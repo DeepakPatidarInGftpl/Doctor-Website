@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -14,9 +15,12 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateDebitNoteComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private toastr: ToastrService, private router: Router, private Arout: ActivatedRoute, private contactService: ContactService) { }
+  constructor(private fb: FormBuilder, private transactionService: TransactionService,
+    private purchaseService: PurchaseServiceService, private toastr: ToastrService,
+    private router: Router, private Arout: ActivatedRoute, private contactService: ContactService, private commonService: CommonServiceService) { }
   debitNoteForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.debitNoteForm.controls;
@@ -83,6 +87,9 @@ export class UpdateDebitNoteComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+
     this.supplierControl.valueChanges.subscribe((res) => {
       const isFieldChanged = res !== this.companyName;
       if (res.length >= 3 && isFieldChanged) {
@@ -95,6 +102,13 @@ export class UpdateDebitNoteComponent implements OnInit {
         );
       }
     })
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.debitNoteForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

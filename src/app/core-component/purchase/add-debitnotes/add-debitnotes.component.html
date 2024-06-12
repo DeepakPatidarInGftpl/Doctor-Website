@@ -19,14 +19,17 @@
                                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                                    <mat-option *ngIf="supplier.is_active==true" [value]="supplier?.name + ' - ' +  supplier?.company_name "
-                                        (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier?.name + ' - ' +  supplier?.company_name  }}</mat-option>
+                                    <mat-option *ngIf="supplier.is_active==true"
+                                        [value]="supplier?.name + ' - ' +  supplier?.company_name "
+                                        (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{
+                                        supplier?.name + ' - ' + supplier?.company_name }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
-                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 1 or more characters</mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
@@ -38,7 +41,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase Return Date*</label>
-                        <input type="datetime-local" formControlName="purchase_return_date"
+                        <input type="datetime-local" formControlName="purchase_return_date" [attr.min]="minDate"
+                            [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['purchase_return_date'].touched && f['purchase_return_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="purchase_return_date && purchase_return_date.invalid && purchase_return_date.touched">Select
@@ -50,12 +54,12 @@
                     <div class="form-group">
                         <label>Purchase Return Series</label>
                         <!-- <input type="text" formControlName="purchase_return_no" placeholder="Enter Purchase Return No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}"> -->
-                     <!-- 18-5 -->
-                     <select formControlName="purchase_return_no">
-                        <option value="" selected disabled>Select Purchase Return Series</option>
-                        <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                    </select>
-                    <!-- end 18-5 -->
+                        <!-- 18-5 -->
+                        <select formControlName="purchase_return_no">
+                            <option value="" selected disabled>Select Purchase Return Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- end 18-5 -->
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -543,7 +547,8 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="3"> <span (click)="addCart(0)" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                        <th colspan="3"> <span (click)="addCart(0)" class="debitIntoCart"
+                                                *ngIf="isCart">Add Cart+</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -578,7 +583,8 @@
                                                     <input class="input" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                        (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
+                                                        (keyup)="getVariant(id.value,i,'barcode')"
+                                                        (blur)="hideSearch()">
                                                 </td>
                                                 <td colspan="1">
                                                     <div class="form-group" style="margin-bottom: 0;">
@@ -603,18 +609,23 @@
                                                                             option?.variant_name}} </mat-option>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
-                                                                <mat-option *ngIf="variantList?.length === 0 && !isSearch"
+                                                                <mat-option *ngIf="isSearch"
+                                                                    style="color:#FF9F43">Loading...</mat-option>
+                                                                <mat-option
+                                                                    *ngIf="variantList?.length === 0 && !isSearch"
                                                                     [value]="'No data found'">
-                                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                                    <a routerLink="//product/addproduct"
+                                                                        style="color:#FF9F43">+add Product</a>
                                                                 </mat-option>
                                                                 <mat-option *ngIf="myControl.value?.length < 3"
-                                                                    class="is-loading">Please Enter 3 or more characters</mat-option>
+                                                                    class="is-loading">Please Enter 3 or more
+                                                                    characters</mat-option>
                                                             </mat-autocomplete>
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="qty" placeholder="0" class="input"></td>
+                                                <td><input type="text" formControlName="qty" placeholder="0"
+                                                        class="input"></td>
                                                 <td><input type="text" formControlName="unit_cost" class="input"
                                                         [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price
                                                         (blur)="purchase2(price.value,i)">
@@ -654,7 +665,8 @@
                                                                                                 Discount %</th>
                                                                                             <th
                                                                                                 class="boder space-text">
-                                                                                                Additional Discount %</th>
+                                                                                                Additional Discount %
+                                                                                            </th>
                                                                                             <th
                                                                                                 class="boder space-text">
                                                                                                 Action</th>
@@ -694,12 +706,13 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="mrp" placeholder="MRP" class="input"></td>
+                                                <td><input type="text" formControlName="mrp" placeholder="MRP"
+                                                        class="input"></td>
                                                 <!-- <td><input type="text" formControlName="discount" class="input" (blur)="purchasee(i)">
                                         <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                         </td> -->
-                                                <td><input type="number" formControlName="deduction" placeholder="Deduction" class="input"
-                                                        (blur)="purchase4(i)">
+                                                <td><input type="number" formControlName="deduction"
+                                                        placeholder="Deduction" class="input" (blur)="purchase4(i)">
                                                     <span class="symbol" (click)="percentage(i)"
                                                         *ngIf="isPercentage[i]">%</span>
                                                     <span class=symbol (click)="amount(i)"
@@ -716,10 +729,12 @@
                                                         readonly class="input" placeholder="Landing Cost"></td>
                                                 <td class="text-end">
                                                     <input type="text" class="input" readonly
-                                                        [value]="TotalWithoutTax[i] | number:'1.2-2'" placeholder="Total Without Tax">
+                                                        [value]="TotalWithoutTax[i] | number:'1.2-2'"
+                                                        placeholder="Total Without Tax">
                                                 </td>
                                                 <td class="text-end">
-                                                    <input type="text" formControlName="total" class="input" readonly placeholder="Total">
+                                                    <input type="text" formControlName="total" class="input" readonly
+                                                        placeholder="Total">
                                                     <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
                                                 </td>
                                             </tr>
@@ -812,20 +827,27 @@
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                            Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as
+                            Draft</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save</button>
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save</button>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                            Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Create New</button>
                     </div>
                 </div>
             </div>

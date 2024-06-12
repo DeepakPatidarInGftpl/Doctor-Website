@@ -13,12 +13,15 @@
         <form [formGroup]="paymentVoucherForm" (ngSubmit)="onSubmit()">
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="payment_type" [id]="'checkboxCash'" (click)="toggleCash()" [value]="'Cash'">
-                    <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Cash</label>
+                    <input type="radio" formControlName="payment_type" [id]="'checkboxCash'" (click)="toggleCash()"
+                        [value]="'Cash'">
+                    <label [for]="'checkboxCash'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
                     <input type="radio" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
-                    <label [for]="'checkbox-Bnak'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Bank</label>
+                    <label [for]="'checkbox-Bnak'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Bank</label>
                 </div>
             </div>
             <div class="row">
@@ -32,22 +35,28 @@
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': h['supplier'].touched && h['supplier'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let customer of filteredsupplier | async" [value]="customer.company_name + ' ' + customer?.name" (onSelectionChange)="oncheck(customer)" style="color:#FF9F43">{{ customer?.company_name + ' ' + customer?.name}}</mat-option>
+                                <mat-option *ngFor="let customer of filteredsupplier | async"
+                                    [value]="customer.company_name + ' ' + customer?.name"
+                                    (onSelectionChange)="oncheck(customer)" style="color:#FF9F43">{{
+                                    customer?.company_name + ' ' + customer?.name}}</mat-option>
                                 <ng-container *ngIf="(filteredsupplier | async) as customers">
                                     <mat-option *ngIf="customers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
-                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                                        Enter 3 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select Supplier</span>
+                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
+                            Supplier</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date*</label>
-                        <input type="date" formControlName="date" id="date" [ngClass]="{'is-invalid': h['date'].touched && h['date'].invalid}">
+                        <input type="date" formControlName="date" id="date" [attr.min]="minDate" [attr.max]="maxDate"
+                            [ngClass]="{'is-invalid': h['date'].touched && h['date'].invalid}">
                         <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter Date</span>
                     </div>
                 </div>
@@ -58,8 +67,10 @@
                                 <div class="card" (click)="setRadioValue('On Account')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"id="on-account-radio">
-                                            <label for="on-account-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">On Account</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"
+                                                id="on-account-radio">
+                                            <label for="on-account-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">On Account</label>
                                         </div>
                                         <span style="margin-left:33px;font-size: 12px;">Upfront Payment</span>
                                     </div>
@@ -69,10 +80,13 @@
                                 <div class="card" (click)="setRadioValue('Advance Payment')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'" id="advance-payment-radio">
-                                            <label for="advance-payment-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'"
+                                                id="advance-payment-radio">
+                                            <label for="advance-payment-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
                                         </div>
-                                        <span style="margin-left:33px;font-size: 12px;">Will be offset by upcoming bills</span>
+                                        <span style="margin-left:33px;font-size: 12px;">Will be offset by upcoming
+                                            bills</span>
                                     </div>
                                 </div>
                             </div>
@@ -80,33 +94,41 @@
                                 <div class="card" (click)="setRadioValue('Against Bill')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'" id="against-bill-radio">
-                                            <label for="against-bill-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'"
+                                                id="against-bill-radio">
+                                            <label for="against-bill-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
                                         </div>
-                                        <span style="margin-left:33px;font-size: 12px;">Offset against Current Bills</span>
+                                        <span style="margin-left:33px;font-size: 12px;">Offset against Current
+                                            Bills</span>
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Select Mode Type</span>
+                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Select
+                                Mode Type</span>
                         </div>
                     </div>
                 </div>t
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series*</label>
-                        <input type="text" formControlName="payment_voucher_no" id="payment_voucher_no" readonly [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}">
+                        <input type="text" formControlName="payment_voucher_no" id="payment_voucher_no" readonly
+                            [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}">
                         <!-- <select formControlName="payment_voucher_no">
                             <option value="" selected disabled>Select Receipt Voucher Series
                             </option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select> -->
-                        <span class="text-danger" *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter Receipt Voucher Series</span>
+                        <span class="text-danger"
+                            *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter
+                            Receipt Voucher Series</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount*</label>
-                        <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
+                        <input type="number" formControlName="amount" id="amount"
+                            [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
                         <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                     </div>
                 </div>
@@ -116,8 +138,8 @@
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Payment Account" aria-label="payment_account" matInput
-                                [formControl]="payerControl" [matAutocomplete]="Payerauto"
+                            <input type="text" placeholder="Search Payment Account" aria-label="payment_account"
+                                matInput [formControl]="payerControl" [matAutocomplete]="Payerauto"
                                 style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': h['payment_account'].touched && h['payment_account'].invalid}">
                             <mat-autocomplete #Payerauto="matAutocomplete">
@@ -142,8 +164,10 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea formControlName="note" [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
-                        <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description</span>
+                        <textarea formControlName="note"
+                            [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
+                        <span class="text-danger"
+                            *ngIf="description && description.invalid && description.touched">Enter description</span>
                     </div>
                 </div>
 
@@ -164,186 +188,237 @@
                                             <!-- <th></th> -->
                                         </tr>
                                         <tr>
-                                           <th colspan="2"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                            <th colspan="2"> <span (click)="addCart()" class="debitIntoCart"
+                                                    *ngIf="isCart">Add Cart+</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <ng-container formArrayName="payment_voucher_cart">
                                             <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                                <ng-container [formGroupName]="i">  
-                                                <tr>
-                                                    <td>{{i+1+'.'}}</td>
-                                                    <td>
-                                                        <div>
-                                                            <div class="me-2">
-                                                                <svg (click)="removeCart(i)" style="color:red"
+                                                <ng-container [formGroupName]="i">
+                                                    <tr>
+                                                        <td>{{i+1+'.'}}</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="me-2">
+                                                                    <svg (click)="removeCart(i)" style="color:red"
+                                                                        xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                        height="16" fill="currentColor"
+                                                                        class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                        <path
+                                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                    </svg>
+                                                                </div>
+                                                                <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                                    style="color:green"
                                                                     xmlns="http://www.w3.org/2000/svg" width="16"
                                                                     height="16" fill="currentColor"
-                                                                    class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                    class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                                     <path
                                                                         d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                                     <path
-                                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                                 </svg>
                                                             </div>
-                                                            <svg *ngIf="isLastCart(i)" (click)="addCart()"
-                                                                style="color:green" xmlns="http://www.w3.org/2000/svg"
-                                                                width="16" height="16" fill="currentColor"
-                                                                class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                <path
-                                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                            </svg>
-                                                        </div>
-                                                    </td>
-                                                    <td>
+                                                        </td>
+                                                        <td>
 
-                                                        <div class="form-group" style="margin-bottom:-1%">
-                                                            <mat-form-field class="w-100"
-                                                                style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                                <input type="text" placeholder="Search purchaseBill"
-                                                                    aria-label="Search purchaseBills" matInput
-                                                                    [formControl]="myControls.at(i)"
-                                                                    (input)="getFilter($event.target.value)"
-                                                                    [matAutocomplete]="autos"
-                                                                    style="box-sizing: border-box;" />
-                                                                <mat-autocomplete #autos="matAutocomplete">
-                                                                    <ng-container *ngFor="let option of filterPurchaseBill">
-                                                                        <mat-option *ngIf="option?.is_active==true"
-                                                                            [value]="option?.refrence_bill_no"
-                                                                            (onSelectionChange)="oncheck3(option,i)"
-                                                                            style="color:#FF9F43">
-                                                                            {{ option?.refrence_bill_no}}
+                                                            <div class="form-group" style="margin-bottom:-1%">
+                                                                <mat-form-field class="w-100"
+                                                                    style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                                    <input type="text" placeholder="Search purchaseBill"
+                                                                        aria-label="Search purchaseBills" matInput
+                                                                        [formControl]="myControls.at(i)"
+                                                                        (input)="getFilter($event.target.value)"
+                                                                        [matAutocomplete]="autos"
+                                                                        style="box-sizing: border-box;" />
+                                                                    <mat-autocomplete #autos="matAutocomplete">
+                                                                        <ng-container
+                                                                            *ngFor="let option of filterPurchaseBill">
+                                                                            <mat-option *ngIf="option?.is_active==true"
+                                                                                [value]="option?.refrence_bill_no"
+                                                                                (onSelectionChange)="oncheck3(option,i)"
+                                                                                style="color:#FF9F43">
+                                                                                {{ option?.refrence_bill_no}}
+                                                                            </mat-option>
+                                                                        </ng-container>
+                                                                        <mat-option
+                                                                            *ngIf="filterPurchaseBill?.length === 0"
+                                                                            [value]="'No data found'">
+                                                                            <a routerLink="//sales/addsalesbill"
+                                                                                style="color:#FF9F43">+ Add Sale
+                                                                                Bill</a>
                                                                         </mat-option>
-                                                                    </ng-container>
-                                                                    <mat-option *ngIf="filterPurchaseBill?.length === 0"
-                                                                        [value]="'No data found'">
-                                                                        <a routerLink="//sales/addsalesbill"
-                                                                            style="color:#FF9F43">+ Add Sale
-                                                                            Bill</a>
-                                                                    </mat-option>
-                                                                    <mat-option
-                                                                        *ngIf="myControls.at(i)?.value?.length < 1"
-                                                                        class="is-loading">
-                                                                        Please Enter 1 or more characters
-                                                                    </mat-option>
-                                                                </mat-autocomplete>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="sale_bill(i) && sale_bill(i).invalid && sale_bill(i).touched">Select
-                                                            Sale Bill</span>
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" formControlName="original_amount"
-                                                            class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="original_amount(i) && original_amount(i).invalid && original_amount(i).touched">Enter
-                                                            Original
-                                                            Amount </span>
-                                                    </td>
-                                                    <td><input type="number" formControlName="paid_amount"
-                                                            class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="paid_amount(i) && paid_amount(i).invalid && paid_amount(i).touched">Enter
-                                                            debit Paid Amount</span>
-                                                    </td>
-                                                    <td><input type="number" formControlName="pending_amount"
-                                                            class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="pending_amount(i) && pending_amount(i).invalid && pending_amount(i).touched">Enter
-                                                            Pending Amount</span>
-                                                    </td>
-                                                    <td><input type="number" formControlName="payment" class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="payment(i) && payment(i).invalid && payment(i).touched">Enter
-                                                            Payment</span>
-                                                    </td>
-                                                </tr>
-                                                <tr> 
-                                                    <td></td>
-                                                    <td colspan="5">
-                                                        <span (click)="debitNoteCartIndex1(i)" class="debitIntoCart" *ngIf="!isDebitNoteCart1[i]">Redeem Debit Note</span>
-                                                        <div class="table-responsive" *ngIf="isDebitNoteCart1[i]" style="border:1px solid #FF9F43;">
-                                                            <table class="table datanew">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th></th>
-                                                                        <th>Debit Note</th>
-                                                                        <th>Original Amount</th>
-                                                                        <th>Redeem Amount</th>
-                                                                        <th>Pending Amount</th>
-                                                                        <th>Amount</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody >
-                                                                    <ng-container formArrayName="debit_note_cart">
-                                                                        <ng-container *ngFor="let debit of getDebitNoteCartForm1(i).controls; let j=index">
-                                                                            <tr [formGroupName]="j">
-                                                                                <td>{{j+1+'.'}}</td>
-                                                                                <td>
-                                                                                    <div>
-                                                                                        <div class="me-2">
-                                                                                            <svg (click)="removeDebitNoteForm1(i,j)" style="color:red"
-                                                                                                xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                                                height="16" fill="currentColor"
-                                                                                                class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                        <mat-option
+                                                                            *ngIf="myControls.at(i)?.value?.length < 1"
+                                                                            class="is-loading">
+                                                                            Please Enter 1 or more characters
+                                                                        </mat-option>
+                                                                    </mat-autocomplete>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="sale_bill(i) && sale_bill(i).invalid && sale_bill(i).touched">Select
+                                                                Sale Bill</span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" formControlName="original_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="original_amount(i) && original_amount(i).invalid && original_amount(i).touched">Enter
+                                                                Original
+                                                                Amount </span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="paid_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="paid_amount(i) && paid_amount(i).invalid && paid_amount(i).touched">Enter
+                                                                debit Paid Amount</span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="pending_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="pending_amount(i) && pending_amount(i).invalid && pending_amount(i).touched">Enter
+                                                                Pending Amount</span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="payment"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="payment(i) && payment(i).invalid && payment(i).touched">Enter
+                                                                Payment</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td colspan="5">
+                                                            <span (click)="debitNoteCartIndex1(i)" class="debitIntoCart"
+                                                                *ngIf="!isDebitNoteCart1[i]">Redeem Debit Note</span>
+                                                            <div class="table-responsive" *ngIf="isDebitNoteCart1[i]"
+                                                                style="border:1px solid #FF9F43;">
+                                                                <table class="table datanew">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th></th>
+                                                                            <th>Debit Note</th>
+                                                                            <th>Original Amount</th>
+                                                                            <th>Redeem Amount</th>
+                                                                            <th>Pending Amount</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ng-container formArrayName="debit_note_cart">
+                                                                            <ng-container
+                                                                                *ngFor="let debit of getDebitNoteCartForm1(i).controls; let j=index">
+                                                                                <tr [formGroupName]="j">
+                                                                                    <td>{{j+1+'.'}}</td>
+                                                                                    <td>
+                                                                                        <div>
+                                                                                            <div class="me-2">
+                                                                                                <svg (click)="removeDebitNoteForm1(i,j)"
+                                                                                                    style="color:red"
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                    fill="currentColor"
+                                                                                                    class="bi bi-x-circle"
+                                                                                                    viewBox="0 0 16 16">
+                                                                                                    <path
+                                                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                                                    <path
+                                                                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                                                </svg>
+                                                                                            </div>
+                                                                                            <svg *ngIf="isLastDebitNote1(i, j)"
+                                                                                                (click)="addDebitNoteCartForm1(i)"
+                                                                                                style="color:green"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                width="16" height="16"
+                                                                                                fill="currentColor"
+                                                                                                class="bi bi-plus-circle"
+                                                                                                viewBox="0 0 16 16">
+                                                                                                <path
+                                                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                                                <path
+                                                                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                                                             </svg>
                                                                                         </div>
-                                                                                        <svg *ngIf="isLastDebitNote1(i, j)" (click)="addDebitNoteCartForm1(i)"
-                                                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
-                                                                                            width="16" height="16" fill="currentColor"
-                                                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                                                        </svg>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                            
-                                                                                    <div class="form-group" style="margin-bottom:-1%">
-                                                                                        <mat-form-field class="w-100"
-                                                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                                                            <input type="text" placeholder="Search Debit Note" aria-label="Search debitNote" matInput [formControl]="debitNoteControl.at(j)" (input)="getFilterDebit($event.target.value)" [matAutocomplete]="autosBankCart" style="box-sizing: border-box;" />
-                                                                                            <mat-autocomplete #autosBankCart="matAutocomplete">
-                                                                                                <ng-container *ngFor="let option of filterdebitNote">
-                                                                                                    <mat-option *ngIf="option?.is_active==true" [value]="option?.debit_note_no" (onSelectionChange)="oncheckBankDebit1(option,i,j)" style="color:#FF9F43">
-                                                                                                        {{ option?.debit_note_no}}
+                                                                                    </td>
+                                                                                    <td>
+
+                                                                                        <div class="form-group"
+                                                                                            style="margin-bottom:-1%">
+                                                                                            <mat-form-field
+                                                                                                class="w-100"
+                                                                                                style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                                                                <input type="text"
+                                                                                                    placeholder="Search Debit Note"
+                                                                                                    aria-label="Search debitNote"
+                                                                                                    matInput
+                                                                                                    [formControl]="debitNoteControl.at(j)"
+                                                                                                    (input)="getFilterDebit($event.target.value)"
+                                                                                                    [matAutocomplete]="autosBankCart"
+                                                                                                    style="box-sizing: border-box;" />
+                                                                                                <mat-autocomplete
+                                                                                                    #autosBankCart="matAutocomplete">
+                                                                                                    <ng-container
+                                                                                                        *ngFor="let option of filterdebitNote">
+                                                                                                        <mat-option
+                                                                                                            *ngIf="option?.is_active==true"
+                                                                                                            [value]="option?.debit_note_no"
+                                                                                                            (onSelectionChange)="oncheckBankDebit1(option,i,j)"
+                                                                                                            style="color:#FF9F43">
+                                                                                                            {{
+                                                                                                            option?.debit_note_no}}
+                                                                                                        </mat-option>
+                                                                                                    </ng-container>
+                                                                                                    <mat-option
+                                                                                                        *ngIf="filterdebitNote?.length === 0"
+                                                                                                        [value]="'No data found'">
+                                                                                                        <a routerLink="//transaction/adddebitnote"
+                                                                                                            style="color:#FF9F43">+
+                                                                                                            Add Debit
+                                                                                                            Note</a>
                                                                                                     </mat-option>
-                                                                                                </ng-container>
-                                                                                                <mat-option *ngIf="filterdebitNote?.length === 0" [value]="'No data found'">
-                                                                                                    <a routerLink="//transaction/adddebitnote" style="color:#FF9F43">+ Add Debit Note</a>
-                                                                                                </mat-option>
-                                                                                                <mat-option *ngIf="debitNoteControl.at(i)?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters</mat-option>
-                                                                                            </mat-autocomplete>
-                                                                                        </mat-form-field>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="number" formControlName="original_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="redeem_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="pending_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="amount" class="input">
-                                                                                </td>
-                                                                            </tr>
+                                                                                                    <mat-option
+                                                                                                        *ngIf="debitNoteControl.at(i)?.value?.length < 1"
+                                                                                                        class="is-loading">
+                                                                                                        Please Enter 1
+                                                                                                        or more
+                                                                                                        characters</mat-option>
+                                                                                                </mat-autocomplete>
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="number"
+                                                                                            formControlName="original_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="redeem_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="pending_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </ng-container>
                                                                         </ng-container>
-                                                                    </ng-container>
-                            
-                                                                </tbody>
-                                                            </table>
-                                                        </div> 
-                                                    </td>
-                                                </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 </ng-container>
                                             </ng-container>
                                         </ng-container>
@@ -356,8 +431,10 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-                    <button routerLink="//transaction/paymentVoucherList" type="button" class="btn btn-cancel">Cancel</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit</button>
+                    <button routerLink="//transaction/paymentVoucherList" type="button"
+                        class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>
@@ -371,26 +448,31 @@
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
                     <input type="radio" [id]="'checkboxCash'" (click)="toggleCash()">
-                    <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Cash</label>
+                    <label [for]="'checkboxCash'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="payment_type" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
-                    <label [for]="'checkbox-Bnak'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Bank</label>
+                    <input type="radio" formControlName="payment_type" [id]="'checkbox-Bnak'" (click)="toggleBank()"
+                        [value]="'Bank'">
+                    <label [for]="'checkbox-Bnak'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Bank</label>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Customer*</label>
-                        <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
+                        <mat-form-field class="w-100"
+                            style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="autobank"
                                 style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': g['supplier'].touched && g['supplier'].invalid}">
                             <mat-autocomplete #autobank="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredsupplier | async"
-                                    [value]="customer?.company_name+ ' '+ customer?.name " (onSelectionChange)="oncheckBank(customer)"
-                                    style="color:#FF9F43">{{ customer?.company_name+ ' '+ customer?.name  }}</mat-option>
+                                    [value]="customer?.company_name+ ' '+ customer?.name "
+                                    (onSelectionChange)="oncheckBank(customer)" style="color:#FF9F43">{{
+                                    customer?.company_name+ ' '+ customer?.name }}</mat-option>
                                 <ng-container *ngIf="(filteredsupplier | async) as customers">
                                     <mat-option *ngIf="customers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
@@ -400,35 +482,46 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select Supplier </span>
+                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
+                            Supplier </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date</label>
-                        <input type="date" formControlName="date" id="date" [ngClass]="{'is-invalid': g['date'].touched && g['date'].invalid}">
+                        <input type="date" formControlName="date" id="date" [attr.min]="bankMinDate"
+                            [attr.max]="bankMaxDate" [ngClass]="{'is-invalid': g['date'].touched && g['date'].invalid}">
                         <span class="text-danger" *ngIf="date1 && date1.invalid && date1.touched">Enter Date</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Transaction Date</label>
-                        <input type="date" formControlName="transaction_date" id="transaction_date"[ngClass]="{'is-invalid': g['transaction_date'].touched && g['transaction_date'].invalid}">
-                        <span class="text-danger" *ngIf="transaction_date && transaction_date.invalid && transaction_date.touched">Select Transaction Date</span>
+                        <input type="date" formControlName="transaction_date" id="transaction_date"
+                            [attr.min]="transactionMinDate" [attr.max]="transactionMaxDate"
+                            [ngClass]="{'is-invalid': g['transaction_date'].touched && g['transaction_date'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="transaction_date && transaction_date.invalid && transaction_date.touched">Select
+                            Transaction Date</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Transaction Id</label>
-                        <input type="text" formControlName="transaction_id" id="transaction_id" [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
-                        <span class="text-danger" *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Receipt Voucher no.</span>
+                        <input type="text" formControlName="transaction_id" id="transaction_id"
+                            [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Receipt
+                            Voucher no.</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
-                            <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'" [value]="'Online'">
-                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Online</label>
+                            <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'"
+                                [value]="'Online'">
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Online</label>
                         </div>
                     </div>
                 </div>
@@ -439,8 +532,11 @@
                                 <div class="card" (click)="setRadioValue1('On Account')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"id="on-account-radio" [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
-                                            <label for="on-account-radio" class="d_flex"style="margin-bottom: 0; margin-left: 15px;">On Account</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"
+                                                id="on-account-radio"
+                                                [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
+                                            <label for="on-account-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">On Account</label>
                                         </div>
                                         <span style="margin-left: 33px;font-size: 12px;">Upfront Payment</span>
                                     </div>
@@ -450,10 +546,14 @@
                                 <div class="card" (click)="setRadioValue1('Advance Payment')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'" id="advance-payment-radio" [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
-                                            <label for="advance-payment-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'"
+                                                id="advance-payment-radio"
+                                                [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
+                                            <label for="advance-payment-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming
+                                            bills</span>
                                     </div>
                                 </div>
                             </div>
@@ -461,15 +561,20 @@
                                 <div class="card" (click)="setRadioValue1('Against Bill')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'" id="against-bill-radio" [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
-                                            <label for="against-bill-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'"
+                                                id="against-bill-radio"
+                                                [ngStyle]="{'border': modeError ? '1px solid red' : ''}">
+                                            <label for="against-bill-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current Bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current
+                                            Bills</span>
                                     </div>
                                 </div>
                             </div>
                             <span class="text-danger" *ngIf="modeError">Select Mode Type</span>
-                            <span class="text-danger" *ngIf="mode_type1 && mode_type1.invalid && mode_type1.touched">Select Mode Type</span>
+                            <span class="text-danger"
+                                *ngIf="mode_type1 && mode_type1.invalid && mode_type1.touched">Select Mode Type</span>
                         </div>
                     </div>
                 </div>
@@ -478,7 +583,7 @@
                         <label>Receipt Voucher Series</label>
                         <input type="text" formControlName="payment_voucher_no" id="payment_voucher_no" readonly
                             [ngClass]="{'is-invalid': g['payment_voucher_no'].touched && g['payment_voucher_no'].invalid}">
-                            <!-- <select formControlName="payment_voucher_no1">
+                        <!-- <select formControlName="payment_voucher_no1">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -491,8 +596,10 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': g['amount'].touched && g['amount'].invalid}">
-                        <span class="text-danger" *ngIf="amount1 && amount1.invalid && amount1.touched">Enter Amount</span>
+                        <input type="number" formControlName="amount" id="amount"
+                            [ngClass]="{'is-invalid': g['amount'].touched && g['amount'].invalid}">
+                        <span class="text-danger" *ngIf="amount1 && amount1.invalid && amount1.touched">Enter
+                            Amount</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
@@ -500,8 +607,8 @@
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Payment Account" aria-label="payment_account" matInput
-                                [formControl]="payerControl" [matAutocomplete]="Payerautobank"
+                            <input type="text" placeholder="Search Payment Account" aria-label="payment_account"
+                                matInput [formControl]="payerControl" [matAutocomplete]="Payerautobank"
                                 style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': g['payment_account'].touched && g['payment_account'].invalid}">
                             <mat-autocomplete #Payerautobank="matAutocomplete">
@@ -517,7 +624,8 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Enter Payment Account</span>
+                        <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Enter Payment
+                            Account</span>
                     </div>
                 </div>
 
@@ -548,172 +656,236 @@
                                             <th>Payment</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="2"> <span (click)="addCartBank()" class="debitIntoCart" *ngIf="isCartBank">Add Cart+</span></th>
-                                         </tr>
+                                            <th colspan="2"> <span (click)="addCartBank()" class="debitIntoCart"
+                                                    *ngIf="isCartBank">Add Cart+</span></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <ng-container formArrayName="payment_voucher_cart">
                                             <ng-container *ngFor="let d of getCartBank().controls; let i=index">
-                                                <ng-container [formGroupName]="i">      
-                                                <tr>
-                                                    <td>{{i+1+'.'}}</td>
-                                                    <td>
-                                                        <div>
-                                                            <div class="me-2">
-                                                                <svg (click)="removeCartBank(i)" style="color:red"
+                                                <ng-container [formGroupName]="i">
+                                                    <tr>
+                                                        <td>{{i+1+'.'}}</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="me-2">
+                                                                    <svg (click)="removeCartBank(i)" style="color:red"
+                                                                        xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                        height="16" fill="currentColor"
+                                                                        class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                        <path
+                                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                    </svg>
+                                                                </div>
+                                                                <svg *ngIf="isLastCartBank(i)" (click)="addCartBank()"
+                                                                    style="color:green"
                                                                     xmlns="http://www.w3.org/2000/svg" width="16"
                                                                     height="16" fill="currentColor"
-                                                                    class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                    class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                                     <path
                                                                         d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                                     <path
-                                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                                 </svg>
                                                             </div>
-                                                            <svg *ngIf="isLastCartBank(i)" (click)="addCartBank()"
-                                                                style="color:green" xmlns="http://www.w3.org/2000/svg"
-                                                                width="16" height="16" fill="currentColor"
-                                                                class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                <path
-                                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                            </svg>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group" style="margin-bottom:-1%">
-                                                            <mat-form-field class="w-100"
-                                                                style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                                <input type="text" placeholder="Search purchaseBill"
-                                                                    aria-label="Search purchaseBills" matInput
-                                                                    [formControl]="myControls.at(i)"
-                                                                    (input)="getFilter($event.target.value)"
-                                                                    [matAutocomplete]="autosBankCart"
-                                                                    style="box-sizing: border-box;" />
-                                                                <mat-autocomplete #autosBankCart="matAutocomplete">
-                                                                    <ng-container *ngFor="let option of filterPurchaseBill">
-                                                                        <mat-option *ngIf="option?.is_active==true"
-                                                                            [value]="option?.refrence_bill_no"
-                                                                            (onSelectionChange)="oncheckBank3(option,i)"
-                                                                            style="color:#FF9F43">
-                                                                            {{ option?.refrence_bill_no}}
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group" style="margin-bottom:-1%">
+                                                                <mat-form-field class="w-100"
+                                                                    style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                                    <input type="text" placeholder="Search purchaseBill"
+                                                                        aria-label="Search purchaseBills" matInput
+                                                                        [formControl]="myControls.at(i)"
+                                                                        (input)="getFilter($event.target.value)"
+                                                                        [matAutocomplete]="autosBankCart"
+                                                                        style="box-sizing: border-box;" />
+                                                                    <mat-autocomplete #autosBankCart="matAutocomplete">
+                                                                        <ng-container
+                                                                            *ngFor="let option of filterPurchaseBill">
+                                                                            <mat-option *ngIf="option?.is_active==true"
+                                                                                [value]="option?.refrence_bill_no"
+                                                                                (onSelectionChange)="oncheckBank3(option,i)"
+                                                                                style="color:#FF9F43">
+                                                                                {{ option?.refrence_bill_no}}
+                                                                            </mat-option>
+                                                                        </ng-container>
+                                                                        <mat-option
+                                                                            *ngIf="filterPurchaseBill?.length === 0"
+                                                                            [value]="'No data found'">
+                                                                            <a routerLink="//sales/addsalesbill"
+                                                                                style="color:#FF9F43">+ Add Sale
+                                                                                Bill</a>
                                                                         </mat-option>
-                                                                    </ng-container>
-                                                                    <mat-option *ngIf="filterPurchaseBill?.length === 0"
-                                                                        [value]="'No data found'">
-                                                                        <a routerLink="//sales/addsalesbill"
-                                                                            style="color:#FF9F43">+ Add Sale
-                                                                            Bill</a>
-                                                                    </mat-option>
-                                                                    <mat-option
-                                                                        *ngIf="myControls.at(i)?.value?.length < 1"
-                                                                        class="is-loading">
-                                                                        Please Enter 1 or more characters
-                                                                    </mat-option>
-                                                                </mat-autocomplete>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="sale_bill1(i) && sale_bill1(i).invalid && sale_bill1(i).touched">Select
-                                                            Sale Bill</span>
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" formControlName="original_amount" class="input">
-                                                        <span class="text-danger" style="display: block;" *ngIf="original_amount1(i) && original_amount1(i).invalid && original_amount1(i).touched">Enter Original Amount</span>
-                                                    </td>
-                                                    <td><input type="number" formControlName="paid_amount" class="input">
-                                                        <span class="text-danger" style="display: block;" *ngIf="paid_amount1(i) && paid_amount1(i).invalid && paid_amount1(i).touched">Enter debit Paid Amount</span></td>
-                                                    <td><input type="number" formControlName="pending_amount" class="input">
-                                                        <span class="text-danger" style="display: block;" *ngIf="pending_amount1(i) && pending_amount1(i).invalid && pending_amount1(i).touched">Enter Pending Amount</span>
-                                                    </td>
-                                                    <td><input type="number" formControlName="payment" class="input">
-                                                        <span class="text-danger" style="display: block;" *ngIf="payment1(i) && payment1(i).invalid && payment1(i).touched">Enter Payment</span>
-                                                    </td>
-                                                </tr>
-                                                <tr> 
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td colspan="5">
-                                                        <span (click)="debitNoteCartIndex(i)" class="debitIntoCart" *ngIf="!isDebitNoteCart[i]">Redeem Debit Note</span>
-                                                        <div class="table-responsive" *ngIf="isDebitNoteCart[i]" style="border:1px solid #FF9F43;">
-                                                            <table class="table datanew">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th></th>
-                                                                        <th>Debit Note</th>
-                                                                        <th>Original Amount</th>
-                                                                        <th>Redeem Amount</th>
-                                                                        <th>Pending Amount</th>
-                                                                        <th>Amount</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody >
-                                                                    <ng-container formArrayName="debit_note_cart">
-                                                                        <ng-container *ngFor="let debit of getDebitNoteCartForm(i).controls; let j=index">
-                                                                            <tr [formGroupName]="j">
-                                                                                <td>{{j+1+'.'}}</td>
-                                                                                <td>
-                                                                                    <div>
-                                                                                        <div class="me-2">
-                                                                                            <svg (click)="removeDebitNoteForm(i,j)" style="color:red"
-                                                                                                xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                                                height="16" fill="currentColor"
-                                                                                                class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                        <mat-option
+                                                                            *ngIf="myControls.at(i)?.value?.length < 1"
+                                                                            class="is-loading">
+                                                                            Please Enter 1 or more characters
+                                                                        </mat-option>
+                                                                    </mat-autocomplete>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="sale_bill1(i) && sale_bill1(i).invalid && sale_bill1(i).touched">Select
+                                                                Sale Bill</span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" formControlName="original_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="original_amount1(i) && original_amount1(i).invalid && original_amount1(i).touched">Enter
+                                                                Original Amount</span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="paid_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="paid_amount1(i) && paid_amount1(i).invalid && paid_amount1(i).touched">Enter
+                                                                debit Paid Amount</span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="pending_amount"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="pending_amount1(i) && pending_amount1(i).invalid && pending_amount1(i).touched">Enter
+                                                                Pending Amount</span>
+                                                        </td>
+                                                        <td><input type="number" formControlName="payment"
+                                                                class="input">
+                                                            <span class="text-danger" style="display: block;"
+                                                                *ngIf="payment1(i) && payment1(i).invalid && payment1(i).touched">Enter
+                                                                Payment</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td colspan="5">
+                                                            <span (click)="debitNoteCartIndex(i)" class="debitIntoCart"
+                                                                *ngIf="!isDebitNoteCart[i]">Redeem Debit Note</span>
+                                                            <div class="table-responsive" *ngIf="isDebitNoteCart[i]"
+                                                                style="border:1px solid #FF9F43;">
+                                                                <table class="table datanew">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th></th>
+                                                                            <th>Debit Note</th>
+                                                                            <th>Original Amount</th>
+                                                                            <th>Redeem Amount</th>
+                                                                            <th>Pending Amount</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <ng-container formArrayName="debit_note_cart">
+                                                                            <ng-container
+                                                                                *ngFor="let debit of getDebitNoteCartForm(i).controls; let j=index">
+                                                                                <tr [formGroupName]="j">
+                                                                                    <td>{{j+1+'.'}}</td>
+                                                                                    <td>
+                                                                                        <div>
+                                                                                            <div class="me-2">
+                                                                                                <svg (click)="removeDebitNoteForm(i,j)"
+                                                                                                    style="color:red"
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                    fill="currentColor"
+                                                                                                    class="bi bi-x-circle"
+                                                                                                    viewBox="0 0 16 16">
+                                                                                                    <path
+                                                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                                                    <path
+                                                                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                                                </svg>
+                                                                                            </div>
+                                                                                            <svg *ngIf="isLastDebitNote(i, j)"
+                                                                                                (click)="addDebitNoteCartForm(i)"
+                                                                                                style="color:green"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                width="16" height="16"
+                                                                                                fill="currentColor"
+                                                                                                class="bi bi-plus-circle"
+                                                                                                viewBox="0 0 16 16">
+                                                                                                <path
+                                                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                                                <path
+                                                                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                                                             </svg>
                                                                                         </div>
-                                                                                        <svg *ngIf="isLastDebitNote(i, j)" (click)="addDebitNoteCartForm(i)"
-                                                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
-                                                                                            width="16" height="16" fill="currentColor"
-                                                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                                                        </svg>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div class="form-group" style="margin-bottom:-1%">
-                                                                                        <mat-form-field class="w-100"
-                                                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                                                            <input type="text" placeholder="Search Debit Note" aria-label="Search debitNote" matInput [formControl]="debitNoteControl.at(j)" (input)="getFilterDebit($event.target.value)" [matAutocomplete]="autosBankCart" style="box-sizing: border-box;" />
-                                                                                            <mat-autocomplete #autosBankCart="matAutocomplete">
-                                                                                                <ng-container *ngFor="let option of filterdebitNote">
-                                                                                                    <mat-option *ngIf="option?.is_active==true" [value]="option?.debit_note_no" (onSelectionChange)="oncheckBankDebit2(option,i,j)" style="color:#FF9F43"> {{ option?.debit_note_no}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group"
+                                                                                            style="margin-bottom:-1%">
+                                                                                            <mat-form-field
+                                                                                                class="w-100"
+                                                                                                style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                                                                <input type="text"
+                                                                                                    placeholder="Search Debit Note"
+                                                                                                    aria-label="Search debitNote"
+                                                                                                    matInput
+                                                                                                    [formControl]="debitNoteControl.at(j)"
+                                                                                                    (input)="getFilterDebit($event.target.value)"
+                                                                                                    [matAutocomplete]="autosBankCart"
+                                                                                                    style="box-sizing: border-box;" />
+                                                                                                <mat-autocomplete
+                                                                                                    #autosBankCart="matAutocomplete">
+                                                                                                    <ng-container
+                                                                                                        *ngFor="let option of filterdebitNote">
+                                                                                                        <mat-option
+                                                                                                            *ngIf="option?.is_active==true"
+                                                                                                            [value]="option?.debit_note_no"
+                                                                                                            (onSelectionChange)="oncheckBankDebit2(option,i,j)"
+                                                                                                            style="color:#FF9F43">
+                                                                                                            {{
+                                                                                                            option?.debit_note_no}}
+                                                                                                        </mat-option>
+                                                                                                    </ng-container>
+                                                                                                    <mat-option
+                                                                                                        *ngIf="filterdebitNote?.length === 0"
+                                                                                                        [value]="'No data found'">
+                                                                                                        <a routerLink="//transaction/adddebitnote"
+                                                                                                            style="color:#FF9F43">+
+                                                                                                            Add Debit
+                                                                                                            Note</a>
                                                                                                     </mat-option>
-                                                                                                </ng-container>
-                                                                                                <mat-option *ngIf="filterdebitNote?.length === 0" [value]="'No data found'">
-                                                                                                    <a routerLink="//transaction/adddebitnote" style="color:#FF9F43">+ Add Debit Note</a>
-                                                                                                </mat-option>
-                                                                                                <mat-option *ngIf="debitNoteControl.at(i)?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters</mat-option>
-                                                                                            </mat-autocomplete>
-                                                                                        </mat-form-field>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="number" formControlName="original_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="redeem_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="pending_amount"
-                                                                                        class="input">
-                                                                                </td>
-                                                                                <td><input type="number" formControlName="amount" class="input">
-                                                                                </td>
-                                                                            </tr>
+                                                                                                    <mat-option
+                                                                                                        *ngIf="debitNoteControl.at(i)?.value?.length < 1"
+                                                                                                        class="is-loading">
+                                                                                                        Please Enter 1
+                                                                                                        or more
+                                                                                                        characters</mat-option>
+                                                                                                </mat-autocomplete>
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="number"
+                                                                                            formControlName="original_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="redeem_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="pending_amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                    <td><input type="number"
+                                                                                            formControlName="amount"
+                                                                                            class="input">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </ng-container>
                                                                         </ng-container>
-                                                                    </ng-container>
-                            
-                                                                </tbody>
-                                                            </table>
-                                                        </div> 
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                             </ng-container>
                                         </ng-container>
                                     </tbody>
@@ -725,8 +897,10 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-                    <button routerLink="//transaction/paymentVoucherList" type="button" class="btn btn-cancel">Cancel</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit</button>
+                    <button routerLink="//transaction/paymentVoucherList" type="button"
+                        class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>

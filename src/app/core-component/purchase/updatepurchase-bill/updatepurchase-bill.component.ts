@@ -6,6 +6,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-updatepurchase-bill',
   templateUrl: './updatepurchase-bill.component.html',
@@ -27,7 +28,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+    private commonService: CommonServiceService) {
   }
 
   supplierControlName = 'party';
@@ -44,6 +46,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   puchaseBillForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  dueMinDate: string = '';
+  dueMaxDate: string = '';
   get f() {
     return this.puchaseBillForm.controls;
   }
@@ -154,6 +160,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.dueDateValidation(financialYear);
+    this.supplierBillDateValidation(financialYear);
+
+    this.puchaseBillForm.get('supplier_bill_date').valueChanges.subscribe((date) => {
+      this.updateDueDateMin(date, financialYear);
+    });
+
     this.supplierControl.valueChanges.subscribe((res) => {
       const isFieldChanged = res !== this.companyName;
       if (res.length >= 3 && isFieldChanged) {
@@ -193,6 +208,30 @@ export class UpdatepurchaseBillComponent implements OnInit {
     //       this.supplierControl.setValue(matchedSuppliers[0].name);
     //     }
     //   });
+  }
+
+  updateDueDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.puchaseBillForm.get('due_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear, minDate);
+      this.dueMinDate = formattedMinDate;
+      this.dueMaxDate = formattedMaxDate;
+    }
+  }
+
+  dueDateValidation(financialYear) {
+    const dateControl = this.puchaseBillForm.get('due_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.dueMinDate = formattedMinDate;
+    this.dueMaxDate = formattedMaxDate;
+  }
+
+  supplierBillDateValidation(financialYear) {
+    const dateControl = this.puchaseBillForm.get('supplier_bill_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

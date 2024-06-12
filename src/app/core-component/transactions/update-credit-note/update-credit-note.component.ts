@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -14,9 +15,12 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateCreditNoteComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private transactionService: TransactionService, private saleService: SalesService, private toastr: ToastrService, private router: Router,
-    private Aroute: ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private transactionService: TransactionService,
+    private saleService: SalesService, private toastr: ToastrService, private router: Router,
+    private Aroute: ActivatedRoute, private commonService: CommonServiceService) { }
   debitNoteForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.debitNoteForm.controls;
@@ -26,7 +30,7 @@ export class UpdateCreditNoteComponent implements OnInit {
   filteredFromAccount: Observable<any[]>;
   //salebill
   billControl = new FormControl();
-  
+
   id: any;
   ngOnInit(): void {
     this.id = this.Aroute.snapshot.paramMap.get('id');
@@ -50,17 +54,26 @@ export class UpdateCreditNoteComponent implements OnInit {
     this.getprefix()
 
     this.transactionService.getCreditNoteById(this.id).subscribe(res => {
-    console.log(res);
-    this.debitNoteForm.patchValue(res);
-    this.debitNoteForm.get('account').patchValue(res?.account?.id);
-    this.debitNoteForm.get('sale_bill_no').patchValue(res?.sale_bill_no?.id);
-    // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
-    this.fromAccountControl.setValue(res?.account?.account_id);
-    this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
+      console.log(res);
+      this.debitNoteForm.patchValue(res);
+      this.debitNoteForm.get('account').patchValue(res?.account?.id);
+      this.debitNoteForm.get('sale_bill_no').patchValue(res?.sale_bill_no?.id);
+      // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
+      this.fromAccountControl.setValue(res?.account?.account_id);
+      this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
     })
-   
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
   }
-  
+
+  dateValidation(financialYear) {
+    const dateControl = this.debitNoteForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getCreditNotePrefix().subscribe((res: any) => {
@@ -158,7 +171,7 @@ export class UpdateCreditNoteComponent implements OnInit {
       formdata.append('tax', this.debitNoteForm.get('tax')?.value);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
 
-      this.transactionService.updateCreditNote(formdata,this.id).subscribe(res => {
+      this.transactionService.updateCreditNote(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.loaders = false;
         this.addRes = res

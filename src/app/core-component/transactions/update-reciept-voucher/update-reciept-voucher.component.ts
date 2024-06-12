@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -13,7 +14,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class UpdateRecieptVoucherComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private toastr: ToastrService, private router: Router,
-    private transactionService: TransactionService, private Arout: ActivatedRoute) { }
+    private transactionService: TransactionService, private commonService: CommonServiceService,
+    private Arout: ActivatedRoute) { }
 
   customerControl = new FormControl();
   filteredCustomer: Observable<any[]>;
@@ -26,6 +28,12 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   filteredsaleBill: Observable<any[]>;
 
   recieptVoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  bankMinDate: string = '';
+  bankMaxDate: string = '';
+  transactionMinDate: string = '';
+  transactionMaxDate: string = '';
   get h() {
     return this.recieptVoucherForm.controls;
   }
@@ -43,12 +51,12 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.customerControl.setValue('Loading...');
     this.payerControl.setValue('Loading...');
 
-    
+
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       customer: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
-      receipt_voucher_no: new FormControl('',[Validators.required]),
+      receipt_voucher_no: new FormControl('', [Validators.required]),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
@@ -62,7 +70,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       receipt_voucher_no: new FormControl(''),
-      mode_type: new FormControl('',[Validators.required]),
+      mode_type: new FormControl('', [Validators.required]),
       amount: new FormControl(0),
       note: new FormControl(''),
       payer: new FormControl(''), // account foreign key
@@ -83,6 +91,11 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       map(value => this._filterr(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+    this.bankDateValidation(financialYear);
+    this.bankTransactionDateValidation(financialYear);
+
     this.getAccount();
     this.getSaleBill();
     this.getprefix();
@@ -97,13 +110,13 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherBankForm.get('payment_account')?.patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
         // this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
-        if(this.editRes?.bill_cart.length>0){
+        if (this.editRes?.bill_cart.length > 0) {
           this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
-        }else{
-          this.isCartBank=true;
-          this.isAgainstBillBank=true;
+        } else {
+          this.isCartBank = true;
+          this.isAgainstBillBank = true;
         }
-  
+
         this.customerControl.setValue(this.editRes?.customer?.account_id);
         this.payerControl.setValue(this.editRes?.payer?.account_id);
       } else {
@@ -111,19 +124,41 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
         // this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
-        if(this.editRes?.bill_cart.length>0){
+        if (this.editRes?.bill_cart.length > 0) {
           this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
-        }else{
-          this.isCart=true;
-          this.isAgainstBill=true;
+        } else {
+          this.isCart = true;
+          this.isAgainstBill = true;
         }
         this.payerControl.setValue(this.editRes?.payer?.account_id);
         this.customerControl.setValue(this.editRes?.customer?.account_id);
-       
+
       }
 
     })
   }
+
+  dateValidation(financialYear) {
+    const dateControl = this.recieptVoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  bankDateValidation(financialYear) {
+    const dateControl = this.recieptVoucherBankForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.bankMinDate = formattedMinDate;
+    this.bankMaxDate = formattedMaxDate;
+  }
+
+  bankTransactionDateValidation(financialYear) {
+    const dateControl = this.recieptVoucherBankForm.get('transaction_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.transactionMinDate = formattedMinDate;
+    this.transactionMaxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getReceiptVoucherPrefix().subscribe((res: any) => {
@@ -149,8 +184,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         pending_amount: j?.pending_amount,
         payment: j?.payment,
       }))
-      
-      
+
+
       this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
     })
     return formarr
@@ -167,7 +202,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         payment: j?.payment,
       }))
       console.log(j);
-      
+
       this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
     })
     return formarr
@@ -184,17 +219,17 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart())
     this.myControls.push(new FormControl(''));
-    this.isCart=false;
+    this.isCart = false;
   }
 
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(i==0){
-      this.isCart=true;
+    if (i == 0) {
+      this.isCart = true;
     }
   }
   // bank
@@ -204,13 +239,13 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   addCartBank() {
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
-    this.isCartBank=false;
+    this.isCartBank = false;
   }
-  isCartBank=false;
+  isCartBank = false;
   removeCartBank(i: any) {
     this.getCartBank().removeAt(i);
-    if(this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length==0){
-      this.isCartBank=true;
+    if (this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length == 0) {
+      this.isCartBank = true;
     }
   }
 
@@ -352,7 +387,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
 
   loaders = false
   addRes: any;
-  modeError:any
+  modeError: any
   onSubmit() {
     console.log(this.recieptVoucherForm.value);
     if (this.recieptVoucherForm.valid) {
@@ -383,7 +418,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       });
       formdata.append('receipt_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.updateRecieptVoucher(formdata,this.id).subscribe(
+      this.transactionService.updateRecieptVoucher(formdata, this.id).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
@@ -396,11 +431,11 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         },
         (err) => {
           this.loaders = false;
-          if(err.error.error?.mode_type){
-            this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
-            this.modeError=err.error.error?.mode_type[0]
+          if (err.error.error?.mode_type) {
+            this.toastr.error('Select Mode Type', err.error.error?.mode_type[0])
+            this.modeError = err.error.error?.mode_type[0]
             setTimeout(() => {
-              this.modeError=''
+              this.modeError = ''
             }, 5000);
           }
         }
@@ -447,7 +482,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       });
       formdata.append('receipt_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.updateRecieptVoucher(formdata,this.id).subscribe(
+      this.transactionService.updateRecieptVoucher(formdata, this.id).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
@@ -456,29 +491,29 @@ export class UpdateRecieptVoucherComponent implements OnInit {
           } else {
             this.loaders = false
             this.toastr.error(res.msg);
-            if(res.error?.mode_type){
-              this.toastr.error('Select Mode Type',res.error?.mode_type[0])
-              this.modeError=res.error?.mode_type[0]
+            if (res.error?.mode_type) {
+              this.toastr.error('Select Mode Type', res.error?.mode_type[0])
+              this.modeError = res.error?.mode_type[0]
               setTimeout(() => {
-                this.modeError=''
+                this.modeError = ''
               }, 5000);
             }
           }
         },
         (err) => {
           this.loaders = false;
-          if(err.error.error?.mode_type){
-            this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
-            this.modeError=err.error.error?.mode_type[0]
+          if (err.error.error?.mode_type) {
+            this.toastr.error('Select Mode Type', err.error.error?.mode_type[0])
+            this.modeError = err.error.error?.mode_type[0]
             setTimeout(() => {
-              this.modeError=''
+              this.modeError = ''
             }, 5000);
           }
         }
       );
     } else {
       this.recieptVoucherBankForm.markAllAsTouched();
-      this.toastr.error('Please Fill All The Required Fields')   
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   //bank

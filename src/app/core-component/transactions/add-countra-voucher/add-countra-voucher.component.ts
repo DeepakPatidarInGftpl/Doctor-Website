@@ -1,9 +1,10 @@
-import { Component, OnInit, Renderer2} from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -14,8 +15,12 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 
 export class AddCountraVoucherComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private renderer: Renderer2, private transactionService: TransactionService, private coreService: CoreService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private renderer: Renderer2,
+    private transactionService: TransactionService, private coreService: CoreService,
+    private toastr: ToastrService, private router: Router, private commonService: CommonServiceService) { }
   countraVoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.countraVoucherForm.controls;
@@ -25,16 +30,16 @@ export class AddCountraVoucherComponent implements OnInit {
 
   toAccountControl = new FormControl();
   filteredToAccount: Observable<string[]>;
-  
+
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.countraVoucherForm = this.fb.group({
       date: new FormControl(defaultDate,),
       countra_voucher_no: new FormControl('',),
-      from_account: new FormControl('',[Validators.required]),
-      to_account: new FormControl('',[Validators.required]),
+      from_account: new FormControl('', [Validators.required]),
+      to_account: new FormControl('', [Validators.required]),
       amount: new FormControl(0,),
-      note: new FormControl('',[Validators.required])
+      note: new FormControl('', [Validators.required])
     })
     this.getAccount();
     this.getprefix();
@@ -46,8 +51,18 @@ export class AddCountraVoucherComponent implements OnInit {
 
     this.filteredToAccount = this.toAccountControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterr(value ,true)),
+      map(value => this._filterr(value, true)),
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.countraVoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -56,7 +71,7 @@ export class AddCountraVoucherComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.countraVoucherForm.get('countra_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastr.error(res.msg);
@@ -66,12 +81,12 @@ export class AddCountraVoucherComponent implements OnInit {
     })
   }
 
-  accountList: any[]=[];
-  toAccountList:any[]=[]
+  accountList: any[] = [];
+  toAccountList: any[] = []
   getAccount() {
-    this.transactionService.getAccount().subscribe((res:any) => {
+    this.transactionService.getAccount().subscribe((res: any) => {
       this.accountList = res;
-      this.toAccountList=res;
+      this.toAccountList = res;
     })
   }
 
@@ -81,7 +96,7 @@ export class AddCountraVoucherComponent implements OnInit {
       ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
     if (!include && filteredFromAccount.length === 0) {
-      filteredFromAccount.push({ account: "No data found" }); 
+      filteredFromAccount.push({ account: "No data found" });
     }
     return filteredFromAccount;
   }
@@ -92,7 +107,7 @@ export class AddCountraVoucherComponent implements OnInit {
       ? this.toAccountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.toAccountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
     if (!include && filteredToAccount.length === 0) {
-      filteredToAccount.push({ account: "No data found" }); 
+      filteredToAccount.push({ account: "No data found" });
     }
     return filteredToAccount;
   }

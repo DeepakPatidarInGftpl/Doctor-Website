@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -16,9 +17,13 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class AddScrapEntryComponent implements OnInit {
   toaster: any;
 
-  constructor(private fb: FormBuilder, private saleService:SalesService,
-    private coreService:CoreService, private toastrService: ToastrService, private purchaseService: PurchaseServiceService, private transactionService: TransactionService,private router:Router) { }
+  constructor(private fb: FormBuilder, private saleService: SalesService,
+    private coreService: CoreService, private toastrService: ToastrService,
+    private purchaseService: PurchaseServiceService, private transactionService: TransactionService,
+    private router: Router, private commonService: CommonServiceService) { }
   scrapEntryForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.scrapEntryForm.controls;
   }
@@ -29,9 +34,9 @@ export class AddScrapEntryComponent implements OnInit {
   ngOnInit(): void {
     const defaultDate = new Date().toLocaleString('en-CA', { timeZone: 'America/Vancouver' }).split(',')[0];
     this.scrapEntryForm = this.fb.group({
-      voucher_no: new FormControl('',[Validators.required]),
-      date: new FormControl(defaultDate,[Validators.required]),
-      updater_name: new FormControl('',[Validators.required]),
+      voucher_no: new FormControl('', [Validators.required]),
+      date: new FormControl(defaultDate, [Validators.required]),
+      updater_name: new FormControl('', [Validators.required]),
       cart_item: this.fb.array([])
     });
     this.addCart(0);
@@ -39,6 +44,16 @@ export class AddScrapEntryComponent implements OnInit {
     this.getPrefix();
     this.ManageNameControl(0);
     this.ManageItemCodeControl(0);
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.scrapEntryForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -47,7 +62,7 @@ export class AddScrapEntryComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.scrapEntryForm.get('voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toaster.error(res.msg);
@@ -59,11 +74,11 @@ export class AddScrapEntryComponent implements OnInit {
 
   cart(): FormGroup {
     return this.fb.group({
-      barcode: new FormControl('',[Validators.required]),
-      item_code: new FormControl('',[Validators.required]),
-      item_name: new FormControl('',[Validators.required]),
-      unit: new FormControl('',[Validators.required]),
-      qty: new FormControl(1,[Validators.required]),
+      barcode: new FormControl('', [Validators.required]),
+      item_code: new FormControl('', [Validators.required]),
+      item_name: new FormControl('', [Validators.required]),
+      unit: new FormControl('', [Validators.required]),
+      qty: new FormControl(1, [Validators.required]),
       reason: new FormControl('')
     })
   }
@@ -71,15 +86,15 @@ export class AddScrapEntryComponent implements OnInit {
     return this.scrapEntryForm.get('cart_item') as FormArray;
   }
   isCart = false;
-  addCart(i:any) {
+  addCart(i: any) {
     this.getCart().push(this.cart());
-    if (this.scrapEntryForm?.value?.cart_item?.length >0) {
+    if (this.scrapEntryForm?.value?.cart_item?.length > 0) {
       this.ManageNameControl(i);
       this.ManageItemCodeControl(i);
     }
     this.isCart = false;
   }
-  addCart2(cart:any) {
+  addCart2(cart: any) {
     const itemsArrayLength = (this.scrapEntryForm?.get('cart_item') as FormArray);
     this.getCart()?.push(this.cart())
     this.ManageNameControl(itemsArrayLength?.length - 1);
@@ -103,7 +118,7 @@ export class AddScrapEntryComponent implements OnInit {
   }
 
   unit(index: number) {
-  return this.getCart().controls[index].get('unit');
+    return this.getCart().controls[index].get('unit');
   }
   qty(index: number) {
     return this.getCart().controls[index].get('qty');
@@ -125,24 +140,24 @@ export class AddScrapEntryComponent implements OnInit {
 
   ManageNameControl(index: number) {
     console.log('index', index)
-    var arrayControl:any = this.scrapEntryForm?.get('cart_item') as FormArray;
+    var arrayControl: any = this.scrapEntryForm?.get('cart_item') as FormArray;
     this.filteredOptions[index] = arrayControl.at(index)?.get('item_name')?.valueChanges
-      .pipe(startWith(''), map((title:any) => this._filter5(title)) );
+      .pipe(startWith(''), map((title: any) => this._filter5(title)));
   }
 
   private _filter5(title: any) {
     const filterValue = title?.toLowerCase();
-    return this.productList?.filter((option:any) => option?.title?.toLowerCase().indexOf(filterValue) === 0);
+    return this.productList?.filter((option: any) => option?.title?.toLowerCase().indexOf(filterValue) === 0);
   }
 
-   // item code
-   ManageItemCodeControl(index: number) {
+  // item code
+  ManageItemCodeControl(index: number) {
     console.log('index', index)
     var arrayControl: any = this.scrapEntryForm?.get('cart_item') as FormArray;
-    console.log(arrayControl,'arrayControl');
+    console.log(arrayControl, 'arrayControl');
     this.filteredItemCode[index] = arrayControl.at(index)?.get('item_code')?.valueChanges
       .pipe(startWith(''), map((item_code: any) => this._filter6(item_code)));
-      console.log(this.filteredItemCode);    
+    console.log(this.filteredItemCode);
   }
   private _filter6(item_code: any) {
     const filterValue = item_code?.toLowerCase();
@@ -160,26 +175,26 @@ export class AddScrapEntryComponent implements OnInit {
     const barcode = (this.scrapEntryForm.get('cart_item') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId,
-      item_code:event?.sku,
-      item_name:event?.product_title,
-      unit:event?.product?.unit?.title
+      item_code: event?.sku,
+      item_name: event?.product_title,
+      unit: event?.product?.unit?.title
     });
   }
-  loader=false;
+  loader = false;
   submit() {
-    console.log(this.scrapEntryForm.value); 
-    if(this.scrapEntryForm.valid){
-      this.loader=true;
-      let formData =new FormData();
-      formData.append('date',this.scrapEntryForm.get('date')?.value);
-      formData.append('voucher_no',this.scrapEntryForm.get('voucher_no')?.value);
-      formData.append('updater_name',this.scrapEntryForm.get('updater_name')?.value);
+    console.log(this.scrapEntryForm.value);
+    if (this.scrapEntryForm.valid) {
+      this.loader = true;
+      let formData = new FormData();
+      formData.append('date', this.scrapEntryForm.get('date')?.value);
+      formData.append('voucher_no', this.scrapEntryForm.get('voucher_no')?.value);
+      formData.append('updater_name', this.scrapEntryForm.get('updater_name')?.value);
 
       const cartArray = this.scrapEntryForm.get('cart_item') as FormArray;
-      const cartData:any = [];
+      const cartData: any = [];
       cartArray.controls.forEach((items) => {
         const cartGroup = items as FormGroup;
-        const cartObject:any = {};
+        const cartObject: any = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
           if (!isNaN(control.value)) {
@@ -193,30 +208,30 @@ export class AddScrapEntryComponent implements OnInit {
       formData.append('cart_item', JSON.stringify(cartData));
       this.transactionService.addScrapEntry(formData).subscribe((res: any) => {
         console.log(res);
-        if(res.success){
-          this.loader=false;
+        if (res.success) {
+          this.loader = false;
           this.toastrService.success(res.msg);
           this.router.navigate(['/transaction/scarp-entry-list'])
-        }else{
-          this.loader=false;
+        } else {
+          this.loader = false;
           this.toastrService.error(res.msg)
         }
-      },err=>{
-        this.loader=false;
+      }, err => {
+        this.loader = false;
         this.toastrService.error(err.message)
       })
-    }else{
+    } else {
       this.scrapEntryForm.markAllAsTouched();
       this.toastrService.error('Please Submit Required Field')
     }
   }
-  variantList:any[]=[];
+  variantList: any[] = [];
   myControl = new FormControl('');
   barcode: any[] = [];
-  getVariant(search:any){
+  getVariant(search: any) {
     this.transactionService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
-      this.isSearch=false;
+      this.isSearch = false;
       this.variantList = res;
       console.log(this.variantList);
       this.myControl.setValue(res[0].product_title);
@@ -224,5 +239,5 @@ export class AddScrapEntryComponent implements OnInit {
     });
   }
 
-  
+
 }

@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { MatDialog } from '@angular/material/dialog';
 import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-addmaterial-inward',
   templateUrl: './addmaterial-inward.component.html',
@@ -32,7 +33,8 @@ export class AddmaterialInwardComponent implements OnInit {
     private contactService: ContactService,
     private coreService: CoreService,
     private route: ActivatedRoute,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private commonService: CommonServiceService) {
   }
 
   supplierControlName = 'party';
@@ -49,6 +51,10 @@ export class AddmaterialInwardComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   materialForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  materialMinDate: string = '';
+  materialMaxDate: string = '';
   get f() {
     return this.materialForm.controls;
   }
@@ -84,6 +90,11 @@ export class AddmaterialInwardComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.poDateValidation(financialYear);
+    this.materialDateValidation(financialYear);
 
     this.supplierControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -122,6 +133,20 @@ export class AddmaterialInwardComponent implements OnInit {
       //     console.log('error in company');
       //   }
     })
+  }
+
+  materialDateValidation(financialYear) {
+    const dateControl = this.materialForm.get('material_inward_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.materialMinDate = formattedMinDate;
+    this.materialMaxDate = formattedMaxDate;
+  }
+
+  poDateValidation(financialYear) {
+    const dateControl = this.materialForm.get('po_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -216,7 +217,7 @@ export class CommonServiceService {
   //         "url": "/report/tax-wise-debit-note",
   //         "is_Favorite": false
   //       },
-        
+
 
   //     ],
   //     "inventory": [
@@ -298,7 +299,7 @@ export class CommonServiceService {
   //         "url": "/report/least-selling-product",
   //         "is_Favorite": false
   //       },
-       
+
 
   //     ],
   //     "accounts": [
@@ -350,7 +351,7 @@ export class CommonServiceService {
   //         "url": "/report/cash-book",
   //         "is_Favorite": false
   //       },
-      
+
 
   //     ],
   //   }
@@ -560,7 +561,7 @@ export class CommonServiceService {
       "url": "/report/tax-wise-debit-note",
       "is_Favorite": false
     },
-   
+
     {
       "reportname": "Product History",
       "group": "inventory",
@@ -717,6 +718,101 @@ export class CommonServiceService {
       "url": "/report/profit-loss",
       "is_Favorite": false
     },
-  
+
   ]
+
+  formatDate(date: Date): string {
+    const offsetDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return offsetDate.toISOString().split('T')[0];
+  }
+
+  formatDateTime(date: Date): string {
+    const offsetDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return offsetDate.toISOString().slice(0, 16);
+  }
+
+  minDateValidator(minDate: Date) {
+    return (control: { value: string | number | Date }) => {
+      const inputDate = new Date(control.value);
+      return inputDate >= minDate ? null : { minDate: true };
+    };
+  }
+
+  maxDateValidator(maxDate: Date) {
+    return (control: { value: string | number | Date }) => {
+      const inputDate = new Date(control.value);
+      return inputDate <= maxDate ? null : { maxDate: true };
+    };
+  }
+
+  determineMinMaxDates(financialYear: string): { minDate: Date, maxDate: Date } {
+    let minDate: Date;
+    let maxDate: Date;
+
+    switch (financialYear) {
+      case '12':
+        minDate = new Date(2024, 3, 1, 0, 0, 0);
+        maxDate = new Date(2025, 2, 31, 23, 59, 59);
+        break;
+      case '6':
+        minDate = new Date(2023, 3, 1, 0, 0, 0);
+        maxDate = new Date(2024, 2, 31, 23, 59, 59);
+        break;
+      case '14':
+        minDate = new Date(2025, 3, 1, 0, 0, 0);
+        maxDate = new Date(2026, 2, 31, 23, 59, 59);
+        break;
+    }
+
+    return { minDate, maxDate };
+  }
+
+  setMinMaxDates(dateControl: AbstractControl, financialYear: string, dynamicMinDate?: Date) {
+    let { minDate, maxDate } = this.determineMinMaxDates(financialYear);
+
+    if (dynamicMinDate && dynamicMinDate > minDate) {
+      minDate = dynamicMinDate;
+    }
+
+    const formattedMinDate = this.formatDate(minDate);
+    const formattedMaxDate = this.formatDate(maxDate);
+
+    const formControl = dateControl as FormControl;
+    formControl.setValidators([Validators.required, this.minDateValidator(minDate), this.maxDateValidator(maxDate)]);
+    formControl.updateValueAndValidity();
+
+    if (formControl.value) {
+      const selectedDate = new Date(formControl.value);
+      if (selectedDate < minDate || selectedDate > maxDate) {
+        formControl.reset('');
+      }
+    }
+
+    return { formattedMinDate, formattedMaxDate };
+  }
+
+  setMinMaxDatesForDateTime(dateControl: AbstractControl, financialYear: string, dynamicMinDate?: Date) {
+    let { minDate, maxDate } = this.determineMinMaxDates(financialYear);
+
+    if (dynamicMinDate && dynamicMinDate > minDate) {
+      minDate = dynamicMinDate;
+    }
+
+    const formattedMinDate = this.formatDateTime(minDate);
+    const formattedMaxDate = this.formatDateTime(maxDate);
+
+    const formControl = dateControl as FormControl;
+    formControl.setValidators([Validators.required, this.minDateValidator(minDate), this.maxDateValidator(maxDate)]);
+    formControl.updateValueAndValidity();
+
+    if (formControl.value) {
+      const selectedDate = new Date(formControl.value);
+      if (selectedDate < minDate || selectedDate > maxDate) {
+        formControl.reset('');
+      }
+    }
+
+    return { formattedMinDate, formattedMaxDate };
+  }
+
 }

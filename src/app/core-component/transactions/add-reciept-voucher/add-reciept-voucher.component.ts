@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -14,7 +15,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class AddRecieptVoucherComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService, private router: Router,
-    private transactionService: TransactionService) { }
+    private transactionService: TransactionService, private commonService: CommonServiceService) { }
 
   customerControlName = 'payment_account';
   customerControl = new FormControl();
@@ -28,6 +29,12 @@ export class AddRecieptVoucherComponent implements OnInit {
   filteredsaleBill: Observable<any[]>;
 
   recieptVoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  bankMinDate: string = '';
+  bankMaxDate: string = '';
+  transactionMinDate: string = '';
+  transactionMaxDate: string = '';
   get h() {
     return this.recieptVoucherForm.controls;
   }
@@ -44,12 +51,12 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, ),
+      date: new FormControl(defaultDate,),
       receipt_voucher_no: new FormControl('',),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
-      payer: new FormControl('',[Validators.required]), // account foreign key
+      payer: new FormControl('', [Validators.required]), // account foreign key
       // against bill
       receipt_voucher_cart: this.fb.array([]),
     })
@@ -57,12 +64,12 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.recieptVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, ),
+      date: new FormControl(defaultDate,),
       receipt_voucher_no: new FormControl(''),
       mode_type: new FormControl('',),
       amount: new FormControl(0),
       note: new FormControl(''),
-      payer: new FormControl('',[Validators.required]), // account foreign key
+      payer: new FormControl('', [Validators.required]), // account foreign key
       // against bill
       bank_payment: new FormControl(''),
       transaction_id: new FormControl(''),
@@ -80,17 +87,44 @@ export class AddRecieptVoucherComponent implements OnInit {
       map(value => this._filterr(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+    this.bankDateValidation(financialYear);
+    this.bankTransactionDateValidation(financialYear);
+
     this.getAccount();
     this.getSaleBill();
     this.getprefix();
   }
+
+  dateValidation(financialYear) {
+    const dateControl = this.recieptVoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  bankDateValidation(financialYear) {
+    const dateControl = this.recieptVoucherBankForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.bankMinDate = formattedMinDate;
+    this.bankMaxDate = formattedMaxDate;
+  }
+
+  bankTransactionDateValidation(financialYear) {
+    const dateControl = this.recieptVoucherBankForm.get('transaction_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.transactionMinDate = formattedMinDate;
+    this.transactionMaxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getReceiptVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.prefixNo[0]?.id);
         this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
@@ -129,16 +163,16 @@ export class AddRecieptVoucherComponent implements OnInit {
   getCartBank(): FormArray {
     return this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray;
   }
-  isCartBank=false;
+  isCartBank = false;
   addCartBank() {
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
-    this.isCartBank=false;
+    this.isCartBank = false;
   }
   removeCartBank(i: any) {
     this.getCartBank().removeAt(i);
-    if(this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length==0){
-      this.isCartBank=true;
+    if (this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length == 0) {
+      this.isCartBank = true;
     }
   }
 
@@ -326,11 +360,11 @@ export class AddRecieptVoucherComponent implements OnInit {
           } else {
             this.loaders = false
             // this.toastr.error(res.msg);
-            if(res.error?.mode_type){
-              this.toastr.error('Select Mode Type',res.error?.mode_type[0])
-              this.modeError=res.error?.mode_type[0]
+            if (res.error?.mode_type) {
+              this.toastr.error('Select Mode Type', res.error?.mode_type[0])
+              this.modeError = res.error?.mode_type[0]
               setTimeout(() => {
-                this.modeError=''
+                this.modeError = ''
               }, 5000);
             }
           }
@@ -345,7 +379,7 @@ export class AddRecieptVoucherComponent implements OnInit {
       this.toastr.error('Please Fill All The Required Fields')
     }
   }
-  modeError:any;
+  modeError: any;
   onBankSubmit() {
     console.log(this.recieptVoucherBankForm.value);
     if (this.recieptVoucherBankForm.valid) {
@@ -391,11 +425,11 @@ export class AddRecieptVoucherComponent implements OnInit {
           } else {
             this.loaders = false
             // this.toastr.error(res.msg);
-            if(res.error?.mode_type){
-              this.toastr.error('Select Mode Type',res.error?.mode_type[0])
-              this.modeError=res.error?.mode_type[0]
+            if (res.error?.mode_type) {
+              this.toastr.error('Select Mode Type', res.error?.mode_type[0])
+              this.modeError = res.error?.mode_type[0]
               setTimeout(() => {
-                this.modeError=''
+                this.modeError = ''
               }, 5000);
             }
           }

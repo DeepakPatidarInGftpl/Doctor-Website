@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
@@ -27,7 +28,8 @@ export class UpdateEstimateComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService: CoreService
+    private coreService: CoreService,
+    private commonService: CommonServiceService
   ) {
   }
 
@@ -44,6 +46,10 @@ export class UpdateEstimateComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   saleEstimateForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  expiryMinDate: string = '';
+  expiryMaxDate: string = '';
 
   get f() {
     return this.saleEstimateForm.controls;
@@ -113,6 +119,15 @@ export class UpdateEstimateComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
 
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.estimateDateValidation(financialYear);
+    this.expiryDateValidation(financialYear);
+
+    this.saleEstimateForm.get('estimate_date').valueChanges.subscribe((date) => {
+      this.updateExpiryDateMin(date, financialYear);
+    });
+
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getUser(res);
@@ -150,6 +165,31 @@ export class UpdateEstimateComponent implements OnInit {
   variantList: any[] = [];
   isSearch = false;
   searchLength: any;
+
+  updateExpiryDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.saleEstimateForm.get('estimate_expiry_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.expiryMinDate = formattedMinDate;
+      this.expiryMaxDate = formattedMaxDate;
+    }
+  }
+
+  expiryDateValidation(financialYear) {
+    const dateControl = this.saleEstimateForm.get('estimate_expiry_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.expiryMinDate = formattedMinDate;
+    this.expiryMaxDate = formattedMaxDate;
+  }
+
+  estimateDateValidation(financialYear) {
+    const dateControl = this.saleEstimateForm.get('estimate_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   getVariant(search: any, index: any, barcode: any) {
     this.searchLength = search
     this.isSearch = true;

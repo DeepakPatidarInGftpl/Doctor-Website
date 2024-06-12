@@ -7,7 +7,7 @@
 
 <div class="card" id="purchaseForm">
     <div class="card-body">
-        <form [formGroup]="saleEstimateForm">   
+        <form [formGroup]="saleEstimateForm">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -20,9 +20,9 @@
                                 [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let user of filteredusers | async">
-                                    <mat-option *ngIf="user.is_active==true"
-                                    [value]="user?.name + ' '+ user?.username " (onSelectionChange)="oncheck(user)"
-                                    style="color:#FF9F43"> {{user?.name + ' (' + user?.username + ')'}}</mat-option>
+                                    <mat-option *ngIf="user.is_active==true" [value]="user?.name + ' '+ user?.username "
+                                        (onSelectionChange)="oncheck(user)" style="color:#FF9F43"> {{user?.name + ' (' +
+                                        user?.username + ')'}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredusers | async) as users">
                                     <mat-option *ngIf="users.length === 0" [value]="'No data found'">
@@ -42,21 +42,22 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Advance Booking Date</label>
-                        <input type="date" formControlName="booking_date" [ngClass]="{
+                        <input type="date" formControlName="booking_date" [attr.min]="minDate" [attr.max]="maxDate"
+                            [ngClass]="{
                             'is-invalid': f['booking_date'].touched && f['booking_date'].invalid}">
-                        <span class="text-danger" *ngIf="booking_date && booking_date.invalid && booking_date.touched">Select
+                        <span class="text-danger"
+                            *ngIf="booking_date && booking_date.invalid && booking_date.touched">Select
                             Estimate Date
-                        </span>      
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Advance Booking Due date* </label>
-                        <input type="date" formControlName="due_date"
+                        <input type="date" formControlName="due_date" [attr.min]="dueMinDate" [attr.max]="dueMaxDate"
                             [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="due_date && due_date.invalid && due_date.touched">Enter
-                            Advance Booking Due  date
+                        <span class="text-danger" *ngIf="due_date && due_date.invalid && due_date.touched">Enter
+                            Advance Booking Due date
                         </span>
                     </div>
                 </div>
@@ -67,8 +68,9 @@
                             <option value="" selected disabled>Select Advance Booking Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
-                        <input *ngIf="!isStatusDraft" type="text" formControlName="booking_no" readonly [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}">
-                  
+                        <input *ngIf="!isStatusDraft" type="text" formControlName="booking_no" readonly
+                            [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}">
+
                         <!-- <input type="text" formControlName="booking_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}"> -->
                         <!-- <select formControlName="booking_no">
                             <option value="" selected disabled>Select Booking Series</option>
@@ -79,7 +81,7 @@
                         </span>
                     </div>
                 </div>
-             
+
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
                         aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -164,7 +166,7 @@
                                 Provided</small></h5>
                         <div class="form-group row mt-3">
                             <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
-                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>    
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
                         </div>
                     </div>
                     <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
@@ -217,7 +219,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
-                                
+
                                     <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
                                         </span><span class="font-weight-normal"
                                             id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
@@ -364,7 +366,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
-                                    
+
                                     <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
                                         </span><span class="font-weight-normal"
                                             id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
@@ -379,7 +381,8 @@
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms">
                             <option value="" selected disabled>Select Payment Terms</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}
+                            </option>
                         </select>
                         <span class="text-danger"
                             *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select
@@ -387,239 +390,292 @@
                         </span>
                     </div>
                 </div>
-             
+
             </div>
             <div class="card">
-             <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="page-title">
-                            <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="form-group">
-                            <div class="dropdown">
-                                <button type="button" class="dropdown-toggle button" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
-                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                    </li>
-                                    <li><a class="dropdown-item"
-                                            *ngFor="let category of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category?.product?.category?.id)" 
-                                                [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.product?.category?.title}}</label>
-                                        </a></li>
-                                </ul>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="form-group">
-                            <div class="dropdown">
-                                <button type="button" class="dropdown-toggle button" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
-                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                    </li>
-                                    <li><a class="dropdown-item"
-                                            *ngFor="let subcategory of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)" 
-                                                [id]="'checkboxSubCat-' + i">
-                                            <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.product?.subcategory?.title}}</label>
-                                        </a></li>
-                                </ul>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id"
+                                                    (change)="SelectedProduct(category?.product?.category?.id)"
+                                                    [id]="'checkboxCat-' + i">
+                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{category?.product?.category?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table datanew">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th></th>
-                                    <th class="space-text">Barcode/SKU</th>
-                                    <th style="width: 25%;" class="space-text">Product Name</th>
-                                    <th class="qty space-text" style="width: 12%;">QTY</th>
-                                    <th class="space-text" style="width: 15%;">Price</th>
-                                    <!-- <th class="mrp space-text" style="width: 10%;">Mrp</th> -->
-                                    <th class="space-text">Discount %</th>
-                                   <th class="space-text" style="width: 7%;">Tax %</th>
-                                    <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
-                                    <!-- <th class="mrp space-text" style="width: 10%;">Amount</th> -->
-                                    <th class="space-text" style="width: 10%;">Total Without Tax</th>
-                                    <th class="space-text" style="width: 10%;">Total With Tax</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <ng-container formArrayName="advance_booking_cart">
-                                    <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                        <tr [formGroupName]="i">
-                                            <td>{{i+1+'.'}}</td>
-                                            <td>
-                                                <div>
-                                                    <div class="me-2">
-                                                        <svg (click)="removeCart(i)" style="color:red"
-                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let subcategory of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)"
+                                                    [id]="'checkboxSubCat-' + i">
+                                                <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{subcategory?.product?.subcategory?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th></th>
+                                        <th class="space-text">Barcode/SKU</th>
+                                        <th style="width: 25%;" class="space-text">Product Name</th>
+                                        <th class="qty space-text" style="width: 12%;">QTY</th>
+                                        <th class="space-text" style="width: 15%;">Price</th>
+                                        <!-- <th class="mrp space-text" style="width: 10%;">Mrp</th> -->
+                                        <th class="space-text">Discount %</th>
+                                        <th class="space-text" style="width: 7%;">Tax %</th>
+                                        <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
+                                        <!-- <th class="mrp space-text" style="width: 10%;">Amount</th> -->
+                                        <th class="space-text" style="width: 10%;">Total Without Tax</th>
+                                        <th class="space-text" style="width: 10%;">Total With Tax</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart"
+                                                *ngIf="isCart">Add Cart+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="advance_booking_cart">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>{{i+1+'.'}}</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                             <path
                                                                 d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                             <path
-                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                         </svg>
                                                     </div>
-                                                    <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                    </svg>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input class="input" type="text" placeholder="Search Barcode"
-                                                    [attr.data-index]="i"
-                                                    [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                    (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
-                                            </td>
-                                            <td colspan="1">
-                                                <div class="form-group" style="margin-bottom: 0;">
-                                                    <mat-form-field  class="w-100"
-                                                       style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                       <input type="text" placeholder="Search Product"
-                                                           aria-label="Search Products" matInput [formControl]="myControl.at(i)"
-                                                           (input)="getVariant($event.target.value,i,'')"
-                                                           [matAutocomplete]="autos" style="box-sizing: border-box;" />
-                                                       <mat-autocomplete #autos="matAutocomplete">
-                                                           <!-- <ng-container *ngIf="myControls.at(i)?.value?.length >= 1 && myControls.at(i)?.value?.length > 0"> -->
-                                                               <ng-container *ngFor="let option of variantList">
-                                                               <mat-option *ngIf="option?.is_active==true"
-                                                                   [value]="option?.product_title + ' ' + option?.variant_name"
-                                                                   (onSelectionChange)="oncheckVariant(option,i)"
-                                                                   (onSelectionChange)="variantChanged(option, i)"
-                                                                   style="color:#FF9F43">
-                                                                   {{ option?.product_title + ' ' + option?.variant_name}}
-                                                               </mat-option>
-                                                               <!-- </ng-container> -->
-                                                           </ng-container>
-                                                           <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
-                                                           <mat-option *ngIf="variantList?.length === 0 && !isSearch"
-                                                               [value]="'No data found'">
-                                                               <a routerLink="//product/addproduct"
-                                                                   style="color:#FF9F43">+add Product</a>
-                                                           </mat-option>
-                                                           <mat-option *ngIf="myControl.at(i)?.value?.length < 3"
-                                                               class="is-loading">
-                                                               Please Enter 3 or more characters
-                                                           </mat-option>
-                                                       </mat-autocomplete>
-                                                   </mat-form-field>
-                                               </div>
-                                            </td>
-                                            <td><input type="number" formControlName="qty" class="input" (blur)="purchase4(i)"></td>
-                                            <td><input type="number" formControlName="price" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
-                                                <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
-                                                    aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch</h1>
-                                                                <button type="button" class="close"
-                                                                    (click)="closeModalBatch()" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="form-group" *ngIf="selectBatch">
-                                                                    <div class="row">
-                                                                        <div class="table-responsive">
-                                                                            <table class="table datanew">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th class="boder space-text">Sr.No.</th>
-                                                                                        <th class="boder space-text">MRP</th>
-                                                                                        <th class="boder space-text">Purchase Price</th>
-                                                                                        <th class="boder space-text">Discount %</th>
-                                                                                        <th class="boder space-text">Additional Discount %</th>
-                                                                                        <th class="boder space-text">Action</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                        <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                        <td class="boder">{{ batch?.mrp }}</td>
-                                                                                        <td class="boder">{{ batch?.cost_price }}</td>
-                                                                                        <td class="boder">{{ batch?.discount + '%'}}</td>
-                                                                                        <td class="boder">{{ batch?.additional_discount + '%'}}</td>
-                                                                                        <td>
-                                                                                            <button type="button"
-                                                                                                (click)="selecBatchtModel(batch,i)"
-                                                                                                class="btn btn-primary btn-sm"
-                                                                                                style="float: right;">Select</button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
+                                                </td>
+                                                <td>
+                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                        [attr.data-index]="i"
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                        (keyup)="getVariant(id.value,i,'barcode')"
+                                                        (blur)="hideSearch()">
+                                                </td>
+                                                <td colspan="1">
+                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                        <mat-form-field class="w-100"
+                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            <input type="text" placeholder="Search Product"
+                                                                aria-label="Search Products" matInput
+                                                                [formControl]="myControl.at(i)"
+                                                                (input)="getVariant($event.target.value,i,'')"
+                                                                [matAutocomplete]="autos"
+                                                                style="box-sizing: border-box;" />
+                                                            <mat-autocomplete #autos="matAutocomplete">
+                                                                <!-- <ng-container *ngIf="myControls.at(i)?.value?.length >= 1 && myControls.at(i)?.value?.length > 0"> -->
+                                                                <ng-container *ngFor="let option of variantList">
+                                                                    <mat-option *ngIf="option?.is_active==true"
+                                                                        [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                        (onSelectionChange)="oncheckVariant(option,i)"
+                                                                        (onSelectionChange)="variantChanged(option, i)"
+                                                                        style="color:#FF9F43">
+                                                                        {{ option?.product_title + ' ' +
+                                                                        option?.variant_name}}
+                                                                    </mat-option>
+                                                                    <!-- </ng-container> -->
+                                                                </ng-container>
+                                                                <mat-option *ngIf="isSearch"
+                                                                    style="color:#FF9F43">Loading...</mat-option>
+                                                                <mat-option
+                                                                    *ngIf="variantList?.length === 0 && !isSearch"
+                                                                    [value]="'No data found'">
+                                                                    <a routerLink="//product/addproduct"
+                                                                        style="color:#FF9F43">+add Product</a>
+                                                                </mat-option>
+                                                                <mat-option *ngIf="myControl.at(i)?.value?.length < 3"
+                                                                    class="is-loading">
+                                                                    Please Enter 3 or more characters
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td><input type="number" formControlName="qty" class="input"
+                                                        (blur)="purchase4(i)"></td>
+                                                <td><input type="number" formControlName="price" class="input"
+                                                        [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price
+                                                        (blur)="purchase2(price.value,i)">
+                                                    <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        title="ion-information" (click)="openModalBatch()"></i>
+                                                    <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+                                                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                            role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel">Batch</h1>
+                                                                    <button type="button" class="close"
+                                                                        (click)="closeModalBatch()" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group" *ngIf="selectBatch">
+                                                                        <div class="row">
+                                                                            <div class="table-responsive">
+                                                                                <table class="table datanew">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sr.No.</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                MRP</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Purchase Price</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Discount %</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Additional Discount %
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Action</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                            <td class="boder">{{
+                                                                                                ind+1+'.'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.mrp }}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.cost_price }}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.discount + '%'}}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.additional_discount
+                                                                                                + '%'}}</td>
+                                                                                            <td>
+                                                                                                <button type="button"
+                                                                                                    (click)="selecBatchtModel(batch,i)"
+                                                                                                    class="btn btn-primary btn-sm"
+                                                                                                    style="float: right;">Select</button>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                            <td><input type="number" formControlName="discount" class="input" (blur)="purchase4(i)">
-                                            <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
-                                            </td>  
-                                            <td>
-                                            <!-- <input type="text" formControlName="tax" class="input" readonly>
+                                                </td>
+                                                <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
+                                                <td><input type="number" formControlName="discount" class="input"
+                                                        (blur)="purchase4(i)">
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
+                                                        Discount ex: 1-100 % </span>
+                                                </td>
+                                                <td>
+                                                    <!-- <input type="text" formControlName="tax" class="input" readonly>
                                             <span class="text-danger" style="display: block;" *ngIf="taxx(i) && taxx(i).invalid && taxx(i).touched"> Enter Tax ex: 1-100 %</span> -->
-                                            <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
-                                            <br>
-                                            <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
-                                             </td>
-                                            <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
-                                            <td class="text-end"> <input type="number" class="input" readonly [value]="TotalWithoutTax[i]"></td>
-                                            <td class="text-end">
-                                            <input type="number" formControlName="total" class="input" readonly></td>          
-                                        </tr>
+                                                    <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
+                                                        tax[i] + ' (' + tax[i] + '%)' }}</span>
+                                                    <br>
+                                                    <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                                </td>
+                                                <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
+                                                <td class="text-end"> <input type="number" class="input" readonly
+                                                        [value]="TotalWithoutTax[i]"></td>
+                                                <td class="text-end">
+                                                    <input type="number" formControlName="total" class="input" readonly>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
                                     </ng-container>
-                                </ng-container>
-                                <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-start"><strong>Total</strong></td>
-                                    <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
-                                    </td>
-                                    <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
-                                    <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                    <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
-                                    </td>
-                                    <td class="text-start">{{calculateTotalTax()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
-                                    </td>
-                                    <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                    <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                    <td> {{ calculateTotal()?.toFixed(2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
+                                            <input type="text" formControlName="total_qty" class="input"
+                                                [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                        </td>
+                                        <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
+                                        <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
+                                        <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
+                                            <input type="text" formControlName="total_discount" class="input"
+                                                [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                        </td>
+                                        <td class="text-start">{{calculateTotalTax()?.toFixed(2)}}
+                                            <input type="text" formControlName="total_tax" class="input"
+                                                [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
+                                        </td>
+                                        <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
+                                        <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                        <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-             </div>
             </div>
             <div class="row">
                 <div class="col-lg-6 my-3">
@@ -640,7 +696,8 @@
                                     <h4>Sub Total</h4>
                                     <h5>
                                         {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
-                                        <input type="text" formControlName="subtotal" class="input" [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                        <input type="text" formControlName="subtotal" class="input"
+                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
                                     </h5>
                                 </li>
                                 <li>
@@ -651,47 +708,56 @@
                                     <h4>Round Off</h4>
                                     <h5>
                                         <!-- {{calculateRoundoffValue() | currency:'INR'}} -->
-                                        <input type="text" formControlName="roundoff" class="input" [ngModel]="calculateRoundoffValue()" style="width: 30%;">
+                                        <input type="text" formControlName="roundoff" class="input"
+                                            [ngModel]="calculateRoundoffValue()" style="width: 30%;">
                                         <!-- <input type="text" formControlName="roundoff" class="input" [ngModel]="0" style="display: none;"> -->
                                     </h5>
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
+                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text"
+                                            formControlName="total" class="input"
+                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-              <div class="col-lg-12">
+            <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//sales/salesEstimatelist" class="btn btn-cancel text-white me-2 mb-1" style=" background-color: #f4516c;">Cancel</a>
+                        <a routerLink="//sales/salesEstimatelist" class="btn btn-cancel text-white me-2 mb-1"
+                            style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                            Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Print</button>
                         <ng-container *ngIf="isStatusDraft">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
-                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save
+                                as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>&nbsp; Save as Draft</button>
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Save</button>              
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            &nbsp; Save</button>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                            Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Create New</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-  

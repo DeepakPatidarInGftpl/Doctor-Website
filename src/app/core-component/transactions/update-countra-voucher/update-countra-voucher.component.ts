@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -13,8 +14,11 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateCountraVoucherComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private transactionService: TransactionService, private Arout: ActivatedRoute, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private transactionService: TransactionService,
+    private Arout: ActivatedRoute, private toastr: ToastrService, private router: Router, private commonService: CommonServiceService) { }
   countraVoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.countraVoucherForm.controls;
@@ -32,10 +36,10 @@ export class UpdateCountraVoucherComponent implements OnInit {
     this.toAccountControl.setValue('Loading...');
     const defaultDate = new Date().toISOString().split('T')[0];
     this.countraVoucherForm = this.fb.group({
-      date: new FormControl(defaultDate, ),
+      date: new FormControl(defaultDate,),
       countra_voucher_no: new FormControl('',),
-      from_account: new FormControl('',[Validators.required]),
-      to_account: new FormControl('',[Validators.required]),
+      from_account: new FormControl('', [Validators.required]),
+      to_account: new FormControl('', [Validators.required]),
       amount: new FormControl(0),
       note: new FormControl('',)
     })
@@ -50,6 +54,10 @@ export class UpdateCountraVoucherComponent implements OnInit {
       startWith(''),
       map(value => this._filterr(value, true)),
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+
     this.transactionService.getCountraVoucherById(this.id).subscribe(res => {
       console.log(res);
       this.countraVoucherForm.patchValue({
@@ -64,7 +72,13 @@ export class UpdateCountraVoucherComponent implements OnInit {
       this.fromAccountControl.setValue(res?.from_account?.account_id);
       this.toAccountControl.setValue(res?.to_account?.account_id);
     })
+  }
 
+  dateValidation(financialYear) {
+    const dateControl = this.countraVoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

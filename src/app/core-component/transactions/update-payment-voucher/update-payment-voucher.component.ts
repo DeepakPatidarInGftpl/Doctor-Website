@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -12,7 +13,9 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdatePaymentVoucherComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private router: Router, private transactionService: TransactionService,
+  constructor(private fb: FormBuilder, private toastr: ToastrService,
+    private router: Router, private transactionService: TransactionService,
+    private commonService: CommonServiceService,
     private Arout: ActivatedRoute) { }
 
   supplierControl = new FormControl();
@@ -25,6 +28,12 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   filteredsaleBill: Observable<any[]>;
 
   paymentVoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  bankMinDate: string = '';
+  bankMaxDate: string = '';
+  transactionMinDate: string = '';
+  transactionMaxDate: string = '';
   get h() {
     return this.paymentVoucherForm.controls;
   }
@@ -77,6 +86,11 @@ export class UpdatePaymentVoucherComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+    this.bankDateValidation(financialYear);
+    this.bankTransactionDateValidation(financialYear);
 
     this.supplierControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -136,9 +150,30 @@ export class UpdatePaymentVoucherComponent implements OnInit {
         this.supplierControl.setValue(this.editRes?.supplier?.company_name);
         this.payerControl.setValue(this.editRes?.payment_account?.account_id);
       }
-
     })
   }
+
+  dateValidation(financialYear) {
+    const dateControl = this.paymentVoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  bankDateValidation(financialYear) {
+    const dateControl = this.paymentVoucherBankForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.bankMinDate = formattedMinDate;
+    this.bankMaxDate = formattedMaxDate;
+  }
+
+  bankTransactionDateValidation(financialYear) {
+    const dateControl = this.paymentVoucherBankForm.get('transaction_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.transactionMinDate = formattedMinDate;
+    this.transactionMaxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getPaymentVoucherPrefix().subscribe((res: any) => {
