@@ -1,145 +1,152 @@
 <div class="page-header">
-    <div class="page-title">
-      <h4> Update Debit Note</h4>
-      <h6>Edit Debit Note </h6>
-    </div>
+  <div class="page-title">
+    <h4> Update Debit Note</h4>
+    <h6>Edit Debit Note </h6>
   </div>
-  <!-- /add -->
-  <div class="card">
-    <div class="card-body">
-      <form [formGroup]="debitNoteForm" (ngSubmit)="submit()">
-        <div class="row">
-            <div class="col-lg-4 col-sm-4 col-12">
-                <div class="form-group">
-                    <label>Company Name*</label>
-                    <mat-form-field class="w-100" style="padding: 0;
+</div>
+<!-- /add -->
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="debitNoteForm" (ngSubmit)="submit()">
+      <div class="row">
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Company Name*</label>
+            <mat-form-field class="w-100" style="padding: 0;
                     width: 100%;
                     min-width: 100%;border-top: none;">
-                        <input type="text" placeholder="Search Company" aria-label="Party" matInput
-                            [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                            [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
-                        <mat-autocomplete #auto="matAutocomplete">
-                            <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                                <mat-option *ngIf="supplier.is_active==true"
-                                [value]="supplier.company_name" (onSelectionChange)="oncheck(supplier.id)"
-                                style="color:#FF9F43">{{supplier.company_name}}</mat-option>
-                            </ng-container>
-                            <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
-                                <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
-                                    <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
-                                </mat-option>
-                                <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
-                                    Enter 1 or more characters</mat-option>
-                            </ng-container>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                    <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
-                        supplier
-                    </span>
-                </div>
-            </div>
-
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Debit Note Date*</label>
-              <input type="datetime-local" formControlName="date" id="date" [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
-              <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter date name </span>
-            </div>
+              <input type="text" placeholder="Search Company" aria-label="Party" matInput
+                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
+              <mat-autocomplete #auto="matAutocomplete">
+                <ng-container *ngFor="let supplier of filteredSuppliers | async">
+                  <mat-option *ngIf="supplier.is_active==true" [value]="supplier.company_name"
+                    (onSelectionChange)="oncheck(supplier.id)"
+                    style="color:#FF9F43">{{supplier.company_name}}</mat-option>
+                </ng-container>
+                <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
+                  <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
+                    <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
+                  </mat-option>
+                  <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                    Enter 1 or more characters</mat-option>
+                </ng-container>
+              </mat-autocomplete>
+            </mat-form-field>
+            <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
+              supplier
+            </span>
           </div>
+        </div>
 
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Debit Note Series</label>
-              <input type="text" formControlName="debit_note_no" id="debit_note_no" [ngClass]="{ 'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}">
-              <!-- <select formControlName="debit_note_no">
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Debit Note Date*</label>
+            <input type="datetime-local" formControlName="date" [attr.min]="minDate" [attr.max]="maxDate" id="date"
+              [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+            <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter date name </span>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Debit Note Series</label>
+            <input type="text" formControlName="debit_note_no" id="debit_note_no"
+              [ngClass]="{ 'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}">
+            <!-- <select formControlName="debit_note_no">
                 <option value="" selected disabled>Select Debit Note Series
                 </option>
                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
             </select> -->
-              <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Enter Debit Note Series</span>
-            </div>
+            <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Enter
+              Debit Note Series</span>
           </div>
+        </div>
 
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Purchase Bill*</label>
-              <!-- <select formControlName="purchase_bill"  required id="purchase_bill"[ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Purchase Bill*</label>
+            <!-- <select formControlName="purchase_bill"  required id="purchase_bill"[ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
                 <option value="" selected disabled>Select Purchase Bill</option>
                 <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of purchaseList">{{purchasebill?.refrence_bill_no}}</option>
               </select> -->
-              <mat-form-field class="w-100"
-              style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-              <input type="text" placeholder="Search purchase Bill"
-                  aria-label="Search purchase Bills" matInput
-                  [formControl]="billControl"
-                  (input)="getFilterBill($event.target.value)"
-                  [matAutocomplete]="autos"
-                  style="box-sizing: border-box;" />
+            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+              <input type="text" placeholder="Search purchase Bill" aria-label="Search purchase Bills" matInput
+                [formControl]="billControl" (input)="getFilterBill($event.target.value)" [matAutocomplete]="autos"
+                style="box-sizing: border-box;" />
               <mat-autocomplete #autos="matAutocomplete">
-                  <ng-container *ngFor="let option of filterPurchaseBill">
-                      <mat-option *ngIf="option?.is_active==true" [value]="option?.refrence_bill_no" (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
-                          {{ option?.refrence_bill_no}}
-                      </mat-option>
-                  </ng-container>
-                  <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">
-                      <a routerLink="//purchase/add-goodsReceivedNote" style="color:#FF9F43">+ Add purchase Bill</a>
+                <ng-container *ngFor="let option of filterPurchaseBill">
+                  <mat-option *ngIf="option?.is_active==true" [value]="option?.refrence_bill_no"
+                    (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
+                    {{ option?.refrence_bill_no}}
                   </mat-option>
-                  <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters </mat-option>
+                </ng-container>
+                <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">
+                  <a routerLink="//purchase/add-goodsReceivedNote" style="color:#FF9F43">+ Add purchase Bill</a>
+                </mat-option>
+                <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters
+                </mat-option>
               </mat-autocomplete>
-          </mat-form-field>
-              <span class="text-danger" *ngIf="purchase_bill && purchase_bill.invalid && purchase_bill.touched">Select Purchase Bill </span>
-            </div>
+            </mat-form-field>
+            <span class="text-danger" *ngIf="purchase_bill && purchase_bill.invalid && purchase_bill.touched">Select
+              Purchase Bill </span>
           </div>
-
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Reason</label>
-              <input type="text" formControlName="reason" id="reason" [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
-              <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
-            </div>
-          </div>
-
-         
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Amount</label>
-              <input type="number" formControlName="amount" [(ngModel)]="amounts" (input)="calculateTax()" id="amount" [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
-              <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Tax %</label>
-              <input type="number" formControlName="tax" [(ngModel)]="taxs" (input)="calculateTax()"  id="tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
-              <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Total</label>
-              <input type="number" formControlName="total" [(ngModel)]="totals" (input)="calculateTax()" id="total" [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
-              <span class="text-danger" *ngIf="total && total.invalid && total.touched">Enter total</span>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-sm-4 col-12">
-            <div class="form-group">
-              <label>Note</label>
-             <textarea formControlName="note"></textarea>
-              <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax</span>
-            </div>
-          </div>
-        
-          <div class="col-lg-12">
-            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-            <a routerLink="//transaction/debitnoteList" class="btn btn-cancel text-white">Cancel</a>
         </div>
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Reason</label>
+            <input type="text" formControlName="reason" id="reason"
+              [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
+            <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
+          </div>
         </div>
-      </form>
-    </div>
+
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" formControlName="amount" [(ngModel)]="amounts" (input)="calculateTax()" id="amount"
+              [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
+            <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Tax %</label>
+            <input type="number" formControlName="tax" [(ngModel)]="taxs" (input)="calculateTax()" id="tax"
+              [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
+            <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Total</label>
+            <input type="number" formControlName="total" [(ngModel)]="totals" (input)="calculateTax()" id="total"
+              [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
+            <span class="text-danger" *ngIf="total && total.invalid && total.touched">Enter total</span>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4 col-12">
+          <div class="form-group">
+            <label>Note</label>
+            <textarea formControlName="note"></textarea>
+            <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax</span>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+          <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+            Submit</button>
+          <a routerLink="//transaction/debitnoteList" class="btn btn-cancel text-white">Cancel</a>
+        </div>
+      </div>
+    </form>
   </div>
-  <!-- /add -->
+</div>
+<!-- /add -->

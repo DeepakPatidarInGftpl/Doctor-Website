@@ -6,6 +6,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-addpurchase-bill',
@@ -28,7 +29,8 @@ export class AddpurchaseBillComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private coreService: CoreService,) {
+    private coreService: CoreService,
+    private commonService: CommonServiceService) {
   }
 
   supplierControlName = 'party';
@@ -45,6 +47,10 @@ export class AddpurchaseBillComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   purchaseBillForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  dueMinDate: string = '';
+  dueMaxDate: string = '';
   get f() {
     return this.purchaseBillForm.controls;
   }
@@ -112,6 +118,16 @@ export class AddpurchaseBillComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
+
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.dueDateValidation(financialYear);
+    this.supplierBillDateValidation(financialYear);
+
+    this.purchaseBillForm.get('supplier_bill_date').valueChanges.subscribe((date) => {
+      this.updateDueDateMin(date, financialYear);
+    });
+
     // this.getVariants();
     this.getPurchase();
     this.getMaterialInward();
@@ -122,6 +138,31 @@ export class AddpurchaseBillComponent implements OnInit {
     this.getTax();
     this.getCategory();
   }
+
+  updateDueDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.purchaseBillForm.get('due_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear, minDate);
+      this.dueMinDate = formattedMinDate;
+      this.dueMaxDate = formattedMaxDate;
+    }
+  }
+
+  dueDateValidation(financialYear) {
+    const dateControl = this.purchaseBillForm.get('due_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.dueMinDate = formattedMinDate;
+    this.dueMaxDate = formattedMaxDate;
+  }
+
+  supplierBillDateValidation(financialYear) {
+    const dateControl = this.purchaseBillForm.get('supplier_bill_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {

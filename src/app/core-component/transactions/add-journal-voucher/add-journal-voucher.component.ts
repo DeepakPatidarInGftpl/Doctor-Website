@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -16,9 +17,12 @@ export class AddJournalVoucherComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
-    private transactionService: TransactionService) {
+    private transactionService: TransactionService,
+    private commonService: CommonServiceService) {
   }
   journalvoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.journalvoucherForm.controls;
   }
@@ -37,11 +41,21 @@ export class AddJournalVoucherComponent implements OnInit {
     this.getAccount();
     this.getprefix();
     this.addCart();
-    
+
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.journalvoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -50,7 +64,7 @@ export class AddJournalVoucherComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.journalvoucherForm.get('journal_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toaster.error(res.msg);
@@ -59,9 +73,9 @@ export class AddJournalVoucherComponent implements OnInit {
       this.toastrService.error(err.error.msg)
     })
   }
-  accountList: any[]=[];
+  accountList: any[] = [];
   getAccount() {
-    this.transactionService.getAccount().subscribe((res:any) => {
+    this.transactionService.getAccount().subscribe((res: any) => {
       this.accountList = res;
     })
   }
@@ -71,11 +85,11 @@ export class AddJournalVoucherComponent implements OnInit {
       ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
     if (!include && filteredFromAccount.length === 0) {
-      filteredFromAccount.push({ account: "No data found" }); 
+      filteredFromAccount.push({ account: "No data found" });
     }
     return filteredFromAccount;
   }
-  oncheck(data:any,index:number) {
+  oncheck(data: any, index: number) {
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       from_account: data?.id,
@@ -92,16 +106,16 @@ export class AddJournalVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
-    
+    this.isCart = false;
+
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.journalvoucherForm?.value?.journal_voucher_cart?.length==0){
-      this.isCart=true;
+    if (this.journalvoucherForm?.value?.journal_voucher_cart?.length == 0) {
+      this.isCart = true;
     }
   }
 

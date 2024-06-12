@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -19,9 +20,12 @@ export class AddExpensesComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private transactionService: TransactionService,
-    private contactService:ContactService) {
+    private contactService: ContactService,
+    private commonService: CommonServiceService) {
   }
   expensevoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.expensevoucherForm.controls;
   }
@@ -63,8 +67,18 @@ export class AddExpensesComponent implements OnInit {
       map(value => this._filter2(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+
     this.isPercentage[0] = true;
     this.isAmount[0] = false;
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.expensevoucherForm.get('expense_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -73,7 +87,7 @@ export class AddExpensesComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.expensevoucherForm.get('expense_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastr.error(res.msg);
@@ -202,7 +216,7 @@ export class AddExpensesComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('expenses_voucher_cart', JSON.stringify(cartData));
-      this.transactionService.addExpensVoucher(formdata).subscribe((res:any) => {
+      this.transactionService.addExpensVoucher(formdata).subscribe((res: any) => {
         this.loaders = false;
         this.addRes = res
         if (this.addRes.success) {
@@ -211,7 +225,7 @@ export class AddExpensesComponent implements OnInit {
           this.router.navigate(['//transaction/expensesList'])
         } else {
           this.loaders = false;
-          if(res.error){
+          if (res.error) {
             this.toastrService.error(res.error.party[0])
           }
         }
@@ -361,20 +375,20 @@ export class AddExpensesComponent implements OnInit {
       console.log(amountControlValue, 'amountControlValue');
       console.log(taxPercentageValue, 'taxPercentageValue');
       // cost price 
-      if(this.isPercentage[index] == true){
-      let getDiscountPrice = (amountControlValue * discountPercentage) / 100;
-      console.log(getDiscountPrice, 'discount price');
-      let getCoastPrice = amountControlValue - getDiscountPrice;
-      console.log(getCoastPrice, 'getCoastPrice');
-      //tax price
-      let taxPrice = getCoastPrice * taxPercentageValue / 100;
-      console.log(taxPrice, 'taxPrice');
-      this.taxIntoRupees[index] = taxPrice || 0;
-      console.log(this.taxIntoRupees, 'tax value');
-      cartItem.get('tax_value')?.patchValue(taxPrice);
-      let total = amountControlValue + taxPrice;
-      cartItem.get('total')?.patchValue(total);
-      } else if(this.isAmount[index] == true){
+      if (this.isPercentage[index] == true) {
+        let getDiscountPrice = (amountControlValue * discountPercentage) / 100;
+        console.log(getDiscountPrice, 'discount price');
+        let getCoastPrice = amountControlValue - getDiscountPrice;
+        console.log(getCoastPrice, 'getCoastPrice');
+        //tax price
+        let taxPrice = getCoastPrice * taxPercentageValue / 100;
+        console.log(taxPrice, 'taxPrice');
+        this.taxIntoRupees[index] = taxPrice || 0;
+        console.log(this.taxIntoRupees, 'tax value');
+        cartItem.get('tax_value')?.patchValue(taxPrice);
+        let total = amountControlValue + taxPrice;
+        cartItem.get('total')?.patchValue(total);
+      } else if (this.isAmount[index] == true) {
         let getCoastPrice = amountControlValue - discountPercentage;
         console.log(getCoastPrice, 'getCoastPrice');
         //tax price

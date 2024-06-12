@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -12,14 +13,17 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateJournalVoucherComponent implements OnInit {
 
-  constructor( private fb: FormBuilder,
+  constructor(private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private transactionService: TransactionService,
-    private Arout: ActivatedRoute
+    private Arout: ActivatedRoute,
+    private commonService: CommonServiceService
   ) {
   }
   journalvoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.journalvoucherForm.controls;
   }
@@ -44,17 +48,27 @@ export class UpdateJournalVoucherComponent implements OnInit {
       this.editRes = res;
       this.journalvoucherForm.patchValue(this.editRes);
       // this.journalvoucherForm.get('journal_voucher_no')?.patchValue(res?.journal_voucher_no?.id) // 20-5
-      if(this.editRes?.cart?.length>0){
+      if (this.editRes?.cart?.length > 0) {
         this.journalvoucherForm.setControl('journal_voucher_cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
     })
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+
     this.getAccount();
     this.getprefix();
-   
   }
 
+
+  dateValidation(financialYear) {
+    const dateControl = this.journalvoucherForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
   prefixNo: any;
   getprefix() {
     this.transactionService.getJournalVoucherPrefix().subscribe((res: any) => {
@@ -105,11 +119,11 @@ export class UpdateJournalVoucherComponent implements OnInit {
         const aliasLower = account.account_id.toLowerCase();
         return aliasLower.includes(data);
       }
-      return false; 
+      return false;
     });
     console.log(this.filterAccount);
   }
-  oncheck(data:any,index:number) {
+  oncheck(data: any, index: number) {
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       from_account: data?.id,
@@ -126,16 +140,16 @@ export class UpdateJournalVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-   if(this.journalvoucherForm?.value?.journal_voucher_cart?.length==0){
-    this.isCart==true;
-   }
+    if (this.journalvoucherForm?.value?.journal_voucher_cart?.length == 0) {
+      this.isCart == true;
+    }
   }
 
   isLastCart(index: number): boolean {

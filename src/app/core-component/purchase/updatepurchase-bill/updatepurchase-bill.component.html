@@ -19,8 +19,10 @@
                                 [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                                <mat-option *ngIf="supplier.is_active==true" [value]="supplier?.name + ' - ' +  supplier?.company_name "
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier?.name + ' - ' +  supplier?.company_name }}</mat-option>
+                                    <mat-option *ngIf="supplier.is_active==true"
+                                        [value]="supplier?.name + ' - ' +  supplier?.company_name "
+                                        (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{
+                                        supplier?.name + ' - ' + supplier?.company_name }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
@@ -40,7 +42,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill Date*</label>
-                        <input type="datetime-local" formControlName="supplier_bill_date"
+                        <input type="datetime-local" formControlName="supplier_bill_date" [attr.min]="minDate"
+                            [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['supplier_bill_date'].touched && f['supplier_bill_date'].invalid}"
                             readonly>
                     </div>
@@ -51,12 +54,13 @@
                         <!-- <input type="text" formControlName="supplier_bill_no"
                             [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}"
                             readonly> -->
-                            <select formControlName="supplier_bill_no" *ngIf="isStatusDraft">
-                                <option value="" selected disabled>Select Supplier Bill  Series</option>
-                                <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                            </select>
-                            <input *ngIf="!isStatusDraft" type="text" formControlName="supplier_bill_no" readonly [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
-                      
+                        <select formControlName="supplier_bill_no" *ngIf="isStatusDraft">
+                            <option value="" selected disabled>Select Supplier Bill Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <input *ngIf="!isStatusDraft" type="text" formControlName="supplier_bill_no" readonly
+                            [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
+
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -90,43 +94,41 @@
                                             <div class="col-lg-12 col-sm-12 col-12"
                                                 *ngFor="let add of supplierAddress?.address">
                                                 <!-- <div *ngIf="add.address_type=='Billing'"> -->
-                                                    <button type="button" (click)="selectAddressBilling(add)"
-                                                        class="btn btn-primary btn-sm"
-                                                        style="float: right;">Select</button>
+                                                <button type="button" (click)="selectAddressBilling(add)"
+                                                    class="btn btn-primary btn-sm" style="float: right;">Select</button>
 
-                                                    <p class="d-inline mb-0">
-                                                        <span id="billing-address-line-1">
-                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
-                                                        </span>
-                                                    </p>
-                                                    <br>
-                                                    <p class="d-inline mb-0">
-                                                        <span data-address-pincode="">{{add?.pincode}}</span>
-                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
-                                                        <span class="m--font-boldest">,&nbsp;</span>
-                                                    </p>
-                                                    <p class="d-inline mb-0">
-                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
-                                                        <span class="m--font-boldest">,&nbsp;</span>
-                                                        <span
-                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
-                                                    </p>
-                                                    <p class="mb-2">
-                                                        <span class="">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
-                                                                height="11" fill="currentColor"
-                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
-                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
-                                                                <path fill-rule="evenodd"
-                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                                            </svg>
-                                                            <a
-                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                                                            <input type="hidden" class="form-control"
-                                                                name="billingphone" id="billingphone"
-                                                                value="{{supplierAddress?.mobile_no}}">
-                                                        </span>
-                                                    </p>
+                                                <p class="d-inline mb-0">
+                                                    <span id="billing-address-line-1">
+                                                        {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                    </span>
+                                                </p>
+                                                <br>
+                                                <p class="d-inline mb-0">
+                                                    <span data-address-pincode="">{{add?.pincode}}</span>
+                                                    <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                    <span class="m--font-boldest">,&nbsp;</span>
+                                                </p>
+                                                <p class="d-inline mb-0">
+                                                    <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                    <span class="m--font-boldest">,&nbsp;</span>
+                                                    <span
+                                                        data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                </p>
+                                                <p class="mb-2">
+                                                    <span class="">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                            fill="currentColor" class="bi bi-telephone-fill"
+                                                            viewBox="0 0 16 16"
+                                                            style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                            <path fill-rule="evenodd"
+                                                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                        </svg>
+                                                        <a
+                                                            href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                        <input type="hidden" class="form-control" name="billingphone"
+                                                            id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                                    </span>
+                                                </p>
 
                                                 <!-- </div> -->
                                             </div>
@@ -158,63 +160,62 @@
                         </div>
                     </div>
                     <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'"> -->
-                        <div class="form-group" *ngIf="supplierAddress">
+                    <div class="form-group" *ngIf="supplierAddress">
 
-                            <h5 class=""><small class="text-muted"></small></h5>
-                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
-                                <input type="hidden" class="form-control" name="billingcompanyname"
-                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
-                            </h5>
-                            <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'"> -->
-                                <div *ngIf="selectedAddressBilling">
-                                    <p class="d-inline mb-0">
-                                        <span id="billing-address-line-1">
-                                            {{selectedAddressBilling?.address_line_1}},
-                                            {{selectedAddressBilling?.address_line_2}},
-                                        </span>
-                                    </p>
-                                    <br>
-                                    <p class="d-inline mb-0">
-                                        <span data-address-pincode="">{{selectedAddressBilling?.pincode}}, </span>
-                                        <span data-address-city="22691">{{selectedAddressBilling?.city?.city}}</span>
-                                        <span class="m--font-boldest">,&nbsp;</span>
-                                    </p>
-                                    <p class="d-inline mb-0">
-                                        <span data-address-state="1722">{{selectedAddressBilling?.state?.state}}</span>
-                                        <span class="m--font-boldest">,&nbsp;</span>
-                                        <span
-                                            data-address-country="IR">{{selectedAddressBilling?.country?.country_name}}</span>
-                                    </p>
-                                    <p class="mb-2">
-                                        <span class="">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
-                                                style="    height: 11px; width: 11px; color: #FF9F43;">
-                                                <path fill-rule="evenodd"
-                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                            </svg>
-                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                                            <input type="hidden" class="form-control" name="billingphone"
-                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
-                                        </span>
-                                    </p>
-                                    <div class="d-block">
-                                        <a type="button" class="btn-link mx-2" (click)="openModal()">Change Address</a>
-                                        <a class="btn-link"
-                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}"><i data-bs-toggle="tooltip" title="fa fa-edit" class="fa fa-edit"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="form-group row mt-3">
-                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
-                                            of Supply : </span> <span class="font-weight-normal"
-                                            id="lblContactGSTIN">{{selectedAddressBilling?.state?.state}}</span></label>
-                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
-                                        </span><span class="font-weight-normal"
-                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
-                                </div>
+                        <h5 class=""><small class="text-muted"></small></h5>
+                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                            <input type="hidden" class="form-control" name="billingcompanyname" id="billingcompanyname"
+                                value="{{supplierAddress?.name}}">
+                        </h5>
+                        <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'"> -->
+                        <div *ngIf="selectedAddressBilling">
+                            <p class="d-inline mb-0">
+                                <span id="billing-address-line-1">
+                                    {{selectedAddressBilling?.address_line_1}},
+                                    {{selectedAddressBilling?.address_line_2}},
+                                </span>
+                            </p>
+                            <br>
+                            <p class="d-inline mb-0">
+                                <span data-address-pincode="">{{selectedAddressBilling?.pincode}}, </span>
+                                <span data-address-city="22691">{{selectedAddressBilling?.city?.city}}</span>
+                                <span class="m--font-boldest">,&nbsp;</span>
+                            </p>
+                            <p class="d-inline mb-0">
+                                <span data-address-state="1722">{{selectedAddressBilling?.state?.state}}</span>
+                                <span class="m--font-boldest">,&nbsp;</span>
+                                <span data-address-country="IR">{{selectedAddressBilling?.country?.country_name}}</span>
+                            </p>
+                            <p class="mb-2">
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor"
+                                        class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                        style="    height: 11px; width: 11px; color: #FF9F43;">
+                                        <path fill-rule="evenodd"
+                                            d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                    </svg>
+                                    <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                    <input type="hidden" class="form-control" name="billingphone" id="billingphone"
+                                        value="{{supplierAddress?.mobile_no}}">
+                                </span>
+                            </p>
+                            <div class="d-block">
+                                <a type="button" class="btn-link mx-2" (click)="openModal()">Change Address</a>
+                                <a class="btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}"><i
+                                        data-bs-toggle="tooltip" title="fa fa-edit" class="fa fa-edit"></i>
+                                </a>
                             </div>
-                        <!-- </div> -->
+                        </div>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
+                                    of Supply : </span> <span class="font-weight-normal"
+                                    id="lblContactGSTIN">{{selectedAddressBilling?.state?.state}}</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                </span><span class="font-weight-normal"
+                                    id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                        </div>
+                    </div>
+                    <!-- </div> -->
                     <!-- </div> -->
                 </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
@@ -378,7 +379,8 @@
                             <option value="" selected disabled>Select Material Inward</option>
                             <!-- <option value="{{material.id}}" *ngFor="let material of materialList">{{material.material_inward_no}}</option> -->
                             <ng-container *ngFor="let material of materialList">
-                                <option value="{{material.id}}" *ngIf="material?.is_active==true">{{material?.material_inward_no}}</option>
+                                <option value="{{material.id}}" *ngIf="material?.is_active==true">
+                                    {{material?.material_inward_no}}</option>
                             </ng-container>
                         </select>
                     </div>
@@ -391,7 +393,8 @@
                             <option value="" selected disabled>Select Payment Term</option>
                             <!-- <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}</option> -->
                             <ng-container *ngFor="let payment of paymentList">
-                                <option value="{{payment.id}}" *ngIf="payment?.is_active==true">{{payment.title}}</option>
+                                <option value="{{payment.id}}" *ngIf="payment?.is_active==true">{{payment.title}}
+                                </option>
                             </ng-container>
                         </select>
                     </div>
@@ -399,7 +402,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Due Date*</label>
-                        <input type="datetime-local" formControlName="due_date"
+                        <input type="datetime-local" formControlName="due_date" [attr.min]="dueMinDate"
+                            [attr.max]="dueMaxDate"
                             [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
                     </div>
                 </div>
@@ -556,116 +560,128 @@
 
             <div class="card">
                 <div class="card-body">
-            <div class="row">
-                <div class="col-lg-2 col-sm-2 col-12">
-                    <div class="page-title">
-                        <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-4 col-12">
-                    <div class="form-group">
-                        <div class="dropdown">
-                            <button type="button" class="dropdown-toggle button" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
-                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                </li>
-                                <li><a class="dropdown-item"
-                                        *ngFor="let category of filteredCategoryList let i=index;">
-                                        <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category?.id)" 
-                                            [id]="'checkboxCat-' + i" #categoryValue
-                                            (change)="getSubCategory(categoryValue.value)">
-                                        <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.title}}</label>
-                                    </a></li>
-                            </ul>
+                    <div class="row">
+                        <div class="col-lg-2 col-sm-2 col-12">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                            </div>
                         </div>
-                        <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-4 col-12">
-                    <div class="form-group">
-                        <div class="dropdown">
-                            <button type="button" class="dropdown-toggle button" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
-                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchSubCategory"  (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}">
-                                </li>
-                                <li><a class="dropdown-item"
-                                        *ngFor="let subcategory of filteredSubCategoryList let i=index;">
-                                        <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.id)" 
-                                            [id]="'checkboxSubCat-' + i">
-                                        <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.title}}</label>
-                                    </a></li>
-                            </ul>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id"
+                                                    (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i"
+                                                    #categoryValue (change)="getSubCategory(categoryValue.value)">
+                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{category?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
+                            </div>
                         </div>
-                        <p *ngIf="selectSubCate.length>0">{{selectSubCate.length + ' Sub Category Selected'}}</p>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th class="space">Barcode/SKU</th>
-                                <th style="width: 30%;">Product Name</th>
-                                <th class="space" style="width: 10%;">QTY  </th>
-                                <th class="space" style="width: 10%;">Unit Cost</th>
-                                <th class="space" style="width: 10%;" >Mrp </th>
-                                <th class="space" style="width: 10%;">Discount %</th>
-                                <th class="space" style="width: 10%;">Additional Discount %</th>
-                                <th class="space" style="width: 10%;">Selling Price Online</th>
-                                <th class="space" style="width: 10%;">Selling Price Offline</th>
-                                <th class="space" style="width: 10%;">Dealer Price</th>
-                                <th class="space" style="width: 10%;">Employee Price</th>
-                                <th class="space" style="width: 10%;">Tax % </th>                               
-                                <th class="space" style="width: 12%;">Landing Cost</th>
-                                <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
-                                <th class="space-text" style="width: 10%;">Total Cost With Tax</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container formArrayName="purchase_bill">
-                                <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                    <tr [formGroupName]="i">
-                                        <td>
-                                            <div>
-                                                <div class="me-2">
-                                                    <svg (click)="removeCart(i)" style="color:red"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                    </svg>
-                                                </div>
-                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                </svg>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <input class="input" type="text" placeholder="Search Barcode"
-                                                [attr.data-index]="i"
-                                                [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
-                                        </td>
-                                        <td> 
-                                            <div class="form-group" style="margin-bottom: 0;">
-                                            <!-- <input type="text"
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="SelectedProductSubCat(subcategory?.id)"
+                                                    [id]="'checkboxSubCat-' + i">
+                                                <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectSubCate.length>0">{{selectSubCate.length + ' Sub Category Selected'}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="space">Barcode/SKU</th>
+                                        <th style="width: 30%;">Product Name</th>
+                                        <th class="space" style="width: 10%;">QTY </th>
+                                        <th class="space" style="width: 10%;">Unit Cost</th>
+                                        <th class="space" style="width: 10%;">Mrp </th>
+                                        <th class="space" style="width: 10%;">Discount %</th>
+                                        <th class="space" style="width: 10%;">Additional Discount %</th>
+                                        <th class="space" style="width: 10%;">Selling Price Online</th>
+                                        <th class="space" style="width: 10%;">Selling Price Offline</th>
+                                        <th class="space" style="width: 10%;">Dealer Price</th>
+                                        <th class="space" style="width: 10%;">Employee Price</th>
+                                        <th class="space" style="width: 10%;">Tax % </th>
+                                        <th class="space" style="width: 12%;">Landing Cost</th>
+                                        <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
+                                        <th class="space-text" style="width: 10%;">Total Cost With Tax</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart"
+                                                *ngIf="isCart">Add Cart+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="purchase_bill">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                        [attr.data-index]="i"
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                        (keyup)="getVariant(id.value,i,'barcode')"
+                                                        (blur)="hideSearch()">
+                                                </td>
+                                                <td>
+                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                        <!-- <input type="text"
                                                 [value]="productName[i]!== undefined ? productName[i]:''"
                                                 (click)="open()" placeholder="Search Product" *ngIf="isProduct"
                                                 class="input"> -->
-                                            <!-- <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                                        <!-- <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -684,307 +700,372 @@
                                                     </ng-container>
                                                 </mat-autocomplete>
                                             </mat-form-field> -->
-                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                <input
-                                                  type="text"
-                                                  placeholder="Search Product"
-                                                  aria-label="Search Products"
-                                                  matInput
-                                                  [formControl]="myControls.at(i)"
-                                                  (input)="getVariant($event.target.value,i,'')"
-                                                  [matAutocomplete]="autos" 
-                                                  style="box-sizing: border-box;" 
-                                                />
-                                                <mat-autocomplete #autos="matAutocomplete">
-                                                    <!-- <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0"> -->
-                                                        <ng-container *ngFor="let option of variantList">
-                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
-                                                              (onSelectionChange)="oncheckVariant(option,i)"
-                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
-                                                    {{ option?.product_title + ' ' + option?.variant_name}}
-                                                  </mat-option>
-                                                  <!-- </ng-container> -->
-                                                  </ng-container>
-                                                  <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
-                                                  <mat-option *ngIf="variantList?.length === 0 && !isSearch" [value]="'No data found'">
-                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                                                  </mat-option>
-                                                  <mat-option *ngIf="myControl?.at(i)?.value?.length < 3" class="is-loading">
-                                                    Please Enter 3 or more characters
-                                                  </mat-option>
-                                                </mat-autocomplete>
-                                              </mat-form-field>
-                                              </div>
-                                        </td>
-                                        <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)"></td>
-                                        <td><input type="text" formControlName="mrp" class="input">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip"
-                                                title="ion-information" (click)="openModalBatch(i)"></i>
-                                            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
-                                                aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered"
-                                                    role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch
-                                                            </h1>
-                                                            <button type="button" class="close"
-                                                                (click)="closeModalBatch()" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group" *ngIf="selectBatch">
-                                                                <div class="row">
-                                                                    <div class="table-responsive">
-                                                                        <table class="table datanew">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="boder space-text">Sr.No.
-                                                                                    </th>
-                                                                                    <th class="boder space-text">MRP
-                                                                                    </th>
-                                                                                    <th class="boder space-text">
-                                                                                        Purchase Price</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Purchase Tax</th>
-                                                                                    <th class="border space-text">Stock
-                                                                                    </th>
-                                                                                    <th class="border space-text">
-                                                                                        Opening Stock</th>
-                                                                                    <th class="boder space-text">Sale
-                                                                                        Tax</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Discount %</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Additional Discount %</th>
-                                                                                    <th class="boder space-text">Selling
-                                                                                        Price Dealer</th>
-                                                                                    <th class="boder space-text">
-                                                                                        selling_price_employee</th>
-                                                                                    <th class="boder space-text">Selling
-                                                                                        Price Offline</th>
-                                                                                    <th class="boder space-text">Selling
-                                                                                        Price Online</th>
-                                                                                    <th class="boder space-text">Action
-                                                                                    </th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr
-                                                                                    *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                    <td class="boder">{{ ind+1+'.'}}
-                                                                                    </td>
-                                                                                    <td class="boder">{{ batch?.mrp }}
-                                                                                    </td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.cost_price }}</td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.purchase_tax + '%'}}</td>
-                                                                                    <td class="border">{{batch?.stock}}
-                                                                                    </td>
-                                                                                    <td class="border">
-                                                                                        {{batch?.opening_stock}}</td>
-                                                                                    <td class="boder">{{ batch?.sale_tax
-                                                                                        + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.discount
-                                                                                        + '%'}}</td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.additional_discount +
-                                                                                        '%'}}</td>
-                                                                                    <td class="border">
-                                                                                        {{batch?.selling_price_dealer}}
-                                                                                    </td>
-                                                                                    <td class="border">
-                                                                                        {{batch?.selling_price_employee}}
-                                                                                    </td>
-                                                                                    <td class="border">
-                                                                                        {{batch?.selling_price_offline}}
-                                                                                    </td>
-                                                                                    <td class="border">
-                                                                                        {{batch?.selling_price_online}}
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <button type="button"
-                                                                                            (click)="selecBatchtModel(batch,batchCartIndex)"
-                                                                                            class="btn btn-primary btn-sm"
-                                                                                            style="float: right;">Select</button>
-                                                                                    </td>
+                                                        <mat-form-field class="w-100"
+                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            <input type="text" placeholder="Search Product"
+                                                                aria-label="Search Products" matInput
+                                                                [formControl]="myControls.at(i)"
+                                                                (input)="getVariant($event.target.value,i,'')"
+                                                                [matAutocomplete]="autos"
+                                                                style="box-sizing: border-box;" />
+                                                            <mat-autocomplete #autos="matAutocomplete">
+                                                                <!-- <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0"> -->
+                                                                <ng-container *ngFor="let option of variantList">
+                                                                    <mat-option *ngIf="option.is_active==true"
+                                                                        [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                        (onSelectionChange)="oncheckVariant(option,i)"
+                                                                        (onSelectionChange)="variantChanged(option, i)"
+                                                                        style="color:#FF9F43">
+                                                                        {{ option?.product_title + ' ' +
+                                                                        option?.variant_name}}
+                                                                    </mat-option>
+                                                                    <!-- </ng-container> -->
+                                                                </ng-container>
+                                                                <mat-option *ngIf="isSearch"
+                                                                    style="color:#FF9F43">Loading...</mat-option>
+                                                                <mat-option
+                                                                    *ngIf="variantList?.length === 0 && !isSearch"
+                                                                    [value]="'No data found'">
+                                                                    <a routerLink="//product/addproduct"
+                                                                        style="color:#FF9F43">+add Product</a>
+                                                                </mat-option>
+                                                                <mat-option *ngIf="myControl?.at(i)?.value?.length < 3"
+                                                                    class="is-loading">
+                                                                    Please Enter 3 or more characters
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td><input type="text" formControlName="qty" class="input"></td>
+                                                <td><input type="text" formControlName="unit_cost" class="input"
+                                                        [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price
+                                                        (blur)="purchase2(price.value,i)"></td>
+                                                <td><input type="text" formControlName="mrp" class="input">
+                                                    <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        title="ion-information" (click)="openModalBatch(i)"></i>
+                                                    <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+                                                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                            role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel">Batch
+                                                                    </h1>
+                                                                    <button type="button" class="close"
+                                                                        (click)="closeModalBatch()" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group" *ngIf="selectBatch">
+                                                                        <div class="row">
+                                                                            <div class="table-responsive">
+                                                                                <table class="table datanew">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sr.No.
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                MRP
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Purchase Price</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Purchase Tax</th>
+                                                                                            <th
+                                                                                                class="border space-text">
+                                                                                                Stock
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="border space-text">
+                                                                                                Opening Stock</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sale
+                                                                                                Tax</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Discount %</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Additional Discount %
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Selling
+                                                                                                Price Dealer</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                selling_price_employee
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Selling
+                                                                                                Price Offline</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Selling
+                                                                                                Price Online</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Action
+                                                                                            </th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                            <td class="boder">{{
+                                                                                                ind+1+'.'}}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.mrp }}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.cost_price }}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.purchase_tax +
+                                                                                                '%'}}</td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.stock}}
+                                                                                            </td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.opening_stock}}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.sale_tax
+                                                                                                + '%'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.discount
+                                                                                                + '%'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.additional_discount
+                                                                                                +
+                                                                                                '%'}}</td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.selling_price_dealer}}
+                                                                                            </td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.selling_price_employee}}
+                                                                                            </td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.selling_price_offline}}
+                                                                                            </td>
+                                                                                            <td class="border">
+                                                                                                {{batch?.selling_price_online}}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <button type="button"
+                                                                                                    (click)="selecBatchtModel(batch,batchCartIndex)"
+                                                                                                    class="btn btn-primary btn-sm"
+                                                                                                    style="float: right;">Select</button>
+                                                                                            </td>
 
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><input type="text" formControlName="discount" class="input" (blur)="purchase4(i)">
-                                            <span class="text-danger" style="display: block;"
-                                                *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
-                                                Enter Discount ex: 1-100
-                                            </span>
-                                        </td>
-                                        <td><input type="text" formControlName="additional_discount" class="input" (blur)="purchase3(i)"></td>
-                                        <td> <input type="text" formControlName="selling_price_online" class="input">
-                                        </td>
-                                        <td><input type="text" formControlName="selling_price_offline" class="input">
-                                        </td>
-                                        <td><input type="text" formControlName="dealer_price" class="input"></td>
-                                        <td><input type="text" formControlName="employee_price" class="input"></td>
-                                        <td>
-                                            <!-- <input type="text" formControlName="tax" class="input" readonly> -->
-                                         <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
-                                            <br>
-                                        <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
-                                    </td>
-                                       
-                                        <td class="text-end">
-                                            <input type="text" formControlName="landing_cost" readonly class="input">
-                                       <!-- <input type="text" formControlName="landing_cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"> -->
-                                        </td>
+                                                </td>
+                                                <td><input type="text" formControlName="discount" class="input"
+                                                        (blur)="purchase4(i)">
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
+                                                        Enter Discount ex: 1-100
+                                                    </span>
+                                                </td>
+                                                <td><input type="text" formControlName="additional_discount"
+                                                        class="input" (blur)="purchase3(i)"></td>
+                                                <td> <input type="text" formControlName="selling_price_online"
+                                                        class="input">
+                                                </td>
+                                                <td><input type="text" formControlName="selling_price_offline"
+                                                        class="input">
+                                                </td>
+                                                <td><input type="text" formControlName="dealer_price" class="input">
+                                                </td>
+                                                <td><input type="text" formControlName="employee_price" class="input">
+                                                </td>
+                                                <td>
+                                                    <!-- <input type="text" formControlName="tax" class="input" readonly> -->
+                                                    <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
+                                                        tax[i] + ' (' + tax[i] + '%)' }}</span>
+                                                    <br>
+                                                    <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                                </td>
+
                                                 <td class="text-end">
-                                                    <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" >
+                                                    <input type="text" formControlName="landing_cost" readonly
+                                                        class="input">
+                                                    <!-- <input type="text" formControlName="landing_cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"> -->
                                                 </td>
                                                 <td class="text-end">
-                                                <input type="text" formControlName="total" class="input" readonly >
-                                                <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
+                                                    <input type="text" class="input" readonly
+                                                        [value]="TotalWithoutTax[i] | number:'1.2-2'">
                                                 </td>
-                                    </tr>
-                                </ng-container>
-                            </ng-container>
-                            <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                <td></td>
-                                <td></td>
-                                <td class="text-start"><strong>Total</strong></td>
-                                <td class="text-start">{{ calculateTotalQty()}}
-                                    <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()" style="display: none;">
-                                </td>
-                                <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDiscount()}}
-                                    <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
-                                </td>
-                                <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
-                                <td class="text-start">{{calculateTotalSellingPriceOnline().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalSellingPriceOffline().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDealerPrice().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalEmployeePrice().toFixed(2)}}</td>
-                                <!-- <td class="text-start">{{calculateTotalTax()}}</td> -->
-                                <td class="text-start">{{ calculateTotalTax() + '%' + ' (' + (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}</td>
-                                <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
-                                <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                <td>{{calculateTotal()?.toFixed(2)}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-</div>
-</div>
-                  <!-- aditional charge -->
-                  <div class="m-demo-icon pt-0 pl-0 my-2" *ngIf="additionalTable">
-                    <div class="m-demo-icon__class">
-                        <a class="m-link m--font-boldest" (click)="displayAdditiionalTable()"><i class="ion-ios7-plus"
-                                data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
-                            Additional Charges</a>
-                    </div>
-                </div>
-                <div class="card my-2" *ngIf="!additionalTable">
-                    <div class="card-body">
-                        <div class="row my-2">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr style="background-color:#FF9F43;">
-                                            <td colspan="6" style="color:#fff">Additional Charge</td>
-                                            <td (click)="hideAdditiionalTable()" style="color:#fff"><i data-bs-toggle="tooltip"
-                                                    title="ion-close-circled" class="ion-close-circled"></i></td>
-                                        </tr>
-                                    </thead>
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>Additional Charge</th>
-                                            <th>Value</th>
-                                            <th>Tax</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container formArrayName="additional_charges">
-                                            <ng-container *ngFor="let d of getAdditionalCharge().controls; let j=index">
-                                                <tr [formGroupName]="j">
-                                                    <td>
-                                                        <div>
-                                                            <div class="me-2">
-                                                                <svg (click)="removeAdditionalCharge(j)" style="color:red"
-                                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                                    fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                                    <path
-                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                    <path
-                                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                                </svg>
-                                                            </div>
-                                                            <svg *ngIf="isLastAdditionalCharge(j)" (click)="addAdditionalCharge()" style="color:green"
-                                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                                fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                                <path
-                                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                            </svg>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{j+1}}</td>
-                                                    <td>
-                                                        <select formControlName="additional" #chargeValue
-                                                        (change)="getAdditional(chargeValue.value,j)">
-                                                            <option value="" selected disabled>Select</option>
-                                                            <option value="{{discount.additional_charge}}" *ngFor="let discount of additionalData">{{discount.additional_charge}}</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" formControlName="value" [ngModel]="value[j]" class="input">
-                                                    </td>
-                                                    <td>    
-                                                        <select formControlName="tax" (blur)="additionalcharg()">
-                                                            <option value="" selected disabled>Select Tax</option>
-                                                            <option value="{{tax?.tax_percentage}}" *ngFor="let tax of taxData">{{tax.title + (tax.tax_percentage)}}</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" formControlName="total" class="input"
-                                                        [value]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)" [ngModel]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)">
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
+                                                <td class="text-end">
+                                                    <input type="text" formControlName="total" class="input" readonly>
+                                                    <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
+                                                </td>
+                                            </tr>
                                         </ng-container>
-                                        <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-start"><strong>Total</strong></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-start">
-                                                 <!-- {{ calculateTotalAdditionalCharge().toFixed(2) | currency:'INR' }} -->
-                                                <input type="text" formControlName="additional_charge" class="input" style="width: 30%;">       
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start">{{ calculateTotalQty()}}
+                                            <input type="text" formControlName="total_qty" class="input"
+                                                [ngModel]="calculateTotalQty()" style="display: none;">
+                                        </td>
+                                        <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
+                                        <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
+                                        <td class="text-start">{{calculateTotalDiscount()}}
+                                            <input type="text" formControlName="total_discount" class="input"
+                                                [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                        </td>
+                                        <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
+                                        <td class="text-start">{{calculateTotalSellingPriceOnline().toFixed(2)}}</td>
+                                        <td class="text-start">{{calculateTotalSellingPriceOffline().toFixed(2)}}</td>
+                                        <td class="text-start">{{calculateTotalDealerPrice().toFixed(2)}}</td>
+                                        <td class="text-start">{{calculateTotalEmployeePrice().toFixed(2)}}</td>
+                                        <!-- <td class="text-start">{{calculateTotalTax()}}</td> -->
+                                        <td class="text-start">{{ calculateTotalTax() + '%' + ' (' +
+                                            (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}
+                                        </td>
+                                        <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
+                                        <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                        <td>{{calculateTotal()?.toFixed(2)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-              
-                <!-- end additional charge -->
+            </div>
+            <!-- aditional charge -->
+            <div class="m-demo-icon pt-0 pl-0 my-2" *ngIf="additionalTable">
+                <div class="m-demo-icon__class">
+                    <a class="m-link m--font-boldest" (click)="displayAdditiionalTable()"><i class="ion-ios7-plus"
+                            data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
+                        Additional Charges</a>
+                </div>
+            </div>
+            <div class="card my-2" *ngIf="!additionalTable">
+                <div class="card-body">
+                    <div class="row my-2">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr style="background-color:#FF9F43;">
+                                        <td colspan="6" style="color:#fff">Additional Charge</td>
+                                        <td (click)="hideAdditiionalTable()" style="color:#fff"><i
+                                                data-bs-toggle="tooltip" title="ion-close-circled"
+                                                class="ion-close-circled"></i></td>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>Additional Charge</th>
+                                        <th>Value</th>
+                                        <th>Tax</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="additional_charges">
+                                        <ng-container *ngFor="let d of getAdditionalCharge().controls; let j=index">
+                                            <tr [formGroupName]="j">
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeAdditionalCharge(j)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastAdditionalCharge(j)"
+                                                            (click)="addAdditionalCharge()" style="color:green"
+                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-plus-circle"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>{{j+1}}</td>
+                                                <td>
+                                                    <select formControlName="additional" #chargeValue
+                                                        (change)="getAdditional(chargeValue.value,j)">
+                                                        <option value="" selected disabled>Select</option>
+                                                        <option value="{{discount.additional_charge}}"
+                                                            *ngFor="let discount of additionalData">
+                                                            {{discount.additional_charge}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" formControlName="value" [ngModel]="value[j]"
+                                                        class="input">
+                                                </td>
+                                                <td>
+                                                    <select formControlName="tax" (blur)="additionalcharg()">
+                                                        <option value="" selected disabled>Select Tax</option>
+                                                        <option value="{{tax?.tax_percentage}}"
+                                                            *ngFor="let tax of taxData">{{tax.title +
+                                                            (tax.tax_percentage)}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" formControlName="total" class="input"
+                                                        [value]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)"
+                                                        [ngModel]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)">
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start">
+                                            <!-- {{ calculateTotalAdditionalCharge().toFixed(2) | currency:'INR' }} -->
+                                            <input type="text" formControlName="additional_charge" class="input"
+                                                style="width: 30%;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end additional charge -->
             <!-- <div class="col-lg-12 my-3">
                 <div class="form-group">
                     <label>Note</label>
@@ -1060,18 +1141,25 @@
                                             <ng-container *ngFor="let t of getTaxRate().controls; let k=index">
                                                 <tr [formGroupName]="k">
                                                     <td>{{k+1}}</td>
-                                                    <td><input type="text" formControlName="tax_rate" class="input"></td>
-                                                    <td><input type="text" formControlName="taxable_amount" class="input"></td>
-                                                    <td *ngIf="!supplierAddress?.check_sgst_cgst"><input type="text" formControlName="igst_amount"  class="input"></td>
-                                                    <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text" formControlName="sgst_amount"  class="input"></td>
-                                                    <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text" formControlName="cgst_amount"  class="input"></td> 
-                                                    <td> <input type="text" formControlName="total_tax" class="input" ></td>
+                                                    <td><input type="text" formControlName="tax_rate" class="input">
+                                                    </td>
+                                                    <td><input type="text" formControlName="taxable_amount"
+                                                            class="input"></td>
+                                                    <td *ngIf="!supplierAddress?.check_sgst_cgst"><input type="text"
+                                                            formControlName="igst_amount" class="input"></td>
+                                                    <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text"
+                                                            formControlName="sgst_amount" class="input"></td>
+                                                    <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text"
+                                                            formControlName="cgst_amount" class="input"></td>
+                                                    <td> <input type="text" formControlName="total_tax" class="input">
+                                                    </td>
                                                     <td>
                                                         <div>
                                                             <div class="me-2">
                                                                 <svg (click)="removeTax(k)" style="color:red"
-                                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                                    fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                    xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                    height="16" fill="currentColor"
+                                                                    class="bi bi-x-circle" viewBox="0 0 16 16">
                                                                     <path
                                                                         d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                                     <path
@@ -1081,27 +1169,33 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                        </ng-container>
+                                            </ng-container>
                                         </ng-container>
                                         <tr style=" background: rgba(145, 158, 171, 0.32);">
                                             <td class="text-start"><strong>Total</strong></td>
-                                            <td class="text-start">{{calculateTotalTaxrate().toFixed(2) | currency:'INR' }}</td>
-                                            <td class="text-start">{{calculateTotalTaxAmount().toFixed(2) | currency:'INR' }}</td>
-                                            <td class="text-start" *ngIf="!supplierAddress?.check_sgst_cgst">{{calculateTotalIgst().toFixed(2) | currency:'INR' }}</td>
-                                            <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst"> {{calculateTotalSgst().toFixed(2) | currency:'INR' }} </td>
-                                            <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst"> {{calculateTotalCgst().toFixed(2) | currency:'INR' }} </td>
-                                            <td class="text-start"> {{calculateTotalTaxRate().toFixed(2) | currency:'INR' }} </td>
+                                            <td class="text-start">{{calculateTotalTaxrate().toFixed(2) | currency:'INR'
+                                                }}</td>
+                                            <td class="text-start">{{calculateTotalTaxAmount().toFixed(2) |
+                                                currency:'INR' }}</td>
+                                            <td class="text-start" *ngIf="!supplierAddress?.check_sgst_cgst">
+                                                {{calculateTotalIgst().toFixed(2) | currency:'INR' }}</td>
+                                            <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst">
+                                                {{calculateTotalSgst().toFixed(2) | currency:'INR' }} </td>
+                                            <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst">
+                                                {{calculateTotalCgst().toFixed(2) | currency:'INR' }} </td>
+                                            <td class="text-start"> {{calculateTotalTaxRate().toFixed(2) |
+                                                currency:'INR' }} </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div class="col-lg-6 my-1">
                     <div class="form-group">
                         <div class="total-order">
-                            <ul> 
+                            <ul>
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>{{calculateTotalWithoutTax() | currency:'INR'}}</h5>
@@ -1110,12 +1204,14 @@
                                     <h4>Additional Charges</h4>
                                     <h5>
                                         <!-- {{totaladditionalCharge | number:'1.2-2' | currency:'INR' }} -->
-                                        <input type="text" formControlName="additional_charge" class="input" style="width: 30%;">
+                                        <input type="text" formControlName="additional_charge" class="input"
+                                            style="width: 30%;">
                                     </h5>
                                 </li>
                                 <li>
                                     <h4>Total Discount %</h4>
-                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() | currency:'INR'}}</h5>
+                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() |
+                                        currency:'INR'}}</h5>
                                 </li>
                                 <li>
                                     <h4>Tax Amount</h4>
@@ -1128,13 +1224,15 @@
                                 <li>
                                     <h4>Round Off</h4>
                                     <h5>
-                                        <input type="text" formControlName="round_off" class="input" style="width: 34%;">
+                                        <input type="text" formControlName="round_off" class="input"
+                                            style="width: 34%;">
                                     </h5>
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
                                     <h5>{{ calculateTotal() }}
-                                        <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal().toFixed(2)" style="display: none;">
+                                        <input type="text" formControlName="total" class="input"
+                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;">
                                     </h5>
                                 </li>
                             </ul>
@@ -1149,26 +1247,34 @@
                 <a routerLink="//purchase/goodsReceivedNote-list" class="btn btn-cancel text-white">Cancel</a> -->
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/goodsReceivedNote-list" class="btn btn-cancel text-white me-2 mb-1" style=" background-color: #f4516c;">Cancel</a>
+                        <a routerLink="//purchase/goodsReceivedNote-list" class="btn btn-cancel text-white me-2 mb-1"
+                            style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                            Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Print</button>
                         <ng-container *ngIf="isStatusDraft">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
-                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save
+                                as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>&nbsp; Save as Draft</button>
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save</button>
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save</button>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                            Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Create New</button>
                     </div>
                 </div>
             </div>

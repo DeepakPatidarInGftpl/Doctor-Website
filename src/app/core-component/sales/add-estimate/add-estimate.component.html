@@ -45,7 +45,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Sale Estimate Date*</label>
-                        <input type="date" formControlName="estimate_date" [ngClass]="{
+                        <input type="date" formControlName="estimate_date" [attr.min]="minDate" [attr.max]="maxDate"
+                            [ngClass]="{
                             'is-invalid': f['estimate_date'].touched && f['estimate_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="estimate_date && estimate_date.invalid && estimate_date.touched">Select
@@ -56,8 +57,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Estimate Expiry date*</label>
-                        <input type="date" formControlName="estimate_expiry_date" [attr.min]="minDate"
-                            [attr.max]="maxDate"
+                        <input type="date" formControlName="estimate_expiry_date" [attr.min]="expiryMinDate"
+                            [attr.max]="expiryMaxDate"
                             [ngClass]="{'is-invalid': f['estimate_expiry_date'].touched && f['estimate_expiry_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="estimate_expiry_date && estimate_expiry_date.invalid && estimate_expiry_date.touched">Enter

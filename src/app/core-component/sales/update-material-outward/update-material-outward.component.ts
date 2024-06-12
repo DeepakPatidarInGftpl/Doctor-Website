@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+    private commonService: CommonServiceService) {
   }
 
   customerControlName = 'customer';
@@ -45,6 +47,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   saleMaterialOutwardForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.saleMaterialOutwardForm.controls;
@@ -109,6 +113,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.saleMaterialDateValidation(financialYear);
+
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getUser(res);
@@ -121,8 +128,13 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       }
     })
     this.getCategory();
+  }
 
-
+  saleMaterialDateValidation(financialYear) {
+    const dateControl = this.saleMaterialOutwardForm.get('mo_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

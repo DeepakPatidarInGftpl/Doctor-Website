@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class EditSalesComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
+    private commonService: CommonServiceService,
     private coreService: CoreService) {
   }
 
@@ -45,6 +47,10 @@ export class EditSalesComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   saleForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  dueMinDate: string = '';
+  dueMaxDate: string = '';
 
   get f() {
     return this.saleForm.controls;
@@ -115,6 +121,15 @@ export class EditSalesComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
 
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.dueDateValidation(financialYear);
+    this.saleOrderDateValidation(financialYear);
+
+    this.saleForm.get('sale_order_date').valueChanges.subscribe((date) => {
+      this.updateDueDateMin(date, financialYear);
+    });
+
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getUser(res);
@@ -155,6 +170,31 @@ export class EditSalesComponent implements OnInit {
   variantList2: any[] = [];
   isSearch = false;
   searchLength: any;
+
+  updateDueDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.saleForm.get('due_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.dueMinDate = formattedMinDate;
+      this.dueMaxDate = formattedMaxDate;
+    }
+  }
+
+  dueDateValidation(financialYear) {
+    const dateControl = this.saleForm.get('due_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.dueMinDate = formattedMinDate;
+    this.dueMaxDate = formattedMaxDate;
+  }
+
+  saleOrderDateValidation(financialYear) {
+    const dateControl = this.saleForm.get('sale_order_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   getVariant(search: any, index: any, barcode: any) {
     this.searchLength = search
     this.isSearch = true;

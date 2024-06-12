@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -13,24 +14,27 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateExpensesComponent implements OnInit {
 
-  constructor( private fb: FormBuilder,
+  constructor(private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private transactionService: TransactionService,
     private Arout: ActivatedRoute,
-    private contactService:ContactService
+    private contactService: ContactService,
+    private commonService: CommonServiceService
   ) {
   }
   expensevoucherForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.expensevoucherForm.controls;
   }
   id: any
   editRes: any;
   myControls: FormArray;
-    //party
-    fromPartyControl = new FormControl();
-    filteredFromParty: Observable<any[]>;
+  //party
+  fromPartyControl = new FormControl();
+  filteredFromParty: Observable<any[]>;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -57,23 +61,33 @@ export class UpdateExpensesComponent implements OnInit {
       this.editRes = res;
       this.expensevoucherForm.patchValue(this.editRes);
       this.fromPartyControl.setValue(res?.party?.name);
-      this.roundOff=res.round_off;
+      this.roundOff = res.round_off;
       this.expensevoucherForm.get('party')?.patchValue(res?.party?.id)
       // this.expensevoucherForm.get('expense_no')?.patchValue(res?.expense_no?.id) // 20-5
-      if(this.editRes?.cart?.length>0){
+      if (this.editRes?.cart?.length > 0) {
         this.expensevoucherForm.setControl('expenses_voucher_cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
     })
     this.getAccount();
     this.getUser();
     this.getprefix();
-      // party
-      this.filteredFromParty = this.fromPartyControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter2(value, true))
-      ); 
+    // party
+    this.filteredFromParty = this.fromPartyControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter2(value, true))
+    );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.expensevoucherForm.get('expense_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   private _filter2(value: string | number, include: boolean): any[] {
@@ -86,7 +100,7 @@ export class UpdateExpensesComponent implements OnInit {
     }
     return filteredFromParty;
   }
-  
+
   userList: any[] = [];
   getUser() {
     this.contactService.getUser().subscribe((res: any) => {
@@ -149,7 +163,7 @@ export class UpdateExpensesComponent implements OnInit {
         const aliasLower = account.account_id.toLowerCase();
         return aliasLower.includes(data);
       }
-      return false; 
+      return false;
     });
     console.log(this.filterAccount);
   }
@@ -178,10 +192,10 @@ export class UpdateExpensesComponent implements OnInit {
   getCart(): FormArray {
     return this.expensevoucherForm.get('expenses_voucher_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart(i) {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
     if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
@@ -189,9 +203,9 @@ export class UpdateExpensesComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-   if(this.expensevoucherForm?.value?.expenses_voucher_cart?.length==0){
-    this.isCart==true;
-   }
+    if (this.expensevoucherForm?.value?.expenses_voucher_cart?.length == 0) {
+      this.isCart == true;
+    }
   }
 
   isLastCart(index: number): boolean {
@@ -205,58 +219,58 @@ export class UpdateExpensesComponent implements OnInit {
 
   submit() {
     console.log(this.expensevoucherForm.value);
-      if (this.expensevoucherForm.valid) {
-        this.loaders = true;
-        let formdata: any = new FormData();
-        formdata.append('party', this.expensevoucherForm.get('party')?.value);
-        formdata.append('expense_date', this.expensevoucherForm.get('expense_date')?.value);
-        formdata.append('expense_no', this.expensevoucherForm.get('expense_no')?.value);
-        formdata.append('refrence_bill_no', this.expensevoucherForm.get('refrence_bill_no')?.value);
-        formdata.append('reverse_charge', this.expensevoucherForm.get('reverse_charge')?.value);
-        formdata.append('created_from', this.expensevoucherForm.get('created_from')?.value);
-        formdata.append('tax_amount', this.expensevoucherForm.get('tax_amount')?.value);
-        formdata.append('total_amount', this.expensevoucherForm.get('total_amount')?.value);
-        formdata.append('round_off', this.expensevoucherForm.get('round_off')?.value);
-        formdata.append('net_amount', this.expensevoucherForm.get('net_amount')?.value);
-        formdata.append('status', this.expensevoucherForm.get('status')?.value);
-        formdata.append('note', this.expensevoucherForm.get('note')?.value);
-  
-        const cartArray = this.expensevoucherForm.get('expenses_voucher_cart') as FormArray;
-        const cartData = [];
-        cartArray.controls.forEach((address) => {
-          const cartGroup = address as FormGroup;
-          const cartObject: any = {};
-          Object.keys(cartGroup.controls).forEach((key) => {
-            const control = cartGroup.controls[key];
-            if (key === 'service_or_product' || key === 'description') {
-              cartObject[key] = control.value;
-            } else if (!isNaN(control.value)) {
-              cartObject[key] = parseFloat(control.value);
-            } else {
-              cartObject[key] = control.value;
-            }
-          });
-          cartData.push(cartObject);
-        });
-        formdata.append('expenses_voucher_cart', JSON.stringify(cartData));
-        this.transactionService.updateExpensVoucher(formdata, this.id).subscribe(res => {
-          this.loaders = false;
-          this.addRes = res
-          if (this.addRes.success) {
-            this.toastrService.success(this.addRes.msg)
-            this.expensevoucherForm.reset()
-            this.router.navigate(['//transaction/expensesList'])
+    if (this.expensevoucherForm.valid) {
+      this.loaders = true;
+      let formdata: any = new FormData();
+      formdata.append('party', this.expensevoucherForm.get('party')?.value);
+      formdata.append('expense_date', this.expensevoucherForm.get('expense_date')?.value);
+      formdata.append('expense_no', this.expensevoucherForm.get('expense_no')?.value);
+      formdata.append('refrence_bill_no', this.expensevoucherForm.get('refrence_bill_no')?.value);
+      formdata.append('reverse_charge', this.expensevoucherForm.get('reverse_charge')?.value);
+      formdata.append('created_from', this.expensevoucherForm.get('created_from')?.value);
+      formdata.append('tax_amount', this.expensevoucherForm.get('tax_amount')?.value);
+      formdata.append('total_amount', this.expensevoucherForm.get('total_amount')?.value);
+      formdata.append('round_off', this.expensevoucherForm.get('round_off')?.value);
+      formdata.append('net_amount', this.expensevoucherForm.get('net_amount')?.value);
+      formdata.append('status', this.expensevoucherForm.get('status')?.value);
+      formdata.append('note', this.expensevoucherForm.get('note')?.value);
+
+      const cartArray = this.expensevoucherForm.get('expenses_voucher_cart') as FormArray;
+      const cartData = [];
+      cartArray.controls.forEach((address) => {
+        const cartGroup = address as FormGroup;
+        const cartObject: any = {};
+        Object.keys(cartGroup.controls).forEach((key) => {
+          const control = cartGroup.controls[key];
+          if (key === 'service_or_product' || key === 'description') {
+            cartObject[key] = control.value;
+          } else if (!isNaN(control.value)) {
+            cartObject[key] = parseFloat(control.value);
           } else {
-            this.loaders = false;
+            cartObject[key] = control.value;
           }
-        }, err => {
+        });
+        cartData.push(cartObject);
+      });
+      formdata.append('expenses_voucher_cart', JSON.stringify(cartData));
+      this.transactionService.updateExpensVoucher(formdata, this.id).subscribe(res => {
+        this.loaders = false;
+        this.addRes = res
+        if (this.addRes.success) {
+          this.toastrService.success(this.addRes.msg)
+          this.expensevoucherForm.reset()
+          this.router.navigate(['//transaction/expensesList'])
+        } else {
           this.loaders = false;
-        })
-      } else {
-        this.expensevoucherForm.markAllAsTouched()
-        this.toastrService.error('Please Fill All The Required Fields')
-      }
-    
+        }
+      }, err => {
+        this.loaders = false;
+      })
+    } else {
+      this.expensevoucherForm.markAllAsTouched()
+      this.toastrService.error('Please Fill All The Required Fields')
+    }
+
   }
   get party() {
     return this.expensevoucherForm.get('party');
@@ -316,7 +330,7 @@ export class UpdateExpensesComponent implements OnInit {
     return this.getCart().controls[index].get('total');
   }
 
- 
+
   // calculations
   totalDiscount(): number {
     let totalDiscount = 0;
@@ -395,20 +409,20 @@ export class UpdateExpensesComponent implements OnInit {
       console.log(amountControlValue, 'amountControlValue');
       console.log(taxPercentageValue, 'taxPercentageValue');
       // cost price 
-      if(this.isPercentage[index] == true){
-      let getDiscountPrice = (amountControlValue * discountPercentage) / 100;
-      console.log(getDiscountPrice, 'discount price');
-      let getCoastPrice = amountControlValue - getDiscountPrice;
-      console.log(getCoastPrice, 'getCoastPrice');
-      //tax price
-      let taxPrice = getCoastPrice * taxPercentageValue / 100;
-      console.log(taxPrice, 'taxPrice');
-      this.taxIntoRupees[index] = taxPrice || 0;
-      console.log(this.taxIntoRupees, 'tax value');
-      cartItem.get('tax_value')?.patchValue(taxPrice);
-      let total = amountControlValue + taxPrice;
-      cartItem.get('total')?.patchValue(total);
-      } else if(this.isAmount[index] == true){
+      if (this.isPercentage[index] == true) {
+        let getDiscountPrice = (amountControlValue * discountPercentage) / 100;
+        console.log(getDiscountPrice, 'discount price');
+        let getCoastPrice = amountControlValue - getDiscountPrice;
+        console.log(getCoastPrice, 'getCoastPrice');
+        //tax price
+        let taxPrice = getCoastPrice * taxPercentageValue / 100;
+        console.log(taxPrice, 'taxPrice');
+        this.taxIntoRupees[index] = taxPrice || 0;
+        console.log(this.taxIntoRupees, 'tax value');
+        cartItem.get('tax_value')?.patchValue(taxPrice);
+        let total = amountControlValue + taxPrice;
+        cartItem.get('total')?.patchValue(total);
+      } else if (this.isAmount[index] == true) {
         let getCoastPrice = amountControlValue - discountPercentage;
         console.log(getCoastPrice, 'getCoastPrice');
         //tax price

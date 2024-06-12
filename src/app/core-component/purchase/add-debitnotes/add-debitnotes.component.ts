@@ -7,6 +7,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-add-debitnotes',
@@ -30,6 +31,7 @@ export class AddDebitnotesComponent implements OnInit {
     private contactService: ContactService,
     private coreService: CoreService,
     private cdr: ChangeDetectorRef,
+    private commonService: CommonServiceService
   ) {
   }
 
@@ -47,6 +49,8 @@ export class AddDebitnotesComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   debitNotesForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.debitNotesForm.controls;
   }
@@ -93,6 +97,9 @@ export class AddDebitnotesComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.purchaseReturnDateValidation(financialYear);
+
     this.supplierControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getSuuplier(res);
@@ -120,6 +127,14 @@ export class AddDebitnotesComponent implements OnInit {
   get supplier() {
     return this.debitNotesForm.get('party') as FormControl;
   }
+
+  purchaseReturnDateValidation(financialYear) {
+    const dateControl = this.debitNotesForm.get('purchase_return_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.purchaseService.getDebitNotePrefix().subscribe((res: any) => {
