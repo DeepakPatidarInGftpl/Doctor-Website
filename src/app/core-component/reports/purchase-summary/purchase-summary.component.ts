@@ -13,6 +13,7 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { ReportService } from 'src/app/Services/report/report.service';
 import * as XLSX from 'xlsx';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-purchase-summary',
@@ -26,19 +27,21 @@ export class PurchaseSummaryComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public countryList: any = [];
-
   titlee: any;
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-
   purchaseSummaryPaymentType: any;
   userName: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase summary form
   purchaseSummaryform!: FormGroup;
@@ -46,20 +49,24 @@ export class PurchaseSummaryComponent implements OnInit {
   endDate: any;
   purchaseSummaryUserId: any;
   purchaseSummaryList: any;
-
-
   userDetails: any;
   //23-5
-  isAdmin=false;
-  fyID:any;
-ngOnInit(): void {
+  isAdmin = false;
+  fyID: any;
+  ngOnInit(): void {
     //23-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
-      this.fyID=fyId;
+      this.fyID = fyId;
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -68,7 +75,7 @@ ngOnInit(): void {
       }
       this.getBranch();
     });
-//23  
+    //23  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
@@ -86,11 +93,14 @@ ngOnInit(): void {
 
     // purchasesummaryform
     this.purchaseSummaryform = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       user_id: new FormControl(),
       payment_type: new FormControl('')
     });
+
+    this.commonService.validateAndClearDates(this.purchaseSummaryform, this.minDate, this.maxDate);
+
     this.startDate = this.purchaseSummaryform.value?.start;
     this.endDate = this.purchaseSummaryform.value?.end;
     this.purchaseSummaryUserId = this.purchaseSummaryform.value?.user_id;
@@ -169,7 +179,7 @@ ngOnInit(): void {
   }
   purchaseSummary: any
   getPurchaseSummary() {
-    this.reportService.getPurchaseSummary(this.startDate, this.endDate,this.fyID,this.selectData).subscribe((res) => {
+    this.reportService.getPurchaseSummary(this.startDate, this.endDate, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.purchaseSummary = res;
       this.purchaseSummaryList = res?.data;
@@ -220,14 +230,14 @@ ngOnInit(): void {
     doc.text('', 10, 25); //,argin x, y
 
     // Pass tableData to autoTable
-   // nested table
-    const headers = ['#','Supplier', 'Date', 'Payment Type', 'Payment Voucher No. ', 'Amount','supplier Bill No.', 'Note'];
+    // nested table
+    const headers = ['#', 'Supplier', 'Date', 'Payment Type', 'Payment Voucher No. ', 'Amount', 'supplier Bill No.', 'Note'];
     const data: any = [];
 
     let customerIndex = 1;
     this.purchaseSummaryList.forEach((list: any) => {
       console.warn(list);
-      
+
       const supplier = list.supplier;
       const date = list.date;
       const payment_type = list.payment_type;
@@ -235,9 +245,9 @@ ngOnInit(): void {
       const amount = list.amount;
       const note = list.note;
       let isFirstInvoice = true;
-      list.payment_cart.forEach((res:any,index: number) => {
+      list.payment_cart.forEach((res: any, index: number) => {
         console.log(res);
-        
+
         const invoiceNumber = isFirstInvoice ? customerIndex : '';
         data.push([
           invoiceNumber, // row no of each cstmr
@@ -247,7 +257,7 @@ ngOnInit(): void {
           isFirstInvoice ? payment_voucher_no : '',
           isFirstInvoice ? amount : '',
           res.purchase_bill?.supplier_bill_no,
-          isFirstInvoice ? note : '',  
+          isFirstInvoice ? note : '',
         ]);
         isFirstInvoice = false;
       });
@@ -257,7 +267,7 @@ ngOnInit(): void {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32, 
+      startY: 32,
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color
@@ -348,12 +358,12 @@ ngOnInit(): void {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -367,48 +377,48 @@ ngOnInit(): void {
       this.itemsPerPage = this.purchaseSummaryList?.length;
     }
   }
-   //23-5
-   branchList: any[] = [];
-   filteredBranchList: any[] = [];
-   searchBranch: string = '';
-   getBranch() {
-     this.reportService.getBranch().subscribe((res: any) => {
-       this.branchList = res;
-       this.filteredBranchList = [...this.branchList];
-     });
-   }
-   filterBranch() {
-     if (this.searchBranch.trim() === '') {
-       this.filteredBranchList = [...this.branchList];
-     } else {
-       this.filteredBranchList = this.branchList.filter(feature =>
-         feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-       );
-     }
-   }
-   // add remove branch 
-   searchVariant = ''
-   selectData: any[] = [];
-   selectedCategoryIds: any[] = []
-   SelectedBranch(variant: any, event: any) {
-     if (event) {
-       console.log(variant);
-       this.selectData.push(variant)
-       console.log(this.selectData, 'selected data');
-       //close dropdown 
-       this.searchVariant = '';
-       this.ngOnInit();
-     } else {
-       const selectedIndex = this.selectData.findIndex(item => item == variant);
-       console.log(selectedIndex);
-       if (selectedIndex !== -1) {
-         this.selectData.splice(selectedIndex, 1);
-       }
-       this.ngOnInit();
-       console.log(this.selectData);
-     }
-   }
- //23-5
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
 }
 
 

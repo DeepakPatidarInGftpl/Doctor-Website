@@ -15,6 +15,7 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { ReportService } from 'src/app/Services/report/report.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-day-book',
@@ -30,9 +31,13 @@ export class DayBookComponent implements OnInit {
   itemsPerPage: number = 10;
   tableData: any;
   userName: any;
-  date:any
-  
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService:TransactionService, private coreService:CoreService, private cs:CompanyService, private datepipe: DatePipe, private reportService:ReportService) {
+  date: any;
+  minDate: string = '';
+  maxDate: string = '';
+
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private transactionService: TransactionService, private coreService: CoreService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //day book form
   dayBookform!: FormGroup;
@@ -43,15 +48,15 @@ export class DayBookComponent implements OnInit {
   supplierControl: FormControl = new FormControl('');
 
   //23-5
-  isAdmin=false;
-  fyID:any;
-ngOnInit(): void {
+  isAdmin = false;
+  fyID: any;
+  ngOnInit(): void {
     //23-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
-      this.fyID=fyId;
+      this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
@@ -59,15 +64,20 @@ ngOnInit(): void {
       } else {
         this.isAdmin = false;
       }
+
+      const financialYear = localStorage.getItem('financialYear');
+
+      this.dateValidation(financialYear);
+
       this.getBranch();
     });
-//23  
+    //23  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
-      this.userName=userDetails?.username
+      this.userName = userDetails?.username
     });
-this.getAccount()
+    this.getAccount()
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -96,6 +106,12 @@ this.getAccount()
     );
   }
 
+  dateValidation(financialYear) {
+    const dateControl = this.dayBookform.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
 
   suppliers: any[] = [];
   private _filter(name: string): any[] {
@@ -108,7 +124,7 @@ this.getAccount()
   displayFn(user: any): string {
     return user && user?.title ? user?.title : '';
   }
- 
+
 
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
@@ -137,7 +153,7 @@ this.getAccount()
   getDayBook() {
     console.log(this.date);
 
-    this.reportService.getDayBook(this.date, this.voucherType, this.accountId,this.fyID,this.selectData).subscribe((res: any) => {
+    this.reportService.getDayBook(this.date, this.voucherType, this.accountId, this.fyID, this.selectData).subscribe((res: any) => {
       console.log(res);
       this.dayBookList = res;
       this.dayBook = res;
@@ -162,226 +178,226 @@ this.getAccount()
     this.getDayBook();
   }
 
-  getSelectedAccount(data:any){
+  getSelectedAccount(data: any) {
     console.log(data);
     console.log(this.dayBookform.value);
-    this.dayBookform.patchValue({accountId:data});
+    this.dayBookform.patchValue({ accountId: data });
     console.log(this.dayBookform.value);
     this.accountId = this.dayBookform.value.accountId;
     this.getDayBook();
   }
- 
-  isSearch=false
-  userChange(data: any) {
-    this.isSearch=true;
-    if(data.toString().length>=2){
-    console.warn(data);
-    this.coreService.getAccount().subscribe((res:any)=>{
-      console.warn(res?.data); 
-      this.suppliers = res?.data;
-      this.isSearch=false;
-      if(res?.data?.length>0){
-        this.isSearch=false;
-      }
 
-    })
+  isSearch = false
+  userChange(data: any) {
+    this.isSearch = true;
+    if (data.toString().length >= 2) {
+      console.warn(data);
+      this.coreService.getAccount().subscribe((res: any) => {
+        console.warn(res?.data);
+        this.suppliers = res?.data;
+        this.isSearch = false;
+        if (res?.data?.length > 0) {
+          this.isSearch = false;
+        }
+
+      })
     }
   }
-      // convert to pdf
-      // UserName: any;
-      generatePDF() {
-        const doc = new jsPDF();
-        const subtitle = 'PV';
-        const title = 'Day Book Report';
-        const heading2 = `Date Range From: ${this.date}`
-        const heading = `User: ${this.userName}`;
-      
-        doc.setFontSize(12);
-        doc.setTextColor(33, 43, 54);
-        doc.text(subtitle, 86, 5);
-        doc.text(title, 84, 10);
-        doc.text(heading, 10, 18);
-        doc.text(heading2, 10, 22)
-      
-        doc.text('', 10, 25); //,argin x, y
-      
-        autoTable(doc, {
-          html: '#mytable',
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          startY: 25, // margin top 
-        });
-      
-        doc.save('Day Book.pdf');
-      }
-      
-      generatePDFAgain() {
-        const doc = new jsPDF();
-        const subtitle = 'PV';
-        const title = 'Day Book Report';
-        const heading2 = `Date Range From: ${this.date}`
-        const heading = `User: ${this.userName}`;
-      
-        doc.setFontSize(12);
-        doc.setTextColor(33, 43, 54);
-        doc.text(subtitle, 86, 5);
-        doc.text(title, 82, 10);
-        doc.text(heading, 10, 18);
-        doc.text(heading2, 10, 22)
-      
-        doc.text('', 10, 25); //,argin x, y
-      
-        // Pass tableData to autoTable
-        autoTable(doc, {
-          head: [
-            ['#', 'Party','Date','Particulars', 'Voucher Type','Voucher No.','Description','Debit','Credit','Closing','Account Id']
-          ],
-          body: this.dayBookList.map((row:any, index:number ) => [
-            index + 1,
-            row.party,
-            row.date,
-            row.particulars,
-            row.voucher_type,
-            row.voucher_no,
-            row.description,
-            row.debit,
-            row.credit,
-            row.closing,
-            row.account_id
-          ]),
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          startY: 25, // margin top 
-      
-      
-        });
-      
-        doc.save('Day_Book.pdf');
-      } 
-    
-      // excel export only filtered data
-      getVisibleDataFromTable(): any[] {
-        const visibleData = [];
-        const table = document.getElementById('mytable');
-        if (table) {
-          const headerRow = table.querySelector('thead tr');
-          if (headerRow) {
-            const headerData: string[] = [];
-            headerRow.querySelectorAll('th').forEach(cell => {
-              const columnHeader = cell.textContent?.trim(); // Add null check here
-              if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-                headerData.push(columnHeader);
-              }
-            });
-            visibleData.push(headerData);
+  // convert to pdf
+  // UserName: any;
+  generatePDF() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Day Book Report';
+    const heading2 = `Date Range From: ${this.date}`
+    const heading = `User: ${this.userName}`;
+
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 84, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
+
+    doc.text('', 10, 25); //,argin x, y
+
+    autoTable(doc, {
+      html: '#mytable',
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25, // margin top 
+    });
+
+    doc.save('Day Book.pdf');
+  }
+
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Day Book Report';
+    const heading2 = `Date Range From: ${this.date}`
+    const heading = `User: ${this.userName}`;
+
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 82, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
+
+    doc.text('', 10, 25); //,argin x, y
+
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Party', 'Date', 'Particulars', 'Voucher Type', 'Voucher No.', 'Description', 'Debit', 'Credit', 'Closing', 'Account Id']
+      ],
+      body: this.dayBookList.map((row: any, index: number) => [
+        index + 1,
+        row.party,
+        row.date,
+        row.particulars,
+        row.voucher_type,
+        row.voucher_no,
+        row.description,
+        row.debit,
+        row.credit,
+        row.closing,
+        row.account_id
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25, // margin top 
+
+
+    });
+
+    doc.save('Day_Book.pdf');
+  }
+
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    if (table) {
+      const headerRow = table.querySelector('thead tr');
+      if (headerRow) {
+        const headerData: string[] = [];
+        headerRow.querySelectorAll('th').forEach(cell => {
+          const columnHeader = cell.textContent?.trim(); // Add null check here
+          if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+            headerData.push(columnHeader);
           }
-      
-          // Include visible data rows
-          const dataRows = table.querySelectorAll('tbody tr');
-          dataRows.forEach(row => {
-            const rowData: string[] = [];
-            row.querySelectorAll('td').forEach(cell => {
-              const cellData = cell.textContent?.trim(); // Add null check here
-              if (cellData) {
-                rowData.push(cellData);
-              }
-            });
-            visibleData.push(rowData);
-          });
-        }
-        return visibleData;
-      }
-      
-          // Modify your exportToExcel() function
-      exportToExcel(): void {
-        const visibleDataToExport = this.getVisibleDataFromTable();
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-        // Create a Blob from the workbook and initiate a download
-        const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const fileName = 'DayBook.xlsx';
-        saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-      }
-    
-      printTable(): void {
-        // Get the table element and its HTML content
-        const tableElement = document.getElementById('mytable');
-        if (!tableElement) {
-          console.error("Table element with ID 'mytable' not found.");
-          return;
-        }
-      
-        const tableHTML = tableElement.outerHTML;
-      
-        // Get the title element and its HTML content
-        const titleElement = document.querySelector('.titl');
-        if (!titleElement) {
-          console.error("Title element with class 'titl' not found.");
-          return;
-        }
-      
-        const titleHTML = titleElement.outerHTML;
-      
-        // Clone the table element to manipulate
-        const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    
-      
-        // Get the modified table's HTML content
-        const modifiedTableHTML = clonedTable.outerHTML;
-      
-        // Apply styles to add some space from the top after the title
-        const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-      
-        // Combine the title and table content
-        const combinedContent = styledTitleHTML + modifiedTableHTML;
-      
-        // Store the original contents
-        const originalContents = document.body.innerHTML;
-        //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
-        // Replace the content of the body with the combined content
-        document.body.innerHTML = combinedContent;
-        window.print();
-      
-        // Restore the original content of the body
-        document.body.innerHTML = originalContents;
+        });
+        visibleData.push(headerData);
       }
 
- //product sub category
- private _filter3(title: string): any[] {
-  const filterValue = title ? title.toLowerCase() : '';
-  console.log(filterValue);
-  return this.accountList.filter((option: any) =>
-    (option?.title && option.title.toLowerCase().includes(filterValue))
-  );
-}
-displayFn3(user: any): string {
-  return user && user?.title ? user?.title : '';
-}
+      // Include visible data rows
+      const dataRows = table.querySelectorAll('tbody tr');
+      dataRows.forEach(row => {
+        const rowData: string[] = [];
+        row.querySelectorAll('td').forEach(cell => {
+          const cellData = cell.textContent?.trim(); // Add null check here
+          if (cellData) {
+            rowData.push(cellData);
+          }
+        });
+        visibleData.push(rowData);
+      });
+    }
+    return visibleData;
+  }
 
-      accountList: any[] = [];
-      getAccount() {
-        this.coreService.getAccount().subscribe((res: any) => {
-          this.accountList = res;
-        })
-      }
-      changePg(val: any) {
-        console.log(val);
-        if (val == -1) {
-          this.itemsPerPage = this.dayBookList?.length;
-        }
-      }
-            //23-5
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'DayBook.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    if (!tableElement) {
+      console.error("Table element with ID 'mytable' not found.");
+      return;
+    }
+
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    if (!titleElement) {
+      console.error("Title element with class 'titl' not found.");
+      return;
+    }
+
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+
+  //product sub category
+  private _filter3(title: string): any[] {
+    const filterValue = title ? title.toLowerCase() : '';
+    console.log(filterValue);
+    return this.accountList.filter((option: any) =>
+      (option?.title && option.title.toLowerCase().includes(filterValue))
+    );
+  }
+  displayFn3(user: any): string {
+    return user && user?.title ? user?.title : '';
+  }
+
+  accountList: any[] = [];
+  getAccount() {
+    this.coreService.getAccount().subscribe((res: any) => {
+      this.accountList = res;
+    })
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.dayBookList?.length;
+    }
+  }
+  //23-5
   branchList: any[] = [];
   filteredBranchList: any[] = [];
   searchBranch: string = '';
@@ -422,15 +438,8 @@ displayFn3(user: any): string {
       console.log(this.selectData);
     }
   }
-//23-5
-    }
-  
-
-
-
-
-
-  
+  //23-5
+}
 
 
 
@@ -448,5 +457,12 @@ displayFn3(user: any): string {
 
 
 
-  
+
+
+
+
+
+
+
+
 

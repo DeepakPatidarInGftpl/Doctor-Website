@@ -125,6 +125,11 @@ export class UpdateEstimateComponent implements OnInit {
     this.expiryDateValidation(financialYear);
 
     this.saleEstimateForm.get('estimate_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleEstimateForm.get('estimate_expiry_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateExpiryDateMin(date, financialYear);
     });
 

@@ -5,7 +5,7 @@
                 <h4 class="text_24">Category Wise Purchase</h4>
                 <h6>Manage your Category Wise Purchase</h6>
             </div>
-           <div class="page-btn" >
+            <div class="page-btn">
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12 d-flex">
                         <div class="form-group w-100" *ngIf="isAdmin">
@@ -13,16 +13,22 @@
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                                    <li> <input type="text" placeholder="search category" class="form-control"
+                                            [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                            [ngModelOptions]="{standalone: true}">
                                     </li>
                                     <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                            <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                                    </a></li>
+                                            <input type="checkbox" [value]="branch.id"
+                                                [checked]="selectData.includes(branch.id)"
+                                                (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                                style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{branch.title}}</label>
+                                        </a></li>
                                 </ul>
                             </div>
                             <div class="d-flex">
-                            <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                                <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                             </div>
                         </div>
                     </div>
@@ -41,14 +47,16 @@
                                         <strong>Select Date</strong>
                                         <mat-form-field style="width: 100%;" class="border">
                                             <mat-date-range-input [formGroup]="categoryWisePurchaseForm"
-                                                [rangePicker]="startdatePicker">
+                                                [rangePicker]="startdatePicker" [min]="minDate" [max]="maxDate">
                                                 <input matStartDate placeholder="Start date" formControlName="start"
-                                                    class="mat-input" (dateChange)="getSelectedCategoryWisePurchaseDates()">
+                                                    class="mat-input"
+                                                    (dateChange)="getSelectedCategoryWisePurchaseDates()">
                                                 <span class="mat-input-placeholder-wrapper">
                                                     <span class="mat-input-placeholder">to</span>
                                                 </span>
                                                 <input matEndDate placeholder="End date" formControlName="end"
-                                                    class="mat-input" (dateChange)="getSelectedCategoryWisePurchaseDates()">
+                                                    class="mat-input"
+                                                    (dateChange)="getSelectedCategoryWisePurchaseDates()">
                                             </mat-date-range-input>
 
                                             <mat-datepicker-toggle matSuffix [for]="startdatePicker"
@@ -71,8 +79,8 @@
 
                                     </div>
                                 </div>
-                               
-                            
+
+
                             </div>
                         </form>
 
@@ -80,15 +88,18 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"(click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                         </ul>
@@ -111,8 +122,9 @@
                                 padding-right: 64px;">Sku </th>
 
                                 <th class="thone" style="width:10%">Title </th>
-                                <th class="thone" style="width:10%; padding-left:40px" >Category</th>
-                                <th class="thone" style="width:10%;padding-right: -1px;white-space: pre-wrap;">Sub Category </th>
+                                <th class="thone" style="width:10%; padding-left:40px">Category</th>
+                                <th class="thone" style="width:10%;padding-right: -1px;white-space: pre-wrap;">Sub
+                                    Category </th>
                                 <th class="thone" style="width:10%">Brand</th>
 
                                 <th class="thone" style="width:10%; padding-left:15px; padding-right:15px">Qty </th>
@@ -128,32 +140,37 @@
                             <tr
                                 *ngFor="let list of categoryWisePurchaseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td >{{list.user.party_name}}</td>
+                                <td>{{list.user.party_name}}</td>
                                 <td>{{list.check_gst}}</td>
                                 <td>{{list.total | number:'1.2-2'}}</td>
                                 <td>{{list.bill_date |date:'yy/mm/dd'}}</td>
-                                <td colspan = "13"> 
+                                <td colspan="13">
                                     <table class="nested-table">
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
-                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.variant_name}}</td>
-                                            <td style="
+                                                <td style="width:10%; white-space: pre-wrap;">
+                                                    {{data.barcode.variant_name}}</td>
+                                                <td style="
                                             padding-left: 35px;
                                             padding-right: 20px;">{{data.barcode.sku}}</td>
 
-                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.title}}</td>
-                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.category}}</td>
-                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.subcategory}}</td>
-                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.brand}}</td>
+                                                <td style="width:10%; white-space: pre-wrap;">
+                                                    {{data.barcode.product.title}}</td>
+                                                <td style="width:10%; white-space: pre-wrap;">
+                                                    {{data.barcode.product.category}}</td>
+                                                <td style="width:10%; white-space: pre-wrap;">
+                                                    {{data.barcode.product.subcategory}}</td>
+                                                <td style="width:10%; white-space: pre-wrap;">
+                                                    {{data.barcode.product.brand}}</td>
 
-                                     <td >{{data.qty}}</td>
-                                     <td style="width:10%">{{data.unit_cost}}</td>
-                                     <td style="width:10%">{{data.mrp}}</td>
-                                     <td style="width:10%">{{data.discount}}</td>
-                                     <td style="width:7%">{{data.tax}}</td>
-                                     <td  style="width:10%">{{data.landing_cost}}</td>
-                                    <td style="width:10%"> {{data.total}}</td>
-                                    
+                                                <td>{{data.qty}}</td>
+                                                <td style="width:10%">{{data.unit_cost}}</td>
+                                                <td style="width:10%">{{data.mrp}}</td>
+                                                <td style="width:10%">{{data.discount}}</td>
+                                                <td style="width:7%">{{data.tax}}</td>
+                                                <td style="width:10%">{{data.landing_cost}}</td>
+                                                <td style="width:10%"> {{data.total}}</td>
+
                                             </tr>
                                         </tbody>
                                     </table>

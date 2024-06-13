@@ -6,7 +6,7 @@
                 <h6>Manage your Tax Wise Purchase</h6>
             </div>
 
-           <div class="page-btn" >
+            <div class="page-btn">
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12 d-flex">
                         <div class="form-group w-100" *ngIf="isAdmin">
@@ -14,16 +14,22 @@
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                                    <li> <input type="text" placeholder="search category" class="form-control"
+                                            [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                            [ngModelOptions]="{standalone: true}">
                                     </li>
                                     <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                            <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                                    </a></li>
+                                            <input type="checkbox" [value]="branch.id"
+                                                [checked]="selectData.includes(branch.id)"
+                                                (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                                style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{branch.title}}</label>
+                                        </a></li>
                                 </ul>
                             </div>
                             <div class="d-flex">
-                            <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                                <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                             </div>
                         </div>
                     </div>
@@ -36,28 +42,29 @@
                     <div class="search-set">
                         <form [formGroup]="purchaseRegisterForm">
                             <div class="row">
-                                
-                                    <div class="col-lg-7 col-sm-6 col-12">
-                                        <div class="search-input mx-3">
-                                            <strong>Select Date</strong>
-                                            <mat-form-field style="width: 97%;" class="border">
-                                                <mat-date-range-input [formGroup]="purchaseRegisterForm" [rangePicker]="startdatePicker">
-                                                    <input matStartDate placeholder="Start date" formControlName="start"
-                                                        class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
-                                                    <span class="mat-input-placeholder-wrapper">
-                                                        <span class="mat-input-placeholder">to</span>
-                                                    </span>
-                                                    <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                                        (dateChange)="getSelectedpurchaseRegisterDates()">
-                                                </mat-date-range-input>
-            
-                                                <mat-datepicker-toggle matSuffix [for]="startdatePicker"
-                                                    style=" font-size: x-large;"></mat-datepicker-toggle>
-                                                <mat-date-range-picker #startdatePicker></mat-date-range-picker>
-                                            </mat-form-field>
-                                        </div>
+
+                                <div class="col-lg-7 col-sm-6 col-12">
+                                    <div class="search-input mx-3">
+                                        <strong>Select Date</strong>
+                                        <mat-form-field style="width: 97%;" class="border">
+                                            <mat-date-range-input [formGroup]="purchaseRegisterForm"
+                                                [rangePicker]="startdatePicker" [min]="minDate" [max]="maxDate">
+                                                <input matStartDate placeholder="Start date" formControlName="start"
+                                                    class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
+                                                <span class="mat-input-placeholder-wrapper">
+                                                    <span class="mat-input-placeholder">to</span>
+                                                </span>
+                                                <input matEndDate placeholder="End date" formControlName="end"
+                                                    class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
+                                            </mat-date-range-input>
+
+                                            <mat-datepicker-toggle matSuffix [for]="startdatePicker"
+                                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #startdatePicker></mat-date-range-picker>
+                                        </mat-form-field>
                                     </div>
-                               
+                                </div>
+
                             </div>
                         </form>
 
@@ -65,21 +72,21 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
-                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"(click)="printTable()"><img
-                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
                 </div>
-             
+
 
                 <div class="table-responsive">
                     <table class="table datanew" id=mytable>
@@ -92,7 +99,8 @@
                                 <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
 
                                 <th class="thone" style="width:10%; padding-left:31px;padding-right: 45px;">Date </th>
-                                <th class="thone" style="width:10%;white-space: pre-wrap; padding-right: 60px;">Voucher Type</th>
+                                <th class="thone" style="width:10%;white-space: pre-wrap; padding-right: 60px;">Voucher
+                                    Type</th>
                                 <th class="thone" style="width:10%;white-space: pre-wrap;">Voucher No.</th>
                                 <th class="thone" style="width:10%;white-space: pre-wrap;">Hsn Code</th>
 
@@ -114,27 +122,27 @@
                                 <td>{{list.name}}</td>
                                 <td>{{list.voucher_no }}</td>
                                 <td>{{list.total_amount }}</td>
-                                <td colspan = 12 > 
+                                <td colspan=12>
                                     <table>
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
-                                            <td style="width:10%">{{data.date}}</td>
-                                            <td style="width:10%">{{data.voucher_type}}</td>
-                                            <td style="width:10%">{{data.voucher_no}}</td>
-                                            <td style="width:10%">{{data.hsn_code}}</td>
-                                            <td style="width:10%">{{data.taxable}}</td>
+                                                <td style="width:10%">{{data.date}}</td>
+                                                <td style="width:10%">{{data.voucher_type}}</td>
+                                                <td style="width:10%">{{data.voucher_no}}</td>
+                                                <td style="width:10%">{{data.hsn_code}}</td>
+                                                <td style="width:10%">{{data.taxable}}</td>
 
-                                     <td style="width:10%">{{data.CGST_rate}}</td>
-                                     <td style="width:10%">{{data.CGST_amount}}</td>
-                                     <td style="width:10%">{{data.SGST_rate}}</td>
-                                     <td style="width:10%">{{data.SGST_amount}}</td>
-                                     <td style="width:10%">{{data.IGST_rate}}</td>
-                                     <td  style="width:10%">{{data.IGST_amount}}</td>
-                                    <td style="width:10%"> {{data.Tax_amount}}</td>
-                                   </tr>
-                        </tbody>
-                        </table>
-                        </td>
+                                                <td style="width:10%">{{data.CGST_rate}}</td>
+                                                <td style="width:10%">{{data.CGST_amount}}</td>
+                                                <td style="width:10%">{{data.SGST_rate}}</td>
+                                                <td style="width:10%">{{data.SGST_amount}}</td>
+                                                <td style="width:10%">{{data.IGST_rate}}</td>
+                                                <td style="width:10%">{{data.IGST_amount}}</td>
+                                                <td style="width:10%"> {{data.Tax_amount}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
                         <tbody *ngIf="purchaseRegisterList?.length==0">
                             <tr>
                                 <td colspan="10">
@@ -143,7 +151,7 @@
                             </tr>
                         </tbody>
                     </table>
-                     <div class="row">
+                    <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
@@ -164,8 +172,5 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
-            
-    
-

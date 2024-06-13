@@ -15,6 +15,7 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { ReportService } from 'src/app/Services/report/report.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-product-wise-sale',
@@ -41,8 +42,13 @@ export class ProductWiseSaleComponent implements OnInit {
   filteredProduct: Observable<any[]> | undefined;
   productControl: FormControl = new FormControl('');
   userName: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private coreService: CoreService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private transactionService: TransactionService, private coreService: CoreService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //product Wise Sale form
   productWiseSaleForm!: FormGroup;
@@ -64,6 +70,12 @@ export class ProductWiseSaleComponent implements OnInit {
       let fyId = JSON.parse(fy);
       this.fyID = fyId;
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -89,11 +101,12 @@ export class ProductWiseSaleComponent implements OnInit {
 
     // product Wise Sale form
     this.productWiseSaleForm = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       product: new FormControl(),
-
     });
+    this.commonService.validateAndClearDates(this.productWiseSaleForm, this.minDate, this.maxDate);
+
     this.startDate = this.productWiseSaleForm.value?.start;
     this.endDate = this.productWiseSaleForm.value?.end;
     this.product = this.productWiseSaleForm.value?.product;
@@ -201,7 +214,7 @@ export class ProductWiseSaleComponent implements OnInit {
   }
   productWiseSale: any
   getProductWiseSale() {
-    this.reportService.getProductWiseSale(this.startDate, this.endDate, this.product,this.fyID,this.selectData).subscribe((res) => {
+    this.reportService.getProductWiseSale(this.startDate, this.endDate, this.product, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.productWiseSale = res;
       this.productWiseSaleList = res;
@@ -378,48 +391,48 @@ export class ProductWiseSaleComponent implements OnInit {
       this.itemsPerPage = this.productWiseSaleList?.length;
     }
   }
-   //23-5
-   branchList: any[] = [];
-   filteredBranchList: any[] = [];
-   searchBranch: string = '';
-   getBranch() {
-     this.reportService.getBranch().subscribe((res: any) => {
-       this.branchList = res;
-       this.filteredBranchList = [...this.branchList];
-     });
-   }
-   filterBranch() {
-     if (this.searchBranch.trim() === '') {
-       this.filteredBranchList = [...this.branchList];
-     } else {
-       this.filteredBranchList = this.branchList.filter(feature =>
-         feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-       );
-     }
-   }
-   // add remove branch 
-   searchVariant = ''
-   selectData: any[] = [];
-   selectedCategoryIds: any[] = []
-   SelectedBranch(variant: any, event: any) {
-     if (event) {
-       console.log(variant);
-       this.selectData.push(variant)
-       console.log(this.selectData, 'selected data');
-       //close dropdown 
-       this.searchVariant = '';
-       this.ngOnInit();
-     } else {
-       const selectedIndex = this.selectData.findIndex(item => item == variant);
-       console.log(selectedIndex);
-       if (selectedIndex !== -1) {
-         this.selectData.splice(selectedIndex, 1);
-       }
-       this.ngOnInit();
-       console.log(this.selectData);
-     }
-   }
- //23-5
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
 }
 
 
