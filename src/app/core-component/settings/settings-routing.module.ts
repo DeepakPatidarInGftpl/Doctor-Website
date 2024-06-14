@@ -55,6 +55,10 @@ const routes: Routes = [
       {
         path: 'closingFinancialYear',
         loadChildren: () => import('./closing-financial-year/closing-financial-year.module').then((m) => m.ClosingFinancialYearModule)
+      },
+      {
+        path: 'closingFinancialYear/stock-preview',
+        loadChildren: () => import('./stock-preview/stock-preview.module').then((m) => m.StockPreviewModule)
       }
     ],
   },

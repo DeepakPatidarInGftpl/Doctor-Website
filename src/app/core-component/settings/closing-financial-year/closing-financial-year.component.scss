@@ -28,3 +28,40 @@
     font-weight: 500;
     color: #000;
 }
+
+.stock-closing-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.badge-btn {
+    background-color: rgb(255 166 0) !important;
+    color: #FFF !important;
+    font-size: 20px;
+    padding: 10px 30px;
+}
+
+.completed-text {
+    font-size: 20px;
+    color: #4ed44e;
+}
+
+.check-icon {
+    color: #4ed44e;
+    font-size: 28px;
+}
+
+.stock-closing-card-wrapper {
+    background-color: white;
+    padding: 15px;
+}
+
+.processed-text {
+    color: rgb(0 0 0 / 65%);
+    font-size: 20px;
+}
+
+.double-right-arrow {
+    font-size: 28px;
+    color: rgb(0 0 0 / 65%)
+}

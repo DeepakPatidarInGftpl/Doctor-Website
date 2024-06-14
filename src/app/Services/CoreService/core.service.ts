@@ -1397,6 +1397,12 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/financial_year/?id=';
     return this.http.delete(`${url}${id}`);
   }
+
+  closeFinancialYear(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/financial_year_stock_closing/';
+    return this.http.post(url, data);
+  }
+
   getCurrency() {
     let url = this.apiUrl + '/pv-api/currency/';
     return this.http.get(url);
@@ -1677,26 +1683,26 @@ export class CoreService {
   }
 
   //pos order
-  getPosOrder(fy:any,branch:any) {
+  getPosOrder(fy: any, branch: any) {
     let url = this.apiUrl + '/pv-api/pos/pos_orders/';
     //24-5
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     const queryParams: any[] = [];
     // 24-5 nd// 22-5
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
       queryParams.push(`branch=${idString}`);
     }
-//end
-if (queryParams.length > 0) {
-  url += '?' + queryParams.join('&');
-}
+    //end
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
     return this.http.get(url)
   }
   getPosOrderById(id: number): Observable<any> {
@@ -1735,30 +1741,30 @@ if (queryParams.length > 0) {
     return this.http.get<any>(`${url}${id}`);
   }
   //product ledger
-  getProductLedgerFy(product_id:any, fy:any,branch:any){
+  getProductLedgerFy(product_id: any, fy: any, branch: any) {
     let url = this.apiUrl + '/pv-api/product_ledger/';
-      //24-5
-      console.log(branch,'branch');
-      console.log(branch.length,'branch');
-      const queryParams: any[] = [];
-      // 24-5 nd// 22-5
-      if (product_id) {
-        queryParams.push(`product_id=${product_id}`);
-      }
-      if (fy) {
-        queryParams.push(`financial_year=${fy}`);
-      }
-      if (branch && branch.length> 0) {
-        const idString = JSON.stringify(branch);
-        console.log(idString);
-        console.log(idString?.length);
-        queryParams.push(`branch=${idString}`);
-      }
-  //end
-  if (queryParams.length > 0) {
-    url += '?' + queryParams.join('&');
-  }
-  return this.http.get(url)
+    //24-5
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
+    const queryParams: any[] = [];
+    // 24-5 nd// 22-5
+    if (product_id) {
+      queryParams.push(`product_id=${product_id}`);
+    }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length > 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+    //end
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url)
   }
   getProductLedger() {
     let url = this.apiUrl + '/pv-api/product_ledger/';
@@ -1770,7 +1776,12 @@ if (queryParams.length > 0) {
     return this.http.get(url)
   }
 
-//dashboard api
+  getAllProductStock() {
+    let url = this.apiUrl + '/pv-api/all_stocks/';
+    return this.http.get(url)
+  }
+
+  //dashboard api
   getDashboardSaleVsPurchase(from_date: any, to_date: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/sale-vs-purchase/';
     const queryParams: any[] = [];
@@ -1802,19 +1813,19 @@ if (queryParams.length > 0) {
     return this.http.get<any>(url);
   }
   // /pv-api/dashboard/transaction/?start_date=2023-12-18&end_date=2023-12-27&transaction_type=Sale
-  getDashboardTransaction(start_date: any, end_date: any, transaction_type:any,branch:any): Observable<any> {
+  getDashboardTransaction(start_date: any, end_date: any, transaction_type: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/transaction/';
     const queryParams: any[] = [];
     if (start_date) {
       queryParams.push(`start_date=${start_date}`);
     } if (end_date) {
       queryParams.push(`end_date=${end_date}`);
-    } if(transaction_type){
+    } if (transaction_type) {
       queryParams.push(`transaction_type=${transaction_type}`)
     } if (branch) {
       queryParams.push(`branch=${branch}`);
     }
-     if (queryParams.length > 0) {
+    if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
@@ -1870,7 +1881,7 @@ if (queryParams.length > 0) {
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
-    return this.http.patch<any>(url,'');
+    return this.http.patch<any>(url, '');
   }
   // updateLabel(product: number, product_label: number): Observable<any> {
   //   const url = `${this.apiUrl}/pv-api/product-label-update/`;
@@ -1884,69 +1895,69 @@ if (queryParams.length > 0) {
   //   }
   //   return this.http.patch<any>(url, requestBody);
   // }
-  
-    // company drive
-    getCompanyDrive() {
-      let url = this.apiUrl + '/pv-api/company_drive/';
-      return this.http.get(url)
-    }
-    getCompanyDriveById(id) {
-      let url = this.apiUrl + '/pv-api/company_drive/?id=';
-      return this.http.get(`${url}${id}`)
-    }
-    CompanyDriveIsActive(id: any, data) {
-      let url = this.apiUrl + '/pv-api/company_drive/?id=';
-      return this.http.patch(`${url}${id}`, data);
-    }
-    addCompanyDrive(data) {
-      let url = this.apiUrl + '/pv-api/company_drive/';
-      return this.http.post(url, data);
-    }
-    updateCompanyDrive(data: any, id: any): Observable<any> {
-      let url = this.apiUrl + '/pv-api/company_drive/?id=';
-      return this.http.put<any>(`${url}${id}`, data);
-    }
-    deleteCompanyDrive(id: number) {
-      let url = this.apiUrl + '/pv-api/company_drive/?id=';
-      return this.http.delete(`${url}${id}`);
-    }
-    searchProduct(query: any) {
-      let url = this.apiUrl + '/pv-api/variant-search/?search=';
-      return this.http.get(url + query);
-    }
-    
-       // production voucher
-       getProductionVoucher(): Observable<any> {
-        let url = this.apiUrl + '/pv-api/production_voucher/'
-        return this.http.get<any>(url)
-      }
-      getProductionVoucherById(id: number): Observable<any> {
-        let url = this.apiUrl + '/pv-api/production_voucher/?id='
-        return this.http.get<any>(`${url}${id}`)
-      }
-      ProductionVoucherIsActive(id: any, data) {
-        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
-        return this.http.patch(`${url}${id}`, data);
-      }
-      addProductionVoucher(data: any): Observable<any> {
-        let url = this.apiUrl + '/pv-api/production_voucher/';
-        return this.http.post<any>(url, data)
-      }
-      updateProductionVoucher(data: any, id: number): Observable<any> {
-        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
-        return this.http.put<any>(`${url}${id}`, data)
-      }
-      deleteProductionVoucher(id: number) {
-        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
-        return this.http.delete(`${url}${id}`)
-      }
-      getProductionVoucherPrefix(){
-        let url =this.apiUrl+'/pv-api/prefix/?id=ProductionVoucher';
-        return this.http.get(url)
-      }
-      // product shipping charges
-      getShippingCharges(){
-        let url =this.apiUrl+'/pv-api/shipping_charges/';
-        return this.http.get(url)
-      }
+
+  // company drive
+  getCompanyDrive() {
+    let url = this.apiUrl + '/pv-api/company_drive/';
+    return this.http.get(url)
+  }
+  getCompanyDriveById(id) {
+    let url = this.apiUrl + '/pv-api/company_drive/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  CompanyDriveIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/company_drive/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addCompanyDrive(data) {
+    let url = this.apiUrl + '/pv-api/company_drive/';
+    return this.http.post(url, data);
+  }
+  updateCompanyDrive(data: any, id: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/company_drive/?id=';
+    return this.http.put<any>(`${url}${id}`, data);
+  }
+  deleteCompanyDrive(id: number) {
+    let url = this.apiUrl + '/pv-api/company_drive/?id=';
+    return this.http.delete(`${url}${id}`);
+  }
+  searchProduct(query: any) {
+    let url = this.apiUrl + '/pv-api/variant-search/?search=';
+    return this.http.get(url + query);
+  }
+
+  // production voucher
+  getProductionVoucher(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/production_voucher/'
+    return this.http.get<any>(url)
+  }
+  getProductionVoucherById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/production_voucher/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  ProductionVoucherIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addProductionVoucher(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/production_voucher/';
+    return this.http.post<any>(url, data)
+  }
+  updateProductionVoucher(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+    return this.http.put<any>(`${url}${id}`, data)
+  }
+  deleteProductionVoucher(id: number) {
+    let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  getProductionVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=ProductionVoucher';
+    return this.http.get(url)
+  }
+  // product shipping charges
+  getShippingCharges() {
+    let url = this.apiUrl + '/pv-api/shipping_charges/';
+    return this.http.get(url)
+  }
 }

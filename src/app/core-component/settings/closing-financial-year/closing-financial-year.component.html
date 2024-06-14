@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container-fluid">
     <div class="page-header-wrapper">
         <div class="header-title-wrapper">
             <h3 class="title-wrapper">Year End Closing Process</h3>
         </div>
         <div class="cards-container-wrapper mt-3">
-            <div class="row">
+            <div class="row m-0">
                 <div class="col-12 col-lg-6 py-3 px-4 card-list-wrapper">
                     <div class="card-title-wrapper">
                         <h3 class="title-wrapper card-title">Things to take-care:</h3>
@@ -23,8 +23,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6 py-3 px-4">
-                    <div class="card-content-wrapper">
+                <div class="col-12 px-0 col-lg-6 px-lg-2">
+                    <div class="card-content-wrapper bg-white h-100 py-3 px-4 px-lg-2">
                         <h5>1. What is it?</h5>
                         <p class="mb-2">It is the completion of the accounting period when businesses close their
                             accounts for
@@ -45,8 +45,66 @@
             </div>
         </div>
 
-        <div class="process-section-wrapper">
+        <div class="process-section-wrapper mt-4">
+            <div class="stock-closing-card-wrapper d-flex align-items-center justify-content-between">
+                <div class="d-md-flex align-items-center">
+                    <span class="badge text-bg-primary badge-btn">Step 1</span>
+                    <h4 class="ms-md-5 mt-2 mt-md-0 stock-closing-title">Stock Closing</h4>
+                </div>
+                <div class="d-flex align-items-center">
+                    <!-- <p class="mb-0 completed-text me-3">Completed</p> -->
+                    <!-- <i class="fas fa-check-circle check-icon"></i> -->
+                    <!-- <p class="mb-0 processed-text me-3">Processed</p> -->
+                    <button class="btn d-flex align-items-center p-0" data-bs-toggle="modal"
+                        data-bs-target="#add_event">
+                        <span class="processed-text me-3"> Proceed</span>
+                        <i class="fas fa-angle-double-right double-right-arrow"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="stock-closing-card-wrapper mt-3 d-flex align-items-center justify-content-between">
+                <div class="d-md-flex align-items-center">
+                    <span class="badge text-bg-primary badge-btn">Step 2</span>
+                    <h4 class="ms-md-5 mt-2 mt-md-0 stock-closing-title">Ledger Closing</h4>
+                </div>
+                <div class="d-flex align-items-center">
+                    <p class="mb-0 processed-text me-3">Proceed</p>
+                    <i class="fas fa-angle-double-right double-right-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="add_event" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Do you want to Close the Financial Year?</h5>
+                <button type="button" class="btn-close closeModal" data-bs-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Current financial Year <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" [(ngModel)]="current_financial_year"
+                            name="currentFinancialYear" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label>Next Financial Year <span class="text-danger">*</span></label>
+                        <div class="cal-icon">
+                            <input class="form-control" type="text" [(ngModel)]="next_financial_year"
+                                name="nextFinancialYear" disabled />
+                        </div>
+                    </div>
+                    <div class="submit-section d-flex justify-content-end align-items-center">
+                        <button class="btn btn-danger me-3">Cancel</button>
+                        <button class="btn btn-secondary me-3" (click)="preview()">Preview</button>
+                        <button class="btn btn-primary" (click)="submit()">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
