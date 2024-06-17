@@ -15,6 +15,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-brand-wise-sale',
   templateUrl: './brand-wise-sale.component.html',
@@ -35,45 +36,52 @@ export class BrandWiseSaleComponent implements OnInit {
 
   filteredBrand: Observable<any[]> | undefined;
   brandControl: FormControl = new FormControl('');
-
-
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
   userName: any;
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe,
-    private coreService:CoreService, private reportService: ReportService) {
+    private coreService: CoreService, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   // Brand Wise Sale form
- brandWiseSaleForm!: FormGroup;
+  brandWiseSaleForm!: FormGroup;
   startDate: any;
   endDate: any;
   brand: any;
- brandWiseSaleList: any;
+  brandWiseSaleList: any;
 
 
   userDetails: any;
-    //23-5
-    isAdmin=false;
-    fyID:any;
+  //23-5
+  isAdmin = false;
+  fyID: any;
   ngOnInit(): void {
-      //23-5
-      if (localStorage.getItem('financialYear')) {
-        let fy = localStorage.getItem('financialYear');
-        console.warn(JSON.parse(fy));
-        let fyId = JSON.parse(fy);
-        this.fyID=fyId;
+    //23-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
       }
-      this.cs.userDetails$.subscribe((res: any) => {
-        if (res.role == 'admin') {
-          this.isAdmin = true;
-        } else {
-          this.isAdmin = false;
-        }
-        this.getBranch();
-      });
-  //23    
-  this.cs.userDetails$.subscribe((userDetails:any) => {
+      this.getBranch();
+    });
+    //23    
+    this.cs.userDetails$.subscribe((userDetails: any) => {
       this.userDetails = userDetails;
       console.log(userDetails);
-      this.userName=userDetails?.username
+      this.userName = userDetails?.username
     });
 
     const today = new Date();
@@ -86,17 +94,20 @@ export class BrandWiseSaleComponent implements OnInit {
     const formattedToday = this.formatDate(today);
 
     // Brand Wise Sale form
-    this.brandWiseSaleForm= new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+    this.brandWiseSaleForm = new FormGroup({
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       brand: new FormControl(''),
     });
+
+    this.commonService.validateAndClearDates(this.brandWiseSaleForm, this.minDate, this.maxDate);
+
     this.startDate = this.brandWiseSaleForm.value?.start;
     this.endDate = this.brandWiseSaleForm.value?.end;
     this.brand = this.brandWiseSaleForm.value?.brand;
     this.getBrandWiseSale();
     this.getBrand();
-    
+
     this.getProduct()
     // brand
     this.filteredBrand = this.brandControl.valueChanges.pipe(
@@ -108,7 +119,7 @@ export class BrandWiseSaleComponent implements OnInit {
     );
 
   }
-  
+
   getproductHistory() {
     throw new Error('Method not implemented.');
   }
@@ -189,8 +200,8 @@ export class BrandWiseSaleComponent implements OnInit {
   brandWiseSale: any
   getBrandWiseSale() {
     console.log(this.brand);
-    
-    this.reportService.getBrandWiseSale(this.startDate, this.endDate, this.brand,this.fyID, this.selectData).subscribe((res) => {
+
+    this.reportService.getBrandWiseSale(this.startDate, this.endDate, this.brand, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.brandWiseSale = res;
       this.brandWiseSaleList = res;
@@ -228,192 +239,192 @@ export class BrandWiseSaleComponent implements OnInit {
       this.brandList = res;
     })
   }
- 
- // convert to pdf
 
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const subtitle = 'PV';
-  const title = 'Brand Wise Sale Report';
-  const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-  const heading = `User: ${this.userName}`;
+  // convert to pdf
 
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(subtitle, 86, 5);
-  doc.text(title, 82, 10);
-  doc.text(heading, 10, 18);
-  doc.text(heading2, 10, 22)
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Brand Wise Sale Report';
+    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
+    const heading = `User: ${this.userName}`;
 
-  doc.text('', 10, 25); //,argin x, y
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 82, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name','Total Qty.', 'Total Amount']
-    ],
-    body: this.brandWiseSaleList.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.total_qty,
-      row.total_amount,
-      
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
+    doc.text('', 10, 25); //,argin x, y
+
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name', 'Total Qty.', 'Total Amount']
+      ],
+      body: this.brandWiseSaleList.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.total_qty,
+        row.total_amount,
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25, // margin top 
 
 
-  });
+    });
 
-  doc.save('Brand_Wise_Sale .pdf');
-}
- 
+    doc.save('Brand_Wise_Sale .pdf');
+  }
 
-// excel export only filtered data
-getVisibleDataFromTable(): any[] {
-  const visibleData = [];
-  const table = document.getElementById('mytable');
-  if (table) {
-    const headerRow = table.querySelector('thead tr');
-    if (headerRow) {
-      const headerData: string[] = [];
-      headerRow.querySelectorAll('th').forEach(cell => {
-        const columnHeader = cell.textContent?.trim(); // Add null check here
-        if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-          headerData.push(columnHeader);
-        }
+
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    if (table) {
+      const headerRow = table.querySelector('thead tr');
+      if (headerRow) {
+        const headerData: string[] = [];
+        headerRow.querySelectorAll('th').forEach(cell => {
+          const columnHeader = cell.textContent?.trim(); // Add null check here
+          if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+            headerData.push(columnHeader);
+          }
+        });
+        visibleData.push(headerData);
+      }
+
+      // Include visible data rows
+      const dataRows = table.querySelectorAll('tbody tr');
+      dataRows.forEach(row => {
+        const rowData: string[] = [];
+        row.querySelectorAll('td').forEach(cell => {
+          const cellData = cell.textContent?.trim(); // Add null check here
+          if (cellData) {
+            rowData.push(cellData);
+          }
+        });
+        visibleData.push(rowData);
       });
-      visibleData.push(headerData);
+    }
+    return visibleData;
+  }
+
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'Stockalert.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    if (!tableElement) {
+      console.error("Table element with ID 'mytable' not found.");
+      return;
     }
 
-    // Include visible data rows
-    const dataRows = table.querySelectorAll('tbody tr');
-    dataRows.forEach(row => {
-      const rowData: string[] = [];
-      row.querySelectorAll('td').forEach(cell => {
-        const cellData = cell.textContent?.trim(); // Add null check here
-        if (cellData) {
-          rowData.push(cellData);
-        }
-      });
-      visibleData.push(rowData);
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    if (!titleElement) {
+      console.error("Title element with class 'titl' not found.");
+      return;
+    }
+
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.brandWiseSaleList?.length;
+    }
+  }
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
     });
   }
-  return visibleData;
-}
-
-    // Modify your exportToExcel() function
-exportToExcel(): void {
-  const visibleDataToExport = this.getVisibleDataFromTable();
-  const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-  const wb: XLSX.WorkBook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  // Create a Blob from the workbook and initiate a download
-  const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const fileName = 'Stockalert.xlsx';
-  saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-}
-
-printTable(): void {
-  // Get the table element and its HTML content
-  const tableElement = document.getElementById('mytable');
-  if (!tableElement) {
-    console.error("Table element with ID 'mytable' not found.");
-    return;
-  }
-
-  const tableHTML = tableElement.outerHTML;
-
-  // Get the title element and its HTML content
-  const titleElement = document.querySelector('.titl');
-  if (!titleElement) {
-    console.error("Title element with class 'titl' not found.");
-    return;
-  }
-
-  const titleHTML = titleElement.outerHTML;
-
-  // Clone the table element to manipulate
-  const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-
-  // Get the modified table's HTML content
-  const modifiedTableHTML = clonedTable.outerHTML;
-
-  // Apply styles to add some space from the top after the title
-  const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
-  // Combine the title and table content
-  const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-  // Store the original contents
-  const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
-  // Replace the content of the body with the combined content
-  document.body.innerHTML = combinedContent;
-  window.print();
-
-  // Restore the original content of the body
-  document.body.innerHTML = originalContents;
-}
-
-changePg(val: any) {
-  console.log(val);
-  if (val == -1) {
-    this.itemsPerPage = this.brandWiseSaleList?.length;
-  }
-}
-branchList: any[] = [];
-filteredBranchList: any[] = [];
-searchBranch: string = '';
-getBranch() {
-  this.reportService.getBranch().subscribe((res: any) => {
-    this.branchList = res;
-    this.filteredBranchList = [...this.branchList];
-  });
-}
-filterBranch() {
-  if (this.searchBranch.trim() === '') {
-    this.filteredBranchList = [...this.branchList];
-  } else {
-    this.filteredBranchList = this.branchList.filter(feature =>
-      feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-    );
-  }
-}
-// add remove branch 
-searchVariant = ''
-selectData: any[] = [];
-selectedCategoryIds: any[] = []
-SelectedBranch(variant: any, event: any) {
-  if (event) {
-    console.log(variant);
-    this.selectData.push(variant)
-    console.log(this.selectData, 'selected data');
-    //close dropdown 
-    this.searchVariant = '';
-    this.ngOnInit();
-  } else {
-    const selectedIndex = this.selectData.findIndex(item => item == variant);
-    console.log(selectedIndex);
-    if (selectedIndex !== -1) {
-      this.selectData.splice(selectedIndex, 1);
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
     }
-    this.ngOnInit();
-    console.log(this.selectData);
   }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
 }
-//23-5
-}
 
 
 
@@ -442,12 +453,12 @@ SelectedBranch(variant: any, event: any) {
 
 
 
-  
 
 
-  
 
-  
+
+
+
 
 
 

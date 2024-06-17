@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -750,13 +750,13 @@ export class CommonServiceService {
     let maxDate: Date;
 
     switch (financialYear) {
-      case '12':
-        minDate = new Date(2024, 3, 1, 0, 0, 0);
-        maxDate = new Date(2025, 2, 31, 23, 59, 59);
-        break;
       case '6':
         minDate = new Date(2023, 3, 1, 0, 0, 0);
         maxDate = new Date(2024, 2, 31, 23, 59, 59);
+        break;
+      case '12':
+        minDate = new Date(2024, 3, 1, 0, 0, 0);
+        maxDate = new Date(2025, 2, 31, 23, 59, 59);
         break;
       case '14':
         minDate = new Date(2025, 3, 1, 0, 0, 0);
@@ -815,4 +815,45 @@ export class CommonServiceService {
     return { formattedMinDate, formattedMaxDate };
   }
 
+  dateRangeValidator(financialYear: string) {
+    return (control: FormControl): { [key: string]: boolean } | null => {
+      if (!control.parent) {
+        return null;
+      }
+
+      const startDate = control.parent.get('start')?.value;
+      const endDate = control.parent.get('end')?.value;
+
+      if (!startDate || !endDate) {
+        return null;
+      }
+
+      const { minDate, maxDate } = this.determineMinMaxDates(financialYear);
+
+      if (control === control.parent.get('start') && new Date(startDate) < minDate) {
+        return { dateRange: true };
+      }
+
+      if (control === control.parent.get('end') && new Date(endDate) > maxDate) {
+        return { dateRange: true };
+      }
+
+      return null;
+    };
+  }
+
+  validateAndClearDates(formGroup: FormGroup, minDate: Date, maxDate: Date): void {
+    const startControl = formGroup.get('start');
+    const endControl = formGroup.get('end');
+    const startDate = new Date(startControl?.value);
+    const endDate = new Date(endControl?.value);
+
+    if (startDate < minDate || startDate > maxDate) {
+      startControl?.setValue('');
+    }
+
+    if (endDate < minDate || endDate > maxDate) {
+      endControl?.setValue('');
+    }
+  }
 }

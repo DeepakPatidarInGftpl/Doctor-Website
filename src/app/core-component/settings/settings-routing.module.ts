@@ -51,6 +51,18 @@ const routes: Routes = [
       {
         path: 'finncialYear',
         loadChildren: () => import('./financial-year/financial-year.module').then((m) => m.FinancialYearModule)
+      },
+      {
+        path: 'closingFinancialYear',
+        loadChildren: () => import('./closing-financial-year/closing-financial-year.module').then((m) => m.ClosingFinancialYearModule)
+      },
+      {
+        path: 'closingFinancialYear/stock-preview',
+        loadChildren: () => import('./stock-preview/stock-preview.module').then((m) => m.StockPreviewModule)
+      },
+      {
+        path: 'closingFinancialYear/account-ledger-preview',
+        loadChildren: () => import('./account-ledger-preview/account-ledger-preview.module').then((m) => m.AccountLedgerPreviewModule)
       }
     ],
   },
@@ -120,14 +132,14 @@ const routes: Routes = [
   {
     path: 'financial-year-details/:id', loadChildren: () => import('./financial-year-details/financial-year-details.module').then((m) => m.FinancialYearDetailsModule)
   },
-  {path: 'membership', loadChildren: () => import('./membership/membership.module').then((m) => m.MembershipModule)},
-  {path: 'add-membership', loadChildren: () => import('./add-membership/add-membership.module').then((m) => m.AddMembershipModule)},
-  {path: 'update-membership/:id', loadChildren: () => import('./update-membership/update-membership.module').then((m) => m.UpdateMembershipModule)},
-  {path: 'detail-membership/:id', loadChildren: () => import('./detail-membership/detail-membership.module').then((m) => m.DetailMembershipModule)},
+  { path: 'membership', loadChildren: () => import('./membership/membership.module').then((m) => m.MembershipModule) },
+  { path: 'add-membership', loadChildren: () => import('./add-membership/add-membership.module').then((m) => m.AddMembershipModule) },
+  { path: 'update-membership/:id', loadChildren: () => import('./update-membership/update-membership.module').then((m) => m.UpdateMembershipModule) },
+  { path: 'detail-membership/:id', loadChildren: () => import('./detail-membership/detail-membership.module').then((m) => m.DetailMembershipModule) },
 
   //22-2
-  {path: 'company-drive', loadChildren: () => import('./company-drive/company-drive.module').then((m) => m.CompanyDriveModule)},
-  {path: 'detail-company-drive/:id', loadChildren: () => import('./detail-company-drive/detail-company-drive.module').then((m) => m.DetailCompanyDriveModule)},
+  { path: 'company-drive', loadChildren: () => import('./company-drive/company-drive.module').then((m) => m.CompanyDriveModule) },
+  { path: 'detail-company-drive/:id', loadChildren: () => import('./detail-company-drive/detail-company-drive.module').then((m) => m.DetailCompanyDriveModule) },
 
 ];
 

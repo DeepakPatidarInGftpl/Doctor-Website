@@ -18,7 +18,7 @@ import { saveAs } from 'file-saver';
 })
 export class FinancialYearComponent implements OnInit {
 
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -29,17 +29,17 @@ export class FinancialYearComponent implements OnInit {
   }
   imgUrl = 'https://pv.greatfuturetechno.com';
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   startDate: string = '';
   endDate: string = '';
-  selectedBranch:string=''
-  navigateData:any
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private profileService:CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  selectedBranch: string = ''
+  navigateData: any
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private profileService: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -71,7 +71,7 @@ export class FinancialYearComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -79,84 +79,84 @@ export class FinancialYearComponent implements OnInit {
             });
           }
         })
-      
+
       }
     });
   }
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this financial year!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.financialYearIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Financial Year Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this financial year!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.financialYearIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: this.delRes.msg,
-       });
-     }
-   });
- }
- loader=true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this financial year!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.financialYearIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Financial Year Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this financial year!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.financialYearIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: this.delRes.msg,
+        });
+      }
+    });
+  }
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
-      close_year: new FormControl('', [Validators.required]),   
+      close_year: new FormControl('', [Validators.required]),
     })
-   
-    this.coreService.getFinancialYear().subscribe(res=>{
-      this.loader=false;
-      this.tableData=res;
+
+    this.coreService.getFinancialYear().subscribe(res => {
+      this.loader = false;
+      this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
@@ -183,14 +183,14 @@ export class FinancialYearComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='add_financialyear') {
+        if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename == 'add_financialyear') {
           this.isAdd = res?.codename;
           // console.log(this.isAdd);
-        } else if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='change_financialyear') {
+        } else if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename == 'change_financialyear') {
           this.isEdit = res?.codename;
           // console.log(this.isEdit);
-        } else if(res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='delete_financialyear'){
-          this.isDelete=res?.codename;
+        } else if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename == 'delete_financialyear') {
+          this.isDelete = res?.codename;
           // console.log(this.isDelete); 
         }
       });
@@ -198,7 +198,7 @@ export class FinancialYearComponent implements OnInit {
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
@@ -232,54 +232,54 @@ export class FinancialYearComponent implements OnInit {
   }
 
   addRes: any
-  loaders=false;
- submit() {
-  // console.log(this.FinancialYearForm.value);
-  // console.log(this.id);
+  loaders = false;
+  submit() {
+    // console.log(this.FinancialYearForm.value);
+    // console.log(this.id);
 
-  if (this.FinancialYearForm.valid) {
-    this.loaders=true;
-    this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
-      // console.log(res);
-      this.addRes = res
-      if (this.addRes.success) {
-        this.loaders=false;
-        this.toastr.success(this.addRes.msg)
-        this.FinancialYearForm.reset()
-        // window.location.reload();
-        this.ngOnInit()
-      }
-    }, err => {
-      // console.log(err.error.gst);
-    })
-  } else {
-    this.FinancialYearForm.markAllAsTouched()
-    this.toastr.error('Please Fill All The Required Fields');
+    if (this.FinancialYearForm.valid) {
+      this.loaders = true;
+      this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
+        // console.log(res);
+        this.addRes = res
+        if (this.addRes.success) {
+          this.loaders = false;
+          this.toastr.success(this.addRes.msg)
+          this.FinancialYearForm.reset()
+          // window.location.reload();
+          this.ngOnInit()
+        }
+      }, err => {
+        // console.log(err.error.gst);
+      })
+    } else {
+      this.FinancialYearForm.markAllAsTouched()
+      this.toastr.error('Please Fill All The Required Fields');
+    }
   }
-}
 
-update(){
-  if (this.FinancialYearForm.valid) {
-    this.loaders=true;
-    this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
-      // console.log(res);
-      this.addRes = res
-      if (this.addRes.success) {
-        this.loaders=false;
-        this.toastr.success(this.addRes.msg)
-        this.FinancialYearForm.reset()
-        this.addForm=true
-        // window.location.reload()
-        this.ngOnInit()
-      }
-    }, err => {
-      // console.log(err.error.gst);
-    })
-  } else {
-    this.FinancialYearForm.markAllAsTouched()
-    // console.log('forms invalid');
+  update() {
+    if (this.FinancialYearForm.valid) {
+      this.loaders = true;
+      this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
+        // console.log(res);
+        this.addRes = res
+        if (this.addRes.success) {
+          this.loaders = false;
+          this.toastr.success(this.addRes.msg)
+          this.FinancialYearForm.reset()
+          this.addForm = true
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        // console.log(err.error.gst);
+      })
+    } else {
+      this.FinancialYearForm.markAllAsTouched()
+      // console.log('forms invalid');
+    }
   }
-}
 
   get start_year() {
     return this.FinancialYearForm.get('start_year')
@@ -287,22 +287,22 @@ update(){
   get close_year() {
     return this.FinancialYearForm.get('close_year')
   }
- 
+
   addForm = true
   id: any
   editFormdata: any;
-  resData:any;
+  resData: any;
   editForm(id: number) {
     this.id = id
     this.coreService.getFinancialYearById(id).subscribe(res => {
-      this.resData=res
+      this.resData = res
       this.resData.map((data: any) => {
         // console.log(data);
         if (id == data.id) {
-          this.addForm=false
+          this.addForm = false
           this.FinancialYearForm.patchValue({
-            start_year:data.start_year,
-            close_year:data.close_year
+            start_year: data.start_year,
+            close_year: data.close_year
           });
           this.editFormdata = res
         }
@@ -319,7 +319,7 @@ update(){
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.start_year.match(this.titlee));
   //       return res.start_year.match(this.titlee);
@@ -331,10 +331,10 @@ update(){
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.start_year.toString().toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.start_year.toString().toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -346,8 +346,8 @@ update(){
   }
 
 
-   // filter data
-   filterData() {
+  // filter data
+  filterData() {
     let filteredData = this.tableData.slice();
     if (this.startDate && this.endDate) {
       const startDate = new Date(this.startDate).getTime();
@@ -361,7 +361,7 @@ update(){
   }
   clearFilter() {
     this.startDate = null;
-    this.endDate=null
+    this.endDate = null
     this.filterData();
   }
   // convert to pdf
@@ -392,35 +392,35 @@ update(){
       })
     doc.save('financialYear.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Financial Year';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Start Year', 'Close Year']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row.start_year,
-      row.close_year ,
-  
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Financial Year';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Start Year', 'Close Year']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Financial Year  .pdf');
-}
+        index + 1,
+        row.start_year,
+        row.close_year,
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Financial Year  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -463,26 +463,26 @@ update(){
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-  
+
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-  
+
     // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
+
     // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(5)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-  
+
     // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-  
+
     // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
@@ -491,33 +491,33 @@ update(){
       if (isActiveTd) {
         isActiveTd.remove();
       }
-  
+
       // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-  
+
     // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-  
+
     // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-  
+
     // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-  
+
     // Store the original contents
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
-  
+
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }

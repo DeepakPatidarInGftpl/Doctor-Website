@@ -15,6 +15,7 @@ import { ReportService } from 'src/app/Services/report/report.service';
 import * as XLSX from 'xlsx';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-purchase-outstanding',
@@ -28,19 +29,21 @@ export class PurchaseOutstandingComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public countryList: any = [];
-
   titlee: any;
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-
   purchaseSummaryPaymentType: any;
   userName: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private contactService: ContactService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private contactService: ContactService, private purchaseService: PurchaseServiceService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase summary form
   purchaseOutstandingform!: FormGroup;
@@ -48,8 +51,6 @@ export class PurchaseOutstandingComponent implements OnInit {
   endDate: any;
   supplierId: any;
   purchaseOutstandingList: any;
-
-
   userDetails: any;
   //23-5
   isAdmin = false;
@@ -62,6 +63,12 @@ export class PurchaseOutstandingComponent implements OnInit {
       let fyId = JSON.parse(fy);
       this.fyID = fyId;
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -88,10 +95,13 @@ export class PurchaseOutstandingComponent implements OnInit {
 
     // purchaseOutstandingform
     this.purchaseOutstandingform = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       supplier_id: new FormControl(),
     });
+
+    this.commonService.validateAndClearDates(this.purchaseOutstandingform, this.minDate, this.maxDate);
+
     this.startDate = this.purchaseOutstandingform.value?.start;
     this.endDate = this.purchaseOutstandingform.value?.end;
     this.supplierId = this.purchaseOutstandingform.value?.supplier_id;
