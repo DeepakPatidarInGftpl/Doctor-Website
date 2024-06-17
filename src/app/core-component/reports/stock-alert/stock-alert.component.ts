@@ -15,6 +15,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-stock-alert',
   templateUrl: './stock-alert.component.html',
@@ -45,8 +46,12 @@ export class StockAlertComponent implements OnInit {
   filteredItemCode: Observable<any[]> | undefined;
   itemCodeControl: FormControl = new FormControl('');
   userName: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
+
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe,
-    private coreService:CoreService, private reportService: ReportService) {
+    private coreService: CoreService, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   // stock alert form
   stockAlertform!: FormGroup;
@@ -57,33 +62,37 @@ export class StockAlertComponent implements OnInit {
   brand: any;
   costPrice: any;
   stockAlertList: any;
-
-
   userDetails: any;
- //23-5
- isAdmin = false;
- fyID: any;
- ngOnInit(): void {
-   //23-5
-   if (localStorage.getItem('financialYear')) {
-     let fy = localStorage.getItem('financialYear');
-     console.warn(JSON.parse(fy));
-     let fyId = JSON.parse(fy);
-     this.fyID = fyId;
-   }
-   this.cs.userDetails$.subscribe((res: any) => {
-     if (res.role == 'admin') {
-       this.isAdmin = true;
-     } else {
-       this.isAdmin = false;
-     }
-     this.getBranch();
-   });
-   //23 
-    this.cs.userDetails$.subscribe((userDetails:any) => {
+  //23-5
+  isAdmin = false;
+  fyID: any;
+  ngOnInit(): void {
+    //23-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+      this.getBranch();
+    });
+    //23 
+    this.cs.userDetails$.subscribe((userDetails: any) => {
       this.userDetails = userDetails;
       console.log(userDetails);
-      this.userName=userDetails?.username
+      this.userName = userDetails?.username
     });
 
     const today = new Date();
@@ -97,13 +106,16 @@ export class StockAlertComponent implements OnInit {
 
     // stock alert form
     this.stockAlertform = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       category: new FormControl(),
       subcategory: new FormControl(''),
       brand: new FormControl(''),
       costPrice: new FormControl('')
     });
+
+    this.commonService.validateAndClearDates(this.stockAlertform, this.minDate, this.maxDate);
+
     this.startDate = this.stockAlertform.value?.start;
     this.endDate = this.stockAlertform.value?.end;
     this.category = this.stockAlertform.value?.category;
@@ -180,8 +192,8 @@ export class StockAlertComponent implements OnInit {
   displayFn3(user: any): string {
     return user && user?.title ? user?.title : '';
   }
-   //product item code
-   private _filter4(item_code: string): any[] {
+  //product item code
+  private _filter4(item_code: string): any[] {
     const filterValue = item_code ? item_code.toLowerCase() : '';
     console.log(filterValue);
     return this.productList.filter((option: any) =>
@@ -249,8 +261,8 @@ export class StockAlertComponent implements OnInit {
   stockAlert: any
   getStockAlert() {
     console.log(this.brand);
-    
-    this.reportService.getStockAlert(this.startDate, this.endDate, this.category, this.subcategory, this.brand, this.costPrice,this.fyID,this.selectData).subscribe((res) => {
+
+    this.reportService.getStockAlert(this.startDate, this.endDate, this.category, this.subcategory, this.brand, this.costPrice, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.stockAlert = res;
       this.stockAlertList = res;
@@ -271,20 +283,20 @@ export class StockAlertComponent implements OnInit {
   oncheckCategory(data: any) {
     console.log(data);
     this.dataId = data;
-     this.stockAlertform.patchValue({category:data });
+    this.stockAlertform.patchValue({ category: data });
     console.warn(this.stockAlertform.value);
     this.category = this.stockAlertform.value?.category;
     this?.getStockAlert();
   }
   oncheckSubCategory(data: any) {
     console.log(data);
-    this.stockAlertform.patchValue({subcategory: data});
+    this.stockAlertform.patchValue({ subcategory: data });
     console.warn(this.stockAlertform.value);
     this.subcategory = this.stockAlertform.value?.subcategory;
     this?.getStockAlert();
   }
-  oncheckCostPrice(data:any){
-    this.stockAlertform.patchValue({costPrice: data});
+  oncheckCostPrice(data: any) {
+    this.stockAlertform.patchValue({ costPrice: data });
     console.warn(this.stockAlertform.value);
     this.costPrice = this.stockAlertform.value?.costPrice;
     this?.getStockAlert();
@@ -322,222 +334,222 @@ export class StockAlertComponent implements OnInit {
       this.subCategoryList = res
     })
   }
- 
- // convert to pdf
- generatePDF() {
-   const doc = new jsPDF();
-   const subtitle = 'PV';
-   const title = 'Stock Alert Report';
-   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-   const heading = `User: ${this.userName}`;
- 
-   doc.setFontSize(12);
-   doc.setTextColor(33, 43, 54);
-   doc.text(subtitle, 86, 5);
-   doc.text(title, 84, 10);
-   doc.text(heading, 10, 18);
-   doc.text(heading2, 10, 22)
- 
-   doc.text('', 10, 25); //,argin x, y
- 
-   autoTable(doc, {
-     html: '#mytable',
-     theme: 'grid',
-     headStyles: {
-       fillColor: [255, 159, 67]
-     },
-     startY: 25, // margin top 
-   });
- 
-   doc.save('Stock Alert.pdf');
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const subtitle = 'PV';
-  const title = 'Stock Alert Report';
-  const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-  const heading = `User: ${this.userName}`;
 
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(subtitle, 86, 5);
-  doc.text(title, 82, 10);
-  doc.text(heading, 10, 18);
-  doc.text(heading2, 10, 22)
+  // convert to pdf
+  generatePDF() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Stock Alert Report';
+    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
+    const heading = `User: ${this.userName}`;
 
-  doc.text('', 10, 25); //,argin x, y
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 84, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Product Name','Available Qty.', 'Min Qty','MRP.','Stock Value','Landing Stock Value','Created Date','Status']
-    ],
-    body: this.stockAlertList.map((row:any, index:number ) => [
-      index + 1,
-      row.product_name,
-      row.available_qty,
-      row.min_qty,
-      row.mrp,
-      row.stock_value,
-      row.landing_stock_value,
-      row.created_date,
-      row.status
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
+    doc.text('', 10, 25); //,argin x, y
+
+    autoTable(doc, {
+      html: '#mytable',
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25, // margin top 
+    });
+
+    doc.save('Stock Alert.pdf');
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Stock Alert Report';
+    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
+    const heading = `User: ${this.userName}`;
+
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 82, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
+
+    doc.text('', 10, 25); //,argin x, y
+
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Product Name', 'Available Qty.', 'Min Qty', 'MRP.', 'Stock Value', 'Landing Stock Value', 'Created Date', 'Status']
+      ],
+      body: this.stockAlertList.map((row: any, index: number) => [
+        index + 1,
+        row.product_name,
+        row.available_qty,
+        row.min_qty,
+        row.mrp,
+        row.stock_value,
+        row.landing_stock_value,
+        row.created_date,
+        row.status
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25, // margin top 
 
 
-  });
+    });
 
-  doc.save('Stock _Alert .pdf');
-}
- 
+    doc.save('Stock _Alert .pdf');
+  }
 
-// excel export only filtered data
-getVisibleDataFromTable(): any[] {
-  const visibleData = [];
-  const table = document.getElementById('mytable');
-  if (table) {
-    const headerRow = table.querySelector('thead tr');
-    if (headerRow) {
-      const headerData: string[] = [];
-      headerRow.querySelectorAll('th').forEach(cell => {
-        const columnHeader = cell.textContent?.trim(); // Add null check here
-        if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-          headerData.push(columnHeader);
-        }
+
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    if (table) {
+      const headerRow = table.querySelector('thead tr');
+      if (headerRow) {
+        const headerData: string[] = [];
+        headerRow.querySelectorAll('th').forEach(cell => {
+          const columnHeader = cell.textContent?.trim(); // Add null check here
+          if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+            headerData.push(columnHeader);
+          }
+        });
+        visibleData.push(headerData);
+      }
+
+      // Include visible data rows
+      const dataRows = table.querySelectorAll('tbody tr');
+      dataRows.forEach(row => {
+        const rowData: string[] = [];
+        row.querySelectorAll('td').forEach(cell => {
+          const cellData = cell.textContent?.trim(); // Add null check here
+          if (cellData) {
+            rowData.push(cellData);
+          }
+        });
+        visibleData.push(rowData);
       });
-      visibleData.push(headerData);
+    }
+    return visibleData;
+  }
+
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'Stockalert.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    if (!tableElement) {
+      console.error("Table element with ID 'mytable' not found.");
+      return;
     }
 
-    // Include visible data rows
-    const dataRows = table.querySelectorAll('tbody tr');
-    dataRows.forEach(row => {
-      const rowData: string[] = [];
-      row.querySelectorAll('td').forEach(cell => {
-        const cellData = cell.textContent?.trim(); // Add null check here
-        if (cellData) {
-          rowData.push(cellData);
-        }
-      });
-      visibleData.push(rowData);
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    if (!titleElement) {
+      console.error("Title element with class 'titl' not found.");
+      return;
+    }
+
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.stockAlertList?.length;
+    }
+  }
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
     });
   }
-  return visibleData;
-}
-
-    // Modify your exportToExcel() function
-exportToExcel(): void {
-  const visibleDataToExport = this.getVisibleDataFromTable();
-  const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-  const wb: XLSX.WorkBook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  // Create a Blob from the workbook and initiate a download
-  const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const fileName = 'Stockalert.xlsx';
-  saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-}
-
-printTable(): void {
-  // Get the table element and its HTML content
-  const tableElement = document.getElementById('mytable');
-  if (!tableElement) {
-    console.error("Table element with ID 'mytable' not found.");
-    return;
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
   }
-
-  const tableHTML = tableElement.outerHTML;
-
-  // Get the title element and its HTML content
-  const titleElement = document.querySelector('.titl');
-  if (!titleElement) {
-    console.error("Title element with class 'titl' not found.");
-    return;
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
   }
-
-  const titleHTML = titleElement.outerHTML;
-
-  // Clone the table element to manipulate
-  const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-
-  // Get the modified table's HTML content
-  const modifiedTableHTML = clonedTable.outerHTML;
-
-  // Apply styles to add some space from the top after the title
-  const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
-  // Combine the title and table content
-  const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-  // Store the original contents
-  const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
-  // Replace the content of the body with the combined content
-  document.body.innerHTML = combinedContent;
-  window.print();
-
-  // Restore the original content of the body
-  document.body.innerHTML = originalContents;
-}
-
-changePg(val: any) {
-  console.log(val);
-  if (val == -1) {
-    this.itemsPerPage = this.stockAlertList?.length;
-  }
-}
-     //23-5
-     branchList: any[] = [];
-     filteredBranchList: any[] = [];
-     searchBranch: string = '';
-     getBranch() {
-       this.reportService.getBranch().subscribe((res: any) => {
-         this.branchList = res;
-         this.filteredBranchList = [...this.branchList];
-       });
-     }
-     filterBranch() {
-       if (this.searchBranch.trim() === '') {
-         this.filteredBranchList = [...this.branchList];
-       } else {
-         this.filteredBranchList = this.branchList.filter(feature =>
-           feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-         );
-       }
-     }
-     // add remove branch 
-     searchVariant = ''
-     selectData: any[] = [];
-     selectedCategoryIds: any[] = []
-     SelectedBranch(variant: any, event: any) {
-       if (event) {
-         console.log(variant);
-         this.selectData.push(variant)
-         console.log(this.selectData, 'selected data');
-         //close dropdown 
-         this.searchVariant = '';
-         this.ngOnInit();
-       } else {
-         const selectedIndex = this.selectData.findIndex(item => item == variant);
-         console.log(selectedIndex);
-         if (selectedIndex !== -1) {
-           this.selectData.splice(selectedIndex, 1);
-         }
-         this.ngOnInit();
-         console.log(this.selectData);
-       }
-     }
-   //23-5
+  //23-5
 }
 
 
@@ -562,12 +574,12 @@ changePg(val: any) {
 
 
 
-  
 
 
-  
 
-  
+
+
+
 
 
 

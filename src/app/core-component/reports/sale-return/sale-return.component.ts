@@ -15,6 +15,7 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { ReportService } from 'src/app/Services/report/report.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-sale-return',
   templateUrl: './sale-return.component.html',
@@ -27,28 +28,27 @@ export class SaleReturnComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public countryList: any = [];
-
   titlee: any;
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-
   userName: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase register form
   purchaseRegisterForm!: FormGroup;
   startDate: any;
   endDate: any;
-  purchaseRegisterList: any
-
-
-
+  purchaseRegisterList: any;
   userDetails: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
   //23-5
   isAdmin = false;
@@ -61,6 +61,12 @@ export class SaleReturnComponent implements OnInit {
       let fyId = JSON.parse(fy);
       this.fyID = fyId;
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -70,7 +76,7 @@ export class SaleReturnComponent implements OnInit {
       this.getBranch();
     });
     //23       
-     this.cs.userDetails$.subscribe((userDetails) => {
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
       this.userName = userDetails?.username
@@ -87,10 +93,12 @@ export class SaleReturnComponent implements OnInit {
 
     // purchase register form
     this.purchaseRegisterForm = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
-    
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear))
     });
+
+    this.commonService.validateAndClearDates(this.purchaseRegisterForm, this.minDate, this.maxDate);
+
     this.startDate = this.purchaseRegisterForm.value?.start;
     this.endDate = this.purchaseRegisterForm.value?.end;
 
@@ -167,7 +175,7 @@ export class SaleReturnComponent implements OnInit {
   }
   purchaseRegister: any
   getPurchaseRegister() {
-    this.reportService.getSaleReturn(this.startDate, this.endDate,this.fyID, this.selectData).subscribe((res) => {
+    this.reportService.getSaleReturn(this.startDate, this.endDate, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.purchaseRegister = res;
       this.purchaseRegisterList = res;
@@ -205,22 +213,22 @@ export class SaleReturnComponent implements OnInit {
     const title = 'Sale Return Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
     const heading = `User: ${this.userName}`;
-  
+
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(subtitle, 86, 5);
     doc.text(title, 82, 10);
     doc.text(heading, 10, 18);
     doc.text(heading2, 10, 22)
-  
+
     doc.text('', 10, 25); //,argin x, y
-  
+
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#',  'PartyName', 'VoucherNo', 'VariantName ','ProductName','Lending Cost','Mrp','Qty','Deduction','Tax','Amount']
+        ['#', 'PartyName', 'VoucherNo', 'VariantName ', 'ProductName', 'Lending Cost', 'Mrp', 'Qty', 'Deduction', 'Tax', 'Amount']
       ],
-      body: this.purchaseRegisterList.map((row:any, index:number ) => [
+      body: this.purchaseRegisterList.map((row: any, index: number) => [
         index + 1,
         row.party_name.party_name,
         row.voucher_no,
@@ -327,12 +335,12 @@ export class SaleReturnComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -347,95 +355,95 @@ export class SaleReturnComponent implements OnInit {
     }
   }
 
-        //23-5
-        branchList: any[] = [];
-        filteredBranchList: any[] = [];
-        searchBranch: string = '';
-        getBranch() {
-          this.reportService.getBranch().subscribe((res: any) => {
-            this.branchList = res;
-            this.filteredBranchList = [...this.branchList];
-          });
-        }
-        filterBranch() {
-          if (this.searchBranch.trim() === '') {
-            this.filteredBranchList = [...this.branchList];
-          } else {
-            this.filteredBranchList = this.branchList.filter(feature =>
-              feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-            );
-          }
-        }
-        // add remove branch 
-        searchVariant = ''
-        selectData: any[] = [];
-        selectedCategoryIds: any[] = []
-        SelectedBranch(variant: any, event: any) {
-          if (event) {
-            console.log(variant);
-            this.selectData.push(variant)
-            console.log(this.selectData, 'selected data');
-            //close dropdown 
-            this.searchVariant = '';
-            this.ngOnInit();
-          } else {
-            const selectedIndex = this.selectData.findIndex(item => item == variant);
-            console.log(selectedIndex);
-            if (selectedIndex !== -1) {
-              this.selectData.splice(selectedIndex, 1);
-            }
-            this.ngOnInit();
-            console.log(this.selectData);
-          }
-        }
-      //23-5
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
       }
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-          
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            
-          
-            
-          
-          
-        
-        
-        
-        
-      
-          
-        
-          
-        
-        
-      
-      
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

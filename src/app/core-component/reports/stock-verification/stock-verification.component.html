@@ -5,7 +5,7 @@
                 <h4 class="text_24">Stock Verification</h4>
                 <h6>Manage your Stock-verification </h6>
             </div>
-           <div class="page-btn" >
+            <div class="page-btn">
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12 d-flex">
                         <div class="form-group w-100" *ngIf="isAdmin">
@@ -13,16 +13,22 @@
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                                    <li> <input type="text" placeholder="search category" class="form-control"
+                                            [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                            [ngModelOptions]="{standalone: true}">
                                     </li>
                                     <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                            <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                                    </a></li>
+                                            <input type="checkbox" [value]="branch.id"
+                                                [checked]="selectData.includes(branch.id)"
+                                                (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                                style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{branch.title}}</label>
+                                        </a></li>
                                 </ul>
                             </div>
                             <div class="d-flex">
-                            <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                                <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                             </div>
                         </div>
                     </div>
@@ -36,12 +42,12 @@
                     <div class="search-set">
                         <form [formGroup]="stockAlertform">
                             <div class="row">
-                                <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="search-input mx-3">
                                         <strong>Select Date</strong>
                                         <mat-form-field style="width: 100%;" class="border">
                                             <mat-date-range-input [formGroup]="stockAlertform"
-                                                [rangePicker]="startdatePicker">
+                                                [rangePicker]="startdatePicker" [min]="minDate" [max]="maxDate">
                                                 <input matStartDate placeholder="Start date" formControlName="start"
                                                     class="mat-input" (dateChange)="getSelectedStockAlertDates()">
                                                 <span class="mat-input-placeholder-wrapper">
@@ -71,27 +77,25 @@
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Variant</strong>
-                                        <input type="text" placeholder="Search Variant"
-                                        aria-label="Search Products" matInput
-                                        [formControl]="productControl"
-                                        (input)="getVariant($event.target.value)"
-                                        [matAutocomplete]="autos"
-                                        style="box-sizing: border-box;" />
-                                    <mat-autocomplete #autos="matAutocomplete">
-                                        <ng-container
-                                            *ngIf="productControl.value?.length >= 1 && productControl.value?.length > 0">
-                                            <ng-container *ngFor="let option of variantList">
-                                                <mat-option *ngIf="option.is_active==true"
-                                                    [value]="option?.product_title + ' ' + option?.variant_name"
-                                                    (onSelectionChange)="oncheckVariant(option?.id)"
-                                                    style="color:#FF9F43">
-                                                    {{ option?.product_title + ' ' +
-                                                    option?.variant_name}}
-                                                </mat-option>
+                                        <input type="text" placeholder="Search Variant" aria-label="Search Products"
+                                            matInput [formControl]="productControl"
+                                            (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
+                                            style="box-sizing: border-box;" />
+                                        <mat-autocomplete #autos="matAutocomplete">
+                                            <ng-container
+                                                *ngIf="productControl.value?.length >= 1 && productControl.value?.length > 0">
+                                                <ng-container *ngFor="let option of variantList">
+                                                    <mat-option *ngIf="option.is_active==true"
+                                                        [value]="option?.product_title + ' ' + option?.variant_name"
+                                                        (onSelectionChange)="oncheckVariant(option?.id)"
+                                                        style="color:#FF9F43">
+                                                        {{ option?.product_title + ' ' +
+                                                        option?.variant_name}}
+                                                    </mat-option>
+                                                </ng-container>
                                             </ng-container>
-                                        </ng-container>
-                                       
-                                    </mat-autocomplete>
+
+                                        </mat-autocomplete>
                                     </div>
                                 </div>
                                 <!-- <div class="col-lg-2 col-sm-6 col-12">
@@ -171,11 +175,11 @@
                                 <th (click)="sort('id')" class="thone">Sku <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">ItemCode <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">ItemName <i class="fa fa-sort"></i></th>
-                               <th (click)="sort('id')" class="thone">System Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">System Qty <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Physical Qty <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Loss Qty <i class="fa fa-sort"></i></th>
 
-                                
+
                             </tr>
                         </thead>
                         <tbody *ngIf="stockAlertList?.length>=0">

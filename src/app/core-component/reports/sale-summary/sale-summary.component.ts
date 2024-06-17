@@ -13,6 +13,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-sale-summary',
@@ -38,7 +39,10 @@ export class SaleSummaryComponent implements OnInit {
   userControl = new FormControl();
   saleSummaryPaymentType: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder,
+    private toastr: ToastrService, private transactionService: TransactionService,
+    private purchaseService: PurchaseServiceService, private cs: CompanyService,
+    private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //sale summary form
   saleSummaryform!: FormGroup;
@@ -46,6 +50,9 @@ export class SaleSummaryComponent implements OnInit {
   endDate: any;
   saleSummaryUserId: any;
   saleSummaryList: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
 
   userDetails: any;
@@ -60,6 +67,12 @@ export class SaleSummaryComponent implements OnInit {
       let fyId = JSON.parse(fy);
       this.fyID = fyId;
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -85,11 +98,14 @@ export class SaleSummaryComponent implements OnInit {
 
     // salesummaryform
     this.saleSummaryform = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       user_id: new FormControl(),
       payment_type: new FormControl('')
     });
+
+    this.commonService.validateAndClearDates(this.saleSummaryform, this.minDate, this.maxDate);
+
     this.startDate = this.saleSummaryform.value?.start;
     this.endDate = this.saleSummaryform.value?.end;
     this.saleSummaryUserId = this.saleSummaryform.value?.user_id;

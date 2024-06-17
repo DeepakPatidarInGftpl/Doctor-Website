@@ -7,7 +7,7 @@
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Financial Year
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Financial Year
                 </a>
             </div>
         </div>
@@ -22,27 +22,30 @@
                                 <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                             </a>
                         </div>
-                  
+
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
-                            </label>
-                          </div>
-                          </div>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
@@ -57,7 +60,7 @@
                                         <div class="form-group">
                                             <label>Start Date </label>
                                             <input type="date" [(ngModel)]="startDate" (change)="filterData()">
-                                           
+
                                         </div>
                                     </div>
                                     <div class="col-lg col-sm-6 col-12">
@@ -67,13 +70,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="form-group" (click)="clearFilter()">
-                                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                        </div>     
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <!-- /Filter -->
                 <div class="table-responsive">
                     <table class="table datanew" id="mytable">
@@ -90,32 +93,35 @@
                                 <th (click)="sort('id')" class="thone">Start Year<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Close Year<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
-                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                            <tr
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox"  [(ngModel)]="selectedRows[i]">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a  routerLink="//settings/financial-year-details/{{products?.id}}" style="line-height: 3;">{{products.start_year}}</a>
-                                    
+                                    <a routerLink="//settings/financial-year-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.start_year}}</a>
+
                                 </td>
                                 <td>
                                     {{products.close_year}}
-                                   
+
                                 </td>
                                 <td>
                                     <mat-slide-toggle
-                                    (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
-                                    </td>
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
                                 <td>
                                     <a class="me-1" routerLink="//settings/financial-year-details/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -132,11 +138,11 @@
                         </tbody>
                         <tbody *ngIf="filteredData?.length==0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                     </table>
                     <div class="progressbar">
                         <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
@@ -144,23 +150,24 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="30">30</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
+                            </div>
                         </div>
-                       </div>
-                     </div>
+                    </div>
                 </div>
 
             </div>
@@ -172,91 +179,97 @@
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                <h4> Add Financial Year </h4>
-                <h6>Create new Financial Year </h6>
+                    <h4> Add Financial Year </h4>
+                    <h6>Create new Financial Year </h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
-                <h4> Update Financial Year </h4>
+                    <h4> Update Financial Year </h4>
                 </div>
             </div>
         </div>
         <div class="card">
             <div *ngIf="isAdd">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="FinancialYearForm" (ngSubmit)="submit()">
-                    <div class="row">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="FinancialYearForm" (ngSubmit)="submit()">
+                        <div class="row">
 
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Start Year*</label>
-                                <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Start Year*</label>
+                                    <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
                                     'is-invalid': f['start_year'].touched && f['start_year'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Close Year*</label>
-                                <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Close Year*</label>
+                                    <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
                                     'is-invalid': f['close_year'].touched && f['close_year'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
-            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div *ngIf="isEdit">
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="FinancialYearForm" (ngSubmit)="update()">
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Start Year*</label>
-                                <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="FinancialYearForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Start Year*</label>
+                                    <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
                                     'is-invalid': f['start_year'].touched && f['start_year'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Close Year*</label>
-                                <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Close Year*</label>
+                                    <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
                                     'is-invalid': f['close_year'].touched && f['close_year'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>

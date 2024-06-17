@@ -13,6 +13,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-cash-book',
   templateUrl: './cash-book.component.html',
@@ -26,47 +27,55 @@ export class CashBookComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public countryList: any = [];
-
   titlee: any;
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-
   userName: any;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
+  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
+    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase register form
   purchaseRegisterForm!: FormGroup;
   startDate: any;
   endDate: any;
   accountId: any;
- purchaseRegisterList: any
+  purchaseRegisterList: any
 
-userDetails: any;
-   //23-5
-   isAdmin=false;
-   fyID:any;
- ngOnInit(): void {
-     //23-5
-     if (localStorage.getItem('financialYear')) {
-       let fy = localStorage.getItem('financialYear');
-       console.warn(JSON.parse(fy));
-       let fyId = JSON.parse(fy);
-       this.fyID=fyId;
-     }
-     this.cs.userDetails$.subscribe((res: any) => {
-       if (res.role == 'admin') {
-         this.isAdmin = true;
-       } else {
-         this.isAdmin = false;
-       }
-       this.getBranch();
-     });
- //23 
+  userDetails: any;
+  //23-5
+  isAdmin = false;
+  fyID: any;
+  ngOnInit(): void {
+    //23-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+      this.getBranch();
+    });
+    //23 
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
@@ -84,17 +93,19 @@ userDetails: any;
 
     // purchase register form
     this.purchaseRegisterForm = new FormGroup({
-      start: new FormControl(formattedStartDate),
-      end: new FormControl(formattedToday),
+      start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl(formattedToday, this.commonService.dateRangeValidator(this.financialYear)),
       accountId: new FormControl('')
-
     });
+
+    this.commonService.validateAndClearDates(this.purchaseRegisterForm, this.minDate, this.maxDate);
+
     this.startDate = this.purchaseRegisterForm.value?.start;
     this.endDate = this.purchaseRegisterForm.value?.end;
     this.accountId = this.purchaseRegisterForm.value.account_Id;
 
     this.getPurchaseRegister();
-  
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -103,8 +114,8 @@ userDetails: any;
       }),
     );
   }
-  
-  
+
+
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
@@ -122,8 +133,8 @@ userDetails: any;
   displayFn3(user: any): string {
     return user && user?.title ? user?.title : '';
   }
-  
-       
+
+
   suppliers: any[] = [];
 
   search() {
@@ -167,7 +178,7 @@ userDetails: any;
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
-  
+
   calculateProductRange(currentPage: number, productsPerPage: number, totalProducts: number): string {
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
@@ -175,7 +186,7 @@ userDetails: any;
   }
   purchaseRegister: any
   getPurchaseRegister() {
-    this.reportService.getCashBook(this.startDate, this.endDate,this.accountId,this.fyID,this.selectData).subscribe((res) => {
+    this.reportService.getCashBook(this.startDate, this.endDate, this.accountId, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.purchaseRegister = res;
       this.purchaseRegisterList = res;
@@ -192,10 +203,10 @@ userDetails: any;
     console.warn(this.purchaseRegisterForm.value);
     this?.getPurchaseRegister();
   }
-  getSelectedAccount(data:any){
+  getSelectedAccount(data: any) {
     console.log(data);
     console.log(this.purchaseRegisterForm.value);
-    this.purchaseRegisterForm.patchValue({accountId:data});
+    this.purchaseRegisterForm.patchValue({ accountId: data });
     console.log(this.purchaseRegisterForm.value);
     this.accountId = this.purchaseRegisterForm.value.accountId;
     this.getPurchaseRegister();
@@ -210,50 +221,50 @@ userDetails: any;
     this.endDate = end;
     this?.getPurchaseRegister();
   }
-  isSearch=false
+  isSearch = false
   userChange(data: any) {
-    this.isSearch=true;
-    if(data.toString().length>=2){
-    console.warn(data);
-    this.reportService.getAccount().subscribe((res:any)=>{
-      console.warn(res?.data); 
-      this.suppliers = res?.data;
-      this.isSearch=false;
-      if(res?.data?.length>0){
-        this.isSearch=false;
-      }
+    this.isSearch = true;
+    if (data.toString().length >= 2) {
+      console.warn(data);
+      this.reportService.getAccount().subscribe((res: any) => {
+        console.warn(res?.data);
+        this.suppliers = res?.data;
+        this.isSearch = false;
+        if (res?.data?.length > 0) {
+          this.isSearch = false;
+        }
 
-    })
+      })
     }
   }
- 
+
 
   // convert to pdf
   UserName: any;
 
-  
+
   generatePDFAgain() {
     const doc = new jsPDF();
     const subtitle = 'PV';
     const title = 'Cash Book Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
     const heading = `User: ${this.userName}`;
-  
+
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(subtitle, 86, 5);
     doc.text(title, 82, 10);
     doc.text(heading, 10, 18);
     doc.text(heading2, 10, 22)
-  
+
     doc.text('', 10, 25); //,argin x, y
-  
+
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'Date', 'Particulars', 'Voucher Type', 'Voucher No.','Description','Debit','Credit']
+        ['#', 'Date', 'Particulars', 'Voucher Type', 'Voucher No.', 'Description', 'Debit', 'Credit']
       ],
-      body: this.purchaseRegisterList.map((row:any, index:number ) => [
+      body: this.purchaseRegisterList.map((row: any, index: number) => [
         index + 1,
         this.formatDate(row.date),
         row.particulars,
@@ -269,10 +280,10 @@ userDetails: any;
         fillColor: [255, 159, 67]
       },
       startY: 25, // margin top 
-  
-  
+
+
     });
-  
+
     doc.save('Cash_Book.pdf');
   }
 
@@ -357,12 +368,12 @@ userDetails: any;
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -382,48 +393,48 @@ userDetails: any;
       this.itemsPerPage = this.purchaseRegisterList?.length;
     }
   }
-        //23-5
-        branchList: any[] = [];
-        filteredBranchList: any[] = [];
-        searchBranch: string = '';
-        getBranch() {
-          this.reportService.getBranch().subscribe((res: any) => {
-            this.branchList = res;
-            this.filteredBranchList = [...this.branchList];
-          });
-        }
-        filterBranch() {
-          if (this.searchBranch.trim() === '') {
-            this.filteredBranchList = [...this.branchList];
-          } else {
-            this.filteredBranchList = this.branchList.filter(feature =>
-              feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-            );
-          }
-        }
-        // add remove branch 
-        searchVariant = ''
-        selectData: any[] = [];
-        selectedCategoryIds: any[] = []
-        SelectedBranch(variant: any, event: any) {
-          if (event) {
-            console.log(variant);
-            this.selectData.push(variant)
-            console.log(this.selectData, 'selected data');
-            //close dropdown 
-            this.searchVariant = '';
-            this.ngOnInit();
-          } else {
-            const selectedIndex = this.selectData.findIndex(item => item == variant);
-            console.log(selectedIndex);
-            if (selectedIndex !== -1) {
-              this.selectData.splice(selectedIndex, 1);
-            }
-            this.ngOnInit();
-            console.log(this.selectData);
-          }
-        }
-      //23-5
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
 }
 
 
