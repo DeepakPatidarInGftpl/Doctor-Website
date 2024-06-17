@@ -1398,8 +1398,13 @@ export class CoreService {
     return this.http.delete(`${url}${id}`);
   }
 
-  closeFinancialYear(data: any): Observable<any> {
+  closingStockFinancialYear(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/financial_year_stock_closing/';
+    return this.http.post(url, data);
+  }
+
+  closingAccountFinancialYear(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/financial_year_account_closing/';
     return this.http.post(url, data);
   }
 
@@ -1776,8 +1781,19 @@ export class CoreService {
     return this.http.get(url)
   }
 
-  getAllProductStock() {
+  getAllProductStock(search?: string) {
     let url = this.apiUrl + '/pv-api/all_stocks/';
+    if (search) {
+      url += '?search=' + encodeURIComponent(search);
+    }
+    return this.http.get(url);
+  }
+
+  getAllAccountBalance(search?: string) {
+    let url = this.apiUrl + '/pv-api/all_account_balances/';
+    if (search) {
+      url += '?search=' + encodeURIComponent(search);
+    }
     return this.http.get(url)
   }
 

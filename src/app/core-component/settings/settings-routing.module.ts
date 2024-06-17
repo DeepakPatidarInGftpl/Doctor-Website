@@ -59,6 +59,10 @@ const routes: Routes = [
       {
         path: 'closingFinancialYear/stock-preview',
         loadChildren: () => import('./stock-preview/stock-preview.module').then((m) => m.StockPreviewModule)
+      },
+      {
+        path: 'closingFinancialYear/account-ledger-preview',
+        loadChildren: () => import('./account-ledger-preview/account-ledger-preview.module').then((m) => m.AccountLedgerPreviewModule)
       }
     ],
   },

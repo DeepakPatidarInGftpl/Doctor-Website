@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
-import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-closing-financial-year',
@@ -20,8 +19,8 @@ export class ClosingFinancialYearComponent implements OnInit {
   nextFinancialYear: string;
   financialYearMap: { [key: number]: number } = {
     6: 12,
-    12: 16,
-    16: null
+    12: 14,
+    14: null
   };
 
 
@@ -51,11 +50,29 @@ export class ClosingFinancialYearComponent implements OnInit {
       from_financial_year: this.financialYear,
       to_financial_year: this.nextFinancialYear
     }
-    this.coreService.closeFinancialYear(payload).subscribe((res) => {
+    this.coreService.closingStockFinancialYear(payload).subscribe((res) => {
       console.log(res);
       let closeModal = <HTMLElement>document.querySelector('.closeModal');
       closeModal.click();
     })
+  }
+
+  closingAccountFinancialYear() {
+    const payload = {
+      from_financial_year: this.financialYear,
+      to_financial_year: this.nextFinancialYear
+    }
+    this.coreService.closingAccountFinancialYear(payload).subscribe((res) => {
+      console.log(res);
+      let closeModal = <HTMLElement>document.querySelector('.accountModal');
+      closeModal.click();
+    })
+  }
+
+  ClosingAccountPreview() {
+    let closeModal = <HTMLElement>document.querySelector('.accountModal');
+    closeModal.click();
+    this.router.navigate(['/settings/closingFinancialYear/account-ledger-preview']);
   }
 
   preview() {

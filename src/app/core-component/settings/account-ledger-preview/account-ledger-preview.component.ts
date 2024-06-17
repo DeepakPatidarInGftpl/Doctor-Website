@@ -1,23 +1,21 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
-  selector: 'app-stock-preview',
-  templateUrl: './stock-preview.component.html',
-  styleUrls: ['./stock-preview.component.scss']
+  selector: 'app-account-ledger-preview',
+  templateUrl: './account-ledger-preview.component.html',
+  styleUrls: ['./account-ledger-preview.component.scss']
 })
-export class StockPreviewComponent implements OnInit {
-
-  constructor(private coreService: CoreService) { }
+export class AccountLedgerPreviewComponent implements OnInit {
 
   public tableData: any;
   allData: any;
+  p: number = 1;
   searchValue: string;
-  p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
   filteredData: any[];
@@ -27,8 +25,10 @@ export class StockPreviewComponent implements OnInit {
   key = 'id';
   reverse: boolean = true;
 
+  constructor(private coreService: CoreService) { }
+
   ngOnInit(): void {
-    this.coreService.getAllProductStock().subscribe((res) => {
+    this.coreService.getAllAccountBalance().subscribe((res) => {
       this.loader = false;
       this.tableData = res;
       this.allData = res;
@@ -39,7 +39,7 @@ export class StockPreviewComponent implements OnInit {
 
   onModelChange(value) {
     if (value?.length >= 3) {
-      this.coreService.getAllProductStock(value).subscribe((res) => {
+      this.coreService.getAllAccountBalance(value).subscribe((res) => {
         this.tableData = res;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice();
@@ -71,7 +71,7 @@ export class StockPreviewComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'StockPreview.xlsx';
+    const fileName = 'AccountLedgerPreview.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
   printTable(): void {
@@ -139,7 +139,7 @@ export class StockPreviewComponent implements OnInit {
 
   generatePDF() {
     const doc = new jsPDF();
-    const title = 'Stock Preview';
+    const title = 'Account Ledger Preview';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
@@ -147,17 +147,17 @@ export class StockPreviewComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'Product Name', 'Variant Name', 'MRP', 'Available Qty', 'Stock Value', 'Branch']
+        ['#', 'Account ID', 'Title', 'Party Name', 'Account Type', 'Credit', 'Debit']
       ],
       body: this.tableData.map((row: any, index: number) => [
 
         index + 1,
-        row?.product_name,
-        row?.variant?.variant_name,
-        row?.mrp,
-        row?.available_qty,
-        row?.stock_value,
-        row?.branch?.branch_name,
+        row?.account_id,
+        row?.title,
+        row?.party_name,
+        row?.accounts_type,
+        row?.balance_type === 'Cr' ? row?.balance : 0,
+        row?.balance_type === 'Dr' ? row?.balance : 0,
       ]),
       theme: 'grid',
       headStyles: {
@@ -165,7 +165,7 @@ export class StockPreviewComponent implements OnInit {
       },
       startY: 15,
     });
-    doc.save('Stock_Preview.pdf');
+    doc.save('Account_Ledger_Preview.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -191,4 +191,5 @@ export class StockPreviewComponent implements OnInit {
     });
     return visibleData;
   }
+
 }

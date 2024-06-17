@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl"> Stock Preview</h4>
+                <h4 class="titl"> Account Ledger Preview</h4>
                 <h6>Manage your Financial Year</h6>
             </div>
         </div>
@@ -52,28 +52,31 @@
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone th-srno">Sr.No.<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-product-name">Product Name<i
+                                <th (click)="sort('id')" class="thone th-account-id">Account ID
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone th-title">Title<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone th-party-name">Party Name<i
                                         class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-variant-name">Variant Name<i
-                                        class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-mrp">MRP<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-available-qty">Available Qty<i
-                                        class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-stock-value">Stock Value<i
-                                        class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone th-branch">Branch<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone th-account-type">Account Type
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone th-credit">Credit<i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone th-debit">Debit<i class="fa fa-sort"></i>
+                                </th>
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr
-                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                *ngFor="let account of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>{{i+1}}</td>
-                                <td>{{products?.product_name}}</td>
-                                <td>{{products?.variant?.variant_name}}</td>
-                                <td>{{products?.mrp}}</td>
-                                <td>{{products?.available_qty}}</td>
-                                <td>{{products?.stock_value}}</td>
-                                <td>{{products?.branch?.branch_name}}</td>
+                                <td>{{account?.account_id}}</td>
+                                <td>{{account?.title}}</td>
+                                <td>{{account?.party_name}}</td>
+                                <td>{{account?.accounts_type}}</td>
+                                <td>{{account?.balance_type === 'Cr' ? account?.balance : 0 }}</td>
+                                <td>{{account?.balance_type === 'Dr'? account?.balance : 0}}</td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="filteredData?.length==0 && !loader">

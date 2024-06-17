@@ -750,13 +750,13 @@ export class CommonServiceService {
     let maxDate: Date;
 
     switch (financialYear) {
-      case '12':
-        minDate = new Date(2024, 3, 1, 0, 0, 0);
-        maxDate = new Date(2025, 2, 31, 23, 59, 59);
-        break;
       case '6':
         minDate = new Date(2023, 3, 1, 0, 0, 0);
         maxDate = new Date(2024, 2, 31, 23, 59, 59);
+        break;
+      case '12':
+        minDate = new Date(2024, 3, 1, 0, 0, 0);
+        maxDate = new Date(2025, 2, 31, 23, 59, 59);
         break;
       case '14':
         minDate = new Date(2025, 3, 1, 0, 0, 0);
