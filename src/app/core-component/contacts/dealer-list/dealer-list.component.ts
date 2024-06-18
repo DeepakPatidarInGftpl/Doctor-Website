@@ -20,14 +20,14 @@ export class DealerListComponent implements OnInit {
   public tableData: any;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private contactService: ContactService, private QueryService: QueryService,private cs:CompanyService) {
+  constructor(private contactService: ContactService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -50,14 +50,14 @@ export class DealerListComponent implements OnInit {
         this.contactService.deleteDealer(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -85,7 +85,7 @@ export class DealerListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.DealerIsActive(id,'').subscribe(res => {
+        this.contactService.DealerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -114,7 +114,7 @@ export class DealerListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.DealerIsActive(id,'').subscribe(res => {
+        this.contactService.DealerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -128,16 +128,16 @@ export class DealerListComponent implements OnInit {
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any;
-userDetails:any;
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.contactService.getDealer().subscribe(res => {
       // console.log(res);
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
@@ -162,32 +162,32 @@ userDetails:any;
     // }
 
     //permission from profile api
-  
+
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'dealer' && res.codename=='add_dealer') {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename == 'add_dealer') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='change_dealer') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename == 'change_dealer') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='delete_dealer') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename == 'delete_dealer') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
-    });
-  })
+      });
+    })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -208,7 +208,7 @@ select=false
 
     })
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -234,8 +234,8 @@ select=false
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Dealer List';
@@ -261,43 +261,43 @@ select=false
           { header: 'Opening Balance' },
           { header: 'GSTIN' },
           { header: 'PanCard' },
-          { header: 'Membership' },
+          // { header: 'Membership' },
           { header: 'Is Active' }
         ],
       })
     doc.save('dealer.pdf');
- }
+  }
 
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Dealer List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name ','Company Name ', 'Mobile Number','GSTIN','PanCard','Opening Balance','Membership']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.company_name,
-      row.mobile_no,
-      row.gstin,
-      row.pan_no,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-      row.membership
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('dealer.pdf');
-}
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Dealer List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name ', 'Company Name ', 'Mobile Number', 'GSTIN', 'PanCard', 'Opening Balance']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.company_name,
+        row.mobile_no,
+        row.gstin,
+        row.pan_no,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        // row.membership
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('dealer.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -389,12 +389,12 @@ select=false
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -404,13 +404,13 @@ select=false
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
-    
+
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -426,7 +426,7 @@ select=false
   clearFilter() {
     this.selectCredit = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectCredit = null;
     this.filterData();
   }
   changePg(val: any) {

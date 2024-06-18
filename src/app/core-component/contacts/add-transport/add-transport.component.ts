@@ -25,9 +25,9 @@ export class AddTransportComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      telephone_no: new FormControl('',[Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
+      telephone_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
       date_of_birth: new FormControl('',),
       anniversary_date: new FormControl('',),
@@ -40,13 +40,15 @@ export class AddTransportComponent implements OnInit {
       address: this.fb.array([]),
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
-      payment_terms: new FormControl(''),
-      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
-      opening_balance_type:new FormControl('',[Validators.required])
+      payment_terms: new FormControl('6'),
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type: new FormControl('Cr', [Validators.required])
     })
     this.addAddress()
     this.addBank()
     this.getCountry();
+    this.selectState(23, 0);
+    this.selectCity(28, 0);
     this.getgstType();
     this.getPaymentTerms();
   }
@@ -68,10 +70,10 @@ export class AddTransportComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -79,7 +81,12 @@ export class AddTransportComponent implements OnInit {
     return this.transportForm.get('address') as FormArray;
   }
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -109,41 +116,52 @@ export class AddTransportComponent implements OnInit {
   country: any[] = [];
   state: any[][] = []; // Array of arrays to store states for each formArray item
   city: any[][] = []; // Array of arrays to store cities for each formArray item
-  
+
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       // console.log(this.country);
     });
   }
-  
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
-  
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
+
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
-  
+
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
-  
+
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
-  loader=false;
-  mobError:any;
+
+  loader = false;
+  mobError: any;
   submit() {
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
@@ -163,7 +181,7 @@ export class AddTransportComponent implements OnInit {
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.transportForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.transportForm.get('opening_balance')?.value);
-    formdata.append('opening_balance_type',this.transportForm.get('opening_balance_type')?.value)
+    formdata.append('opening_balance_type', this.transportForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.transportForm.get('address') as FormArray;
     const addressData = [];
@@ -193,31 +211,31 @@ export class AddTransportComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.transportForm.valid) {
-      this.loader=true;
+      this.loader = true;
       this.contactService.addTransport(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loader=false;
+          this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])
-        }else{
-          this.loader=false;
+        } else {
+          this.loader = false;
           this.toastr.error(this.addRes?.opening_balance[0]);
           this.toastr.error(this.addRes.opening_balance_type[0])
-          if(this.addRes?.email){
+          if (this.addRes?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
-        this.loader=false;
+        this.loader = false;
         // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
-          this.mobError=err.error.msg;
+          this.mobError = err.error.msg;
           setTimeout(() => {
-            this.mobError='';
+            this.mobError = '';
           }, 5000);
         }
         else if (err.error) {
@@ -333,7 +351,7 @@ export class AddTransportComponent implements OnInit {
     return this.getBanks().controls[index].get('bank_name');
   }
 
-  get opening_balance_type(){
+  get opening_balance_type() {
     return this.transportForm.get('opening_balance_type')
   }
 }

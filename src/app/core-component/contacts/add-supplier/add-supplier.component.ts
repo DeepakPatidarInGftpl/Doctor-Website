@@ -13,7 +13,6 @@ export class AddSupplierComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   supplierForm!: FormGroup;
-
   get f() {
     return this.supplierForm.controls;
   }
@@ -22,7 +21,7 @@ export class AddSupplierComponent implements OnInit {
   ngOnInit(): void {
     this.supplierForm = this.fb.group({
       login_access: new FormControl('',),
-      name: new FormControl('',[Validators.required]),
+      name: new FormControl('', [Validators.required]),
       company_name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
@@ -38,9 +37,9 @@ export class AddSupplierComponent implements OnInit {
       credit_limit: new FormControl('',),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('6'),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
-      opening_balance_type: new FormControl('', [Validators.required]),
+      opening_balance_type: new FormControl('Cr', [Validators.required]),
       supplier_type: new FormControl('', [Validators.required]),
       variant: new FormArray<any>([],),
     });
@@ -49,6 +48,8 @@ export class AddSupplierComponent implements OnInit {
     this.addAddress()
     this.addBank()
     this.getCountry();
+    this.selectState(23, 0);
+    this.selectCity(28, 0);
     this.getPaymentTerms();
     this.getVraiant()
   }
@@ -62,16 +63,16 @@ export class AddSupplierComponent implements OnInit {
 
   search;
   isproduct = false;
-  isProductLoading=false;
+  isProductLoading = false;
   searchProduct(product: any) {
     console.log(product);
-    
-    this.isProductLoading=true;
-    console.log(this.isProductLoading,'bhbhbhbhbhhb');
-    
+
+    this.isProductLoading = true;
+    console.log(this.isProductLoading, 'bhbhbhbhbhhb');
+
     if (product.value) {
       this.contactService.searchProduct(product.value).subscribe(res => {
-        this.isProductLoading=false;
+        this.isProductLoading = false;
         this.search = res;
         console.log(this.search);
         this.isproduct = true
@@ -99,19 +100,30 @@ export class AddSupplierComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
   getAddresss(): FormArray {
     return this.supplierForm.get('address') as FormArray;
   }
+
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    const newAddressGroup = this.addressAdd();
+    this.getAddresss().push(this.addressAdd());
+
+    newAddressGroup.markAsPristine();
+    newAddressGroup.markAsUntouched();
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
+
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
     // const remove = this.taxSlabForm.get('amount_tax_slabs') as FormArray
@@ -162,35 +174,45 @@ export class AddSupplierComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
 
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
 
   loader = false;
-  mobileErr:any;
-  gstinErr:any;
+  mobileErr: any;
+  gstinErr: any;
   submit() {
     console.log(this.supplierForm.value);
     let formdata: any = new FormData();
@@ -264,22 +286,22 @@ export class AddSupplierComponent implements OnInit {
         } else {
           this.loader = false;
           console.log(this.addRes.error);
-          
-          if(this.addRes?.error?.mobile_no){
+
+          if (this.addRes?.error?.mobile_no) {
             this.toastr.error(this.addRes?.error?.mobile_no[0])
-            this.mobileErr=this.addRes?.error?.mobile_no[0];
+            this.mobileErr = this.addRes?.error?.mobile_no[0];
             setTimeout(() => {
-              this.mobileErr=''
+              this.mobileErr = ''
             }, 8000);
-          }else if(this.addRes?.error?.gstin){
+          } else if (this.addRes?.error?.gstin) {
             this.toastr.error(this.addRes?.error?.gstin[0]);
-            this.gstinErr=this.addRes?.error?.gstin[0];
+            this.gstinErr = this.addRes?.error?.gstin[0];
             setTimeout(() => {
-              this.gstinErr=''
+              this.gstinErr = ''
             }, 8000);
-          }else if(this.addRes?.opening_balance){
+          } else if (this.addRes?.opening_balance) {
             this.toastr.error(this.addRes?.opening_balance[0]);
-          }else if(this.addRes?.error?.email){
+          } else if (this.addRes?.error?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
 
@@ -289,10 +311,10 @@ export class AddSupplierComponent implements OnInit {
         // console.log(err.error);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
-          if(err.error.msg=="Mobile Number Already Exists"){
-            this.mobileErr=err.error.msg
+          if (err.error.msg == "Mobile Number Already Exists") {
+            this.mobileErr = err.error.msg
             setTimeout(() => {
-              this.mobileErr=''
+              this.mobileErr = ''
             }, 5000);
           }
         }
@@ -408,7 +430,7 @@ export class AddSupplierComponent implements OnInit {
     return this.getBanks().controls[index].get('bank_name');
   }
 
-  searchVariant=''
+  searchVariant = ''
   selectData: any[] = []
   SelectedProduct(variant: any) {
     console.log('dd');
@@ -419,7 +441,7 @@ export class AddSupplierComponent implements OnInit {
     //close dropdown
     this.search = undefined
     this.isproduct = false;
-    this.searchVariant=''
+    this.searchVariant = ''
   }
   addVariant(event: any) {
     const formArray: any = this.supplierForm.get('variant') as FormArray;
@@ -439,7 +461,7 @@ export class AddSupplierComponent implements OnInit {
       });
     }
   }
-  removeVariant(event:any){
+  removeVariant(event: any) {
     const formArray: any = this.supplierForm.get('variant') as FormArray;
     let i: number = 0;
     formArray.controls.forEach((ctrl: any) => {
