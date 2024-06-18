@@ -34,19 +34,21 @@ export class AddVendorComponent implements OnInit {
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('6'),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl(''),
       // membership: new FormControl('',),
-      opening_balance_type: new FormControl('', [Validators.required])
+      opening_balance_type: new FormControl('Cr', [Validators.required])
     })
     this.addAddress();
     this.addBank();
     this.getCountry();
+    this.selectState(23, 0);
+    this.selectCity(28, 0);
     this.getgstType();
     this.getPaymentTerms();
   }
@@ -69,18 +71,24 @@ export class AddVendorComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
   getAddresss(): FormArray {
     return this.vendorForm.get('address') as FormArray;
   }
+
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -123,29 +131,39 @@ export class AddVendorComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
 
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
 
@@ -231,7 +249,7 @@ export class AddVendorComponent implements OnInit {
             this.toastr.error(this.addRes?.opening_balance[0]);
           } else if (this.addRes?.error?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
-          }else if(this.addRes?.error?.credit_limit){
+          } else if (this.addRes?.error?.credit_limit) {
             this.toastr.error(this.addRes?.error?.credit_limit[0])
           }
         }
@@ -240,10 +258,10 @@ export class AddVendorComponent implements OnInit {
         // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
-          if(err.error.msg=="Mobile Number Already Exists"){
-            this.mobileErr=err.error.msg
+          if (err.error.msg == "Mobile Number Already Exists") {
+            this.mobileErr = err.error.msg
             setTimeout(() => {
-              this.mobileErr=''
+              this.mobileErr = ''
             }, 5000);
           }
         }

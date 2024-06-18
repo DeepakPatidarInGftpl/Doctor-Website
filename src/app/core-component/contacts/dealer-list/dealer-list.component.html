@@ -34,8 +34,8 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -63,7 +63,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Opening Balance Type</label>
+                                    <label>Opening Balance Type</label>
                                     <select [(ngModel)]="selectCredit" (change)="filterData()" class="form-select">
                                         <option value="" selected disabled>Opening Balance Type</option>
                                         <option value="Cr">Cr</option>
@@ -98,7 +98,7 @@
                         <th (click)="sort('id')" class="thone">GSTIN <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Opening Balance<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Membership<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Membership<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -121,9 +121,10 @@
                         <td>{{products.mobile_no}}</td>
                         <td>{{products.gstin}}</td>
                         <td>{{products.pan_no}}</td>
-                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
-                        
-                        <td>{{products?.membership}}</td>
+                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
+                            products?.opening_balance : '') }}</td>
+
+                        <!-- <td>{{products?.membership}}</td> -->
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
@@ -158,7 +159,7 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                            
+
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -171,7 +172,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
                     </div>
                 </div>
             </div>
