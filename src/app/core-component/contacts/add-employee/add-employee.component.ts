@@ -41,7 +41,7 @@ export class AddEmployeeComponent implements OnInit {
       password: new FormControl('',),
       role: new FormControl(''),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
-      opening_balance_type: new FormControl('', [Validators.required]),
+      opening_balance_type: new FormControl('Cr', [Validators.required]),
       // permissions:new FormArray([],),
       branch: new FormControl(''),
       date_of_joining: new FormControl(''),
@@ -50,12 +50,14 @@ export class AddEmployeeComponent implements OnInit {
       is_sales_head: new FormControl('', [Validators.required]),
       incentive: new FormControl(0),
       employee_type: new FormControl('', [Validators.required]),
-      discount_limit:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      discount_limit: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
 
     })
     this.addAddress();
     this.addBank();
     this.getCountry();
+    this.selectState(23, 0);
+    this.selectCity(28, 0);
     this.getPermission();
     this.getGroup();
     this.getBranch();
@@ -86,18 +88,24 @@ export class AddEmployeeComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
   getAddresss(): FormArray {
     return this.employeeForm.get('address') as FormArray;
   }
+
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -135,31 +143,42 @@ export class AddEmployeeComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
 
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
+
   permissionDetails: any;
   getPermission() {
     this.contactService.getPermission()?.subscribe((res: any) => {
@@ -234,8 +253,8 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     //15-2
     formdata.append('employee_type', this.employeeForm.get('employee_type')?.value);
-    
-    formdata.append('discount_limit',this.employeeForm.get('discount_limit')?.value)//17-02
+
+    formdata.append('discount_limit', this.employeeForm.get('discount_limit')?.value)//17-02
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -392,7 +411,7 @@ export class AddEmployeeComponent implements OnInit {
     return this.employeeForm.get('is_sales_head')
   }
   // 17-2
-  get discount_limit(){
+  get discount_limit() {
     return this.employeeForm.get('discount_limit');
   }
   countryy(index: number) {
@@ -500,7 +519,7 @@ export class AddEmployeeComponent implements OnInit {
     this.bankDetails = ''
   }
 
-  isloginAccess = true
+  isloginAccess = false;
   loginAccess() {
     let data = this.employeeForm.value;
     if (data.login_access) {
@@ -508,7 +527,7 @@ export class AddEmployeeComponent implements OnInit {
       this.password.setValidators([Validators.required]);
       this.username.setValidators([Validators.required]);
       this.discount_limit.setValidators([Validators.required])
-    }else{
+    } else {
       this.isloginAccess = false;
       this.username.clearValidators();
       this.password.clearValidators();

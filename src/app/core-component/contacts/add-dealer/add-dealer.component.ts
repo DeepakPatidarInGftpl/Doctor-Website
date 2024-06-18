@@ -21,7 +21,7 @@ export class AddDealerComponent implements OnInit {
   ngOnInit(): void {
     this.dealerForm = this.fb.group({
       login_access: new FormControl('',),
-      name: new FormControl('',[Validators.required]),
+      name: new FormControl('', [Validators.required]),
       company_name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
@@ -37,16 +37,18 @@ export class AddDealerComponent implements OnInit {
       credit_limit: new FormControl('',),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('6'),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
-      opening_balance_type: new FormControl('',[Validators.required]),
-      membership: new FormControl('')
+      opening_balance_type: new FormControl('Cr', [Validators.required]),
+      // membership: new FormControl('')
     });
 
     this.getgstType();
     this.addAddress()
     this.addBank()
     this.getCountry();
+    this.selectState(23, 0);
+    this.selectCity(28, 0);
     this.getPaymentTerms();
   }
   paymentTerms: any;
@@ -59,18 +61,24 @@ export class AddDealerComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
   getAddresss(): FormArray {
     return this.dealerForm.get('address') as FormArray;
   }
+
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -121,34 +129,44 @@ export class AddDealerComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
 
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
 
   loader = false;
-  mobError:any;
+  mobError: any;
   submit() {
     // console.log(this.dealerForm.value);
     let formdata: any = new FormData();
@@ -170,7 +188,7 @@ export class AddDealerComponent implements OnInit {
     formdata.append('payment_terms', this.dealerForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.dealerForm.get('opening_balance')?.value);
     formdata.append('opening_balance_type', this.dealerForm.get('opening_balance_type')?.value);
-    formdata.append('membership', this.dealerForm.get('membership')?.value);
+    // formdata.append('membership', this.dealerForm.get('membership')?.value);
 
     // nested addrs data 
     const addressArray = this.dealerForm.get('address') as FormArray;
@@ -227,13 +245,13 @@ export class AddDealerComponent implements OnInit {
           }
         }
       }, err => {
-        this.loader=false
+        this.loader = false
         // console.log(err.error);
         if (err.error.msg) {
           this.toastr.error(err.error.msg);
-          this.mobError=err.error.msg;
+          this.mobError = err.error.msg;
           setTimeout(() => {
-            this.mobError='';
+            this.mobError = '';
           }, 5000);
         }
         else if (err.error) {
@@ -253,7 +271,7 @@ export class AddDealerComponent implements OnInit {
         }
       })
     } else {
-      this.loader=false;
+      this.loader = false;
       this.dealerForm.markAllAsTouched()
       // console.log('hhhhhh');
       this.toastr.error('Please Fill All The Required Fields')
@@ -308,9 +326,9 @@ export class AddDealerComponent implements OnInit {
   get opening_balance_type() {
     return this.dealerForm.get('opening_balance_type')
   }
-  get membership() {
-    return this.dealerForm.get('membership')
-  }
+  // get membership() {
+  //   return this.dealerForm.get('membership')
+  // }
   get pan_no() {
     return this.dealerForm.get('pan_no')
   }
