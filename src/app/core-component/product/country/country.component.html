@@ -7,7 +7,7 @@
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Country
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Country
                 </a>
             </div>
         </div>
@@ -117,7 +117,9 @@
                                 <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
                                     'is-invalid': f['country_name'].touched && f['country_name'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
+                                <span class="text-danger"
+                                    *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country
+                                    Name
                                 </span>
 
                             </div>
@@ -151,7 +153,9 @@
                                 <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
                                     'is-invalid': f['country_name'].touched && f['country_name'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
+                                <span class="text-danger"
+                                    *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country
+                                    Name
                                 </span>
 
                             </div>

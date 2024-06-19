@@ -29,7 +29,7 @@
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
                                     <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" >
+                                        [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -37,15 +37,21 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
-                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
-                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-toggle="modal" (click)="openModal()"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -67,7 +73,8 @@
                                 <th (click)="sort('id')" class="thone">City Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">State <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="tableData?.length>=0 ">
@@ -83,7 +90,8 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a routerLink="//places/city-details/{{products?.id}}" style="line-height: 3;">{{products?.city}}</a>
+                                    <a routerLink="//places/city-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products?.city}}</a>
                                 </td>
                                 <td>{{products?.city_code}}</td>
                                 <td>{{products?.state?.state}}</td>
@@ -108,11 +116,11 @@
                         </tbody>
                         <tbody *ngIf="tableData?.length==0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                     </table>
                     <div class="progressbar">
                         <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
@@ -133,7 +141,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
                         </div>
@@ -168,19 +177,24 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City*</label>
-                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city" [ngClass]="{
+                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city"
+                                        [ngClass]="{
                                     'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City Name</span>
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City
+                                        Name</span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City Code*</label>
-                                    <input type="text" formControlName="city_code" placeholder="Enter City Code" id="city_code" [ngClass]="{
+                                    <input type="text" formControlName="city_code" placeholder="Enter City Code"
+                                        id="city_code" [ngClass]="{
                                     'is-invalid': f['city_code'].touched && f['city_code'].invalid }">
-                                    <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code </span>
+                                    <span class="text-danger"
+                                        *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
+                                    </span>
                                 </div>
                             </div>
 
@@ -190,8 +204,7 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="state"  required #stateValue
-                                        id="state" [ngClass]="{
+                                    <select formControlName="state" required #stateValue id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
                                         <option value="" selected disabled>Select State</option>
@@ -199,13 +212,15 @@
                                             {{state?.state}}
                                         </option>
                                     </select>
-                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select State </span>
+                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select
+                                        State </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
 
                         </div>
@@ -219,16 +234,19 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City*</label>
-                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city" [ngClass]="{
+                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city"
+                                        [ngClass]="{
                                     'is-invalid': f['city'].touched && f['city'].invalid}">
-                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City Name </span>
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City
+                                        Name </span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City Code*</label>
-                                    <input type="text" formControlName="city_code" placeholder="Enter City Code" id="city_code" [ngClass]="{
+                                    <input type="text" formControlName="city_code" placeholder="Enter City Code"
+                                        id="city_code" [ngClass]="{
                                     'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
                                     <span class="text-danger"
@@ -243,8 +261,7 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="state"  required #stateValue
-                                        id="state" [ngClass]="{
+                                    <select formControlName="state" required #stateValue id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
                                         <option value="" selected disabled>Select State</option>
@@ -262,10 +279,43 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span> &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import City File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain "state", "city" and
+                        "city_code" columns.</p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

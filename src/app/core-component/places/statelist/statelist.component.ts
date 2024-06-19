@@ -21,8 +21,13 @@ export class StatelistComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  filteredData: any[] = [];
   stateForm!: FormGroup;
   get f() {
     return this.stateForm.controls;
@@ -31,13 +36,13 @@ export class StatelistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  navigateData:any
+  navigateData: any
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService,
     private Service: CompanyService) {
-      this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-      if (this.navigateData){
-        this.editForm(this.navigateData)
-      }
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any
@@ -142,10 +147,10 @@ export class StatelistComponent implements OnInit {
     });
   }
   loader = true;
-  isEdit:any;
-  isAdd:any;
-  isDelete:any;
-  userDetails:any;
+  isEdit: any;
+  isAdd: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.stateForm = this.fb.group({
       state: new FormControl('', [Validators.required]),
@@ -178,7 +183,7 @@ export class StatelistComponent implements OnInit {
     })
     // console.log(this.tableData);
     this.getCountryList();
-//permission from localstorage
+    //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
     //   const permission = localStorageData.permission;
@@ -196,23 +201,134 @@ export class StatelistComponent implements OnInit {
     //   });
     // }
 
-      // permission from profile api
-      this.Service.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='add_state') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='change_state') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='delete_state') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.Service.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename == 'add_state') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename == 'change_state') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename == 'delete_state') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+        }
       });
+    });
+  }
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      // Validate the columns
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        // Process the data here (only extract required fields)
+        this.filteredData = jsonSheet.map((row: any) => ({
+          country: row['country'],
+          state: row['state'],
+          state_code: row['state_code']
+        }));
+        console.log('Filtered Data:', this.filteredData);
+        // Further processing with filteredData
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['country', 'state', 'state_code'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.filteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loaders = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importState(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loaders = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loaders = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
   }
 
   //select table row
@@ -288,7 +404,7 @@ export class StatelistComponent implements OnInit {
           this.stateForm.reset();
           this.addForm = true;
           this.ngOnInit()
-        }else{
+        } else {
           this.loaders = false;
         }
       }, err => {
@@ -335,7 +451,7 @@ export class StatelistComponent implements OnInit {
           this.addForm = false
           this.stateForm.patchValue(data);
           this.stateForm.patchValue({
-            country:data?.country?.id
+            country: data?.country?.id
           })
           this.editFormdata = data
         }
@@ -353,7 +469,7 @@ export class StatelistComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.state.toLocaleLowerCase());
   //       console.log(res.state.match(this.titlee));
   //       return res.state.match(this.titlee);
@@ -365,10 +481,10 @@ export class StatelistComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.state.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.state.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -379,171 +495,171 @@ export class StatelistComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-     // convert to pdf
-     generatePDF() {
-      // table data with pagination
-      const doc = new jsPDF();
-      const title = 'State List';
-  
-      doc.setFontSize(15);
-      doc.setTextColor(33, 43, 54);
-      doc.text(title, 10, 10);
-      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
-      autoTable(doc,
-  
-        {
-          html: '#mytable',
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          columns: [
-            //remove action filed
-            { header: 'Sr No.' },
-            { header: 'State' },
-            { header: 'State Code' },
-            { header: 'Country' },
-            { header: 'Is Active' }
-          ],
-        })
-      doc.save('state.pdf');
-   }
-   generatePDFAgain() {
+  // convert to pdf
+  generatePDF() {
+    // table data with pagination
+    const doc = new jsPDF();
+    const title = 'State List';
+
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+    autoTable(doc,
+
+      {
+        html: '#mytable',
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        columns: [
+          //remove action filed
+          { header: 'Sr No.' },
+          { header: 'State' },
+          { header: 'State Code' },
+          { header: 'Country' },
+          { header: 'Is Active' }
+        ],
+      })
+    doc.save('state.pdf');
+  }
+  generatePDFAgain() {
     const doc = new jsPDF();
     const title = 'State List';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'State', 'State Code','Country']
+        ['#', 'State', 'State Code', 'Country']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
-    
+      body: this.tableData.map((row: any, index: number) => [
+
         index + 1,
         row.state,
-        row.state_code ,
+        row.state_code,
         row.country.country_name,
-    
+
 
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('State  .pdf');
   }
-    // excel export only filtered data
-    getVisibleDataFromTable(): any[] {
-      const visibleData = [];
-      const table = document.getElementById('mytable');
-      const headerRow = table.querySelector('thead tr');
-      const dataRows = table.querySelectorAll('tbody tr');
-      //table heading
-      const headerData = [];
-      headerRow.querySelectorAll('th').forEach(cell => {
-        const columnHeader = cell.textContent.trim();
-        if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-          headerData.push(columnHeader);
-        }
-      });
-      visibleData.push(headerData);
-  
-      // Include visible data rows
-      dataRows.forEach(row => {
-        const rowData = [];
-        row.querySelectorAll('td').forEach(cell => {
-          rowData.push(cell.textContent.trim());
-        });
-        visibleData.push(rowData);
-      });
-      return visibleData;
-    }
-  
-    // Modify your exportToExcel() function
-    exportToExcel(): void {
-      const visibleDataToExport = this.getVisibleDataFromTable();
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      // Create a Blob from the workbook and initiate a download
-      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileName = 'state.xlsx';
-      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-    }
-  
-    printTable(): void {
-      // Get the table element and its HTML content
-      const tableElement = document.getElementById('mytable');
-      const tableHTML = tableElement.outerHTML;
-  
-      // Get the title element and its HTML content
-      const titleElement = document.querySelector('.titl');
-      const titleHTML = titleElement.outerHTML;
-  
-      // Clone the table element to manipulate
-      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
-      // Remove the "Is Active" column header from the cloned table
-      const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
-      if (isActiveTh) {
-        isActiveTh.remove();
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    const headerRow = table.querySelector('thead tr');
+    const dataRows = table.querySelectorAll('tbody tr');
+    //table heading
+    const headerData = [];
+    headerRow.querySelectorAll('th').forEach(cell => {
+      const columnHeader = cell.textContent.trim();
+      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+        headerData.push(columnHeader);
       }
-  
-      // Remove the "Action" column header from the cloned table
-      const actionTh = clonedTable.querySelector('th.thone:last-child');
-      if (actionTh) {
-        actionTh.remove();
-      }
-  
-      // Loop through each row and remove the "Is Active" column and "Action" column data cells
-      const rows = clonedTable.querySelectorAll('tr');
-      rows.forEach((row) => {
-        // Remove the "Is Active" column data cell
-        const isActiveTd = row.querySelector('td:nth-child(6)');
-        if (isActiveTd) {
-          isActiveTd.remove();
-        }
-  
-        // Remove the "Action" column data cell
-        const actionTd = row.querySelector('td:last-child');
-        if (actionTd) {
-          actionTd.remove();
-        }
+    });
+    visibleData.push(headerData);
+
+    // Include visible data rows
+    dataRows.forEach(row => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach(cell => {
+        rowData.push(cell.textContent.trim());
       });
-  
-      // Get the modified table's HTML content
-      const modifiedTableHTML = clonedTable.outerHTML;
-  
-      // Apply styles to add some space from the top after the title
-      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-  
-      // Combine the title and table content
-      const combinedContent = styledTitleHTML + modifiedTableHTML;
-  
-      // Store the original contents
-      const originalContents = document.body.innerHTML;
-      window.addEventListener('afterprint', () => {
-        console.log('afterprint');
-       window.location.reload();
-      });
-      // Replace the content of the body with the combined content
-      document.body.innerHTML = combinedContent;
-      window.print();
-  
-      // Restore the original content of the body
-      document.body.innerHTML = originalContents;
+      visibleData.push(rowData);
+    });
+    return visibleData;
+  }
+
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'state.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+    // Remove the "Is Active" column header from the cloned table
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
+    if (isActiveTh) {
+      isActiveTh.remove();
     }
-    changePg(val: any) {
-      console.log(val);
-      if (val == -1) {
-        this.itemsPerPage = this.tableData.length;
+
+    // Remove the "Action" column header from the cloned table
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+    if (actionTh) {
+      actionTh.remove();
+    }
+
+    // Loop through each row and remove the "Is Active" column and "Action" column data cells
+    const rows = clonedTable.querySelectorAll('tr');
+    rows.forEach((row) => {
+      // Remove the "Is Active" column data cell
+      const isActiveTd = row.querySelector('td:nth-child(6)');
+      if (isActiveTd) {
+        isActiveTd.remove();
       }
+
+      // Remove the "Action" column data cell
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        actionTd.remove();
+      }
+    });
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.tableData.length;
     }
+  }
 }
 

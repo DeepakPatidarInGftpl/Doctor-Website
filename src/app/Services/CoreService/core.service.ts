@@ -210,6 +210,14 @@ export class CoreService {
     })
   }
 
+  importAccount(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/accounts_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 
   //HSNCODE section
   getHSNcode() {
@@ -265,6 +273,15 @@ export class CoreService {
   deleteHSNcode(id: number) {
     let url = this.apiUrl + '/pv-api/hsn_code/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  importHSNCode(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/HSN_code_import/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -339,6 +356,15 @@ export class CoreService {
   deleteUnits(id: number) {
     let url = this.apiUrl + '/pv-api/unit/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  importUnit(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unit_import/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -576,6 +602,15 @@ export class CoreService {
     })
   }
 
+  importColor(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/color_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
 
   // size section
   getsize() {
@@ -635,6 +670,16 @@ export class CoreService {
       })
     })
   }
+
+  importSize(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   //tax section
   gettax() {
     let url = this.apiUrl + '/pv-api/tax/';
@@ -679,6 +724,15 @@ export class CoreService {
   deletetax(id: number) {
     let url = this.apiUrl + '/pv-api/tax/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  importTax(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/tax_import/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -790,6 +844,15 @@ export class CoreService {
   deleteFeature(id: number) {
     let url = this.apiUrl + '/pv-api/feature/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  importFeature(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/feature_import/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -958,6 +1021,15 @@ export class CoreService {
     })
   }
 
+  importCountry(data: any): Observable<any> {
+    let url = this.apiUrl + '/country_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   // state section
   getstate() {
     let url = this.apiUrl + '/state/';
@@ -1016,6 +1088,15 @@ export class CoreService {
       })
     })
   }
+
+  importState(data: any): Observable<any> {
+    let url = this.apiUrl + '/state_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
   // city section
   getcity() {
     let url = this.apiUrl + '/city/';
@@ -1069,6 +1150,15 @@ export class CoreService {
   deletecity(id: number) {
     let url = this.apiUrl + '/city/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  importCity(data: any): Observable<any> {
+    let url = this.apiUrl + '/city_import/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -1628,6 +1718,15 @@ export class CoreService {
   deleteAccountSubType(id: number) {
     let url = this.apiUrl + '/pv-api/account_subtypes/?id=';
     return this.http.delete(`${url}${id}`)
+  }
+
+  importAccountSubType(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/account_subtype_import/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
 
   getAddress() {
