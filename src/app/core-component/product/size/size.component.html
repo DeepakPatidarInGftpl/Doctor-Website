@@ -29,8 +29,8 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search Size..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()">
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Size..." [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -49,6 +49,11 @@
                             <li>
                                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
                                     (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -84,7 +89,8 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//product/size-details/{{products?.id}}" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//product/size-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.code}}</td>
                                 <td>
@@ -142,7 +148,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
 
@@ -174,7 +181,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Size Name*</label>
-                                    <input type="text" formControlName="title" placeholder="Enter Size Name" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Enter Size Name" id="title"
+                                        [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
@@ -185,7 +193,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Size Code*</label>
-                                    <input type="text" formControlName="code" id="code" placeholder="Enter Size Code" [ngClass]="{
+                                    <input type="text" formControlName="code" id="code" placeholder="Enter Size Code"
+                                        [ngClass]="{
                                     'is-invalid': f['code'].touched && f['code'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter Size
@@ -211,7 +220,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Size*</label>
-                                    <input type="text" formControlName="title" placeholder="Enter Size Name" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Enter Size Name" id="title"
+                                        [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
@@ -222,7 +232,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Size Code*</label>
-                                    <input type="text" formControlName="code" id="code" placeholder="Enter Size Code" [ngClass]="{
+                                    <input type="text" formControlName="code" id="code" placeholder="Enter Size Code"
+                                        [ngClass]="{
                                     'is-invalid': f['code'].touched && f['code'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter Size
@@ -239,6 +250,39 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Size File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type','account_subtype','opening_balance', and 'opening_balance_type'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

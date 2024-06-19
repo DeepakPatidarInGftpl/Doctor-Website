@@ -1,22 +1,21 @@
-
 .table>:not(:first-child) {
-    border-top: none !important; 
+   border-top: none !important;
 }
 
-.labelSize{
+.labelSize {
    display: flex;
    align-items: center;
-   
+
 }
 
-.entries{
+.entries {
    font-size: 12px;
    color: #5E5873;
    font-weight: 600;
- 
+
 }
 
-.labelSize select{
+.labelSize select {
    border: 1px solid #ced4da;
    width: 80px;
    height: 30px;
@@ -24,17 +23,37 @@
    border-radius: 3px;
 }
 
-.thone i{
+.thone i {
    float: unset;
    margin-left: 5px;
- }
+}
+
+
+.file-upload-button {
+   padding: 24px;
+   text-align: center;
+   border: 1px dashed black;
+   border-radius: 8px;
+   cursor: pointer;
+}
+
+.upload-icon {
+   color: #000;
+   font-size: 20px;
+}
+
+.upload-btn-icon {
+   color: #000;
+   font-size: 18px;
+}
 
 @media (max-width:765px) {
-   .thone i{
+   .thone i {
       float: inherit;
       margin-top: 0;
    }
 }
+
 .fa-sort:before {
    content: "\f0dc";
    right: 0.5em;

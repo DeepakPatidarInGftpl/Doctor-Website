@@ -30,11 +30,17 @@ export class ColorsComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  navigateData:any;
+  navigateData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  fieldfilteredData: any[] = [];
 
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -65,7 +71,7 @@ export class ColorsComponent implements OnInit {
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -73,7 +79,7 @@ export class ColorsComponent implements OnInit {
             });
           }
         })
-      
+
         // this.tableData.splice(index, 1);
       }
     });
@@ -139,18 +145,18 @@ export class ColorsComponent implements OnInit {
     });
   }
   form!: FormGroup;
-  loader=true
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.form = this.fb.group({
       img: new FormControl('')
     })
     this.colorForm = this.fb.group({
-      title: new FormControl('', ),
-      color_code: new FormControl('', ),
+      title: new FormControl('',),
+      color_code: new FormControl('',),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -178,7 +184,7 @@ export class ColorsComponent implements OnInit {
     // })
     this.coreService.getColor().subscribe(res => {
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
@@ -200,18 +206,18 @@ export class ColorsComponent implements OnInit {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-       if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='add_color') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename == 'add_color') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='change_color') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename == 'change_color') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='delete_color') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename == 'delete_color') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -224,6 +230,114 @@ export class ColorsComponent implements OnInit {
     // console.log(this.form.value);
 
   }
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        this.fieldfilteredData = jsonSheet.map((row: any) => ({
+          title: row['title'],
+          code: row['color_code']
+        }));
+        console.log('Filtered Data:', this.fieldfilteredData);
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['title', 'color_code'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.fieldfilteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loader = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importColor(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loader = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loader = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
+  }
+
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -289,18 +403,18 @@ export class ColorsComponent implements OnInit {
   //   }
   // }
 
-loaders=false;
+  loaders = false;
   submit() {
     // console.log(this.colorForm.value);
     // console.log(this.id);
 
     if (this.colorForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()
           // window.location.reload();
@@ -317,12 +431,12 @@ loaders=false;
 
   update() {
     if (this.colorForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()
           this.addForm = true
@@ -384,10 +498,10 @@ loaders=false;
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -398,8 +512,8 @@ loaders=false;
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Color List';
@@ -424,36 +538,36 @@ loaders=false;
       })
     doc.save('color.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Color List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Color', 'Color Code']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row.title,
-      row.color_code ,
- 
-  
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Color List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Color', 'Color Code']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Color  .pdf');
-}
+        index + 1,
+        row.title,
+        row.color_code,
+
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Color  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -545,7 +659,7 @@ loaders=false;
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;

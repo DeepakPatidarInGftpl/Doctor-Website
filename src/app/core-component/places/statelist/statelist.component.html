@@ -34,16 +34,21 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
-                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
-                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-toggle="modal" (click)="openModal()"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -65,7 +70,8 @@
                                 <th (click)="sort('id')" class="thone">State Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Country <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="tableData?.length>=0">
@@ -79,7 +85,8 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//places/state-details/{{products?.id}}" style="line-height: 3;">{{products?.state}}</a>
+                                    <a routerLink="//places/state-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products?.state}}</a>
                                 </td>
                                 <td>{{products?.state_code}}</td>
                                 <td>{{products?.country.country_name}}</td>
@@ -103,11 +110,11 @@
                         </tbody>
                         <tbody *ngIf="tableData?.length==0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -150,7 +157,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
                         </div>
@@ -182,7 +190,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>State*</label>
-                                    <input type="text" formControlName="state" placeholder="Enter State Name" id="state" [ngClass]="{
+                                    <input type="text" formControlName="state" placeholder="Enter State Name" id="state"
+                                        [ngClass]="{
                                     'is-invalid': f['state'].touched && f['state'].invalid}">
                                     <span class="text-danger" *ngIf="state && state.invalid && state.touched">Enter
                                         State Name</span>
@@ -191,7 +200,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>State Code*</label>
-                                    <input type="text" formControlName="state_code" placeholder="Enter State Code" id="state_code"
+                                    <input type="text" formControlName="state_code" placeholder="Enter State Code"
+                                        id="state_code"
                                         [ngClass]="{'is-invalid': f['state_code'].touched && f['state_code'].invalid}">
                                     <span class="text-danger"
                                         *ngIf="state_code && state_code.invalid && state_code.touched">Enter State
@@ -204,8 +214,7 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="country"  required #countryValue
-                                        id="country"
+                                    <select formControlName="country" required #countryValue id="country"
                                         [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
                                         <option value="" selected disabled>Select Country</option>
                                         <option value="{{country?.id}}" *ngFor="let country of countryList">
@@ -219,7 +228,8 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -242,7 +252,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>State Code*</label>
-                                    <input type="text" formControlName="state_code" placeholder="Enter State Code" id="state_code"
+                                    <input type="text" formControlName="state_code" placeholder="Enter State Code"
+                                        id="state_code"
                                         [ngClass]="{'is-invalid': f['state_code'].touched && f['state_code'].invalid }">
                                     <span class="text-danger"
                                         *ngIf="state_code && state_code.invalid && state_code.touched">Enter State Code
@@ -255,24 +266,58 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="country"  required #countryValue
-                                        id="country" [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
+                                    <select formControlName="country" required #countryValue id="country"
+                                        [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
                                         <option value="" selected disabled>Select Country</option>
                                         <option value="{{country?.id}}" *ngFor="let country of countryList">
                                             {{country?.country_name}}
                                         </option>
                                     </select>
                                     <span *ngIf="countryError" class="text-danger">{{countryError}}</span>
-                                    <span class="text-danger" *ngIf="country && country.invalid && country.touched">Select Country</span>
+                                    <span class="text-danger"
+                                        *ngIf="country && country.invalid && country.touched">Select Country</span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>&nbsp;Submit</button>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import State File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain "country", "state" and
+                        "state_code" columns.</p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

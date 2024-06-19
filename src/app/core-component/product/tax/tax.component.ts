@@ -31,10 +31,16 @@ export class TaxComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-  navigateData:any;
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private cs:CompanyService,private router:Router) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  navigateData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  fieldfilteredData: any[] = [];
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService, private router: Router) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -140,8 +146,8 @@ export class TaxComponent implements OnInit {
   loader = true;
   isAdd: any;
   isEdit: any;
-  isDelete:any;
-  userDetails:any
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.taxForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -193,24 +199,132 @@ export class TaxComponent implements OnInit {
     //   });
     // }
 
-      // permission from profile api
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'add_tax') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'change_tax') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'delete_tax') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'add_tax') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'change_tax') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'delete_tax') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+        }
       });
+    });
   }
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        this.fieldfilteredData = jsonSheet.map((row: any) => ({
+          title: row['title'],
+          tax_percentage: row['tax_percentage']
+        }));
+        console.log('Filtered Data:', this.fieldfilteredData);
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['title', 'tax_percentage'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.fieldfilteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loader = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importTax(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loader = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loader = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
+  }
+
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -315,7 +429,7 @@ export class TaxComponent implements OnInit {
           this.addForm = true
           this.toastr.success(this.addRes.msg)
           this.taxForm.reset()
-          
+
           // window.location.reload()
           this.ngOnInit()
         }
@@ -363,7 +477,7 @@ export class TaxComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
@@ -375,10 +489,10 @@ export class TaxComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -388,8 +502,8 @@ export class TaxComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Tax List';
@@ -414,35 +528,35 @@ export class TaxComponent implements OnInit {
       })
     doc.save('tax.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Tax List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#','Tax Name','Tax %']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.title,
-      row.tax_percentage,
-     
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Tax List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Tax Name', 'Tax %']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.title,
+        row.tax_percentage,
 
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Tax .pdf');
-}
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Tax .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -534,7 +648,7 @@ export class TaxComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;

@@ -20,20 +20,25 @@ export class FeatureComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  fieldfilteredData: any[] = [];
   featureForm!: FormGroup;
   get f() {
     return this.featureForm.controls;
   }
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  navigateData:any;
+  navigateData: any;
   itemsPerPage = 10;
-  constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -60,13 +65,13 @@ export class FeatureComponent implements OnInit {
             this.tableData
             this.ngOnInit();
             this.tableData.splice(index, 1);
-      
+
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -74,77 +79,77 @@ export class FeatureComponent implements OnInit {
             });
           }
         })
-      
+
         // this.tableData.splice(index, 1);
       }
     });
   }
 
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this feature!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.featureIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Feature Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this feature!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.featureIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Feature Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: 'Feature Is Active Successfully.',
-       });
-     }
-   });
- }
- loader=true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this feature!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.featureIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Feature Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this feature!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.featureIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Feature Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Feature Is Active Successfully.',
+        });
+      }
+    });
+  }
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -173,9 +178,9 @@ export class FeatureComponent implements OnInit {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("featureList")!))
     //   }
     // })
-    this.coreService.getfeature().subscribe(res=>{
-      this.tableData=res;
-      this.loader=false;
+    this.coreService.getfeature().subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getFeatureGroup();
@@ -198,18 +203,18 @@ export class FeatureComponent implements OnInit {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='add_productfeatures') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename == 'add_productfeatures') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='change_productfeatures') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename == 'change_productfeatures') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='delete_productfeatures') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename == 'delete_productfeatures') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -217,12 +222,118 @@ export class FeatureComponent implements OnInit {
     });
   }
 
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        this.fieldfilteredData = jsonSheet.map((row: any) => ({
+          title: row['title']
+        }));
+        console.log('Filtered Data:', this.fieldfilteredData);
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['title'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.fieldfilteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loader = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importFeature(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loader = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loader = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
+  }
+
   //select table row
- allSelected: boolean = false;
- selectedRows:boolean[]
- selectAlll() {
-   this.selectedRows.fill(this.allSelected);
- }
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -286,55 +397,55 @@ export class FeatureComponent implements OnInit {
   //   }
   // }
 
-  loaders=false
- submit() {
-  // console.log(this.featureForm.value);
-  // console.log(this.id);
+  loaders = false
+  submit() {
+    // console.log(this.featureForm.value);
+    // console.log(this.id);
 
-  if (this.featureForm.valid) {
-    this.loaders=true;
-    this.coreService.addFeature(this.featureForm.value).subscribe(res => {
-      // console.log(res);
-      this.addRes = res
-      if (this.addRes.success) {
-        this.loaders=false;
-        this.toastr.success(this.addRes.msg)
-        this.featureForm.reset()
-        // window.location.reload();
-        this.ngOnInit()
-      }
-    }, err => {
-      // console.log(err.error.gst);
-    })
-  } else {
-    this.featureForm.markAllAsTouched()
-    // console.log('forms invalid');
-    this.toastr.error('Please Fill All The Required Fields')
+    if (this.featureForm.valid) {
+      this.loaders = true;
+      this.coreService.addFeature(this.featureForm.value).subscribe(res => {
+        // console.log(res);
+        this.addRes = res
+        if (this.addRes.success) {
+          this.loaders = false;
+          this.toastr.success(this.addRes.msg)
+          this.featureForm.reset()
+          // window.location.reload();
+          this.ngOnInit()
+        }
+      }, err => {
+        // console.log(err.error.gst);
+      })
+    } else {
+      this.featureForm.markAllAsTouched()
+      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
+    }
   }
-}
 
-update(){
-  if (this.featureForm.valid) {
-    this.loaders=true;
-    this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
-      // console.log(res);
-      this.addRes = res
-      if (this.addRes.success) {
-        this.loaders=false;
-        this.toastr.success(this.addRes.msg)
-        this.featureForm.reset()
-        this.addForm=true;
-        // window.location.reload()
-        this.ngOnInit()
-      }
-    }, err => {
-      // console.log(err.error.gst);
-    })
-  } else {
-    this.featureForm.markAllAsTouched()
-    // console.log('forms invalid');
+  update() {
+    if (this.featureForm.valid) {
+      this.loaders = true;
+      this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
+        // console.log(res);
+        this.addRes = res
+        if (this.addRes.success) {
+          this.loaders = false;
+          this.toastr.success(this.addRes.msg)
+          this.featureForm.reset()
+          this.addForm = true;
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        // console.log(err.error.gst);
+      })
+    } else {
+      this.featureForm.markAllAsTouched()
+      // console.log('forms invalid');
+    }
   }
-}
 
   get title() {
     return this.featureForm.get('title')
@@ -361,14 +472,14 @@ update(){
     this.addForm = true;
     this.featureForm.reset();
   }
-  
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
-        // console.log(res.title.toLocaleLowerCase());
+  // console.log(res);
+  // console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
   //     })
@@ -378,10 +489,10 @@ update(){
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -392,8 +503,8 @@ update(){
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Feature List';
@@ -417,35 +528,35 @@ update(){
       })
     doc.save('feature.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Feature List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Feature Name']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row.title,
- 
-  
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Feature List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Feature Name']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Feature List  .pdf');
-}
+        index + 1,
+        row.title,
+
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Feature List  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -537,7 +648,7 @@ update(){
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
