@@ -28,25 +28,33 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search HSNCode"
-                                        [(ngModel)]="titlee" (ngModelChange)="search()">
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search HSNCode" [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -79,43 +87,45 @@
                                 </td>
                                 <td> {{i+1}} </td>
                                 <td class="productimgname">
-                                    <a routerLink="//product/hsncode-details/{{products.id}}" style="line-height: 3;">{{products?.hsn_code}}</a>
+                                    <a routerLink="//product/hsncode-details/{{products.id}}"
+                                        style="line-height: 3;">{{products?.hsn_code}}</a>
                                 </td>
                                 <td>
-                            <!-- <tr *ngFor="let subcat of products.subcategory">
+                                    <!-- <tr *ngFor="let subcat of products.subcategory">
                                 <td>{{subcat.title}}</td>
                             </tr> -->
-                            {{products?.subcategory[0]?.title}}
-                            </td>
-                            <!-- <td>{{products.tax}}</td> -->
+                                    {{products?.subcategory[0]?.title}}
+                                </td>
+                                <!-- <td>{{products.tax}}</td> -->
 
-                            <td>
-                                <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                <td>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                             class="badges">{{products.is_active}}</span> -->
-                                <mat-slide-toggle
-                                    (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
-                            </td>
-                            <td>
-                                <a class="me-2" routerLink="/product/hsncode-details/{{products.id}}">
-                                    <img src="assets/img/icons/eye.svg" alt="img">
-                                </a>
-                                <a class="me-2" (click)="editForm(products.id)" *ngIf="isEdit">
-                                    <img src="assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a (click)="confirmText(i,products.id)" class="confirm-text" href="javascript:void(0);" *ngIf="isDelete">
-                                    <img src="assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-2" routerLink="/product/hsncode-details/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-2" (click)="editForm(products.id)" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="tableData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -146,7 +156,7 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                    
+
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -159,7 +169,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
 
@@ -207,7 +218,8 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label> HSN Code*</label>
-                                    <input type="text" formControlName="hsn_code" placeholder="Enter HSN Code" id="hsn_code" [ngClass]="{
+                                    <input type="text" formControlName="hsn_code" placeholder="Enter HSN Code"
+                                        id="hsn_code" [ngClass]="{
                                     'is-invalid': f['hsn_code'].touched && f['hsn_code'].invalid
                                   }">
 
@@ -241,12 +253,17 @@
                                     <div class="dropdown">
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li> <input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()" [ngModelOptions]="{standalone: true}">
+                                        <ul class="dropdown-menu"
+                                            style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li> <input type="text" placeholder="search subcategory"
+                                                    class="form-control" [(ngModel)]="searchTerm"
+                                                    [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()"
+                                                    [ngModelOptions]="{standalone: true}">
                                             </li>
                                             <li><a class="dropdown-item"
                                                     *ngFor="let subcategory of filteredFeatureList; let i=index">
-                                                    <input type="checkbox" [value]="subcategory.id" [checked]="selectedSubcategoryIds.includes(subcategory.id)"
+                                                    <input type="checkbox" [value]="subcategory.id"
+                                                        [checked]="selectedSubcategoryIds.includes(subcategory.id)"
                                                         (change)="onCheckChange($event)" formArrayName="subcategory"
                                                         style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
@@ -267,8 +284,9 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                   &nbsp; Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -319,8 +337,12 @@
                                     <div class="dropdown">
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li>    <input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()" [ngModelOptions]="{standalone: true}">
+                                        <ul class="dropdown-menu"
+                                            style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li> <input type="text" placeholder="search subcategory"
+                                                    class="form-control" [(ngModel)]="searchTerm"
+                                                    [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()"
+                                                    [ngModelOptions]="{standalone: true}">
                                             </li>
                                             <li><a class="dropdown-item"
                                                     *ngFor="let subcategory of filteredFeatureList; let i=index">
@@ -349,10 +371,43 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                  &nbsp;  Submit</button>
+                                    &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import HSN Code File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type','account_subtype','opening_balance', and 'opening_balance_type'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

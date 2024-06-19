@@ -25,8 +25,8 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search Title.."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()">
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Title.." [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -34,20 +34,28 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                 <!-- /Filter -->
-                 <div class="card mb-0" id="filter_inputs">
+                <!-- /Filter -->
+                <div class="card mb-0" id="filter_inputs">
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-lg-12 col-sm-12">
@@ -55,26 +63,30 @@
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Alias</label>
-                                            <input type="search" [(ngModel)]="selectedAlias" (ngModelChange)="filterData()" class="search" placeholder="Search Alias">
+                                            <input type="search" [(ngModel)]="selectedAlias"
+                                                (ngModelChange)="filterData()" class="search"
+                                                placeholder="Search Alias">
                                         </div>
                                     </div>
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Account Type</label>
-                                            <select [(ngModel)]="selectedAccountType" (change)="filterData()" class="form-select">
+                                            <select [(ngModel)]="selectedAccountType" (change)="filterData()"
+                                                class="form-select">
                                                 <option value="" selected disabled>Select Account Type</option>
-                                                <option value="{{acc.title}}" *ngFor="let acc of accountType">{{acc.title}}</option>
+                                                <option value="{{acc.title}}" *ngFor="let acc of accountType">
+                                                    {{acc.title}}</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="form-group" (click)="clearFilter()">
-                                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                        </div>     
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <!-- /Filter -->
                 <div class="table-responsive">
                     <table class="table datanew" id="mytable">
@@ -92,7 +104,8 @@
                                 <th (click)="sort('id')" class="thone">Accounts Type<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Alias<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -107,7 +120,8 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//account/account-sub-type-details/{{products.id}}" style="line-height: 3;">{{products?.title}}</a>
+                                    <a routerLink="//account/account-sub-type-details/{{products.id}}"
+                                        style="line-height: 3;">{{products?.title}}</a>
                                 </td>
                                 <td>{{products?.accounts_type}}</td>
                                 <td>{{products?.alias}}</td>
@@ -156,7 +170,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
                             </div>
 
                         </div>
@@ -214,8 +229,8 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Alias*</label>
-                                    <input type="text" formControlName="alias" placeholder="Enter Alias" id="alias" required
-                                        [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
+                                    <input type="text" formControlName="alias" placeholder="Enter Alias" id="alias"
+                                        required [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
                                     <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
                                         Valid alias
                                     </span>
@@ -279,6 +294,39 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Account Sub Type File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type' and 'alias'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

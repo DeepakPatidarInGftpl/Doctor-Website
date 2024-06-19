@@ -19,8 +19,13 @@ export class HsncodeComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  fieldfilteredData: any[] = [];
   hsncodeForm!: FormGroup;
 
   get f() {
@@ -31,10 +36,10 @@ export class HsncodeComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-  navigateData:any
+  navigateData: any
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -199,8 +204,8 @@ export class HsncodeComponent implements OnInit {
     // }
 
     // permission from profile api
-  
-  
+
+
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
@@ -244,6 +249,113 @@ export class HsncodeComponent implements OnInit {
       }
 
     })
+  }
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        this.fieldfilteredData = jsonSheet.map((row: any) => ({
+          hsn_code: row['hsn_code'],
+          subcategory: row['subcategory']
+        }));
+        console.log('Filtered Data:', this.fieldfilteredData);
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['hsn_code', 'subcategory'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.fieldfilteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loader = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importHSNCode(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loader = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loader = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
   }
 
   // form submit
@@ -491,7 +603,7 @@ export class HsncodeComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
@@ -556,26 +668,26 @@ export class HsncodeComponent implements OnInit {
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
         ['#', 'HSN Code', 'Subcategory']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
-    
+      body: this.tableData.map((row: any, index: number) => [
+
         index + 1,
         row.hsn_code,
         row.subcategory[0]?.title
-   
-    
-  
+
+
+
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('HSN Code List .pdf');
   }
@@ -670,7 +782,7 @@ export class HsncodeComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;

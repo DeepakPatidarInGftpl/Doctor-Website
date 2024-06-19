@@ -2,12 +2,12 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl">Feature  list</h4>
+                <h4 class="titl">Feature list</h4>
                 <h6>Manage your Feature </h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Feature Group
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Feature Group
                 </a>
             </div>
         </div>
@@ -26,26 +26,36 @@
                         </div> -->
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search Feature Name..." [(ngModel)]="titlee" (ngModelChange)="search()">
-                            </label>
-                          </div>       
-                          </div>
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Feature Name..." [(ngModel)]="titlee"
+                                        (ngModelChange)="search()">
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -63,11 +73,13 @@
                                 <th (click)="sort('id')" class="thone">Feature Name <i class="fa fa-sort"></i></th>
                                 <!-- <th (click)="sort('id')" class="thone">Feature Group <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="tableData?.length>=0">
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -78,15 +90,18 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a routerLink="//product/feature-details/{{products?.id}}" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//product/feature-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <!-- <td>{{products.feature_group}}</td> -->
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
-                                        <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>          
-                                   
-                                    </td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+
+                                </td>
                                 <td>
                                     <a class="me-1" routerLink="//product/feature-details/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -104,11 +119,11 @@
                         </tbody>
                         <tbody *ngIf="tableData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -138,24 +153,25 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="30">30</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
+                            </div>
+
                         </div>
-             
-                       </div>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,35 +182,37 @@
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                <h4> Feature </h4>
-                <h6>Create new Feature </h6>
+                    <h4> Feature </h4>
+                    <h6>Create new Feature </h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
-                <h4> Feature Edit</h4>
-                <h6> Update Feature </h6>
+                    <h4> Feature Edit</h4>
+                    <h6> Update Feature </h6>
                 </div>
             </div>
         </div>
         <div class="card">
             <div *ngIf="isAdd">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="featureForm" (ngSubmit)="submit()">
-                    <div class="row">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="featureForm" (ngSubmit)="submit()">
+                        <div class="row">
 
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Feature Name*</label>
-                                <input type="text" formControlName="title" placeholder="Enter Feature Name" id="title" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Feature Name*</label>
+                                    <input type="text" formControlName="title" placeholder="Enter Feature Name"
+                                        id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Feature Name
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Feature Name
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="col-lg-6 col-sm-6 col-12">
+                            <!-- <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Feature Group*</label>
                              
@@ -215,34 +233,36 @@
 
                             </div>
                         </div> -->
-                        <div class="col-lg-8 text-end mt-5">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-8 text-end mt-5">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
-            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div *ngIf="isEdit">
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="featureForm" (ngSubmit)="update()">
-                    <div class="row">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="featureForm" (ngSubmit)="update()">
+                        <div class="row">
 
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="col-lg-6 col-sm-6 col-12">
+                            <!-- <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Feature Group*</label>
                               
@@ -263,16 +283,50 @@
 
                             </div>
                         </div> -->
-                        <div class="col-lg-8 text-end mt-5">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-8 text-end mt-5">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Feature File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type','account_subtype','opening_balance', and 'opening_balance_type'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
+                </div>
             </div>
         </div>
     </div>

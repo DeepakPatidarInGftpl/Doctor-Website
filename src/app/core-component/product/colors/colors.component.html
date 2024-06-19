@@ -28,25 +28,33 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search Color..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()">
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Color..." [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -64,7 +72,8 @@
                                 <th (click)="sort('id')" class="thone">Color<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Color Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="tableData?.length>=0">
@@ -80,7 +89,8 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a routerLink="//product/color-details/{{products?.id}}" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//product/color-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.color_code}}</td>
                                 <td>
@@ -106,11 +116,11 @@
                         </tbody>
                         <tbody *ngIf="tableData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -153,7 +163,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
 
@@ -188,22 +199,29 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Color</label>
-                                    <input type="text" formControlName="title" placeholder="Color Name" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Color Name" id="title"
+                                        [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Color</span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Color</span>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Color Code</label>
-                                    <input type="color" formControlName="color_code" placeholder="Color Code" id="color_code" [ngClass]="{'is-invalid': f['color_code'].touched && f['color_code'].invalid }">
-                                    <span class="text-danger" *ngIf="color_code && color_code.invalid && color_code.touched">Enter Color Code(example: #fff) </span>
+                                    <input type="color" formControlName="color_code" placeholder="Color Code"
+                                        id="color_code"
+                                        [ngClass]="{'is-invalid': f['color_code'].touched && f['color_code'].invalid }">
+                                    <span class="text-danger"
+                                        *ngIf="color_code && color_code.invalid && color_code.touched">Enter Color
+                                        Code(example: #fff) </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span> &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -216,7 +234,8 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Color</label>
-                                    <input type="text" formControlName="title" placeholder="Color Name" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Color Name" id="title"
+                                        [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
@@ -243,10 +262,43 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                   &nbsp; Submit</button>
+                                    &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Color File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type','account_subtype','opening_balance', and 'opening_balance_type'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
                 </div>
             </div>
         </div>

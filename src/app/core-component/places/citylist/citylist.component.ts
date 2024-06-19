@@ -19,8 +19,13 @@ export class CitylistComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  filteredData: any[] = [];
   cityForm!: FormGroup;
   get f() {
     return this.cityForm.controls;
@@ -29,13 +34,13 @@ export class CitylistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  navigateData:any
+  navigateData: any
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private cs :CompanyService) {
-      this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-      if (this.navigateData){
-        this.editForm(this.navigateData)
-      }
+    private cs: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any
@@ -124,16 +129,16 @@ export class CitylistComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text:this.delRes.msg,
+          text: this.delRes.msg,
         });
       }
     });
   }
-  loader=true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.cityForm = this.fb.group({
       city: new FormControl('', [Validators.required]),
@@ -160,7 +165,7 @@ export class CitylistComponent implements OnInit {
     // })
 
     this.coreService.getcity().subscribe(res => {
-      this.loader=false;
+      this.loader = false;
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -185,23 +190,133 @@ export class CitylistComponent implements OnInit {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='add_city') {
+        if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename == 'add_city') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='change_city') {
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename == 'change_city') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='delete_city') {
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename == 'delete_city') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
       });
     });
+  }
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      // Validate the columns
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        // Process the data here (only extract required fields)
+        this.filteredData = jsonSheet.map((row: any) => ({
+          state: row['state'],
+          city: row['city'],
+          city_code: row['city_code']
+        }));
+        console.log('Filtered Data:', this.filteredData);
+        // Further processing with filteredData
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['state', 'city', 'city_code'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.filteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+    this.loaders = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importCity(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loaders = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loaders = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
   }
 
   //select table row
@@ -237,23 +352,23 @@ export class CitylistComponent implements OnInit {
     })
   }
   addRes: any;
-  loaders=false;
+  loaders = false;
   submit() {
     // console.log(this.cityForm.value);
     // console.log(this.id);
 
     if (this.cityForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addcity(this.cityForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset()
           // window.location.reload();
           this.ngOnInit()
-        }else{
+        } else {
           this.loaders = false;
         }
       }, err => {
@@ -269,18 +384,18 @@ export class CitylistComponent implements OnInit {
   stateError = null
   update() {
     if (this.cityForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset();
           this.addForm = true;
           // window.location.reload()
           this.ngOnInit();
-        }else{
+        } else {
           this.loaders = false;
         }
       }, err => {
@@ -336,10 +451,10 @@ export class CitylistComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.city.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.city.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -351,171 +466,171 @@ export class CitylistComponent implements OnInit {
   }
 
 
-     // convert to pdf
-     generatePDF() {
-      const doc = new jsPDF();
-      const title = 'City List';
-    
-      doc.setFontSize(15);
-      doc.setTextColor(33, 43, 54);
-      doc.text(title, 10, 10);
-      
-      // Pass tableData to autoTable
-      autoTable(doc, {
-        head: [
-          ['Sr No.', 'City', 'City Code', 'State', 'Is Active']
-        ],
-        body: this.tableData.map((row, index) => [
-          index + 1,
-          row.city,
-          row.city_code,
-          row.state?.state,
-          row.is_active ? 'Yes' : 'No'
-        ]),
-        theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
-      });
-    
-      doc.save('city.pdf');
-    }
-    
-    generatePDFAgain() {
-      const doc = new jsPDF();
-      const title = 'city List';
-      doc.setFontSize(12);
-      doc.setTextColor(33, 43, 54);
-      doc.text(title, 82, 10);
-      doc.text('', 10, 15); 
-      // Pass tableData to autoTable
-      autoTable(doc, {
-        head: [
-          ['#', 'City','City Code','State']
-        ],
-        body: this.tableData.map((row:any, index:number ) => [
-      
-          index + 1,
-          row.city ,
-          row.city_code,
-         row.state?.state,
-      
-  
-        ]),
-        theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
-        startY: 15, 
-      });
-      doc.save('city  .pdf');
-    }
-    // excel export only filtered data
-    getVisibleDataFromTable(): any[] {
-      const visibleData = [];
-      const table = document.getElementById('mytable');
-      const headerRow = table.querySelector('thead tr');
-      const dataRows = table.querySelectorAll('tbody tr');
-      //table heading
-      const headerData = [];
-      headerRow.querySelectorAll('th').forEach(cell => {
-        const columnHeader = cell.textContent.trim();
-        if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-          headerData.push(columnHeader);
-        }
-      });
-      visibleData.push(headerData);
-  
-      // Include visible data rows
-      dataRows.forEach(row => {
-        const rowData = [];
-        row.querySelectorAll('td').forEach(cell => {
-          rowData.push(cell.textContent.trim());
-        });
-        visibleData.push(rowData);
-      });
-      return visibleData;
-    }
-  
-    // Modify your exportToExcel() function
-    exportToExcel(): void {
-      const visibleDataToExport = this.getVisibleDataFromTable();
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      // Create a Blob from the workbook and initiate a download
-      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileName = 'city.xlsx';
-      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-    }
-  
-    printTable(): void {
-      // Get the table element and its HTML content
-      const tableElement = document.getElementById('mytable');
-      const tableHTML = tableElement.outerHTML;
-  
-      // Get the title element and its HTML content
-      const titleElement = document.querySelector('.titl');
-      const titleHTML = titleElement.outerHTML;
-  
-      // Clone the table element to manipulate
-      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
-      // Remove the "Is Active" column header from the cloned table
-      const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
-      if (isActiveTh) {
-        isActiveTh.remove();
+  // convert to pdf
+  generatePDF() {
+    const doc = new jsPDF();
+    const title = 'City List';
+
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['Sr No.', 'City', 'City Code', 'State', 'Is Active']
+      ],
+      body: this.tableData.map((row, index) => [
+        index + 1,
+        row.city,
+        row.city_code,
+        row.state?.state,
+        row.is_active ? 'Yes' : 'No'
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+    });
+
+    doc.save('city.pdf');
+  }
+
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'city List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'City', 'City Code', 'State']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+
+        index + 1,
+        row.city,
+        row.city_code,
+        row.state?.state,
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('city  .pdf');
+  }
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    const headerRow = table.querySelector('thead tr');
+    const dataRows = table.querySelectorAll('tbody tr');
+    //table heading
+    const headerData = [];
+    headerRow.querySelectorAll('th').forEach(cell => {
+      const columnHeader = cell.textContent.trim();
+      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+        headerData.push(columnHeader);
       }
-  
-      // Remove the "Action" column header from the cloned table
-      const actionTh = clonedTable.querySelector('th.thone:last-child');
-      if (actionTh) {
-        actionTh.remove();
-      }
-  
-      // Loop through each row and remove the "Is Active" column and "Action" column data cells
-      const rows = clonedTable.querySelectorAll('tr');
-      rows.forEach((row) => {
-        // Remove the "Is Active" column data cell
-        const isActiveTd = row.querySelector('td:nth-child(6)');
-        if (isActiveTd) {
-          isActiveTd.remove();
-        }
-  
-        // Remove the "Action" column data cell
-        const actionTd = row.querySelector('td:last-child');
-        if (actionTd) {
-          actionTd.remove();
-        }
+    });
+    visibleData.push(headerData);
+
+    // Include visible data rows
+    dataRows.forEach(row => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach(cell => {
+        rowData.push(cell.textContent.trim());
       });
-  
-      // Get the modified table's HTML content
-      const modifiedTableHTML = clonedTable.outerHTML;
-  
-      // Apply styles to add some space from the top after the title
-      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-  
-      // Combine the title and table content
-      const combinedContent = styledTitleHTML + modifiedTableHTML;
-  
-      // Store the original contents
-      const originalContents = document.body.innerHTML;
-      window.addEventListener('afterprint', () => {
-        console.log('afterprint');
-       window.location.reload();
-      });
-      // Replace the content of the body with the combined content
-      document.body.innerHTML = combinedContent;
-      window.print();
-  
-      // Restore the original content of the body
-      document.body.innerHTML = originalContents;
+      visibleData.push(rowData);
+    });
+    return visibleData;
+  }
+
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'city.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+    // Remove the "Is Active" column header from the cloned table
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
+    if (isActiveTh) {
+      isActiveTh.remove();
     }
-    changePg(val: any) {
-      console.log(val);
-      if (val == -1) {
-        this.itemsPerPage = this.tableData.length;
+
+    // Remove the "Action" column header from the cloned table
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+    if (actionTh) {
+      actionTh.remove();
+    }
+
+    // Loop through each row and remove the "Is Active" column and "Action" column data cells
+    const rows = clonedTable.querySelectorAll('tr');
+    rows.forEach((row) => {
+      // Remove the "Is Active" column data cell
+      const isActiveTd = row.querySelector('td:nth-child(6)');
+      if (isActiveTd) {
+        isActiveTd.remove();
       }
+
+      // Remove the "Action" column data cell
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        actionTd.remove();
+      }
+    });
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.tableData.length;
     }
+  }
 }

@@ -19,22 +19,27 @@ export class UnitComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  fileName: string;
+  selectedFile: File;
+  selectedFileName: string;
+  fileFormatError = false;
+  missingFieldsError = false;
+  fieldfilteredData: any[] = [];
   unitsForm!: FormGroup;
   get f() {
     return this.unitsForm.controls;
   }
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
- 
+
   itemsPerPage = 10;
-  navigateData:any
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  navigateData: any
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -58,14 +63,14 @@ export class UnitComponent implements OnInit {
         this.coreService.deleteUnits(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else{
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -73,75 +78,75 @@ export class UnitComponent implements OnInit {
             });
           }
         })
-       
+
       }
     });
   }
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this Unit!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.unitIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Unit Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this Unit!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.unitIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: this.delRes.msg,
-       });
-     }
-   });
- }
- loader=true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this Unit!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.unitIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Unit Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this Unit!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.unitIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: this.delRes.msg,
+        });
+      }
+    });
+  }
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.unitsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -171,10 +176,10 @@ export class UnitComponent implements OnInit {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("unitList")!))
     //   }
     // })
-    
-    this.coreService.getUnit().subscribe(res=>{
-      this.tableData=res;
-      this.loader=false;
+
+    this.coreService.getUnit().subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
@@ -196,30 +201,136 @@ export class UnitComponent implements OnInit {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='add_unit') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename == 'add_unit') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='change_unit') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename == 'change_unit') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='delete_unit') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename == 'delete_unit') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
       });
     });
   }
-//select table row
-allSelected: boolean = false;
-selectedRows:boolean[]
-selectAlll() {
-  this.selectedRows.fill(this.allSelected);
-}
+
+  openModal() {
+    this.fileName = '';
+    this.missingFieldsError = false;
+    this.fileFormatError = false;
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      const fileExtension = this.getFileExtension(file.name);
+      if (fileExtension !== 'xlsx') {
+        this.fileFormatError = true;
+        this.missingFieldsError = false;
+      } else {
+        this.fileFormatError = false;
+        this.readExcelFile(file);
+      }
+    }
+  }
+
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  readExcelFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonSheet = XLSX.utils.sheet_to_json(worksheet);
+
+      if (this.validateColumns(jsonSheet)) {
+        this.missingFieldsError = false;
+        this.fieldfilteredData = jsonSheet.map((row: any) => ({
+          title: row['title']
+        }));
+        console.log('Filtered Data:', this.fieldfilteredData);
+      } else {
+        this.missingFieldsError = true;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateColumns(sheetData: any[]): boolean {
+    if (!sheetData || sheetData.length === 0) {
+      return false;
+    }
+
+    const requiredFields = ['title'];
+    const sheetFields = Object.keys(sheetData[0]);
+
+    for (const field of requiredFields) {
+      if (!sheetFields.includes(field)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  createFilteredExcelFile(data: any[]) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    return new Blob([wbout], { type: 'application/octet-stream' });
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const filteredExcelBlob = this.createFilteredExcelFile(this.fieldfilteredData);
+    formData.append('file', filteredExcelBlob, this.selectedFileName);
+
+    this.loader = true;
+    if (!this.fileFormatError && !this.missingFieldsError && this.fileName) {
+      this.coreService.importUnit(formData).subscribe((res) => {
+        console.log(res);
+        this.toastr.success(res?.msg);
+        this.loader = false;
+        this.missingFieldsError = false;
+        this.fileFormatError = false;
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      }, (err) => {
+        this.toastr.error(err?.error?.msg);
+        console.error(err?.error?.msg);
+      })
+    } else {
+      this.loader = false;
+      this.toastr.error('Please Upload a valid File');
+      console.error('No file selected');
+      return;
+    }
+  }
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -246,7 +357,7 @@ selectAlll() {
   // submit() {
   //   console.log(this.unitsForm.value);
   //   console.log(this.id);
-    
+
   //   if (this.unitsForm.valid) {
   //     if(this.id){
   //       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
@@ -284,18 +395,18 @@ selectAlll() {
     this.unitsForm.reset();
   }
 
-loaders=false;
- submit() {
+  loaders = false;
+  submit() {
     // console.log(this.unitsForm.value);
     // console.log(this.id);
 
     if (this.unitsForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
           // window.location.reload()
@@ -310,20 +421,20 @@ loaders=false;
     }
   }
 
-  update(){
+  update() {
     if (this.unitsForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
-          this.addForm=true
+          this.loaders = false;
+          this.addForm = true
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
-        //  window.location.reload()
-        this.ngOnInit()
-}
+          //  window.location.reload()
+          this.ngOnInit()
+        }
       }, err => {
         // console.log(err.error.gst);
       })
@@ -335,30 +446,30 @@ loaders=false;
   get title() {
     return this.unitsForm.get('title')
   }
-addForm=true
-id:any
+  addForm = true
+  id: any
   editForm(id: number) {
-    this.id=id
+    this.id = id
     this.coreService.getUnitsById(id).subscribe(res => {
       // console.log(res);
       res.map((data: any) => {
         // console.log(data);
         if (id == data.id) {
-          this.addForm=false
+          this.addForm = false
           this.unitsForm.patchValue(data);
-          
+
         }
       })
     })
   }
 
-  
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
@@ -370,10 +481,10 @@ id:any
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -385,8 +496,8 @@ id:any
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Unit list';
@@ -410,34 +521,34 @@ id:any
       })
     doc.save('unit.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Unit List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#', 'Units',]
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.title,
-     
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Unit List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Units',]
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.title,
 
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Unit .pdf');
-}
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Unit .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -529,7 +640,7 @@ id:any
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
