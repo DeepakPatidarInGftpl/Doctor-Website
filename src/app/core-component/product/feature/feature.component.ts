@@ -328,6 +328,19 @@ export class FeatureComponent implements OnInit {
     }
   }
 
+  download() {
+    this.coreService.sampleFeatureFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleFeatureFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]

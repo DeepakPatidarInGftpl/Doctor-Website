@@ -219,6 +219,16 @@ export class CoreService {
     })
   }
 
+  sampleAccountFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Account';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
   //HSNCODE section
   getHSNcode() {
     let url = this.apiUrl + '/pv-api/hsn_code/';
@@ -285,6 +295,16 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    })
+  }
+
+  sampleHSNCodeFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=HSNCode';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
     })
   }
 
@@ -368,6 +388,16 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    })
+  }
+
+  sampleUnitFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Unit';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
     })
   }
 
@@ -611,6 +641,16 @@ export class CoreService {
     })
   }
 
+  sampleColorFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Color';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
 
   // size section
   getsize() {
@@ -680,6 +720,16 @@ export class CoreService {
     })
   }
 
+  sampleSizeFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Size';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
   //tax section
   gettax() {
     let url = this.apiUrl + '/pv-api/tax/';
@@ -738,6 +788,17 @@ export class CoreService {
       })
     })
   }
+
+  sampleTaxFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Tax';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
   //fuature_group section
   getFuature_group() {
     let url = this.apiUrl + '/pv-api/fuature_group/';
@@ -856,6 +917,16 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    })
+  }
+
+  sampleFeatureFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Feature';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
     })
   }
 
@@ -1030,6 +1101,16 @@ export class CoreService {
     })
   }
 
+  sampleCountryFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=Country';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
+
   // state section
   getstate() {
     let url = this.apiUrl + '/state/';
@@ -1097,6 +1178,16 @@ export class CoreService {
       })
     })
   }
+
+  sampleStateFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=State';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
+    })
+  }
   // city section
   getcity() {
     let url = this.apiUrl + '/city/';
@@ -1162,6 +1253,16 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    })
+  }
+
+  sampleCityFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=City';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
     })
   }
 
@@ -1726,6 +1827,16 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    })
+  }
+
+  sampleAccountSubTypeFileExport(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sample_files_export/?table_name=AccountSubTypes';
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+      responseType: 'blob' as 'json'
     })
   }
 
