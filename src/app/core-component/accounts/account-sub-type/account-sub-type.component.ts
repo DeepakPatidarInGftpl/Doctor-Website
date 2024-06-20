@@ -317,6 +317,19 @@ export class AccountSubTypeComponent implements OnInit {
     }
   }
 
+  download() {
+    this.coreService.sampleAccountSubTypeFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleAccountSubTypeFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {

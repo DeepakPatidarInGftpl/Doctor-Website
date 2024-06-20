@@ -319,6 +319,19 @@ export class CitylistComponent implements OnInit {
     }
   }
 
+  download() {
+    this.coreService.sampleCityFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleCityFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]

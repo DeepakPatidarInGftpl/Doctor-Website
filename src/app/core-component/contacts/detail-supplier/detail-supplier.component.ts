@@ -11,9 +11,12 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class DetailSupplierComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location) { }
 
-  id: any
+  id: any;
+  filterAddressData: any[];
+  filterBankData: any[];
+  filterProductData: any[];
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -39,13 +42,19 @@ export class DetailSupplierComponent implements OnInit {
   getdata() {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.supplierDetail = res
-
+        this.supplierDetail = res;
+        this.filterAddressData = this.supplierDetail?.address.slice();
+        this.filterBankData = this.supplierDetail?.bank_id.slice();
+        this.filterProductData = this.supplierDetail?.products.slice();
         this.filteredData = this.supplierDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
         // console.log(res); 
       }
     })
+  }
+
+  get isSupplierDetailEmpty(): boolean {
+    return !this.supplierDetail || Object.keys(this.supplierDetail).length === 0;
   }
 
   sho = true;
@@ -70,13 +79,16 @@ export class DetailSupplierComponent implements OnInit {
     this.isBatch = true;
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
 
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
+  addressItemsPerPage = 10;
+  bankItemsPerPage = 10;
+  productItemsPerPage = 10;
   key = 'id';
   reverse: boolean = false;
 
@@ -85,28 +97,49 @@ export class DetailSupplierComponent implements OnInit {
     this.reverse = !this.reverse
   }
   // filter data
-  filteredData: any[]; 
-  
-  filterOpertion:any;
+  filteredData: any[];
+
+  filterOpertion: any;
   filterData() {
     let filteredData = this.supplierDetail?.logs.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
- 
+
     if (this.filterOpertion) {
       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    this.filterOpertion=null;
+    this.filterOpertion = null;
     this.filterData();
   }
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
       this.itemsPerPage = this.filteredData?.length;
+    }
+  }
+
+  changeAddresPg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.addressItemsPerPage = this.filterAddressData?.length;
+    }
+  }
+
+  changeBankPg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.bankItemsPerPage = this.filterBankData?.length;
+    }
+  }
+
+  changeProductPg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.productItemsPerPage = this.filterProductData?.length;
     }
   }
 

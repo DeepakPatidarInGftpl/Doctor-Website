@@ -358,6 +358,19 @@ export class HsncodeComponent implements OnInit {
     }
   }
 
+  download() {
+    this.coreService.sampleHSNCodeFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleHSNCodeFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   // form submit
   check: any
   selectedSubcat = 0;

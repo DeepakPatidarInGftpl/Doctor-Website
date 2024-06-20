@@ -231,6 +231,7 @@
                 <h5 class="modal-title">Import Account File</h5>
                 <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
                     aria-label="Close"><span aria-hidden="true">×</span></button>
+                <a class="text-primary text-decoration-underline" (click)="download()">Download Sample</a>
             </div>
             <div class="modal-body">
                 <div>
@@ -244,7 +245,7 @@
                         an Excel file (.xlsx format) </p>
                     <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
                     <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
-                        'title','accounts_type' and 'alias'.
+                        'title', 'accounts_type', 'account_subtype', 'opening_balance', and 'opening_balance_type'.
                     </p>
                     <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
                 </div>

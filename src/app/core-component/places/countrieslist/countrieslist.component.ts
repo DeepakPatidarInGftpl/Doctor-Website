@@ -363,6 +363,19 @@ export class CountrieslistComponent implements OnInit {
     this.fileFormatError = false;
   }
 
+  download() {
+    this.coreService.sampleCountryFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleCountryFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   addRes: any;
   loaders = false;
   submit() {
