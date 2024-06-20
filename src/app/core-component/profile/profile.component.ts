@@ -20,6 +20,9 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  getInitial(name: string): string {
+    return name.charAt(0).toUpperCase();
+  }
 
   onClick() {
     if (this.password === 'password') {

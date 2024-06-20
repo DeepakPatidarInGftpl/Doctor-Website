@@ -325,6 +325,19 @@ export class TaxComponent implements OnInit {
     }
   }
 
+  download() {
+    this.coreService.sampleTaxFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleTaxFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {

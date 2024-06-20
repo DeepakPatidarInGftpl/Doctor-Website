@@ -325,6 +325,20 @@ export class UnitComponent implements OnInit {
       return;
     }
   }
+
+  download() {
+    this.coreService.sampleUnitFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleUnitFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]

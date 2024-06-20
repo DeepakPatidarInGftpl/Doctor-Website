@@ -324,6 +324,20 @@ export class SizeComponent implements OnInit {
       return;
     }
   }
+
+  download() {
+    this.coreService.sampleSizeFileExport().subscribe(
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'sampleSizeFile.xlsx');
+      },
+      (error) => {
+        console.error('Error downloading the file:', error);
+        this.toastr.error('Error downloading the file');
+      }
+    );
+  }
+
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]
