@@ -12,12 +12,18 @@ import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 })
 export class DetailCustomerComponent implements OnInit {
   imgUrl = 'https://pv.greatfuturetechno.com';
-  constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService, private coreService: ContactService, private location: Location) { }
-  id: any
+  constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService, private coreService: CoreService, private location: Location, private contactService: ContactService) { }
+  id: any;
+  profileDetails: any;
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
-    this.getLoyaltyPoints()
+    this.getLoyaltyPoints();
+
+    this.coreService.profileDetails.subscribe((res) => {
+      this.profileDetails = res;
+    })
   }
 
   ngAfterViewInit() {
@@ -37,19 +43,39 @@ export class DetailCustomerComponent implements OnInit {
     document.body.appendChild(script);
   }
   productDetail: any;
-  firstLatter:any;
+  firstLatter: any;
   getdata() {
-    this.coreService.getCustomerById(this.id).subscribe(res => {
+    this.contactService.getCustomerById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.productDetail = res;
         let words = res.name.split(" ");
         let combined = words.map(word => word.charAt(0)).join('');
-        this.firstLatter=combined
+        this.firstLatter = combined
         this.filteredData = this.productDetail?.logs.slice();
         this.filterData();
       }
     })
   }
+
+  formatDate(utcDate: string): string {
+    const date = new Date(utcDate);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  }
+
+  getInitial(name: string): string {
+    if (!name) return '';
+    const userName = name.split(' ');
+    const initials = userName.map(part => part.charAt(0).toUpperCase()).join('');
+    return initials;
+  }
+
   LoyaltyList: any;
   getLoyaltyPoints() {
     this.hrmService.getLoyalPoints(this.id).subscribe((res: any) => {
@@ -106,7 +132,7 @@ export class DetailCustomerComponent implements OnInit {
     this.filterData();
   }
 
-  openModalMembershp(id:number) {
+  openModalMembershp(id: number) {
     const modal = document.getElementById('membershipModal');
     if (modal) {
       modal.classList.add('show');
@@ -122,19 +148,19 @@ export class DetailCustomerComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  loader=true;
-  membershipList:any;
-  getMemberShip(){
+  loader = true;
+  membershipList: any;
+  getMemberShip() {
     this.hrmService.getMembership().subscribe(res => {
       this.membershipList = res;
-      this.loader=false;
+      this.loader = false;
     });
   }
-  memberDetails:any
-  getMemberShipById(id:number){
+  memberDetails: any
+  getMemberShipById(id: number) {
     this.hrmService.getMembershipById(id).subscribe(res => {
       this.memberDetails = res;
-      this.loader=false;
+      this.loader = false;
     });
   }
   changePg(val: any) {

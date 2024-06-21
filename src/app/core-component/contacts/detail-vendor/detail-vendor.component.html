@@ -1,15 +1,23 @@
 <div class="card bg">
     <div class="card-body">
-        <div class="page-header">
-            <div class="page-title">
-                <h6 class="subhead-color" (click)="goBack()"><mat-icon
-                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                Back to Vendor</h6>
-                <h4>Full details of a Vendor</h4>
+        <div class="card d-flex align-items-center card-container-wrapper justify-content-between">
+            <div *ngIf="vendorDetail?.name" class="card-body p-0 d-flex align-items-center">
+                <div class="initial logo-title-wrapper me-3">
+                    <h1 class="logo-title">{{ getInitial(vendorDetail?.name) }}</h1>
+                </div>
+                <div class="user-title-wrapper text-white px-2">
+                    <h5 class="card-title user-title-wrapper text-white mb-0">{{ vendorDetail?.name }}
+                        ({{vendorDetail?.mobile_no}})
+                    </h5>
+                    <p class="card-text mb-0">{{ vendorDetail?.company_name ? vendorDetail?.company_name
+                        : profileDetails?.role }}</p>
+                </div>
             </div>
-            <div class="page-btn">
-                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Vendor
+            <div class="page-btn me-4">
+                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}"
+                    class="btn btn-added d-flex align-items-center bg-white">
+                    <i class="fas fa-edit edit-icon"></i>
+                    <span class="ms-2 edit-btn-title">Edit Vendor</span>
                 </a>
             </div>
         </div>
@@ -20,89 +28,135 @@
                     <div class="col-lg-12 col-sm-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="productdetails">
-                                    <ul class="product-bar">
-                                        <li>
-                                            <h4>Name</h4>
-                                            <h6>{{vendorDetail?.name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Company name</h4>
-                                            <h6>{{vendorDetail?.company_name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Date of Birth</h4>
-                                            <h6>{{vendorDetail?.date_of_birth}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Anniversary</h4>
-                                            <h6>{{vendorDetail?.anniversary_date}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Mobile Number</h4>
-                                            <h6>{{vendorDetail?.mobile_no}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Telephone Number</h4>
-                                            <h6>{{vendorDetail?.telephone_no}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>WhatsApp Number</h4>
-                                            <h6>{{vendorDetail?.whatsapp_no}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Email</h4>
-                                            <h6>{{vendorDetail?.email}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Remark</h4>
-                                            <h6>{{vendorDetail?.remark}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>GST Type</h4>
-                                            <h6>{{vendorDetail?.gst_type}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>GSTIN</h4>
-                                            <h6>{{vendorDetail?.gstin}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Apply TDS</h4>
-                                            <h6>{{vendorDetail?.apply_tds}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Pan card</h4>
-                                            <h6>{{vendorDetail?.pan_no}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Credit Limit</h4>
-                                            <h6>{{vendorDetail?.credit_limit}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Payment Terms</h4>
-                                            <h6>{{vendorDetail?.payment_terms?.title}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Opening Balance</h4>
-                                            <h6>{{vendorDetail?.opening_balance_type + ' : ' +
-                                                vendorDetail?.opening_balance}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Invite Code</h4>
-                                            <h6>{{vendorDetail?.invite_code}}</h6>
-                                        </li>
-                                        <!-- <li>
-                                            <h4>Membership</h4>
-                                            <h6>{{vendorDetail?.membership}}</h6>
-                                        </li> -->
-                                    </ul>
+                                <h3 class="contact-title-wrapper ps-4 mb-3">Contact Information</h3>
+                                <div class="row m-0">
+                                    <div class="col-5">
+                                        <div class="row m-0">
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Mobile Number:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.mobile_no ||
+                                                    'null' }}
+                                                </h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Email:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.email || 'null'
+                                                    }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Telephone Number:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.telephone_no ||
+                                                    'null' }}
+                                                </h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">WhatsApp Number:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.whatsapp_no ||
+                                                    'null' }}
+                                                </h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Date of Birth:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.date_of_birth ||
+                                                    'null'
+                                                    }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Anniversary:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.anniversary_date
+                                                    ||
+                                                    'null' }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center mx-4">
-                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                <span
-                                    [ngClass]="{'bg-lightgreen': vendorDetail?.is_active === true, 'bg-lightred' : vendorDetail?.is_active === false,'bg-lightyellow' : vendorDetail?.is_active === 'Partial' }"
-                                    class="badges">{{vendorDetail?.is_active}}</span>
+
+                                <h3 class="contact-title-wrapper ps-4 mt-4 pt-2 mb-3">Business Information</h3>
+                                <div class="row m-0">
+                                    <div class="col-5">
+                                        <div class="row m-0">
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">GST Type:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.gst_type ||
+                                                    'null' }}
+                                                </h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">GSTIN:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.gstin || 'null'
+                                                    }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Apply TDS:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.apply_tds ? 'Yes' :
+                                                    'No' ||
+                                                    'N/A' }}
+                                                </h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Pan Card:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.pan_no
+                                                    ||
+                                                    'null' }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Credit Limit:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.credit_limit
+                                                    ||
+                                                    'null' }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Payment Terms:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.payment_terms?.title
+                                                    ||
+                                                    'null' }}</h5>
+                                            </div>
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Supplier Type:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ vendorDetail?.supplier_type
+                                                    ||
+                                                    'null' }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -110,43 +164,24 @@
             </mat-tab>
             <mat-tab label="Address">
                 <div class="row">
-                    <div class="col-lg-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-body" *ngFor="let address of vendorDetail?.address;let i=index">
-                                <strong>{{i+1+'.'}} </strong>
-                                <div class="productdetails">
-                                    <ul class="product-bar">
-                                        <li>
-                                            <h4>Address Line 1</h4>
-                                            <h6>{{address?.address_line_1}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Address Line 2</h4>
-                                            <h6>{{address?.address_line_2}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Select Country</h4>
-                                            <h6>{{address?.country?.country_name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Select State</h4>
-                                            <h6>{{address?.state?.state}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Select City</h4>
-                                            <h6>{{address?.city?.city}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Pincode</h4>
-                                            <h6>{{address?.pincode}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Address Type</h4>
-                                            <h6>{{address?.address_type}}</h6>
-                                        </li>
-
-                                    </ul>
+                    <div class="col-md-4" *ngFor="let address of vendorDetail?.address">
+                        <div class="card mb-4">
+                            <div class="card-body p-4 address-card-body-wrapper">
+                                <h5 class="card-title address-type-title text-black mb-1 pb-1">{{
+                                    address?.address_type }}</h5>
+                                <p *ngIf="address?.address_line_1 || address?.address_line_2"
+                                    class="card-text card-description mb-1 pb-1">{{ address?.address_line_1 }}, {{
+                                    address?.address_line_2 }}</p>
+                                <p class="card-text card-description mb-1 pb-1">{{ address?.city?.city }}, {{
+                                    address?.state?.state }},
+                                    {{address?.country?.country_name}}</p>
+                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode}}</p>
+                                <div class="d-flex align-items-center">
+                                    <mat-checkbox class="example-margin"><span class="primary-color"> Default
+                                            Shipping
+                                            Address</span></mat-checkbox>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -154,34 +189,20 @@
             </mat-tab>
             <mat-tab label="Bank Details">
                 <div class="row">
-                    <div class="col-lg-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-body" *ngFor="let bank of vendorDetail?.bank_id;let i=index">
-                                <strong>{{i+1+'.'}} </strong>
-                                <div class="productdetails">
-                                    <ul class="product-bar">
-                                        <li>
-                                            <h4>Account Holder Name</h4>
-                                            <h6>{{bank?.account_holder_name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Bank Name</h4>
-                                            <h6>{{bank?.bank_name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Branch Name</h4>
-                                            <h6>{{bank?.branch_name}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Account Number</h4>
-                                            <h6>{{bank?.account_no}}</h6>
-                                        </li>
-                                        <li>
-                                            <h4>Bank IFSC Code</h4>
-                                            <h6>{{bank?.bank_ifsc_code}}</h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                    <div class="col-md-4" *ngFor="let bankDetails of vendorDetail?.bank_id">
+                        <div class="card mb-4">
+                            <div class="card-body p-4 address-card-body-wrapper">
+                                <h5 class="card-title address-type-title text-black mb-1 pb-1">{{
+                                    bankDetails?.bank_name }}</h5>
+                                <p class="card-text card-description mb-1 pb-1">
+                                    Account Holder Name: {{ bankDetails?.account_holder_name }}</p>
+                                <p class="card-text card-description mb-1 pb-1">Account Number: {{
+                                    bankDetails?.account_no
+                                    }}</p>
+                                <p class="card-text card-description mb-1 pb-1">Bank IFSC Code:
+                                    {{bankDetails?.bank_ifsc_code}}</p>
+                                <p class="card-text card-description mb-1 pb-1">Branch Name:
+                                    {{bankDetails?.branch_name || 'null'}}</p>
                             </div>
                         </div>
                     </div>
@@ -189,92 +210,24 @@
             </mat-tab>
             <mat-tab label="Logs" *ngIf="vendorDetail?.logs?.length>0">
                 <div class="card">
-                    <!-- <div class="search-set mx-3 mt-3">
-                        <div class="search-path">
-                            <a class="btn btn-filter" id="filter_search">
-                                <img src="assets/img/icons/filter.svg" alt="img">
-                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
-                            </a>
-                        </div>
-                    </div> -->
                     <div class="card-body">
-                        <div class="card" id="filter_inputs">
-                            <!-- <div class="card-body border">
-                                <div class="row my-2">
-                                    <div class="col-lg-12 col-sm-12">
-                                        <div class="col-lg-4 col-sm-6 col-12">
-                                            <div class="form-group mb-0 mx-3">
-                                               <label>Select Operation Type</label>
-                                                <select [(ngModel)]="filterOpertion" (change)="filterData()" class="form-select">
-                                                    <option value="" selected disabled>Select Operation Type</option>
-                                                    <option value="Add">Add</option>
-                                                    <option value="Update">Update</option>
-                                                </select>
-                                            </div>
+                        <mat-stepper orientation="vertical">
+                            <ng-container *ngFor="let log of vendorDetail?.logs; let index = index">
+                                <mat-step>
+                                    <ng-template matStepLabel>
+                                        <div class="step-label-wrapper">
+                                            <p class="mb-1 text-title-wrapper"> <span class="operation-label">{{
+                                                    log?.operation_type }}
+                                                    By {{
+                                                    log?.userid
+                                                    }}</span> </p>
+                                            <span class="date-label">{{ formatDate(log?.date_time) }}</span>
                                         </div>
-                                        <div class="form-group mb-0" (click)="clearFilter()">
-                                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table datanew">
-                        <thead>
-                            <tr>
-                                <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                            <tr>
-                                <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                            </tr> 
-                        </ng-container>
-                        </tbody>
-                        <tbody *ngIf="filteredData?.length==0">
-                            <tr>
-                                <td colspan="10">
-                                    <p class="center-textt">Data not available</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="progressbar">
-                        <mat-progress-bar mode="indeterminate" class="progressbar" 
-                            *ngIf="loader"></mat-progress-bar>
+                                    </ng-template>
+                                </mat-step>
+                            </ng-container>
+                        </mat-stepper>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                            <div class="entries"> Show per page
-                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)"> 
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                    <option value="-1">All</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                            <div class="f-right">
-                                <pagination-controls
-                                    (pageChange)="p = $event"></pagination-controls>
-                                    <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
