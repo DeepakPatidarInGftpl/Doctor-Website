@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-detail-vendor',
@@ -11,11 +12,34 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class DetailVendorComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
-  id: any
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location, private coreService: CoreService) { }
+  id: any;
+  profileDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.coreService.profileDetails.subscribe((res) => {
+      this.profileDetails = res;
+    })
+  }
+
+  formatDate(utcDate: string): string {
+    const date = new Date(utcDate);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  }
+
+  getInitial(name: string): string {
+    if (!name) return '';
+    const userName = name.split(' ');
+    const initials = userName.map(part => part.charAt(0).toUpperCase()).join('');
+    return initials;
   }
 
   ngAfterViewInit() {
@@ -34,14 +58,14 @@ export class DetailVendorComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
- vendorDetail: any
+  vendorDetail: any
   getdata() {
     this.contactService.getVendorById(this.id).subscribe(res => {
-        if(this.id==res.id){
-          this.vendorDetail = res
-          this.filteredData = this.vendorDetail?.logs.slice(); // Initialize filteredData with the original data
-          this.filterData();
-        }
+      if (this.id == res.id) {
+        this.vendorDetail = res;
+        this.filteredData = this.vendorDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      }
     })
   }
 
@@ -59,7 +83,7 @@ export class DetailVendorComponent implements OnInit {
     this.sho2 = !this.sho2;
   }
 
-  goBack(){
+  goBack() {
     this.location.back()
   }
 
@@ -74,22 +98,22 @@ export class DetailVendorComponent implements OnInit {
     this.reverse = !this.reverse
   }
   // filter data
-  filteredData: any[]; 
-  
-  filterOpertion:any;
+  filteredData: any[];
+
+  filterOpertion: any;
   filterData() {
     let filteredData = this.vendorDetail?.logs.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
- 
+
     if (this.filterOpertion) {
       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    this.filterOpertion=null;
+    this.filterOpertion = null;
     this.filterData();
   }
   changePg(val: any) {

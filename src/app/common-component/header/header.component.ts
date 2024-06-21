@@ -93,7 +93,7 @@ export class HeaderComponent implements OnInit {
       financial_year: new FormControl('')
     });
     //17-5
-    if(localStorage.getItem('financialYear')){
+    if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       this.financialYearForm.patchValue({
         financial_year: JSON.parse(fy)
@@ -132,6 +132,7 @@ export class HeaderComponent implements OnInit {
   profile() {
     this.coreService.getProfile().subscribe((res: any) => {
       this.userDetails = res;
+      this.coreService.profileDetails.next(res);
       this.profileService.setUserDetails(this.userDetails);
       const userDetails = res?.permission;
       const storedUserDetails = this.profileService.getUserDetails();
