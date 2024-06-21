@@ -6,13 +6,15 @@ import { DetailVendorRoutingModule } from './detail-vendor-routing.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatIconModule} from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
 
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DetailVendorComponent } from './detail-vendor.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     MatIconModule,
     MatSelectModule,
     MatCheckboxModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatStepperModule,
+    MatButtonModule
   ]
 })
 export class DetailVendorModule { }

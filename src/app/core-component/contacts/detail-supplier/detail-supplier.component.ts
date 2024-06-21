@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-detail-supplier',
@@ -11,15 +12,20 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class DetailSupplierComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location) { }
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location, private coreService: CoreService) { }
 
   id: any;
   filterAddressData: any[];
   filterBankData: any[];
   filterProductData: any[];
+  profileDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+
+    this.coreService.profileDetails.subscribe((res) => {
+      this.profileDetails = res;
+    })
   }
 
   ngAfterViewInit() {
@@ -43,14 +49,31 @@ export class DetailSupplierComponent implements OnInit {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.supplierDetail = res;
-        this.filterAddressData = this.supplierDetail?.address.slice();
-        this.filterBankData = this.supplierDetail?.bank_id.slice();
         this.filterProductData = this.supplierDetail?.products.slice();
         this.filteredData = this.supplierDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
         // console.log(res); 
       }
     })
+  }
+
+  formatDate(utcDate: string): string {
+    const date = new Date(utcDate);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  }
+
+  getInitial(name: string): string {
+    if (!name) return '';
+    const userName = name.split(' ');
+    const initials = userName.map(part => part.charAt(0).toUpperCase()).join('');
+    return initials;
   }
 
   get isSupplierDetailEmpty(): boolean {
@@ -86,9 +109,6 @@ export class DetailSupplierComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-  addressItemsPerPage = 10;
-  bankItemsPerPage = 10;
-  productItemsPerPage = 10;
   key = 'id';
   reverse: boolean = false;
 
@@ -122,24 +142,10 @@ export class DetailSupplierComponent implements OnInit {
     }
   }
 
-  changeAddresPg(val: any) {
-    console.log(val);
-    if (val == -1) {
-      this.addressItemsPerPage = this.filterAddressData?.length;
-    }
-  }
-
-  changeBankPg(val: any) {
-    console.log(val);
-    if (val == -1) {
-      this.bankItemsPerPage = this.filterBankData?.length;
-    }
-  }
-
   changeProductPg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.productItemsPerPage = this.filterProductData?.length;
+      this.itemsPerPage = this.filterProductData?.length;
     }
   }
 

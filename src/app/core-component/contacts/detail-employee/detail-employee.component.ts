@@ -11,8 +11,8 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailEmployeeComponent implements OnInit {
 
-  
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
+
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location) { }
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -38,12 +38,31 @@ export class DetailEmployeeComponent implements OnInit {
   employeeDetail: any
   getdata() {
     this.contactService.getEmployeeById(this.id).subscribe(res => {
-        if(this.id==res.id){
-          this.employeeDetail = res
-          this.filteredData = this.employeeDetail?.logs.slice(); // Initialize filteredData with the original data
-          this.filterData();
-        }
+      if (this.id == res.id) {
+        this.employeeDetail = res
+        this.filteredData = this.employeeDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      }
     })
+  }
+
+  formatDate(utcDate: string): string {
+    const date = new Date(utcDate);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  }
+
+  getInitial(name: string): string {
+    if (!name) return '';
+    const userName = name.split(' ');
+    const initials = userName.map(part => part.charAt(0).toUpperCase()).join('');
+    return initials;
   }
 
   sho = true;
@@ -59,7 +78,7 @@ export class DetailEmployeeComponent implements OnInit {
     this.sho1 = false;
     this.sho2 = !this.sho2;
   }
-  goBack(){
+  goBack() {
     this.location.back()
   }
 
@@ -68,32 +87,32 @@ export class DetailEmployeeComponent implements OnInit {
   itemsPerPage = 10;
   key = 'id';
   reverse: boolean = false;
-  
+
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
   }
 
-   // filter data
-   filteredData: any[]; 
-  
-   filterOpertion:any;
-   filterData() {
-     let filteredData = this.employeeDetail?.logs.slice();
-     // if (this.supplierType) {
-     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-     // }
-  
-     if (this.filterOpertion) {
-       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
-     }
-     this.filteredData = filteredData;
-   }
-   clearFilter() {
-     this.filterOpertion=null;
-     this.filterData();
-   }
-   changePg(val: any) {
+  // filter data
+  filteredData: any[];
+
+  filterOpertion: any;
+  filterData() {
+    let filteredData = this.employeeDetail?.logs.slice();
+    // if (this.supplierType) {
+    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
+    // }
+
+    if (this.filterOpertion) {
+      filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.filterOpertion = null;
+    this.filterData();
+  }
+  changePg(val: any) {
     console.log(val);
     if (val == -1) {
       this.itemsPerPage = this.filteredData?.length;

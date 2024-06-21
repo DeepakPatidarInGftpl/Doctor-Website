@@ -33,7 +33,8 @@ export class CoreService {
   featureBehavior = new BehaviorSubject(null);
   featureGroupBehavior = new BehaviorSubject(null);
   productListBehaviur = new BehaviorSubject(null);
-  StaticPageBehaveSub = new BehaviorSubject(null)
+  StaticPageBehaveSub = new BehaviorSubject(null);
+  profileDetails = new BehaviorSubject(null);
 
 
 
