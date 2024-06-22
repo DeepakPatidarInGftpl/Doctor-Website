@@ -33,17 +33,17 @@ export class UpdateEmployeeComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
       dob: new FormControl('',),
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       // commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      wages: new FormControl(0,[Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       // extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       // target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
@@ -51,20 +51,28 @@ export class UpdateEmployeeComponent implements OnInit {
       // username: new FormControl(''),
       // password: new FormControl(''),
       // permission_group: new FormControl('')
-      branch:new FormControl(''),
-      date_of_joining:new FormControl(''),
-      department:new FormControl('',[Validators.required]),
+      branch: new FormControl(''),
+      date_of_joining: new FormControl(''),
+      department: new FormControl('', [Validators.required]),
       //2-1 
-      incentive:new FormControl(''),
-      is_sales_head:new FormControl('',[Validators.required]),
+      incentive: new FormControl(''),
+      is_sales_head: new FormControl('', [Validators.required]),
       //15-2
-      employee_type:new FormControl('',[Validators.required]),
-      discount_limit:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      employee_type: new FormControl('', [Validators.required]),
+      discount_limit: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
       this.getRes = res;
-      this.employeeForm.patchValue(this.getRes);
+
+      const filteredRes = Object.keys(res).reduce((acc, key) => {
+        if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
+          acc[key] = res[key];
+        }
+        return acc;
+      }, {});
+
+      this.employeeForm.patchValue(filteredRes);
       // this.employeeForm.get('commision')?.patchValue(this.getRes?.commision == undefined ? '' : this.getRes?.commision)
       this.employeeForm.get('dob')?.patchValue(this.getRes?.dob == null ? '' : this.getRes?.dob)
       this.employeeForm.get('anniversary')?.patchValue(this.getRes?.anniversary == null ? '' : this.getRes?.anniversary)
@@ -74,7 +82,7 @@ export class UpdateEmployeeComponent implements OnInit {
       this.employeeForm.get('wages')?.patchValue(this.getRes?.wages == null ? '' : this.getRes?.wages)
       this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
-//2-1
+      //2-1
       this.employeeForm.get('branch')?.patchValue(res?.branch?.id);
       this.employeeForm.get('department')?.patchValue(res?.department?.id);
       this.isloginAccess = this.getRes.login_access;
@@ -87,21 +95,21 @@ export class UpdateEmployeeComponent implements OnInit {
     this.getDepartment();
   }
 
-   // updated data
-   updateAddress(add: any[]): FormArray {
+  // updated data
+  updateAddress(add: any[]): FormArray {
     const formArr = new FormArray([]);
 
     add.forEach((j: any) => {
       // console.log(j);
 
       const addressGroup = this.fb.group({
-        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
-        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
+        address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
         state: null,
         city: null,
-        pincode: j?.pincode==null?'':j?.pincode,
-        address_type: j?.address_type==null?'':j?.address_type
+        pincode: j?.pincode == null ? '' : j?.pincode,
+        address_type: j?.address_type == null ? '' : j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -153,10 +161,10 @@ export class UpdateEmployeeComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -164,7 +172,12 @@ export class UpdateEmployeeComponent implements OnInit {
     return this.employeeForm.get('address') as FormArray;
   }
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -175,7 +188,7 @@ export class UpdateEmployeeComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -190,16 +203,16 @@ export class UpdateEmployeeComponent implements OnInit {
     this.getBanks().removeAt(i)
   }
 
-  branchList:any;
-  getBranch(){
-    this.contactService.getBranch().subscribe((res:any)=>{
-      this.branchList=res;
+  branchList: any;
+  getBranch() {
+    this.contactService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
     })
   }
-  departmentList:any;
-  getDepartment(){
-    this.contactService.getDepartment().subscribe((res:any)=>{
-      this.departmentList=res;
+  departmentList: any;
+  getDepartment() {
+    this.contactService.getDepartment().subscribe((res: any) => {
+      this.departmentList = res;
     })
   }
   dateError = null
@@ -215,19 +228,28 @@ export class UpdateEmployeeComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val, i);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
+
   selectedState(val, i) {
     // console.log(val, i);
     if (val) {
@@ -237,19 +259,20 @@ export class UpdateEmployeeComponent implements OnInit {
         // this.city[i] = [];
       });
     }
-
   }
+
   selectCity(val: any, i) {
-    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
-
   }
 
   selectedCity(val: any, i) {
@@ -262,9 +285,9 @@ export class UpdateEmployeeComponent implements OnInit {
     }
 
   }
-loader=false;
-userError:any;
-mobileError:any;
+  loader = false;
+  userError: any;
+  mobileError: any;
   submit() {
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
@@ -293,11 +316,11 @@ mobileError:any;
     formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
     formdata.append('department', this.employeeForm.get('department')?.value);
     //2-1
-      formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
-      formdata.append('incentive', this.employeeForm.get('incentive')?.value);
+    formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
+    formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     //15-2
-    formdata.append('employee_type',this.employeeForm.get('employee_type')?.value);
-    formdata.append('discount_limit',this.employeeForm.get('discount_limit')?.value); //17-02
+    formdata.append('employee_type', this.employeeForm.get('employee_type')?.value);
+    formdata.append('discount_limit', this.employeeForm.get('discount_limit')?.value); //17-02
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -327,37 +350,37 @@ mobileError:any;
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.employeeForm.valid) {
-      this.loader=true;
-      this.contactService.updateEmployee(formdata,this.id).subscribe(res => {
+      this.loader = true;
+      this.contactService.updateEmployee(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loader=false;
+          this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/employee'])
-        }else{
-          this.loader=false;
+        } else {
+          this.loader = false;
           this.toastr.error(this.addRes.error);
-          if(this.addRes.msg.includes('Username')){
-            this.userError=this.addRes.msg;
+          if (this.addRes.msg.includes('Username')) {
+            this.userError = this.addRes.msg;
             setTimeout(() => {
-              this.userError=''
+              this.userError = ''
             }, 5000);
-          }else if(this.addRes?.msg.includes('Mobile Number')){
-            this.mobileError=this.addRes.msg;
+          } else if (this.addRes?.msg.includes('Mobile Number')) {
+            this.mobileError = this.addRes.msg;
             setTimeout(() => {
-              this.mobileError=''
+              this.mobileError = ''
             }, 5000);
           }
         }
       }, err => {
-        this.loader=false;
+        this.loader = false;
         // console.log(err.error.gst);
-        if(err.error.msg){
+        if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
-       else if (err.error.dob) {
+        else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -367,15 +390,15 @@ mobileError:any;
           setTimeout(() => {
             this.dateError = ''
           }, 2000);
-        }else if(err.error.msg.includes('Mobile Number')){
-          this.mobileError=this.addRes.msg;
+        } else if (err.error.msg.includes('Mobile Number')) {
+          this.mobileError = this.addRes.msg;
           setTimeout(() => {
-            this.mobileError=''
+            this.mobileError = ''
           }, 5000);
         }
       })
     } else {
-      this.loader=false;
+      this.loader = false;
       this.employeeForm.markAllAsTouched()
       // console.log('hhhhhh');
       this.toastr.error('Please Fill All The Required Fields')
@@ -412,13 +435,13 @@ mobileError:any;
   // get commision() {
   //   return this.employeeForm.get('commision')
   // }
-  get date_of_joining(){
+  get date_of_joining() {
     return this.employeeForm.get('date_of_joining')
   }
-  get branch(){
+  get branch() {
     return this.employeeForm.get('branch')
   }
-  get department(){
+  get department() {
     return this.employeeForm.get('department')
   }
   get address() {
@@ -439,7 +462,7 @@ mobileError:any;
   get credit_limit() {
     return this.employeeForm.get('credit_limit')
   }
-  get role(){
+  get role() {
     return this.employeeForm.get('role')
   }
   get opening_balance_type() {
@@ -448,11 +471,11 @@ mobileError:any;
   get opening_balance() {
     return this.employeeForm.get('opening_balance')
   }
-  get employee_type(){
+  get employee_type() {
     return this.employeeForm.get('employee_type')
   }
-   // 17-2
-   get discount_limit(){
+  // 17-2
+  get discount_limit() {
     return this.employeeForm.get('discount_limit');
   }
   countryy(index: number) {
@@ -467,7 +490,7 @@ mobileError:any;
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
- 
+
   // nested bank error
 
   getBankHolderName(index: number) {
@@ -556,14 +579,14 @@ mobileError:any;
   getBank() {
     this.bankDetails = ''
   }
-  
+
   isloginAccess = true
   loginAccess() {
     let data = this.employeeForm.value;
     if (data.login_access) {
       this.isloginAccess = true;
       this.discount_limit.setValidators([Validators.required])
-    }else{
+    } else {
       this.isloginAccess = false;
       this.discount_limit.clearValidators();
     }

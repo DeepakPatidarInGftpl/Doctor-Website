@@ -40,15 +40,15 @@ export class UpdateVendorComponent implements OnInit {
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl('',),
       // membership: new FormControl('',),
-      opening_balance_type:new FormControl('',[Validators.required])
+      opening_balance_type: new FormControl('', [Validators.required])
     })
 
     this.addAddress()
@@ -57,14 +57,22 @@ export class UpdateVendorComponent implements OnInit {
 
     this.contactService.getVendorById(this.id).subscribe(res => {
       this.getRes = res;
-      this.vendorForm.patchValue(this.getRes);
+
+      const filteredRes = Object.keys(res).reduce((acc, key) => {
+        if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
+          acc[key] = res[key];
+        }
+        return acc;
+      }, {});
+
+      this.vendorForm.patchValue(filteredRes);
       // this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id);
       this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.vendorForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
       this.vendorForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
       this.vendorForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
       this.vendorForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
-     
+
       this.vendorForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.vendorForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
@@ -83,13 +91,13 @@ export class UpdateVendorComponent implements OnInit {
     add.forEach((j: any) => {
       // console.log(j);
       const addressGroup = this.fb.group({
-        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
-        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
+        address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
         state: null,
         city: null,
-        pincode: j?.pincode==null?'':j?.pincode,
-        address_type: j?.address_type==null?'':j?.address_type
+        pincode: j?.pincode == null ? '' : j?.pincode,
+        address_type: j?.address_type == null ? '' : j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -148,10 +156,10 @@ export class UpdateVendorComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: (''),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -159,7 +167,12 @@ export class UpdateVendorComponent implements OnInit {
     return this.vendorForm.get('address') as FormArray;
   }
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -198,19 +211,28 @@ export class UpdateVendorComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val, i);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
+
   selectedState(val, i) {
     // console.log(val, i);
     if (val) {
@@ -222,17 +244,19 @@ export class UpdateVendorComponent implements OnInit {
     }
 
   }
+
   selectCity(val: any, i) {
-    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
-
   }
 
   selectedCity(val: any, i) {
@@ -246,8 +270,8 @@ export class UpdateVendorComponent implements OnInit {
 
   }
   loader = false;
-  mobileErr:any;
-  gstinErr:any;
+  mobileErr: any;
+  gstinErr: any;
   submit() {
     // console.log(this.vendorForm.value);
     let formdata: any = new FormData();
@@ -270,7 +294,7 @@ export class UpdateVendorComponent implements OnInit {
     formdata.append('opening_balance', this.vendorForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.vendorForm.get('invite_code')?.value);
     // formdata.append('membership', this.vendorForm.get('membership')?.value);
-    formdata.append('opening_balance_type',this.vendorForm.get('opening_balance_type')?.value)
+    formdata.append('opening_balance_type', this.vendorForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.vendorForm.get('address') as FormArray;
     const addressData = [];
@@ -285,60 +309,60 @@ export class UpdateVendorComponent implements OnInit {
     });
     formdata.append('address', JSON.stringify(addressData));
 
-     // nested bank data 
-     const bankArray = this.vendorForm.get('bank_id') as FormArray;
-     const bankData = [];
-     bankArray.controls.forEach((bank) => {
-       const featuresGroup = bank as FormGroup;
-       const featureObj = {};
-       Object.keys(featuresGroup.controls).forEach((key) => {
-         const control = featuresGroup.controls[key];
-         featureObj[key] = control.value;
-       });
-       bankData.push(featureObj);
-     });
-     formdata.append('bank_id', JSON.stringify(bankData));
+    // nested bank data 
+    const bankArray = this.vendorForm.get('bank_id') as FormArray;
+    const bankData = [];
+    bankArray.controls.forEach((bank) => {
+      const featuresGroup = bank as FormGroup;
+      const featureObj = {};
+      Object.keys(featuresGroup.controls).forEach((key) => {
+        const control = featuresGroup.controls[key];
+        featureObj[key] = control.value;
+      });
+      bankData.push(featureObj);
+    });
+    formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.vendorForm.valid) {
-      this.loader=true;
+      this.loader = true;
       this.contactService.updateVendor(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loader=false;
+          this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.vendorForm.reset()
           this.router.navigate(['//contacts/vendor'])
-        }else{
-          this.loader=false
+        } else {
+          this.loader = false
           this.toastr.error(this.addRes?.opening_balance[0]);
-          if(this.addRes?.error?.mobile_no){
+          if (this.addRes?.error?.mobile_no) {
             this.toastr.error(this.addRes?.error?.mobile_no[0])
-            this.mobileErr=this.addRes?.error?.mobile_no[0];
+            this.mobileErr = this.addRes?.error?.mobile_no[0];
             setTimeout(() => {
-              this.mobileErr=''
+              this.mobileErr = ''
             }, 5000);
-          }else if(this.addRes?.error?.gstin){
+          } else if (this.addRes?.error?.gstin) {
             this.toastr.error(this.addRes?.error?.gstin[0]);
-            this.gstinErr=this.addRes?.error?.gstin[0];
+            this.gstinErr = this.addRes?.error?.gstin[0];
             setTimeout(() => {
-              this.gstinErr=''
+              this.gstinErr = ''
             }, 5000);
-          }else if(this.addRes?.opening_balance){
+          } else if (this.addRes?.opening_balance) {
             this.toastr.error(this.addRes?.opening_balance[0]);
-          }else if(this.addRes?.error?.email){
+          } else if (this.addRes?.error?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
-        this.loader=false
+        this.loader = false
         // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
-          if(err.error.msg=="Mobile Number Already Exists"){
-            this.mobileErr=err.error.msg
+          if (err.error.msg == "Mobile Number Already Exists") {
+            this.mobileErr = err.error.msg
             setTimeout(() => {
-              this.mobileErr=''
+              this.mobileErr = ''
             }, 5000);
           }
         }
@@ -453,7 +477,7 @@ export class UpdateVendorComponent implements OnInit {
   getBankName(index: number) {
     return this.getBanks().controls[index].get('bank_name');
   }
-  get opening_balance_type(){
+  get opening_balance_type() {
     return this.vendorForm.get('opening_balance_type')
   }
 }

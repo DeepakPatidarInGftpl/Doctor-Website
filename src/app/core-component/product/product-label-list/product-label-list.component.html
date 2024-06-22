@@ -16,6 +16,12 @@
             <div class="card-body">
                 <div class="table-top">
                     <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
                         <div class="search-input">
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
@@ -29,18 +35,48 @@
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table datanew" id="mytable">
                         <thead>
@@ -56,12 +92,13 @@
                                 <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Incentive <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="tableData?.length>=0">
+                        <tbody *ngIf="filteredData?.length>=0">
                             <tr
-                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -69,13 +106,17 @@
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
-                                <td><a class="product-img" routerLink="//product/detail-product-label/{{products?.id}}">{{products.title}}</a></td>
+                                <td><a class="product-img"
+                                        routerLink="//product/detail-product-label/{{products?.id}}">{{products.title}}</a>
+                                </td>
                                 <td>
-                                    {{ products.incentive_type === '%' ? products.incentive + products.incentive_type : products.incentive_type+ ' ' + products.incentive }}
-                                  </td>
-                                  
+                                    {{ products.incentive_type === '%' ? products.incentive + products.incentive_type :
+                                    products.incentive_type+ ' ' + products.incentive }}
+                                </td>
+
                                 <td>
-                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
@@ -92,21 +133,21 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody *ngIf="tableData?.length===0 && !loader">
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
-                         </table>
+                        </tbody>
+                    </table>
                     <div class="progressbar">
                         <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">   
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -119,7 +160,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
                         </div>
@@ -151,36 +193,44 @@
                             <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" placeholder="Enter Title" [ngClass]="{
+                                    <input type="text" formControlName="title" id="title" placeholder="Enter Title"
+                                        [ngClass]="{
                                                 'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Brand
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Brand
                                     </span>
                                 </div>
                             </div>
-                           
+
                             <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group row">
-                                  <div class="col-lg-12">
-                                    <label>Incentive*</label>
-                                    <div class="input-group">
-                                      <div>
-                                        <select formControlName="incentive_type" class=" border hov" required id="incentive_type"
-                                          [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
-                                          <option class="unhov" value="%" selected>%</option>
-                                          <option class="unhov"  value="Rs">Rs</option>
-                                        </select>
-                                        <span class="text-danger d-block" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select Incentive Type</span>
-                                      </div>
-                                      <div>
-                                        <input type="number" formControlName="incentive" id="incentive" placeholder="Enter incentive" [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
-                                    <span class="text-danger" *ngIf="incentive && incentive.invalid && incentive.touched">Enter
-                                        Incentive
-                                    </span>
-                                      </div>
+                                    <div class="col-lg-12">
+                                        <label>Incentive*</label>
+                                        <div class="input-group">
+                                            <div>
+                                                <select formControlName="incentive_type" class=" border hov" required
+                                                    id="incentive_type"
+                                                    [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
+                                                    <option class="unhov" value="%" selected>%</option>
+                                                    <option class="unhov" value="Rs">Rs</option>
+                                                </select>
+                                                <span class="text-danger d-block"
+                                                    *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select
+                                                    Incentive Type</span>
+                                            </div>
+                                            <div>
+                                                <input type="number" formControlName="incentive" id="incentive"
+                                                    placeholder="Enter incentive"
+                                                    [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
+                                                <span class="text-danger"
+                                                    *ngIf="incentive && incentive.invalid && incentive.touched">Enter
+                                                    Incentive
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
-                              </div>
+                            </div>
 
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
@@ -201,35 +251,43 @@
                             <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" placeholder="Enter Title" [ngClass]="{
+                                    <input type="text" formControlName="title" id="title" placeholder="Enter Title"
+                                        [ngClass]="{
                                                 'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Brand
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Brand
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group row">
-                                  <div class="col-lg-12">
-                                    <label>Incentive*</label>
-                                    <div class="input-group">
-                                      <div>
-                                        <select formControlName="incentive_type" class=" border hov" required id="incentive_type"
-                                          [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
-                                          <option class="unhov" value="%">%</option>
-                                          <option class="unhov"  value="Rs">Rs</option>
-                                        </select>
-                                        <span class="text-danger d-block" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select Incentive Type</span>
-                                      </div>
-                                      <div>
-                                        <input type="number" formControlName="incentive" id="incentive" placeholder="Enter incentive" [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
-                                    <span class="text-danger" *ngIf="incentive && incentive.invalid && incentive.touched">Enter
-                                        Incentive
-                                    </span>
-                                      </div>
+                                    <div class="col-lg-12">
+                                        <label>Incentive*</label>
+                                        <div class="input-group">
+                                            <div>
+                                                <select formControlName="incentive_type" class=" border hov" required
+                                                    id="incentive_type"
+                                                    [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
+                                                    <option class="unhov" value="%">%</option>
+                                                    <option class="unhov" value="Rs">Rs</option>
+                                                </select>
+                                                <span class="text-danger d-block"
+                                                    *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select
+                                                    Incentive Type</span>
+                                            </div>
+                                            <div>
+                                                <input type="number" formControlName="incentive" id="incentive"
+                                                    placeholder="Enter incentive"
+                                                    [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
+                                                <span class="text-danger"
+                                                    *ngIf="incentive && incentive.invalid && incentive.touched">Enter
+                                                    Incentive
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
-                              </div>
+                            </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
@@ -245,4 +303,3 @@
         </div>
     </div>
 </div>
-   

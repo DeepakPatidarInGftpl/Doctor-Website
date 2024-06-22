@@ -22,14 +22,15 @@ export class TransportComponent implements OnInit {
   public tableData: any | employee;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  selectActive: any;
 
-  constructor(private contactService: ContactService, private QueryService: QueryService,private cs:CompanyService) {
+  constructor(private contactService: ContactService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -52,21 +53,21 @@ export class TransportComponent implements OnInit {
         this.contactService.deleteTransport(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted !',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else{
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted !',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted !',
               text: this.delRes.error,
             });
           }
-        }) 
+        })
       }
     });
   }
@@ -87,7 +88,7 @@ export class TransportComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.TransportIsActive(id,'').subscribe(res => {
+        this.contactService.TransportIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -116,7 +117,7 @@ export class TransportComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.TransportIsActive(id,'').subscribe(res => {
+        this.contactService.TransportIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -131,16 +132,16 @@ export class TransportComponent implements OnInit {
     });
   }
 
-  loader=true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.contactService.getTransport().subscribe(res => {
       // console.log(res);
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
@@ -153,43 +154,43 @@ export class TransportComponent implements OnInit {
     //     if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
     //       this.isAdd = res.codename;
     //       console.log(this.isAdd);
-          
+
     //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='change_transport') {
     //       this.isEdit = res.codename;
     //       console.log(this.isEdit);
-          
+
     //     }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='delete_transport') {
     //       this.isDelete = res.codename;
     //       console.log(this.isDelete);
-          
+
     //     }
     //   });
     // }
     //permission from profile api
-  
+
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
+        if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'add_transport') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-          
-        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='change_transport') {
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'change_transport') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-          
-        }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='delete_transport') {
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'delete_transport') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
-          
+
         }
-    });
-  })
+      });
+    })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
@@ -204,7 +205,7 @@ export class TransportComponent implements OnInit {
 
     //search sorting filtering not wroking when direct getting variable data
   }
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -225,7 +226,7 @@ select=false
 
     })
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -281,36 +282,36 @@ select=false
         ],
       })
     doc.save('customer.pdf');
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Transport List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name','Company Name ', 'Mobile Number ','Opening Balance','GSTIN','PanCard']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.company_name,
-      row.mobile_no,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-  row?.gstin,
-  row?.pan_no
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('transport.pdf');
-}
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Transport List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name', 'Company Name ', 'Mobile Number ', 'Opening Balance', 'GSTIN', 'PanCard']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.company_name,
+        row.mobile_no,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        row?.gstin,
+        row?.pan_no
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('transport.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -402,12 +403,12 @@ select=false
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -417,13 +418,13 @@ select=false
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
-    
+
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -434,12 +435,16 @@ select=false
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.supplierType = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectCredit = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

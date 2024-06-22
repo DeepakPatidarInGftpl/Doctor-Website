@@ -113,11 +113,7 @@ export class AddSupplierComponent implements OnInit {
 
   addAddress() {
     const addressArray = this.getAddresss();
-    const newAddressGroup = this.addressAdd();
     this.getAddresss().push(this.addressAdd());
-
-    newAddressGroup.markAsPristine();
-    newAddressGroup.markAsUntouched();
     const index = addressArray.length - 1;
     this.selectState('23', index).then(() => {
       this.selectCity('28', index);

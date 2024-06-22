@@ -27,6 +27,8 @@ export class UnitComponent implements OnInit {
   missingFieldsError = false;
   fieldfilteredData: any[] = [];
   unitsForm!: FormGroup;
+  selectActive: any;
+  filteredData: any[];
   get f() {
     return this.unitsForm.controls;
   }
@@ -181,6 +183,8 @@ export class UnitComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
 
     //permission from localstoarge data
@@ -218,6 +222,19 @@ export class UnitComponent implements OnInit {
         }
       });
     });
+  }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
   }
 
   openModal() {
@@ -496,7 +513,7 @@ export class UnitComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -666,7 +683,7 @@ export class UnitComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

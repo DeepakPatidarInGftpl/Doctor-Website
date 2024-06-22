@@ -23,11 +23,13 @@ export class BrandlistComponent implements OnInit {
 
   imgUrl = 'https://pv.greatfuturetechno.com';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
     this.QueryService.filterToggle();
   }
 
-  delRes: any
+  delRes: any;
+  selectActive: any;
+
   confirmText(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
@@ -132,15 +134,15 @@ export class BrandlistComponent implements OnInit {
   filteredData: any[]; // The filtered data
   selectedCategoryType: string = '';
   selectedSubcategoryType: string = '';
-  selectedSubcategoryGroupType:string='';
-  selectedBrandType:string='';
-  selectedProductStoreType:string='';
+  selectedSubcategoryGroupType: string = '';
+  selectedBrandType: string = '';
+  selectedProductStoreType: string = '';
 
   loader = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.coreService.getBrand().subscribe(res => {
       this.tableData = res;
@@ -149,7 +151,7 @@ export class BrandlistComponent implements OnInit {
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
- 
+
 
     // permision from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -158,7 +160,7 @@ export class BrandlistComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
     //       this.isAdd = res.codename;
-          // console.log(this.isAdd);
+    // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
     //       this.isEdit = res.codename;
     //       console.log(this.isEdit);
@@ -169,18 +171,18 @@ export class BrandlistComponent implements OnInit {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename == 'add_brands') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename == 'change_brands') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='delete_brands') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename == 'delete_brands') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -193,24 +195,24 @@ export class BrandlistComponent implements OnInit {
   }
 
 
-  categoryList:any
+  categoryList: any
   getCategory() {
     this.coreService.getCategory().subscribe(res => {
       this.categoryList = res;
     })
   }
-  subcatGroupList:any;
-  getSubcategoryGroup(){
-    this.coreService.getSubCategoryGroup().subscribe(res=>{
-      this.subcatGroupList=res
+  subcatGroupList: any;
+  getSubcategoryGroup() {
+    this.coreService.getSubCategoryGroup().subscribe(res => {
+      this.subcatGroupList = res
     })
   }
   subcategoryList
-getSubCategory(){
-  this.coreService.getSubcategory().subscribe(res=>{
-    this.subcategoryList=res
-  })
-}
+  getSubCategory() {
+    this.coreService.getSubcategory().subscribe(res => {
+      this.subcategoryList = res
+    })
+  }
 
   //select table row
   allSelected: boolean = false;
@@ -230,16 +232,16 @@ getSubCategory(){
       })
     }
   }
- 
+
 
   search() {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -257,8 +259,8 @@ getSubCategory(){
     event.stopPropagation();
   }
 
-   // filter data
-   filterData() {
+  // filter data
+  filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectedCategoryType) {
       filteredData = filteredData.filter((item) => item?.category[0]?.title === this.selectedCategoryType);
@@ -269,14 +271,18 @@ getSubCategory(){
     if (this.selectedSubcategoryGroupType) {
       filteredData = filteredData.filter((item) => item?.subcategory_group[0]?.title === this.selectedSubcategoryGroupType);
     }
- 
- 
+
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.selectedCategoryType = null;
-    this.selectedSubcategoryType = null;
+    this.selectedSubcategoryType = undefined;
     this.selectedSubcategoryGroupType = null;
+    this.selectActive = undefined;
     this.filterData();
   }
 
@@ -313,40 +319,40 @@ getSubCategory(){
       })
     doc.save('brand.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF('landscape');
-  const title = 'Brand List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Image', 'Brand Name','Code','Discount','Category','Subcategory group','SubCategory']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row.image,
-      row.title ,
-      row.code,
-      row.discount,
-      row.category[0]?.title,
-      row.subcategory_group[0]?.title,
-      row.subcategory[0]?.title
-  
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF('landscape');
+    const title = 'Brand List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Image', 'Brand Name', 'Code', 'Discount', 'Category', 'Subcategory group', 'SubCategory']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Brand  .pdf');
-}
+        index + 1,
+        row.image,
+        row.title,
+        row.code,
+        row.discount,
+        row.category[0]?.title,
+        row.subcategory_group[0]?.title,
+        row.subcategory[0]?.title
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Brand  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -373,7 +379,7 @@ getSubCategory(){
     });
     return visibleData;
   }
-// Modify your exportToExcel() function
+  // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
@@ -438,7 +444,7 @@ getSubCategory(){
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;

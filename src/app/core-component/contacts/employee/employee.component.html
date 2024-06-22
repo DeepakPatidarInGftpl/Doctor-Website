@@ -35,8 +35,8 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label>Mobile Number</label>
                                     <input type="search" [(ngModel)]="selectedCompany" (ngModelChange)="filterData()"
-                                        class="search" placeholder="Search Mobile No." maxlength="10" >
+                                        class="search" placeholder="Search Mobile No." maxlength="10">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -74,11 +74,21 @@
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Opening Balance Type</label>
+                                    <label>Opening Balance Type</label>
                                     <select [(ngModel)]="selectCredit" (change)="filterData()" class="form-select">
-                                        <option value="" selected disabled>Opening Balance Type</option>
+                                        <option value="undefined" disabled selected>Opening Balance Type</option>
                                         <option value="Cr">Cr</option>
                                         <option value="Dr">Dr</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select [(ngModel)]="selectActive" (change)="filterData()" class="form-select">
+                                        <option [ngValue]="undefined" selected disabled>Select Active Status</option>
+                                        <option [ngValue]="true">Yes</option>
+                                        <option [ngValue]="false">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -132,7 +142,8 @@
                         <td>{{products.mobile_no}}</td>
                         <td>{{products?.employee_type}}</td>
                         <td>{{products?.email}}</td>
-                        <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
+                        <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
+                            products?.opening_balance : '') }}</td>
                         <td>{{products?.date_of_joining}}</td>
                         <td>{{products.pan_no}}</td>
                         <td>{{products?.userid?.role?.name}}</td>
@@ -182,7 +193,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}}
+                            entries</div>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.mobile_no ||
-                                                'null' }}
+                                                '--' }}
                                             </h5>
                                         </div>
 
@@ -47,7 +47,7 @@
                                             <label class="label-title-wrapper">Email:</label>
                                         </div>
                                         <div class="col-6 mb-2">
-                                            <h5 class="field-title-wrapper">{{ productDetail?.email || 'null'
+                                            <h5 class="field-title-wrapper">{{ productDetail?.email || '--'
                                                 }}</h5>
                                         </div>
 
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.telephone_no ||
-                                                'null' }}
+                                                '--' }}
                                             </h5>
                                         </div>
 
@@ -65,7 +65,7 @@
                                         </div>
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.whatsapp_no ||
-                                                'null' }}
+                                                '--' }}
                                             </h5>
                                         </div>
 
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.date_of_birth ||
-                                                'null'
+                                                '--'
                                                 }}</h5>
                                         </div>
 
@@ -84,13 +84,13 @@
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.anniversary_date
                                                 ||
-                                                'null' }}</h5>
+                                                '--' }}</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <h3 class="contact-title-wrapper ps-4 mt-4 pt-2 mb-3">Business Information</h3>
+                            <h3 class="contact-title-wrapper ps-4 mt-4 mb-3">Business Information</h3>
                             <div class="row m-0">
                                 <div class="col-5">
                                     <div class="row m-0">
@@ -99,7 +99,7 @@
                                         </div>
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.gst_type ||
-                                                'null' }}
+                                                '--' }}
                                             </h5>
                                         </div>
 
@@ -107,7 +107,7 @@
                                             <label class="label-title-wrapper">GSTIN:</label>
                                         </div>
                                         <div class="col-6 mb-2">
-                                            <h5 class="field-title-wrapper">{{ productDetail?.gstin || 'null'
+                                            <h5 class="field-title-wrapper">{{ productDetail?.gstin || '--'
                                                 }}</h5>
                                         </div>
 
@@ -127,7 +127,7 @@
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.pan_no
                                                 ||
-                                                'null' }}</h5>
+                                                '--' }}</h5>
                                         </div>
 
                                         <div class="col-6 mb-2">
@@ -136,7 +136,7 @@
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.credit_limit
                                                 ||
-                                                'null' }}</h5>
+                                                '--' }}</h5>
                                         </div>
 
                                         <div class="col-6 mb-2">
@@ -145,10 +145,15 @@
                                         <div class="col-6 mb-2">
                                             <h5 class="field-title-wrapper">{{ productDetail?.payment_terms?.title
                                                 ||
-                                                'null' }}</h5>
+                                                '--' }}</h5>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div *ngIf="productDetail?.remark && productDetail?.remark !== 'null'" class="mt-4">
+                                <h3 class="contact-title-wrapper ps-4 mb-3">Remark</h3>
+                                <p class="mb-0 text-black fw-semibold ps-4 fs-6">{{productDetail?.remark}}</p>
                             </div>
                         </div>
                     </div>
@@ -166,7 +171,8 @@
                                     {{address?.address_line_2 }},</p>
                                 <p class="card-text card-description mb-1 pb-1">{{ address?.city?.city }}, {{
                                     address?.state?.state }}, {{address?.country?.country_name}}</p>
-                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode}}</p>
+                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode || '--'}}
+                                </p>
                                 <div class="d-flex align-items-center">
                                     <mat-checkbox class="example-margin"><span class="primary-color"> Default
                                             Shipping
@@ -231,9 +237,9 @@
                                     <ng-template matStepLabel>
                                         <div class="step-label-wrapper">
                                             <p class="mb-1 text-title-wrapper"> <span class="operation-label">{{
-                                                    log.operation_type }}
+                                                    log?.operation_type }}
                                                     By {{
-                                                    log.userid
+                                                    log?.userid
                                                     }}</span> </p>
                                             <span class="date-label">{{ formatDate(log.date_time) }}</span>
                                         </div>
@@ -275,27 +281,27 @@
                                     </tr>
                                     <tr>
                                         <td>Validity of Points</td>
-                                        <td>{{memberDetails?.validity_of_points}}</td>
+                                        <td>{{memberDetails?.validity_of_points || '--'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Title</td>
-                                        <td>{{memberDetails?.title}}</td>
+                                        <td>{{memberDetails?.title || '--'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Points Per 100</td>
-                                        <td>{{memberDetails?.points_per_100}}</td>
+                                        <td>{{memberDetails?.points_per_100 || '--'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Purchase From</td>
-                                        <td>{{memberDetails?.purchase_from}}</td>
+                                        <td>{{memberDetails?.purchase_from || '--'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Purchase To</td>
-                                        <td>{{memberDetails?.purchase_to}}</td>
+                                        <td>{{memberDetails?.purchase_to || '--'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Maximum Redemption Points</td>
-                                        <td>{{memberDetails?.maximum_redemption_points}}</td>
+                                        <td>{{memberDetails?.maximum_redemption_points || '--'}}</td>
                                     </tr>
                                 </tbody>
                             </table>

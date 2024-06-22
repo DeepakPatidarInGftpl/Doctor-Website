@@ -65,9 +65,19 @@
                                 <div class="form-group">
                                     <label>Opening Balance Type</label>
                                     <select [(ngModel)]="selectCredit" (change)="filterData()" class="form-select">
-                                        <option value="" selected disabled>Opening Balance Type</option>
+                                        <option value="undefined" disabled selected>Opening Balance Type</option>
                                         <option value="Cr">Cr</option>
                                         <option value="Dr">Dr</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select [(ngModel)]="selectActive" (change)="filterData()" class="form-select">
+                                        <option [ngValue]="undefined" selected disabled>Select Active Status</option>
+                                        <option [ngValue]="true">Yes</option>
+                                        <option [ngValue]="false">No</option>
                                     </select>
                                 </div>
                             </div>

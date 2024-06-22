@@ -28,25 +28,55 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search Feature Group"
-                                        [(ngModel)]="titlee" (ngModelChange)="search()">
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Feature Group" [(ngModel)]="titlee"
+                                        (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -64,12 +94,13 @@
                                 <th (click)="sort('id')" class="thone">Feature Group <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Feature<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="tableData?.length>=0">
+                        <tbody *ngIf="filteredData?.length>=0">
                             <tr
-                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -79,39 +110,40 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//product/feature-group-details/{{products?.id}}"  style="line-height: 3;">{{products.title}}</a>
-                                    
+                                    <a routerLink="//product/feature-group-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.title}}</a>
+
                                 </td>
                                 <td> {{products.feature[0].title}}</td>
-                            <td>
-                                <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                <td>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
-                                <mat-slide-toggle
-                                    (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
-                            </td>
-                            <td>
-                                <a class="me-1" routerLink="//product/feature-group-details/{{products?.id}}">
-                                    <img src="assets/img/icons/eye.svg" alt="img">
-                                </a>
-                                <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
-                                    <img src="assets/img/icons/edit.svg" alt="img">
-                                </a>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-1" routerLink="//product/feature-group-details/{{products?.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
 
-                                <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                    href="javascript:void(0);" *ngIf="isDelete">
-                                    <img src="assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
-                        <tbody *ngIf="tableData?.length===0 && !loader">
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
 
                         <!-- <tr>
                             <td colspan="5">
@@ -143,7 +175,7 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                    
+
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -156,7 +188,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
                             </div>
 
                         </div>
@@ -192,7 +225,8 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Feature Group*</label>
-                                    <input type="text" formControlName="title" placeholder="Enter Feature Group Name" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Enter Feature Group Name"
+                                        id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
@@ -205,24 +239,32 @@
                                 <div class="form-group">
                                     <label>Select Feature*</label>
                                     <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                          Select Feature
+                                        <button type="button" class="dropdown-toggle button" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Select Feature
                                         </button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li>    <input type="text" placeholder="search feature" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterFeatures()" [ngModelOptions]="{standalone: true}">
+                                        <ul class="dropdown-menu"
+                                            style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li> <input type="text" placeholder="search feature" class="form-control"
+                                                    [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle"
+                                                    (ngModelChange)="filterFeatures()"
+                                                    [ngModelOptions]="{standalone: true}">
                                             </li>
-                                          <li *ngFor="let feature of filteredFeatureList; let i = index">
-                                            <a class="dropdown-item">
-                                              <input type="checkbox" [value]="feature.id" [checked]="selectedFeatureIds.includes(feature.id)" (change)="onCheckChange($event)"
-                                                formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
+                                            <li *ngFor="let feature of filteredFeatureList; let i = index">
+                                                <a class="dropdown-item">
+                                                    <input type="checkbox" [value]="feature.id"
+                                                        [checked]="selectedFeatureIds.includes(feature.id)"
+                                                        (change)="onCheckChange($event)" formArrayName="feature"
+                                                        style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['feature'].touched && f['feature'].invalid
                                               }" [id]="'checkbox-' + i">
-                                              <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{ feature.title }}</label>
-                                            </a>
-                                          </li>
+                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                                        (click)="onLabelClick($event)">{{ feature.title }}</label>
+                                                </a>
+                                            </li>
                                         </ul>
-                                      </div>
-                                      
+                                    </div>
+
                                     <p *ngIf="selectedFeature>0">{{selectedFeature + ' Feature Selected'}}</p>
                                     <span class="text-danger"
                                         *ngIf="feature && feature.invalid && feature.touched">Select
@@ -235,7 +277,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                  &nbsp;  Submit</button>
+                                    &nbsp; Submit</button>
                             </div>
 
                         </div>
@@ -262,24 +304,32 @@
                                 <div class="form-group">
                                     <label>Select Feature*</label>
                                     <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                          Select Feature
+                                        <button type="button" class="dropdown-toggle button" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Select Feature
                                         </button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li>    <input type="text" placeholder="search feature" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterFeatures()" [ngModelOptions]="{standalone: true}">
+                                        <ul class="dropdown-menu"
+                                            style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li> <input type="text" placeholder="search feature" class="form-control"
+                                                    [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle"
+                                                    (ngModelChange)="filterFeatures()"
+                                                    [ngModelOptions]="{standalone: true}">
                                             </li>
-                                          <li *ngFor="let feature of filteredFeatureList; let i = index">
-                                            <a class="dropdown-item">
-                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id) || selectedFeatureIds.includes(feature.id)" (change)="onCheckChange($event)"
-                                                formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
+                                            <li *ngFor="let feature of filteredFeatureList; let i = index">
+                                                <a class="dropdown-item">
+                                                    <input type="checkbox" [value]="feature.id"
+                                                        [checked]="features.includes(feature.id) || selectedFeatureIds.includes(feature.id)"
+                                                        (change)="onCheckChange($event)" formArrayName="feature"
+                                                        style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['feature'].touched && f['feature'].invalid
                                               }" [id]="'checkbox-' + i">
-                                              <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{ feature.title }}</label>
-                                            </a>
-                                          </li>
+                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                                        (click)="onLabelClick($event)">{{ feature.title }}</label>
+                                                </a>
+                                            </li>
                                         </ul>
-                                      </div>
-                                      
+                                    </div>
+
                                     <p *ngIf="selectedFeature>0">{{selectedFeature + ' Feature Selected'}}</p>
                                     <span class="text-danger"
                                         *ngIf="feature && feature.invalid && feature.touched">Select
@@ -292,7 +342,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                   &nbsp; Submit</button>
+                                    &nbsp; Submit</button>
                             </div>
 
                         </div>

@@ -39,7 +39,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.mobile_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -47,7 +47,7 @@
                                                 <label class="label-title-wrapper">Email:</label>
                                             </div>
                                             <div class="col-6 mb-2">
-                                                <h5 class="field-title-wrapper">{{ supplierDetail?.email || 'null'
+                                                <h5 class="field-title-wrapper">{{ supplierDetail?.email || '--'
                                                     }}</h5>
                                             </div>
 
@@ -56,7 +56,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.telephone_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -65,7 +65,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.whatsapp_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -74,7 +74,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.date_of_birth ||
-                                                    'null'
+                                                    '--'
                                                     }}</h5>
                                             </div>
 
@@ -84,13 +84,13 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.anniversary_date
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <h3 class="contact-title-wrapper ps-4 mt-4 pt-2 mb-3">Business Information</h3>
+                                <h3 class="contact-title-wrapper ps-4 mt-4 mb-3">Business Information</h3>
                                 <div class="row m-0">
                                     <div class="col-5">
                                         <div class="row m-0">
@@ -99,7 +99,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.gst_type ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -107,7 +107,7 @@
                                                 <label class="label-title-wrapper">GSTIN:</label>
                                             </div>
                                             <div class="col-6 mb-2">
-                                                <h5 class="field-title-wrapper">{{ supplierDetail?.gstin || 'null'
+                                                <h5 class="field-title-wrapper">{{ supplierDetail?.gstin || '--'
                                                     }}</h5>
                                             </div>
 
@@ -117,7 +117,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.apply_tds ? 'Yes' :
                                                     'No' ||
-                                                    'N/A' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -127,7 +127,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.pan_no
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">
@@ -136,7 +136,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.credit_limit
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">
@@ -145,7 +145,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.payment_terms?.title
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">
@@ -154,15 +154,15 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ supplierDetail?.supplier_type
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="progressbar">
-                                    <mat-progress-bar mode="indeterminate" class="progressbar"
-                                        *ngIf="loader"></mat-progress-bar>
+                                <div *ngIf="supplierDetail?.remark && supplierDetail?.remark !== 'null'" class="mt-4">
+                                    <h3 class="contact-title-wrapper ps-4 mb-3">Remark</h3>
+                                    <p class="mb-0 text-black fw-semibold ps-4 fs-6">{{supplierDetail?.remark}}</p>
                                 </div>
                             </div>
                         </div>
@@ -209,11 +209,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="progressbar">
-                                    <mat-progress-bar mode="indeterminate" class="progressbar"
-                                        *ngIf="loader"></mat-progress-bar>
-                                </div>
-                                <div class="row">
+                                <div class="row m-0 mt-4">
                                     <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                         <div class="entries"> Show per page
                                             <select [(ngModel)]="itemsPerPage" class="pagination" #v
@@ -252,7 +248,8 @@
                                     {{address?.address_line_2 }},</p>
                                 <p class="card-text card-description mb-1 pb-1">{{ address?.city?.city }}, {{
                                     address?.state?.state }}, {{address?.country?.country_name}}</p>
-                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode}}</p>
+                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode || '--'}}
+                                </p>
                                 <div class="d-flex align-items-center">
                                     <mat-checkbox class="example-margin"><span class="primary-color"> Default
                                             Shipping
@@ -277,14 +274,14 @@
                                         <h5 class="card-title address-type-title text-black mb-1 pb-1">{{
                                             bankDetails?.bank_name }}</h5>
                                         <p class="card-text card-description mb-1 pb-1">
-                                            Account Holder Name: {{ bankDetails?.account_holder_name }}</p>
+                                            Account Holder Name: {{ bankDetails?.account_holder_name || '--' }}</p>
                                         <p class="card-text card-description mb-1 pb-1">Account Number: {{
-                                            bankDetails?.account_no
+                                            bankDetails?.account_no || '--'
                                             }}</p>
                                         <p class="card-text card-description mb-1 pb-1">Bank IFSC Code:
-                                            {{bankDetails?.bank_ifsc_code}}</p>
+                                            {{bankDetails?.bank_ifsc_code || '--'}}</p>
                                         <p class="card-text card-description mb-1 pb-1">Branch Name:
-                                            {{bankDetails?.branch_name || 'null'}}</p>
+                                            {{bankDetails?.branch_name || '--'}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -307,9 +304,9 @@
                                         <ng-template matStepLabel>
                                             <div class="step-label-wrapper">
                                                 <p class="mb-1 text-title-wrapper"> <span class="operation-label">{{
-                                                        log.operation_type }}
+                                                        log?.operation_type }}
                                                         By {{
-                                                        log.userid
+                                                        log?.userid
                                                         }}</span> </p>
                                                 <span class="date-label">{{ formatDate(log.date_time) }}</span>
                                             </div>

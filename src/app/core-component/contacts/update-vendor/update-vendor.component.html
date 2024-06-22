@@ -7,7 +7,7 @@
 <!-- /add -->
 <div class="card">
     <div class="card-body">
-        <form [formGroup]="vendorForm" (ngSubmit)="submit()">
+        <form [formGroup]="vendorForm">
             <div class="row">
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
@@ -20,7 +20,8 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Company Name*</label>
-                        <input type="text" formControlName="company_name" placeholder="Enter Company Name" id="company_name" [ngClass]="{
+                        <input type="text" formControlName="company_name" placeholder="Enter Company Name"
+                            id="company_name" [ngClass]="{
                       'is-invalid': f['company_name'].touched && f['company_name'].invalid}">
                         <span class="text-danger"
                             *ngIf="company_name && company_name.invalid && company_name.touched">Enter your Company Name
@@ -31,19 +32,20 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Mobile No*</label>
-                        <input type="text" formControlName="mobile_no" placeholder="Enter Mobile No." maxlength="10" minlength="10" id="mobile_no"
-                            [ngClass]="{
-                      'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}" [ngStyle]="{'border': mobileErr ? '1px solid red' : ''}">
+                        <input type="text" formControlName="mobile_no" placeholder="Enter Mobile No." maxlength="10"
+                            minlength="10" id="mobile_no" [ngClass]="{
+                      'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}"
+                            [ngStyle]="{'border': mobileErr ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10
                             Digits Mobile Number</span>
-                            <span class="text-danger" *ngIf="mobileErr">{{mobileErr}}</span>
+                        <span class="text-danger" *ngIf="mobileErr">{{mobileErr}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Telephone No.</label>
-                        <input type="text" formControlName="telephone_no" placeholder="Enter Telephone No." maxlength="11" minlength="11"
-                            id="telephone_no" [ngClass]="{
+                        <input type="text" formControlName="telephone_no" placeholder="Enter Telephone No."
+                            maxlength="11" minlength="11" id="telephone_no" [ngClass]="{
                       'is-invalid': f['telephone_no'].touched && f['telephone_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="telephone_no && telephone_no.invalid && telephone_no.touched">Enter your 11 Digits
@@ -53,8 +55,8 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Whatsapp No.</label>
-                        <input type="text" formControlName="whatsapp_no" placeholder="Enter Whatsapp No." maxlength="10" minlength="10" id="whatsapp_no"
-                            [ngClass]="{
+                        <input type="text" formControlName="whatsapp_no" placeholder="Enter Whatsapp No." maxlength="10"
+                            minlength="10" id="whatsapp_no" [ngClass]="{
                       'is-invalid': f['whatsapp_no'].touched && f['whatsapp_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="whatsapp_no && whatsapp_no.invalid && whatsapp_no.touched">Enter your 10 Digits
@@ -71,16 +73,9 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Remark</label>
-                        <input type="text" formControlName="remark" placeholder="Enter Remark" id="remark" [ngClass]="{
-                      'is-invalid': f['remark'].touched && f['remark'].invalid}">
-                        <span class="text-danger" *ngIf="remark && remark.invalid && remark.touched">Enter Remark</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
                         <label>Date of Birth</label>
-                        <input type="date" formControlName="date_of_birth" placeholder="Select Date of Birth" id="date_of_birth" [ngClass]="{
+                        <input type="date" formControlName="date_of_birth" placeholder="Select Date of Birth"
+                            id="date_of_birth" [ngClass]="{
                       'is-invalid': f['date_of_birth'].touched && f['date_of_birth'].invalid}">
                         <span class="text-danger" *ngIf="dateError">{{dateError}}</span>
                         <span class="text-danger" *ngIf="dob && dob.invalid && dob.touched">Date
@@ -91,7 +86,8 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Anniversary</label>
-                        <input type="date" formControlName="anniversary_date" placeholder="Select Anniversary" id="anniversary_date" [ngClass]="{
+                        <input type="date" formControlName="anniversary_date" placeholder="Select Anniversary"
+                            id="anniversary_date" [ngClass]="{
                       'is-invalid': f['anniversary_date'].touched && f['anniversary_date'].invalid }">
                         <span class="text-danger" *ngIf="dateError">{{dateError}}</span>
                         <span class="text-danger" *ngIf="anniversary && anniversary.invalid && anniversary.touched">Date
@@ -105,20 +101,23 @@
                             <label>GSTIN</label>
                             <div class="input-group">
                                 <div>
-                                    <select formControlName="gst_type" class=" border hov" id="gst_type"
+                                    <select formControlName="gst_type" class=" border hov gst-type-wrapper"
+                                        id="gst_type"
                                         [ngClass]="{'is-invalid': f['gst_type'].touched && f['gst_type'].invalid}">
                                         <option class="unhov" value="" selected disabled>GST type</option>
-                                        <option class="unhov" value="{{gst.title}}" *ngFor="let gst of gstType">{{gst.title}}</option>
+                                        <option class="unhov" value="{{gst.title}}" *ngFor="let gst of gstType">
+                                            {{gst?.title}}</option>
                                     </select>
                                     <span class="text-danger d-block"
                                         *ngIf="gst_type && gst_type.invalid && gst_type.touched">Select GST Type</span>
                                 </div>
                                 <div>
-                                    <input type="text" formControlName="gstin" id="gstin"
-                                        [ngClass]="{'is-invalid': f['gstin'].touched && f['gstin'].invalid}" [ngStyle]="{'border': gstinErr ? '1px solid red' : ''}">
+                                    <input type="text" formControlName="gstin" id="gstin" class="gst-field-wrapper"
+                                        [ngClass]="{'is-invalid': f['gstin'].touched && f['gstin'].invalid}"
+                                        [ngStyle]="{'border': gstinErr ? '1px solid red' : ''}">
                                     <span class="text-danger ml-5 pl-5" *ngIf="gstin && gstin.invalid && gstin.touched">
                                         Enter your GSTIN </span>
-                                        <span class="text-danger" *ngIf="gstinErr">{{gstinErr}}</span>
+                                    <span class="text-danger" *ngIf="gstinErr">{{gstinErr}}</span>
                                 </div>
                             </div>
                         </div>
@@ -133,12 +132,13 @@
                         <span class="text-danger" *ngIf="pan_no && pan_no.invalid && pan_no.touched">Enter your Pan
                             Number</span>
                     </div>
-                </div>  
-         
+                </div>
+
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Credit Limit</label>
-                        <input type="text" formControlName="credit_limit" id="credit_limit" placeholder="Enter Credit Limit" [ngClass]="{
+                        <input type="text" formControlName="credit_limit" id="credit_limit"
+                            placeholder="Enter Credit Limit" [ngClass]="{
                       'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
                         <span class="text-danger"
                             *ngIf="credit_limit && credit_limit.invalid && credit_limit.touched">Enter your
@@ -146,168 +146,205 @@
                     </div>
                 </div>
 
-                <div formArrayName="address">
-                    <div *ngFor="let d of getAddresss().controls; let i=index" style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
-                        <div [formGroupName]="i" class="row m-2">
-                            <div class="col-lg-3 col-sm-3">
-                                <div class="form-group">
-                                    <label>Address Line 1</label>
-                                    <input type="text" formControlName="address_line_1" placeholder="Enter Address Line 1">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Address Line 2</label>
-                                    <input type="text" formControlName="address_line_2" placeholder="Enter Address Line 2">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                  <label>Select Country*</label>
-                                  <select formControlName="country"  #countryValue
-                                    (change)="selectState(countryValue.value,i)" id="country">
-                                    <option value="" selected disabled>Select Country</option>
-                                    <option [value]="country.id" *ngFor="let country of country; let j = index">
-                                      {{country.country_name}}
-                                    </option>
-                                  </select>
-                                  <span class="text-danger"
-                                    *ngIf="countryy(i).invalid && countryy(i).touched">Select Country</span>
-                                </div>
-                              </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Select State*</label>
-                                    <select formControlName="state"  #stateValue
-                                        (change)="selectCity(stateValue.value,i)">
-                                        <option value="" selected disabled>Select State</option>
-                                        <option [value]="state.id" *ngFor="let state of state[i]">{{state.state}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="statee(i) && statee(i).invalid && statee(i).touched && state[i]?.length>0">Select
-                                        State</span>
-                                    <span class="text-danger"
-                                        *ngIf="statee(i) && statee(i).invalid && statee(i).touched && state[i]?.length<=0">Please Select Country</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Select City*</label>
-                                    <select formControlName="city"  id="city">
-                                        <option value="" selected disabled>Select City</option>
-                                        <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length>0">Select
-                                        city</span>
-                                    <span class="text-danger"
-                                        *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">Please Select State</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Pincode</label>
-                                    <input type="text" formControlName="pincode" placeholder="Enter Pincode" maxlength="6" minlength="6"
-                                        id="pincode">
-                                    <span class="text-danger"
-                                        *ngIf="pincode(i).invalid && pincode(i).touched">Enter your 6 digits
-                                        pincode number</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Select Address Type</label>
-                                    <select formControlName="address_type" class="inp">
-                                        <option value="" selected disabled>Select Address Type</option>
-                                        <option value="Shipping">Shipping</option>
-                                        <option value="Silling">Billing</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
-                                    <span (click)="removeAddress(i)" class="btn" style="color: red;"
-                                        *ngIf="i>0"><svg style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                          </svg></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-100 text-right my-3">
-                        <span (click)="addAddress()" class="addMore" 
-                        style="background: #FF9F43; color: white; border-radius: 2px;">+  Add More Address</span>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Remark</label>
+                        <input type="text" formControlName="remark" placeholder="Enter Remark" id="remark" [ngClass]="{
+                      'is-invalid': f['remark'].touched && f['remark'].invalid}">
+                        <span class="text-danger" *ngIf="remark && remark.invalid && remark.touched">Enter Remark</span>
                     </div>
                 </div>
-                <div formArrayName="bank_id">
-                    <div *ngFor="let d of getBanks().controls; let i=index" style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
-                        <div [formGroupName]="i" class="row m-2">
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Bank Holder Name*</label>
-                                    <input type="text" formControlName="account_holder_name" placeholder="Enter Bank Holder Name">
-                                    <span class="text-danger"
-                                        *ngIf="getBankHolderName(i)?.invalid && getBankHolderName(i)?.touched">Enter
-                                        Bank holder name</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Bank Name*</label>
-                                    <input type="text" formControlName="bank_name" placeholder="Enter Bank Name">
-                                    <span class="text-danger"
-                                        *ngIf="getBankName(i)?.invalid && getBankName(i)?.touched">Enter your Bank
-                                        Name</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Branch</label>
-                                    <input type="text" formControlName="branch_name" placeholder="Enter Branch Name">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label>Account No.*</label>
-                                    <input type="text" formControlName="account_no" placeholder="Enter Account No.">
-                                    <span class="text-danger"
-                                        *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter your Account
-                                        No.</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3">
-                                <div class="form-group">
-                                    <label>IFSC Code*</label>
-                                    <input type="text" formControlName="bank_ifsc_code">
-                                    <span class="text-danger"
-                                    *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your IFSC Code</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
-                                <span (click)="removeBank(i)" class="btn" style="color: red;" *ngIf="i>0"><svg
-                                        style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16"
-                                        height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+
+                <div class="address-details-wrapper">
+                    <h4 class="address-title">Address Details</h4>
+                    <div class="w-100 text-right my-3">
+                        <button class="p-0 border-0" (click)="addAddress()">
+                            <p class="addMore-btn"><span class="plus-icon">+</span> Add More
+                                Address</p>
+                        </button>
+                    </div>
+                    <div formArrayName="address" class="mb-3 pb-3">
+                        <div *ngFor="let d of getAddresss().controls; let i=index"
+                            style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
+                            <div class="col-12 d-flex align-items-center justify-content-end mt-2">
+                                <span (click)="removeAddress(i)" class="btn me-2" style="color: red;" *ngIf="i>0"><svg
+                                        style="width:28px; height:28px" xmlns="http://www.w3.org/2000/svg" width="28"
+                                        height="28" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                                         <path
                                             d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                         <path
                                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                     </svg></span>
                             </div>
+                            <div [formGroupName]="i" class="row m-2">
+                                <div class="col-lg-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Address Line 1</label>
+                                        <input type="text" formControlName="address_line_1"
+                                            placeholder="Enter Address Line 1">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Address Line 2</label>
+                                        <input type="text" formControlName="address_line_2"
+                                            placeholder="Enter Address Line 2">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Select Country*</label>
+                                        <select formControlName="country" #countryValue
+                                            (change)="selectState(countryValue.value,i)" id="country">
+                                            <option value="" selected disabled>Select Country</option>
+                                            <option [value]="country.id" *ngFor="let country of country; let j = index">
+                                                {{country.country_name}}
+                                            </option>
+                                        </select>
+                                        <span class="text-danger"
+                                            *ngIf="countryy(i).invalid && countryy(i).touched">Select
+                                            Country</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Select State*</label>
+                                        <select formControlName="state" #stateValue
+                                            (change)="selectCity(stateValue.value,i)">
+                                            <option value="" selected disabled>Select State</option>
+                                            <option [value]="state.id" *ngFor="let state of state[i]">{{state.state}}
+                                            </option>
+                                        </select>
+                                        <span class="text-danger"
+                                            *ngIf="statee(i) && statee(i).invalid && statee(i).touched && state[i]?.length>0">Select
+                                            State</span>
+                                        <span class="text-danger"
+                                            *ngIf="statee(i) && statee(i).invalid && statee(i).touched && state[i]?.length<=0">Please
+                                            Select Country</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Select City*</label>
+                                        <select formControlName="city" id="city">
+                                            <option value="" selected disabled>Select City</option>
+                                            <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}
+                                            </option>
+                                        </select>
+                                        <span class="text-danger"
+                                            *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length>0">Select
+                                            city</span>
+                                        <span class="text-danger"
+                                            *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">Please
+                                            Select
+                                            State</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Pincode</label>
+                                        <input type="text" formControlName="pincode" placeholder="Enter Pincode"
+                                            maxlength="6" minlength="6" id="pincode">
+                                        <span class="text-danger" *ngIf="pincode(i).invalid && pincode(i).touched">Enter
+                                            your 6 digits
+                                            pincode number</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Select Address Type</label>
+                                        <select formControlName="address_type" class="inp">
+                                            <option value="" selected disabled>Select Address Type</option>
+                                            <option value="Shipping">Shipping</option>
+                                            <option value="Silling">Billing</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="bank-details-wrapper">
+                    <h4 class="address-title">Bank Details</h4>
                     <div class="w-100 text-right my-3">
-                        <span (click)="addBank()" class="addMore"
-                            style="background: #FF9F43; color: white; border-radius: 2px;">+ Add More Banks</span>
+                        <button class="p-0 border-0" (click)="addBank()">
+                            <p class="addMore-btn"><span class="plus-icon">+</span> Add More Banks
+                            </p>
+                        </button>
+                    </div>
+                    <div formArrayName="bank_id" class="mb-3 pb-3">
+                        <div *ngFor="let d of getBanks().controls; let i=index"
+                            style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
+                            <div class="col-12 d-flex align-items-center justify-content-end mt-2">
+                                <span (click)="removeBank(i)" class="btn me-2" style="color: red;" *ngIf="i>0"><svg
+                                        style="width:28px; height:28px" xmlns="http://www.w3.org/2000/svg" width="28"
+                                        height="28" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg></span>
+                            </div>
+                            <div [formGroupName]="i" class="row m-2">
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Bank Holder Name*</label>
+                                        <input type="text" formControlName="account_holder_name"
+                                            placeholder="Enter Bank Holder Name">
+                                        <span class="text-danger"
+                                            *ngIf="getBankHolderName(i)?.invalid && getBankHolderName(i)?.touched">Enter
+                                            Bank holder name</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Bank Name*</label>
+                                        <input type="text" formControlName="bank_name" placeholder="Enter Bank Name">
+                                        <span class="text-danger"
+                                            *ngIf="getBankName(i)?.invalid && getBankName(i)?.touched">Enter your Bank
+                                            Name</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Branch</label>
+                                        <input type="text" formControlName="branch_name"
+                                            placeholder="Enter Branch Name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3 col-12">
+                                    <div class="form-group">
+                                        <label>Account No.*</label>
+                                        <input type="text" formControlName="account_no" placeholder="Enter Account No.">
+                                        <span class="text-danger"
+                                            *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter your
+                                            Account
+                                            No.</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>IFSC Code*</label>
+                                        <input type="text" formControlName="bank_ifsc_code">
+                                        <span class="text-danger"
+                                            *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your IFSC
+                                            Code</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Select Payment Terms</label>
-                        <select formControlName="payment_terms"  id="payment_terms" [ngClass]="{
+                        <select formControlName="payment_terms" id="payment_terms" [ngClass]="{
                             'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                                <option value="" selected disabled>Select Payment terms</option>
-                                <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
-                            </select>
+                            <option value="" selected disabled>Select Payment terms</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}
+                            </option>
+                        </select>
                         <span class="text-danger"
                             *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Payment
                             Terms</span>
@@ -325,37 +362,42 @@
                 </div> -->
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group row">
-                      <div class="col-lg-12">
-                        <label>Opening Balance*</label>
-                        <div class="input-group">
-                          <div>
-                            <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
-                              [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
-                              <option class="unhov" value="" selected disabled>Balance type</option>
-                              <option class="unhov" value="Cr">Cr</option>
-                              <option class="unhov" value="Dr">Dr</option>
-                            </select>
-                            <span class="text-danger d-block"
-                              *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
-                              Balance Type</span>
-                          </div>
-                          <div>
-                            <input type="text" formControlName="opening_balance" id="opening_balance"
-                              [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
-                            <span class="text-danger ml-5 pl-5"
-                              *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
-                              Enter your Balance</span>
-                          </div>
+                        <div class="col-lg-12">
+                            <label>Opening Balance*</label>
+                            <div class="input-group">
+                                <div>
+                                    <select formControlName="opening_balance_type"
+                                        class=" border hov opening-balance-select-wrapper" required
+                                        id="opening_balance_type"
+                                        [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
+                                        <option class="unhov" value="" selected disabled>Balance type</option>
+                                        <option class="unhov" value="Cr">Cr</option>
+                                        <option class="unhov" value="Dr">Dr</option>
+                                    </select>
+                                    <span class="text-danger d-block"
+                                        *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
+                                        Balance Type</span>
+                                </div>
+                                <div>
+                                    <input type="text" formControlName="opening_balance" id="opening_balance"
+                                        class="opening-input-field"
+                                        [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
+                                    <span class="text-danger ml-5 pl-5"
+                                        *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
+                                        Enter your Balance</span>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Invite Code</label>
-                        <input type="text" formControlName="invite_code" placeholder="Enter Invite Code" id="invite_code"
+                        <input type="text" formControlName="invite_code" placeholder="Enter Invite Code"
+                            id="invite_code"
                             [ngClass]="{'is-invalid': f['invite_code'].touched && f['invite_code'].invalid}">
-                            <span class="text-danger ml-5 pl-5" *ngIf="invite_code && invite_code.invalid && invite_code.touched"> Enter Invite code</span>
+                        <span class="text-danger ml-5 pl-5"
+                            *ngIf="invite_code && invite_code.invalid && invite_code.touched"> Enter Invite code</span>
                     </div>
                 </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
@@ -371,29 +413,28 @@
                 </div> -->
 
                 <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
-                    <div class="form-group mt-4">
-                            <div class="d-flex ">
-                                <input type="checkbox" formControlName="login_access"
-                                    [id]="'checkboxTax-'" [ngModel]="true">
-                                <label [for]="'checkboxTax-'" class="d_flex"
-                                    style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
-                            </div>
-                            <div class="d-flex ">
-                                <input type="checkbox" formControlName="apply_tds"
-                                    [id]="'checkboxMeasure-'" [ngModel]="true">
-                                <label [for]="'checkboxMeasure-'" class="d_flex"
-                                    style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
-                            </div>
-                      
+                    <div class="form-group mt-md-4 position-relative">
+                        <div class="d-flex ">
+                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'">
+                            <label [for]="'checkboxTax-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
+                        </div>
+                        <div class="d-flex ">
+                            <input type="checkbox" formControlName="apply_tds" [id]="'checkboxMeasure-'">
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
+                        </div>
+
                     </div>
                 </div>
 
 
                 <div class="col-lg-12">
-                    <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-                        <a routerLink="//contacts/vendor" class="btn btn-cancel">Cancel</a>
+                    <button class="btn btn-submit me-2" (click)="submit()" *ngIf="!loader">Submit</button>
+                    <button class="btn btn-submit me-2" (click)="submit()" type="submit" *ngIf="loader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit</button>
+                    <a routerLink="//contacts/vendor" class="btn btn-cancel">Cancel</a>
                 </div>
 
             </div>

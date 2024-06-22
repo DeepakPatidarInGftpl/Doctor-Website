@@ -13,19 +13,19 @@ import { saveAs } from 'file-saver';
 })
 export class TaxSlabsListComponent implements OnInit {
 
-  
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any 
-
- 
+  public tableData: any;
+  selectActive: any;
+  filteredData: any[];
   titlee: any;
-  name:any
-  p:number=1
+  name: any
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
-  row:boolean=false;
-  constructor(private coreService: CoreService,private cs:CompanyService) {}
+  itemsPerPage: number = 10;
+  row: boolean = false;
+  constructor(private coreService: CoreService, private cs: CompanyService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -52,7 +52,7 @@ export class TaxSlabsListComponent implements OnInit {
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -80,7 +80,7 @@ export class TaxSlabsListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.taxSlabIsActive(id,'').subscribe(res => {
+        this.coreService.taxSlabIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -109,7 +109,7 @@ export class TaxSlabsListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.taxSlabIsActive(id,'').subscribe(res => {
+        this.coreService.taxSlabIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -123,16 +123,18 @@ export class TaxSlabsListComponent implements OnInit {
       }
     });
   }
-  loader=true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
-    this.coreService.getTaxSlab().subscribe(res=>{
-      this.tableData=res;
-      this.loader=false;
+    this.coreService.getTaxSlab().subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
 
     //permission from localstorage
@@ -153,31 +155,31 @@ export class TaxSlabsListComponent implements OnInit {
     //   });
     // }
 
-      // permission from profile api
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'add_taxslabs') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'change_taxslabs') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'delete_taxslabs') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'add_taxslabs') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'change_taxslabs') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'delete_taxslabs') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+        }
       });
+    });
   }
   //select table row
- allSelected: boolean = false;
-  selectedRows:boolean[]
+  allSelected: boolean = false;
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
- 
+
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -188,6 +190,19 @@ export class TaxSlabsListComponent implements OnInit {
         f.isSelected = false
       })
     }
+  }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
   }
 
   deleteId(id: number) {
@@ -209,7 +224,7 @@ export class TaxSlabsListComponent implements OnInit {
   //       if(res.subcategory_group.title.match(this.titlee)){
   //         return res.subcategory_group.title.match(this.titlee);
   //       }
-     
+
   //     })
 
   //   }
@@ -219,10 +234,10 @@ export class TaxSlabsListComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.slab_title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
+      this.filteredData = this.filteredData.filter(res => {
+        const nameLower = res?.slab_title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -234,8 +249,8 @@ export class TaxSlabsListComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Tax Slab List';
@@ -260,35 +275,35 @@ export class TaxSlabsListComponent implements OnInit {
       })
     doc.save('taxslab.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Tax List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#','Slab Title','Variable Tax']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.slab_title,
-      row.variable_tax,
-     
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Tax List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Slab Title', 'Variable Tax']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.slab_title,
+        row.variable_tax,
 
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Tax_slab .pdf');
-}
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Tax_slab .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -380,7 +395,7 @@ export class TaxSlabsListComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -392,7 +407,7 @@ export class TaxSlabsListComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }
