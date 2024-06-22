@@ -29,9 +29,10 @@ export class EmployeeComponent implements OnInit {
   filteredData: any[]; // The filtered data
   roleType: string = '';
   selectedCompany: string = '';
+  selectActive: any;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,
-    private cs:CompanyService) {
+    private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -54,15 +55,15 @@ export class EmployeeComponent implements OnInit {
         this.contactService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           
+
             Swal.fire({
               icon: 'success',
               title: 'Deleted !',
-              text:this.delRes.msg,
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
             this.ngOnInit();
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted !',
@@ -70,7 +71,7 @@ export class EmployeeComponent implements OnInit {
             });
           }
         })
-       
+
       }
     });
   }
@@ -135,10 +136,10 @@ export class EmployeeComponent implements OnInit {
     });
   }
   loader = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
 
     this.contactService.getEmployee().subscribe(res => {
@@ -166,25 +167,25 @@ export class EmployeeComponent implements OnInit {
     //     }
     //   });
     // }
-       // permissin from api profile
-       this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'master'  && res.content_type.model === 'employee' && res.codename=='add_employee') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);    
-          } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename=='change_employee') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);      
-          }else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename=='delete_employee') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);      
-          }
-        });
+    // permissin from api profile
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'add_employee') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);    
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'change_employee') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);      
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'delete_employee') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);      
+        }
       });
+    });
 
-      this.getGroup() 
+    this.getGroup()
   }
 
   groupList: any
@@ -236,14 +237,14 @@ export class EmployeeComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.name.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
-  
+
   key = 'id'
   reverse: boolean = true;
   sort(key) {
@@ -251,9 +252,9 @@ export class EmployeeComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  
-   // convert to pdf
-   generatePDF() {
+
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Employee List';
@@ -284,38 +285,38 @@ export class EmployeeComponent implements OnInit {
         ],
       })
     doc.save('employee.pdf');
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Employee List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name','Mobile Number', 'Employee Type','Email','Opening Balance','Joining','PanCard','User Role']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.mobile_no,
-      row.employee_type,
-      row.email,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-      row.date_of_joining,
-      row.pan_no,
-      row.userid?.role?.name,
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('employee.pdf');
-}
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Employee List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name', 'Mobile Number', 'Employee Type', 'Email', 'Opening Balance', 'Joining', 'PanCard', 'User Role']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.mobile_no,
+        row.employee_type,
+        row.email,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        row.date_of_joining,
+        row.pan_no,
+        row.userid?.role?.name,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('employee.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -407,12 +408,12 @@ export class EmployeeComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-      //refresh
-      window.addEventListener('afterprint', () => {
-        console.log('afterprint');
-       window.location.reload();
-      });
-      //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
 
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -423,7 +424,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.roleType) {
@@ -439,12 +440,17 @@ export class EmployeeComponent implements OnInit {
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.roleType = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectCredit = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

@@ -1,38 +1,79 @@
 .ng-dirty.ng-invalid.is-invalid.ng-touched {
     border: 1px solid red;
 }
-.ng-pristine.ng-invalid.is-invalid.ng-touched{
+
+.ng-pristine.ng-invalid.is-invalid.ng-touched {
     border: 1px solid red;
 }
 
 select,
 input[type="date"],
-input[type="button"]
-{
-   border: 1px solid rgba(145, 158, 171, 0.32);
-   height: 40px;
-   width: 100%;
-   font-size: 14px;
-   font-weight: 500;
-   color: #637381;
-   padding: 10px 15px;
-   border-radius: 5px;
-}
-.button{
-   border: 1px solid rgba(145, 158, 171, 0.32);
-   height: 40px;
-   width: 100%;
-   font-size: 14px;
-   font-weight: 500;
-   color: #637381;
-   display: flex;
-   padding: 10px 15px;
-   border-radius: 5px;
-   justify-content: space-between;
-   align-items: center;
-   background: white;
-}
-textarea
-{
+input[type="button"] {
+    border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #637381;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.button {
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #637381;
+    display: flex;
+    padding: 10px 15px;
+    border-radius: 5px;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+
+textarea {
+    height: 40px;
+}
+
+
+.gst-type-wrapper {
+    border-radius: 5px 0 0 5px;
+}
+
+.address-title {
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.addMore-btn {
+    background-color: #FF9F43;
+    color: #FFF;
+    border-radius: 5px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+}
+
+.plus-icon {
+    font-size: 24px;
+    margin: 0 5px 0 0;
+}
+
+.gst-field-wrapper {
+    border-radius: 0 5px 5px 0 !important;
+}
+
+.opening-balance-select-wrapper {
+    padding: 10px;
+    border-radius: 5px 0 0 5px !important;
+}
+
+.opening-input-field {
+    border-radius: 0 5px 5px 0 !important;
 }

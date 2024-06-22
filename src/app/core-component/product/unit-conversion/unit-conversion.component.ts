@@ -18,20 +18,21 @@ import { saveAs } from 'file-saver';
 export class UnitConversionComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  selectActive: any;
+  filteredData: any[];
   unitConversionForm!: FormGroup;
   get f() {
     return this.unitConversionForm.controls;
   }
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-  navigateData:any;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+  navigateData: any;
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -62,7 +63,7 @@ export class UnitConversionComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -70,75 +71,75 @@ export class UnitConversionComponent implements OnInit {
             });
           }
         })
-       
+
       }
     });
   }
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this unit conversion!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.unitConversionIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Unit Conversion Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this unit conversion!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.unitConversionIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.success) {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: this.delRes.msg,
-       });
-     }
-   });
- }
- loader=true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this unit conversion!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.unitConversionIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Unit Conversion Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this unit conversion!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.unitConversionIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: this.delRes.msg,
+        });
+      }
+    });
+  }
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.unitConversionForm = this.fb.group({
       alternate_unit: new FormControl('', [Validators.required]),
@@ -164,10 +165,12 @@ export class UnitConversionComponent implements OnInit {
     //   this.tableData = Object.values(JSON.parse(localStorage.getItem("unitconservationList")))
     // })
 
-    this.coreService.getunitconversion().subscribe(res=>{
-      this.loader=false;
-      this.tableData=res;
+    this.coreService.getunitconversion().subscribe(res => {
+      this.loader = false;
+      this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
     // console.log(this.tableData);
     this.getUnits();
@@ -190,30 +193,30 @@ export class UnitConversionComponent implements OnInit {
     //   });
     // }
 
-      // permission from profile api
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='add_unitconversion') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='change_unitconversion') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='delete_unitconversion') {
-            this.isDelete = res.codename;
-            // console.log(this.isEdit);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename == 'add_unitconversion') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename == 'change_unitconversion') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename == 'delete_unitconversion') {
+          this.isDelete = res.codename;
+          // console.log(this.isEdit);
+        }
       });
+    });
   }
-//select table row
-allSelected: boolean = false;
-selectedRows:boolean[]
-selectAlll() {
-  this.selectedRows.fill(this.allSelected);
-}
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -235,6 +238,20 @@ selectAlll() {
 
     })
   }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
+  }
+
   //form submit
   unitList: any
   getUnits() {
@@ -285,18 +302,18 @@ selectAlll() {
     this.unitConversionForm.reset();
   }
 
-loaders=false;
+  loaders = false;
   submit() {
     // console.log(this.unitConversionForm.value);
     // console.log(this.id);
 
     if (this.unitConversionForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
           this.ngOnInit()
@@ -312,12 +329,12 @@ loaders=false;
 
   update() {
     if (this.unitConversionForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
         if (this.addRes.success) {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
           this.addForm = true
@@ -353,11 +370,11 @@ loaders=false;
         if (id == data.id) {
           this.addForm = false
           // console.log(data.quantity);
-          
+
           this.unitConversionForm.patchValue({
-            alternate_unit:data?.alternate_unit?.id,
-            quantity:data?.quantity,
-            unit:data?.unit?.id
+            alternate_unit: data?.alternate_unit?.id,
+            quantity: data?.quantity,
+            unit: data?.unit?.id
           });
           this.editFormdata = res
         }
@@ -365,13 +382,13 @@ loaders=false;
     })
   }
 
-  
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-        // console.log(res);
+  // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
@@ -382,10 +399,10 @@ loaders=false;
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.alternate_unit?.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
+      this.filteredData = this.filteredData.filter(res => {
+        const nameLower = res?.alternate_unit?.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -396,8 +413,8 @@ loaders=false;
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Unit Conversion list';
@@ -423,36 +440,36 @@ loaders=false;
       })
     doc.save('unitconversion.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Unit Conversion list';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#', 'Alternate Unit','Units','Quantity']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.alternate_unit.title,
-      row.unit.title,
-      row.quantity
-     
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Unit Conversion list';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Alternate Unit', 'Units', 'Quantity']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.alternate_unit.title,
+        row.unit.title,
+        row.quantity
 
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Unit Conversion  .pdf');
-}
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Unit Conversion  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -544,7 +561,7 @@ loaders=false;
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -556,7 +573,7 @@ loaders=false;
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

@@ -31,7 +31,7 @@ export class UpdateTransportComponent implements OnInit {
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('',Validators.email),
+      email: new FormControl('', Validators.email),
       remark: new FormControl(''),
       date_of_birth: new FormControl('',),
       anniversary_date: new FormControl('',),
@@ -45,8 +45,8 @@ export class UpdateTransportComponent implements OnInit {
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(0,[ Validators.pattern(/^[0-9]*$/)]),
-      opening_balance_type:new FormControl('',[Validators.required])
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type: new FormControl('', [Validators.required])
     })
     this.addAddress()
     this.addBank()
@@ -58,14 +58,22 @@ export class UpdateTransportComponent implements OnInit {
       // console.log(res);
       this.getRes = res;
       // console.log(this.getRes);
-      this.transportForm.patchValue(this.getRes);
+
+      const filteredRes = Object.keys(res).reduce((acc, key) => {
+        if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
+          acc[key] = res[key];
+        }
+        return acc;
+      }, {});
+
+      this.transportForm.patchValue(filteredRes);
       // this.transportForm.get('payment_terms')?.patchValue(this.getRes.payment_terms.id)
       this.transportForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.transportForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
       this.transportForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
       this.transportForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
       this.transportForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
-     
+
       this.transportForm.setControl('address', this.updateAddress(this.getRes.address));
       this.transportForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
 
@@ -79,13 +87,13 @@ export class UpdateTransportComponent implements OnInit {
       // console.log(j);
 
       const addressGroup = this.fb.group({
-        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
-        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
+        address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
         state: null,
         city: null,
-        pincode: j?.pincode==null?'':j?.pincode,
-        address_type: j?.address_type==null?'':j?.address_type
+        pincode: j?.pincode == null ? '' : j?.pincode,
+        address_type: j?.address_type == null ? '' : j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -151,10 +159,10 @@ export class UpdateTransportComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -162,7 +170,12 @@ export class UpdateTransportComponent implements OnInit {
     return this.transportForm.get('address') as FormArray;
   }
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -200,19 +213,29 @@ export class UpdateTransportComponent implements OnInit {
       // console.log(this.country);
     });
   }
-  selectState(val: any, i) {
-    // console.log(val, i);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
+
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
+
   selectedState(val, i) {
     // console.log(val, i);
     if (val) {
@@ -222,20 +245,22 @@ export class UpdateTransportComponent implements OnInit {
         // this.city[i] = [];
       });
     }
-
   }
+
   selectCity(val: any, i) {
-    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
-
   }
+
   selectedCity(val: any, i) {
     // console.log(val, i);
     if (val) {
@@ -246,7 +271,7 @@ export class UpdateTransportComponent implements OnInit {
     }
 
   }
-  loader=false;
+  loader = false;
   submit() {
     // console.log(this.transportForm.value);
 
@@ -268,7 +293,7 @@ export class UpdateTransportComponent implements OnInit {
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.transportForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.transportForm.get('opening_balance')?.value);
-    formdata.append('opening_balance_type',this.transportForm.get('opening_balance_type')?.value)
+    formdata.append('opening_balance_type', this.transportForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.transportForm.get('address') as FormArray;
     const addressData = [];
@@ -298,7 +323,7 @@ export class UpdateTransportComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.transportForm.valid) {
-      this.loader=true;
+      this.loader = true;
       this.contactService.updateTransport(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
@@ -306,21 +331,21 @@ export class UpdateTransportComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])
-        }else{
-          this.loader=false;
+        } else {
+          this.loader = false;
           this.toastr.error(this.addRes?.opening_balance[0]);
           this.toastr.error(this.addRes.opening_balance_type[0])
-          if(this.addRes?.email){
+          if (this.addRes?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
-        this.loader=false;
+        this.loader = false;
         // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
-        else if(err.error){
+        else if (err.error) {
           this.toastr.error(err.error?.opening_balance[0]);
           this.toastr.error(err.error?.email[0])
         }
@@ -337,7 +362,7 @@ export class UpdateTransportComponent implements OnInit {
         }
       })
     } else {
-      this.loader=false;
+      this.loader = false;
       this.transportForm.markAllAsTouched()
       // console.log('hhhhhh');
       this.toastr.error('Please Fill All The Required Fields')
@@ -414,7 +439,7 @@ export class UpdateTransportComponent implements OnInit {
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
- 
+
   // nested bank error
 
   getBankHolderName(index: number) {
@@ -429,7 +454,7 @@ export class UpdateTransportComponent implements OnInit {
   getBankName(index: number) {
     return this.getBanks().controls[index].get('bank_name');
   }
-  get opening_balance_type(){
+  get opening_balance_type() {
     return this.transportForm.get('opening_balance_type')
   }
 }

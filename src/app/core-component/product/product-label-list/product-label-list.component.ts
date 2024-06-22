@@ -19,11 +19,12 @@ import { saveAs } from 'file-saver';
 export class ProductLabelListComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any = []
+  public tableData: any = [];
+  selectActive: any;
 
   imgUrl = 'https://pv.greatfuturetechno.com';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
     this.QueryService.filterToggle();
   }
 
@@ -136,36 +137,37 @@ export class ProductLabelListComponent implements OnInit {
   }
 
   loader = true;
-  addRes:any;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  addRes: any;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.coreService.getProductLabel().subscribe(res => {
       this.tableData = res;
       this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
     });
- 
+
     this.addProductForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       incentive: new FormControl(''),
       incentive_type: new FormControl('%', [Validators.required]),
     })
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename=='add_productlabel') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'add_productlabel') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename=='change_productlabel') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'change_productlabel') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename=='delete_productlabel') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'delete_productlabel') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -175,7 +177,7 @@ export class ProductLabelListComponent implements OnInit {
   }
 
 
- 
+
 
   //select table row
   allSelected: boolean = false;
@@ -196,6 +198,19 @@ export class ProductLabelListComponent implements OnInit {
     }
   }
 
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
+  }
+
   loaders = false
   submit() {
     if (this.addProductForm.valid) {
@@ -204,7 +219,7 @@ export class ProductLabelListComponent implements OnInit {
       formData.append("title", this.addProductForm.get('title')?.value);
       formData.append("incentive", this.addProductForm.get('incentive')?.value);
       formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-   
+
       this.coreService.addProductLabel(formData).subscribe(res => {
         // console.log(res);
         this.addRes = res
@@ -234,7 +249,7 @@ export class ProductLabelListComponent implements OnInit {
       formData.append("title", this.addProductForm.get('title')?.value);
       formData.append("incentive", this.addProductForm.get('incentive')?.value);
       formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-   
+
       this.coreService.updateProductLabel(formData, this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.success) {
@@ -281,16 +296,16 @@ export class ProductLabelListComponent implements OnInit {
     this.addProductForm.reset();
   }
 
- 
+
 
   search() {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
+      this.filteredData = this.filteredData.filter(res => {
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -300,8 +315,8 @@ export class ProductLabelListComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Tax List';
@@ -327,32 +342,32 @@ export class ProductLabelListComponent implements OnInit {
       })
     doc.save('productLabel.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Product Label';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#','Title.','Incentive']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row?.title,
-      row.incentive,
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Product _Label.pdf');
-}
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Product Label';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Title.', 'Incentive']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row?.title,
+        row.incentive,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Product _Label.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -444,7 +459,7 @@ export class ProductLabelListComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -456,7 +471,7 @@ export class ProductLabelListComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

@@ -19,7 +19,7 @@ export class ProductlistComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any = []
-
+  selectActive: any;
   titlee: any;
   p: number = 1
   pageSize: number = 10;
@@ -30,7 +30,7 @@ export class ProductlistComponent implements OnInit {
   selectedSubcategoryGroupType: string = '';
   selectedBrandType: string = '';
   selectedProductStoreType: string = '';
-  selectedLabel:string='';
+  selectedLabel: string = '';
   constructor(private QueryService: QueryService, private coreService: CoreService, private cs: CompanyService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
@@ -186,7 +186,7 @@ export class ProductlistComponent implements OnInit {
         }
       });
     });
-this.getLabel();
+    this.getLabel();
     this.getCategory()
     this.getSubcategory()
     this.getSubcategoryGroup()
@@ -276,8 +276,8 @@ this.getLabel();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.title?.toLocaleLowerCase()||'';
-        const label = res?.product_label?.title?.toLocaleLowerCase() ||'';
+        const nameLower = res?.title?.toLocaleLowerCase() || '';
+        const label = res?.product_label?.title?.toLocaleLowerCase() || '';
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (label.match(searchTerm)) {
@@ -334,6 +334,9 @@ this.getLabel();
       filteredData = filteredData.filter((item) => item?.product_label?.title === this.selectedLabel);
     }
 
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
 
     this.filteredData = filteredData;
   }
@@ -342,8 +345,9 @@ this.getLabel();
     this.selectedSubcategoryType = null;
     this.selectedSubcategoryGroupType = null;
     this.selectedBrandType = null;
-    this.selectedLabel=null;//16/2
+    this.selectedLabel = null;//16/2
     this.selectedProductStoreType = null;
+    this.selectActive = undefined;
     this.filterData();
   }
 
@@ -406,13 +410,13 @@ this.getLabel();
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-            ['#','Product Name','Product Label','Category','Subcategory','Subcategory group','Brand','Unit','Product Store']
+        ['#', 'Product Name', 'Product Label', 'Category', 'Subcategory', 'Subcategory group', 'Brand', 'Unit', 'Product Store']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.tableData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.product_label?.title,
@@ -422,14 +426,14 @@ this.getLabel();
         row.brand?.title,
         row.unit?.title,
         row.product_store,
-  
-  
+
+
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('Product List.pdf');
   }
@@ -524,7 +528,7 @@ this.getLabel();
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -536,11 +540,11 @@ this.getLabel();
 
 
   // label update
-labelList:any[]=[];
-  getLabel(){
-    this.coreService.getProductLabel().subscribe((res:any)=>{
+  labelList: any[] = [];
+  getLabel() {
+    this.coreService.getProductLabel().subscribe((res: any) => {
       console.log(res);
-      this.labelList=res;
+      this.labelList = res;
     })
   }
   // updateLabel(p_id: number, l_id: number) {
@@ -556,7 +560,7 @@ labelList:any[]=[];
   //   })
   // }
 
-  updateLabel(p_id: number, l_id: number,i:number) {
+  updateLabel(p_id: number, l_id: number, i: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: "Do You Want Change The Product Label!",
@@ -572,7 +576,7 @@ labelList:any[]=[];
     }).then((t) => {
       if (t.isConfirmed) {
         this.coreService.updateLabel(p_id, l_id).subscribe(res => {
-        console.log(res);
+          console.log(res);
           if (res.success) {
             this.loader = true;
             Swal.fire({
@@ -588,7 +592,7 @@ labelList:any[]=[];
               text: res.error,
             });
           }
-        },err=>{
+        }, err => {
           this.toastr.error(err.message)
         })
 

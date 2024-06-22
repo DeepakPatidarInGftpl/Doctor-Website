@@ -20,8 +20,9 @@ export class TaxComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  selectActive: any;
+  filteredData: any[];
   taxForm!: FormGroup;
   get f() {
     return this.taxForm.controls;
@@ -179,6 +180,8 @@ export class TaxComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
 
     //permission from localstorage
@@ -216,6 +219,19 @@ export class TaxComponent implements OnInit {
         }
       });
     });
+  }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
   }
 
   openModal() {
@@ -503,7 +519,7 @@ export class TaxComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -673,7 +689,7 @@ export class TaxComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

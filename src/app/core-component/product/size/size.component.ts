@@ -19,8 +19,9 @@ export class SizeComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  selectActive: any;
+  filteredData: any[];
   sizeForm!: FormGroup;
   get f() {
     return this.sizeForm.controls;
@@ -180,6 +181,8 @@ export class SizeComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
     //permission from localdtarge
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -229,6 +232,19 @@ export class SizeComponent implements OnInit {
     if (fileInput) {
       fileInput.click();
     }
+  }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
   }
 
   onFileChange(event: any) {
@@ -464,7 +480,7 @@ export class SizeComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -636,7 +652,7 @@ export class SizeComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

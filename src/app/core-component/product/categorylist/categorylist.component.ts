@@ -27,8 +27,10 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor( private coreServ: CoreService, private router: Router, private toastr: ToastrService,
-    private cs:CompanyService) {
+  selectActive: any;
+  filteredData: any[];
+  constructor(private coreServ: CoreService, private router: Router, private toastr: ToastrService,
+    private cs: CompanyService) {
   }
 
   delRes: any
@@ -135,15 +137,17 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   }
 
   loader = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit() {
     this.coreServ.getProductCategor().subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
     // this.coreServ.ProdCategBehaveSub.subscribe(() => {
     //   if (localStorage.getItem("prodCategories")) {
@@ -164,7 +168,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     //   },
 
     // };
- 
+
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -183,18 +187,18 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'add_productcategory') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'change_productcategory') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='delete_productcategory') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'delete_productcategory') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -217,6 +221,18 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     // this.router.navigate(['product/categorylist/'+`${prod.id}`])
   }
 
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
+  }
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -246,10 +262,10 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     if (this.title === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.title.toLocaleLowerCase(); 
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+      const searchTerm = this.title.toLocaleLowerCase();
+      this.filteredData = this.filteredData.filter(res => {
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -268,7 +284,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     window.location.reload()
   }
 
-  
+
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -295,35 +311,35 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       })
     doc.save('category.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Category List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Category name']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row.title ,
- 
-  
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Category List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Category name']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Category  .pdf');
-}
+        index + 1,
+        row.title,
+
+
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Category  .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -415,7 +431,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -427,7 +443,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }
