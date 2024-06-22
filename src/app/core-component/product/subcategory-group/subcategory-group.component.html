@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 col-sm-12 col-12">
-    
+
     <!-- <div class="page-header">
       <div class="page-title">
         <h4>Sub Category Group list</h4>
@@ -44,7 +44,8 @@
               <a class="btn btn-searchset">
                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
               <div class="dataTables_filter"><label>
-                  <input type="search" class="form-control form-control-sm" placeholder="Search SubCategory Group" [(ngModel)]="titlee" (ngModelChange)="search()">
+                  <input type="search" class="form-control form-control-sm" placeholder="Search SubCategory Group"
+                    [(ngModel)]="titlee" (ngModelChange)="search()">
                 </label>
               </div>
 
@@ -53,15 +54,18 @@
           <div class="wordset">
             <ul>
               <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
+                    src="assets/img/icons/pdf.svg" alt="img"></a>
               </li>
               <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                    src="assets/img/icons/excel.svg" alt="img"></a>
               </li>
               <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                    src="assets/img/icons/printer.svg" alt="img"></a>
               </li>
-          </ul>
+            </ul>
           </div>
         </div>
         <!-- /Filter -->
@@ -77,7 +81,7 @@
                     <option value="" selected disabled>Select Category</option>
                     <option value="">All</option>
                     <option value="{{cat?.title}}" *ngFor="let cat of categories">{{cat?.title}}</option>
-                 </select>
+                  </select>
                 </div>
               </div>
               <div class="col-lg col-sm-6 col-12">
@@ -100,6 +104,16 @@
                   </select>
                 </div>
               </div>
+              <div class="col-lg-3 col-sm-6 col-12">
+                <div class="form-group">
+                  <label>Is Active</label>
+                  <select [(ngModel)]="selectActive" (change)="filterData()" class="form-select">
+                    <option [ngValue]="undefined" selected disabled>Select Active Status</option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
+                  </select>
+                </div>
+              </div>
               <!-- <div class="col-lg-1 col-sm-6 col-12 ms-auto">
                 <div class="form-group">
                   <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
@@ -107,8 +121,8 @@
               </div> -->
             </div>
             <div class="form-group" (click)="clearFilter()">
-              <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-          </div>   
+              <a class="btn btn-filters ms-auto" style="width: 30%;">Clear Filter</a>
+            </div>
           </div>
         </div>
         <!-- /Filter -->
@@ -143,7 +157,7 @@
                   </label>
                 </td>
                 <td>{{i+1}}</td>
-                <td >
+                <td>
                   <a routerLink="/product/subCategoryDetails/{{products.id}}" class="product-img"><img
                       [src]="imgUrl+products.image" alt="product"></a>
                 </td>
@@ -193,7 +207,7 @@
           <div class="row">
             <div class="col-lg-4 col-sm-4 col-12 mt-2">
               <div class="entries"> Show per page
-                <select [(ngModel)]="itemsPerPage" class="pagination"  #v (change)="changePg(v.value)">
+                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="30">30</option>
@@ -206,7 +220,7 @@
             <div class="col-lg-8 col-sm-8 col-12 mt-2">
               <div class="f-right">
                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
+                <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>
               </div>
             </div>
           </div>

@@ -27,6 +27,8 @@ export class HsncodeComponent implements OnInit {
   missingFieldsError = false;
   fieldfilteredData: any[] = [];
   hsncodeForm!: FormGroup;
+  selectActive: any;
+  filteredData: any[];
 
   get f() {
     return this.hsncodeForm.controls;
@@ -179,8 +181,10 @@ export class HsncodeComponent implements OnInit {
     // })
     this.coreService.getHSNCode().subscribe(res => {
       this.loader = false;
-      this.tableData = res
+      this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
     this.getSubcategory();
     this.getTax();
@@ -241,6 +245,20 @@ export class HsncodeComponent implements OnInit {
       })
     }
   }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
+  }
+
   deleteId(id: number) {
     this.coreService.deleteWarehouse(id).subscribe(res => {
       this.delRes = res
@@ -629,7 +647,7 @@ export class HsncodeComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.hsn_code.toString().toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -807,7 +825,7 @@ export class HsncodeComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

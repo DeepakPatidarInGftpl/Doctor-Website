@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-7 col-sm-7 col-12">
-    
+
         <div class="page-header">
             <div class="page-title">
                 <h4 class="titl">Unit Conversion list</h4>
@@ -8,13 +8,13 @@
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add State
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add State
                 </a>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-              
+
                 <div class="table-top">
                     <div class="search-set">
                         <div class="search-path">
@@ -28,26 +28,57 @@
                         </div> -->
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search Alternate Unit..." [(ngModel)]="titlee" (ngModelChange)="search()">
-                            </label>
-                          </div>
-                 </div>
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Alternate Unit..." [(ngModel)]="titlee"
+                                        (ngModelChange)="search()">
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                          </li>
-                          <li>
-                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                          </li>
-                      </ul>
-                      </div>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -66,11 +97,13 @@
                                 <th (click)="sort('id')" class="thone">Units <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Quantity <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="tableData?.length>=0">
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                        <tbody *ngIf="filteredData?.length>=0">
+                            <tr
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -80,7 +113,8 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a  routerLink="//product/unit-conversion-details/{{products?.id}}" style="line-height: 3;">{{products?.alternate_unit.title}}</a>
+                                    <a routerLink="//product/unit-conversion-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products?.alternate_unit.title}}</a>
                                 </td>
                                 <td>{{products?.unit.title}}</td>
                                 <td>{{products?.quantity}}</td>
@@ -105,13 +139,13 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody *ngIf="tableData?.length===0 && !loader">
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
                             <tr>
-                              <td colspan="10">
-                                <p class="center-textt">Data not available</p>
-                              </td>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
                             </tr>
-                          </tbody>
+                        </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -141,24 +175,25 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="30">30</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
+                            </div>
+
                         </div>
-             
-                       </div>
-                     </div>
+                    </div>
                 </div>
 
             </div>
@@ -170,133 +205,140 @@
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                <h4> Add Unit Conversion </h4>
-                <h6>Create new Unit Conversion</h6>
+                    <h4> Add Unit Conversion </h4>
+                    <h6>Create new Unit Conversion</h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
-                <h4> Update Unit Conversion </h4>
+                    <h4> Update Unit Conversion </h4>
                 </div>
             </div>
         </div>
         <div class="card">
             <div *ngIf="isAdd">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="unitConversionForm" (ngSubmit)="submit()">
-                    <div class="row">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="unitConversionForm" (ngSubmit)="submit()">
+                        <div class="row">
 
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Select Alternate Unit*</label>
-                                
-                                <select formControlName="alternate_unit"   required
-                                #unitValue id="alternate_unit" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Select Alternate Unit*</label>
+
+                                    <select formControlName="alternate_unit" required #unitValue id="alternate_unit"
+                                        [ngClass]="{
                           'is-invalid': f['alternate_unit'].touched && f['alternate_unit'].invalid}">
-                                <option value="" selected disabled>Alternate unit</option>
-                                <option value="{{unit.id}}" *ngFor="let unit of unitList">
-                                    {{unit.title}}
-                                </option>
-                            </select>
-                              <span class="text-danger" *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select alternate unit
-                              </span>
+                                        <option value="" selected disabled>Alternate unit</option>
+                                        <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                            {{unit.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select
+                                        alternate unit
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Quantity*</label>
-                                <input type="number" formControlName="quantity" id="quantity" placeholder="Enter Quantity" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Quantity*</label>
+                                    <input type="number" formControlName="quantity" id="quantity"
+                                        placeholder="Enter Quantity" [ngClass]="{
                                     'is-invalid': f['quantity'].touched && f['quantity'].invalid}">
-                                <span class="text-danger" *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity</span>
+                                    <span class="text-danger"
+                                        *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Select Units*</label>
-                                <select formControlName="unit"  required
-                                    #unitValue id="unit" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Select Units*</label>
+                                    <select formControlName="unit" required #unitValue id="unit" [ngClass]="{
                               'is-invalid': f['unit'].touched && f['unit'].invalid
                             }">
-                                    <option value="" selected disabled>Unit</option>
-                                    <option value="{{unit.id}}" *ngFor="let unit of unitList">
-                                        {{unit.title}}
-                                    </option>
-                                </select>
-                                <span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select unit
-                                </span>
+                                        <option value="" selected disabled>Unit</option>
+                                        <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                            {{unit.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select unit
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
-            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div *ngIf="isEdit">
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="unitConversionForm" (ngSubmit)="update()">
-                    <div class="row">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="unitConversionForm" (ngSubmit)="update()">
+                        <div class="row">
 
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Alternate Unit*</label>
-                               
-                                  <select formControlName="alternate_unit"  required
-                                  #unitValue id="alternate_unit" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Alternate Unit*</label>
+
+                                    <select formControlName="alternate_unit" required #unitValue id="alternate_unit"
+                                        [ngClass]="{
                             'is-invalid': f['alternate_unit'].touched && f['alternate_unit'].invalid}">
-                                  <option value="" selected disabled>Alternate_unit</option>
-                                  <option value="{{unit.id}}" *ngFor="let unit of unitList">
-                                      {{unit.title}}
-                                  </option>
-                              </select>
-                                <span class="text-danger" *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select alternate unit
-                                </span>
+                                        <option value="" selected disabled>Alternate_unit</option>
+                                        <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                            {{unit.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select
+                                        alternate unit
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Quantity*</label>
-                                <input type="number" formControlName="quantity" id="quantity" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Quantity*</label>
+                                    <input type="number" formControlName="quantity" id="quantity" [ngClass]="{
                                     'is-invalid': f['quantity'].touched && f['quantity'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Units*</label>
-                                <select formControlName="unit"  required
-                                    #unitValue id="unit" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Units*</label>
+                                    <select formControlName="unit" required #unitValue id="unit" [ngClass]="{
                               'is-invalid': f['unit'].touched && f['unit'].invalid}">
-                                    <option value="" selected disabled>Unit</option>
-                                    <option value="{{unit.id}}" *ngFor="let unit of unitList">
-                                        {{unit.title}}
-                                    </option>
-                                </select>
-                                <span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select unit
-                                </span>
+                                        <option value="" selected disabled>Unit</option>
+                                        <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                            {{unit.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select unit
+                                    </span>
 
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -11,7 +11,7 @@
                         ({{employeeDetail?.mobile_no}})
                     </h5>
                     <p class="card-text mb-0">{{ employeeDetail?.company_name ? employeeDetail?.company_name
-                        : employeeDetail?.role }}</p>
+                        : profileDetails?.role }}</p>
                 </div>
             </div>
             <div class="page-btn me-4">
@@ -38,7 +38,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.mobile_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -46,7 +46,7 @@
                                                 <label class="label-title-wrapper">Email:</label>
                                             </div>
                                             <div class="col-6 mb-2">
-                                                <h5 class="field-title-wrapper">{{ employeeDetail?.email || 'null'
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.email || '--'
                                                     }}</h5>
                                             </div>
 
@@ -55,7 +55,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.telephone_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -64,7 +64,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.whatsapp_no ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -73,7 +73,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.dob ||
-                                                    'null'
+                                                    '--'
                                                     }}</h5>
                                             </div>
 
@@ -83,13 +83,13 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.anniversary
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <h3 class="contact-title-wrapper ps-4 mt-4 pt-2 mb-3">Advance Information</h3>
+                                <h3 class="contact-title-wrapper ps-4 mt-4 mb-3">Advance Information</h3>
                                 <div class="row m-0">
                                     <div class="col-5">
                                         <div class="row m-0">
@@ -98,7 +98,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.branch ||
-                                                    'null' }}
+                                                    '--' }}
                                                 </h5>
                                             </div>
 
@@ -107,7 +107,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.department?.title ||
-                                                    'null'
+                                                    '--'
                                                     }}</h5>
                                             </div>
 
@@ -116,7 +116,7 @@
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.date_of_joining ||
-                                                    'null'}}
+                                                    '--'}}
                                                 </h5>
                                             </div>
 
@@ -126,7 +126,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.pan_no
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">
@@ -135,7 +135,7 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.credit_limit
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">
@@ -144,10 +144,15 @@
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ employeeDetail?.userid?.user_type
                                                     ||
-                                                    'null' }}</h5>
+                                                    '--' }}</h5>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div *ngIf="employeeDetail?.remark && employeeDetail?.remark !== 'null'" class="mt-4">
+                                    <h3 class="contact-title-wrapper ps-4 mb-3">Remark</h3>
+                                    <p class="mb-0 text-black fw-semibold ps-4 fs-6">{{employeeDetail?.remark}}</p>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +171,8 @@
                                     {{address?.address_line_2 }},</p>
                                 <p class="card-text card-description mb-1 pb-1">{{ address?.city?.city }}, {{
                                     address?.state?.state }}, {{address?.country?.country_name}}</p>
-                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode}}</p>
+                                <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode || '--'}}
+                                </p>
                                 <div class="d-flex align-items-center">
                                     <mat-checkbox class="example-margin"><span class="primary-color"> Default
                                             Shipping
@@ -188,14 +194,14 @@
                                         <h5 class="card-title address-type-title text-black mb-1 pb-1">{{
                                             bankDetails?.bank_name }}</h5>
                                         <p class="card-text card-description mb-1 pb-1">
-                                            Account Holder Name: {{ bankDetails?.account_holder_name }}</p>
+                                            Account Holder Name: {{ bankDetails?.account_holder_name || '--' }}</p>
                                         <p class="card-text card-description mb-1 pb-1">Account Number: {{
-                                            bankDetails?.account_no
+                                            bankDetails?.account_no || '--'
                                             }}</p>
                                         <p class="card-text card-description mb-1 pb-1">Bank IFSC Code:
-                                            {{bankDetails?.bank_ifsc_code}}</p>
+                                            {{bankDetails?.bank_ifsc_code || '--'}}</p>
                                         <p class="card-text card-description mb-1 pb-1">Branch Name:
-                                            {{bankDetails?.branch_name || 'null'}}</p>
+                                            {{bankDetails?.branch_name || '--'}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +221,7 @@
                                     </div>
                                     <div class="col-6 mb-2">
                                         <h5 class="field-title-wrapper"> {{employeeDetail?.userid?.user_type ||
-                                            'null' }}
+                                            '--' }}
                                         </h5>
                                     </div>
 
@@ -224,7 +230,7 @@
                                     </div>
                                     <div class="col-6 mb-2">
                                         <h5 class="field-title-wrapper">{{ employeeDetail?.userid?.username ||
-                                            'null'
+                                            '--'
                                             }}</h5>
                                     </div>
 
@@ -233,7 +239,7 @@
                                     </div>
                                     <div class="col-6 mb-2">
                                         <h5 class="field-title-wrapper">{{ employeeDetail?.userid?.phone_number ||
-                                            'null' }}
+                                            '--' }}
                                         </h5>
                                     </div>
                                 </div>
@@ -251,9 +257,9 @@
                                     <ng-template matStepLabel>
                                         <div class="step-label-wrapper">
                                             <p class="mb-1 text-title-wrapper"> <span class="operation-label">{{
-                                                    log.operation_type }}
+                                                    log?.operation_type }}
                                                     By {{
-                                                    log.userid
+                                                    log?.userid
                                                     }}</span> </p>
                                             <span class="date-label">{{ formatDate(log.date_time) }}</span>
                                         </div>

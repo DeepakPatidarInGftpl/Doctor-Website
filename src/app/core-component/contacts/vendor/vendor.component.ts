@@ -28,9 +28,11 @@ export class VendorComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  selectActive: any;
+
 
   constructor(private contactService: ContactService, private QueryService: QueryService,
-    private cs:CompanyService) {
+    private cs: CompanyService) {
   }
 
   delRes: any
@@ -132,10 +134,10 @@ export class VendorComponent implements OnInit {
     });
   }
   loader = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.contactService.getVendor().subscribe(res => {
       // console.log(res);
@@ -145,27 +147,27 @@ export class VendorComponent implements OnInit {
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
-//permission from localstorage
+    //permission from localstorage
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'vendor' && res.codename=='add_vendor') {
+        if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename == 'add_vendor') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-          
-        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='change_vendor') {
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename == 'change_vendor') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-          
-        }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='delete_vendor') {
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename == 'delete_vendor') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
-          
+
         }
       });
     }
- 
+
   }
 
   allSelected: boolean = false;
@@ -231,9 +233,9 @@ export class VendorComponent implements OnInit {
   }
 
 
-  
-   // convert to pdf
-   generatePDF() {
+
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Vendor List';
@@ -264,37 +266,37 @@ export class VendorComponent implements OnInit {
         ],
       })
     doc.save('vendor.pdf');
- }
+  }
 
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Vendor List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name','Company Name ', 'Mobile Number ','Opening Balance','GSTIN','PanCard']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.company_name,
-      row.mobile_no,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-  row?.gstin,
-  row?.pan_no
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('vendor.pdf');
-}
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Vendor List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name', 'Company Name ', 'Mobile Number ', 'Opening Balance', 'GSTIN', 'PanCard']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.company_name,
+        row.mobile_no,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        row?.gstin,
+        row?.pan_no
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('vendor.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -386,12 +388,12 @@ export class VendorComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -401,13 +403,13 @@ export class VendorComponent implements OnInit {
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
-    
+
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -418,11 +420,15 @@ export class VendorComponent implements OnInit {
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.selectCredit = null;
     this.selectedCompany = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

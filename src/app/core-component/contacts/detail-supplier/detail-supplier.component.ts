@@ -22,7 +22,6 @@ export class DetailSupplierComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
-
     this.coreService.profileDetails.subscribe((res) => {
       this.profileDetails = res;
     })

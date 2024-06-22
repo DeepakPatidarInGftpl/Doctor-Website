@@ -20,8 +20,8 @@ import html2canvas from 'html2canvas';
 export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   dtOptions: DataTables.Settings = {};
-  initChecked: boolean = false
-
+  initChecked: boolean = false;
+  selectActive: any;
   apiUrl = environment.api
 
   public tableData: any = []
@@ -34,10 +34,10 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   filteredData: any[]; // The filtered data
   selectedCategoryType: string = '';
   selectedSubcategoryType: string = '';
-  selectedSubcategoryGroupType:string='';
-  selectedBrandType:string='';
-  selectedProductStoreType:string='';
-  constructor(private QueryService: QueryService, private coreServ: CoreService, private toastr: ToastrService, private cs:CompanyService) {
+  selectedSubcategoryGroupType: string = '';
+  selectedBrandType: string = '';
+  selectedProductStoreType: string = '';
+  constructor(private QueryService: QueryService, private coreServ: CoreService, private toastr: ToastrService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
   delRes: any;
@@ -61,7 +61,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
           this.delRes = res;
           if (this.delRes.success) {
             // console.log('abssssss');
-            
+
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -146,7 +146,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   categories;
 
-  featureGroup:any[]=[]
+  featureGroup: any[] = []
 
   subCategory
 
@@ -162,11 +162,11 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   errormessFSubC
   errormessFFG;
   loader = true;
-  updateData:any;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  updateData: any;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit() {
     // this.coreServ.subCategoryGroupGet()
 
@@ -194,8 +194,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       this.categories = res
     })
 
-   
-this.getFeatureGroup()
+
+    this.getFeatureGroup()
     this.coreServ.subCategory().subscribe((res: any) => {
       this.subCategory = res
 
@@ -212,14 +212,14 @@ this.getFeatureGroup()
         eCategory = res?.category?.id
         this.subcatEdit = res.subcategories
         this.featureCategoryEdit = res.feature_group;
-        this.updateData=res;
+        this.updateData = res;
         // console.log(this.updateData);
-        
+
         // this.selectedSubCats = this.subcatEdit.map(res => res.id,
         //   console.log(res));
         this.selectedSubCats = res.subcategories.map(res => res.id,
-       );
-          
+        );
+
         this.selectedFeature = this.featureCategoryEdit.map(res => res.id)
         // this.selectedFeatureGrp=this.selectedFeature.length
       }
@@ -234,7 +234,7 @@ this.getFeatureGroup()
     })
 
     // console.log(this.subcategories);
-// permission from localstorage
+    // permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
     //   const permission = localStorageData.permission;
@@ -252,18 +252,18 @@ this.getFeatureGroup()
     //   });
     // }
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='add_subcategorygroup') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename == 'add_subcategorygroup') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='change_subcategorygroup') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename == 'change_subcategorygroup') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='delete_subcategorygroup') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename == 'delete_subcategorygroup') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -300,7 +300,7 @@ this.getFeatureGroup()
       this.selectedFeature.push(fGroup.id);
       this.selectedFeatureGrp++;
     } else {
-      this.selectedFeatureGrp=this.selectedFeature.length
+      this.selectedFeatureGrp = this.selectedFeature.length
       this.selectedFeature = this.selectedFeature.filter(id => id !== fGroup.id,
         this.selectedFeatureGrp--);
     }
@@ -312,15 +312,15 @@ this.getFeatureGroup()
     // console.log(this.form.controls['category'].value);
   }
 
-  
+
   filteredFeatureGroupData: any[];
   searchFeatureGroup: string = '';
-  getFeatureGroup(){
-    this.coreServ.getFeatureGroup().subscribe((res:any) => {
+  getFeatureGroup() {
+    this.coreServ.getFeatureGroup().subscribe((res: any) => {
       this.featureGroup = res
       this.filteredFeatureGroupData = this.featureGroup.slice();
       // console.log(this.filteredFeatureGroupData);
-      
+
       this.filterFeatureGroupData();
     })
   }
@@ -392,18 +392,18 @@ this.getFeatureGroup()
         // formdata.append("image", this.form.controls['image'].value);
         formdata.append("subcategories", `[${this.selectedSubCats}]`);
         formdata.append("feature_group", `[${this.selectedFeature}]`);
-        
+
         const imageFile = this.form.get('image')?.value;
         if (imageFile && imageFile instanceof File) {
           formdata.append('image', imageFile);
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
             if (res.success) {
-              this.selectedSubCat=0
-              this.selectedFeatureGrp=0
+              this.selectedSubCat = 0
+              this.selectedFeatureGrp = 0
               this.loaders = false;
               this.editMode = false;
-              this.url='';
-              this.updateData='';
+              this.url = '';
+              this.updateData = '';
               this.coreServ.editThings.unsubscribe()
               this.selectedSubCats = []
               this.selectedFeature = []
@@ -415,14 +415,14 @@ this.getFeatureGroup()
               this.selectedFeatureGrp = 0;
             }
           })
-        }else{
+        } else {
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
             if (res.success) {
-              this.selectedSubCat=0
-              this.selectedFeatureGrp=0
+              this.selectedSubCat = 0
+              this.selectedFeatureGrp = 0
               this.loaders = false;
-              this.url='';
-              this.updateData='';
+              this.url = '';
+              this.updateData = '';
               this.editMode = false
               this.coreServ.editThings.unsubscribe()
               this.selectedSubCats = []
@@ -444,10 +444,10 @@ this.getFeatureGroup()
         formdata.append("feature_group", `[${this.selectedFeature}]`);
         this.coreServ.postCategoriesGroup(formdata).subscribe((res: any) => {
           if (res.success) {
-            this.selectedSubCat=0
-            this.selectedFeatureGrp=0
-            this.url='';
-            this.updateData='';
+            this.selectedSubCat = 0
+            this.selectedFeatureGrp = 0
+            this.url = '';
+            this.updateData = '';
             this.loaders = false;
             this.form.reset()
             this.selectedSubCats = []
@@ -476,8 +476,8 @@ this.getFeatureGroup()
   }
   id: any;
   editThis(prod) {
-    this.url='';
-    this.updateData='';
+    this.url = '';
+    this.updateData = '';
     this.id = prod.id;
     this.coreServ.editThisData(prod)
     this.editForm()
@@ -520,16 +520,16 @@ this.getFeatureGroup()
   }
 
   openaddForm() {
-    this.url=''
+    this.url = ''
     this.addForm = true;
     this.form.reset();
   }
   addForm = true
   editForm() {
-    this.url='';
+    this.url = '';
     this.addForm = false
-    this.selectedSubCat=0
-    this.selectedFeatureGrp=0
+    this.selectedSubCat = 0
+    this.selectedFeatureGrp = 0
   }
   // search() {
   //   if (this.titlee == "") {
@@ -548,10 +548,10 @@ this.getFeatureGroup()
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res?.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -568,85 +568,89 @@ this.getFeatureGroup()
   }
 
 
-    // filter data
-    filterData() {
-      let filteredData = this.tableData.slice();
-      if (this.selectedCategoryType) {
-        filteredData = filteredData.filter((item) => item?.category?.title === this.selectedCategoryType);
-      }
-      if (this.selectedSubcategoryType) {
-        filteredData = filteredData.filter((item) => item?.subcategories[0]?.title === this.selectedSubcategoryType);
-      }
-      if (this.selectedSubcategoryGroupType) {
-        filteredData = filteredData.filter((item) => item?.feature_group[0]?.title === this.selectedSubcategoryGroupType);
-      }
-      this.filteredData = filteredData;
+  // filter data
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectedCategoryType) {
+      filteredData = filteredData.filter((item) => item?.category?.title === this.selectedCategoryType);
     }
-    clearFilter() {
-      this.selectedCategoryType = null;
-      this.selectedSubcategoryType = null;
-      this.selectedSubcategoryGroupType = null;
-      this.selectedBrandType = null;
-      this.selectedProductStoreType = null;
-      this.filterData();
+    if (this.selectedSubcategoryType) {
+      filteredData = filteredData.filter((item) => item?.subcategories[0]?.title === this.selectedSubcategoryType);
     }
-    // convert to pdf
-    generatePDF() {
-      const doc = new jsPDF();
-      const title = 'Sub Category Group list';
-      doc.setFontSize(15);
-      doc.setTextColor(33, 43, 54);
-      doc.text(title, 10, 10);
-      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
-      autoTable(doc,
-  
-        {
-          html: '#mytable',
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          columns: [
-            //remove action filed
-            { header: 'Sr No.' },
-            { header: 'Image' },
-            { header: 'Sub Category Group' },
-            { header: 'Category' },
-            { header: 'Subcategories' },
-            { header: 'Feature Group' },
-            { header: 'Is Active' }
-          ],
-        })
-      doc.save('subcategorygroup.pdf');
-  
-   }
-   generatePDFAgain() {
+    if (this.selectedSubcategoryGroupType) {
+      filteredData = filteredData.filter((item) => item?.feature_group[0]?.title === this.selectedSubcategoryGroupType);
+    }
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.selectedCategoryType = null;
+    this.selectedSubcategoryType = null;
+    this.selectedSubcategoryGroupType = null;
+    this.selectedBrandType = null;
+    this.selectedProductStoreType = null;
+    this.selectActive = undefined;
+    this.filterData();
+  }
+  // convert to pdf
+  generatePDF() {
+    const doc = new jsPDF();
+    const title = 'Sub Category Group list';
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+    autoTable(doc,
+
+      {
+        html: '#mytable',
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        columns: [
+          //remove action filed
+          { header: 'Sr No.' },
+          { header: 'Image' },
+          { header: 'Sub Category Group' },
+          { header: 'Category' },
+          { header: 'Subcategories' },
+          { header: 'Feature Group' },
+          { header: 'Is Active' }
+        ],
+      })
+    doc.save('subcategorygroup.pdf');
+
+  }
+  generatePDFAgain() {
     const doc = new jsPDF('landscape');
     const title = 'Sub Category Group list';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-            ['#','Image','Sub Category Group','Category','Subcategories']
+        ['#', 'Image', 'Sub Category Group', 'Category', 'Subcategories']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.tableData.map((row: any, index: number) => [
         index + 1,
         row.image,
         row.title,
         row.category.title,
         row.subcategories[0]?.title,
-       
-  
-  
+
+
+
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('Sub _Category _Group.pdf');
   }
@@ -654,125 +658,125 @@ this.getFeatureGroup()
   // generatePDF() {
   //   const doc = new jsPDF();
   //   const title = 'Sub Category Group list';
-  
+
   //   doc.setFontSize(15);
   //   doc.setTextColor(33, 43, 54);
   //   doc.text(title, 10, 10);
-  
+
   //   const table = document.getElementById('mytable'); // Get the table element
-  
+
   //   html2canvas(table).then((canvas) => {
   //     const tableImgData = canvas.toDataURL('image/png'); // Convert table to image data URL
   //     doc.addImage(tableImgData, 'PNG', 10, 20, 190, 0); // Add the table image to PDF
-  
+
   //     doc.save('subcategorygroup.pdf');
   //   });
   // }
-  
-    // excel export only filtered data
-    getVisibleDataFromTable(): any[] {
-      const visibleData = [];
-      const table = document.getElementById('mytable');
-      const headerRow = table.querySelector('thead tr');
-      const dataRows = table.querySelectorAll('tbody tr');
-      //table heading
-      const headerData = [];
-      headerRow.querySelectorAll('th').forEach(cell => {
-        const columnHeader = cell.textContent.trim();
-        if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-          headerData.push(columnHeader);
-        }
+
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    const headerRow = table.querySelector('thead tr');
+    const dataRows = table.querySelectorAll('tbody tr');
+    //table heading
+    const headerData = [];
+    headerRow.querySelectorAll('th').forEach(cell => {
+      const columnHeader = cell.textContent.trim();
+      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+        headerData.push(columnHeader);
+      }
+    });
+    visibleData.push(headerData);
+
+    // Include visible data rows
+    dataRows.forEach(row => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach(cell => {
+        rowData.push(cell.textContent.trim());
       });
-      visibleData.push(headerData);
-  
-      // Include visible data rows
-      dataRows.forEach(row => {
-        const rowData = [];
-        row.querySelectorAll('td').forEach(cell => {
-          rowData.push(cell.textContent.trim());
-        });
-        visibleData.push(rowData);
-      });
-      return visibleData;
-    }
+      visibleData.push(rowData);
+    });
+    return visibleData;
+  }
   // Modify your exportToExcel() function
-    exportToExcel(): void {
-      const visibleDataToExport = this.getVisibleDataFromTable();
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      // Create a Blob from the workbook and initiate a download
-      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileName = 'subcategorygroup.xlsx';
-      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'subcategorygroup.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+    // Remove the "Is Active" column header from the cloned table
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(8)');
+    if (isActiveTh) {
+      isActiveTh.remove();
     }
-    printTable(): void {
-      // Get the table element and its HTML content
-      const tableElement = document.getElementById('mytable');
-      const tableHTML = tableElement.outerHTML;
-  
-      // Get the title element and its HTML content
-      const titleElement = document.querySelector('.titl');
-      const titleHTML = titleElement.outerHTML;
-  
-      // Clone the table element to manipulate
-      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
-      // Remove the "Is Active" column header from the cloned table
-      const isActiveTh = clonedTable.querySelector('th.thone:nth-child(8)');
-      if (isActiveTh) {
-        isActiveTh.remove();
-      }
-  
-      // Remove the "Action" column header from the cloned table
-      const actionTh = clonedTable.querySelector('th.thone:last-child');
-      if (actionTh) {
-        actionTh.remove();
-      }
-  
-      // Loop through each row and remove the "Is Active" column and "Action" column data cells
-      const rows = clonedTable.querySelectorAll('tr');
-      rows.forEach((row) => {
-        // Remove the "Is Active" column data cell
-        const isActiveTd = row.querySelector('td:nth-child(8)');
-        if (isActiveTd) {
-          isActiveTd.remove();
-        }
-  
-        // Remove the "Action" column data cell
-        const actionTd = row.querySelector('td:last-child');
-        if (actionTd) {
-          actionTd.remove();
-        }
-      });
-  
-      // Get the modified table's HTML content
-      const modifiedTableHTML = clonedTable.outerHTML;
-  
-      // Apply styles to add some space from the top after the title
-      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-  
-      // Combine the title and table content
-      const combinedContent = styledTitleHTML + modifiedTableHTML;
-  
-      // Store the original contents
-      const originalContents = document.body.innerHTML;
-      window.addEventListener('afterprint', () => {
-        console.log('afterprint');
-       window.location.reload();
-      });
-      // Replace the content of the body with the combined content
-      document.body.innerHTML = combinedContent;
-      window.print();
-  
-      // Restore the original content of the body
-      document.body.innerHTML = originalContents;
+
+    // Remove the "Action" column header from the cloned table
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+    if (actionTh) {
+      actionTh.remove();
     }
-    changePg(val: any) {
-      console.log(val);
-      if (val == -1) {
-        this.itemsPerPage = this.filteredData?.length;
+
+    // Loop through each row and remove the "Is Active" column and "Action" column data cells
+    const rows = clonedTable.querySelectorAll('tr');
+    rows.forEach((row) => {
+      // Remove the "Is Active" column data cell
+      const isActiveTd = row.querySelector('td:nth-child(8)');
+      if (isActiveTd) {
+        isActiveTd.remove();
       }
+
+      // Remove the "Action" column data cell
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        actionTd.remove();
+      }
+    });
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
     }
+  }
 }

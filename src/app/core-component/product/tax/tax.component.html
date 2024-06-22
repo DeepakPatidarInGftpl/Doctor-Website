@@ -16,12 +16,12 @@
             <div class="card-body">
                 <div class="table-top">
                     <div class="search-set">
-                        <!-- <div class="search-path">
+                        <div class="search-path">
                             <a class="btn btn-filter" id="filter_search">
                                 <img src="assets/img/icons/filter.svg" alt="img">
                                 <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                             </a>
-                        </div> -->
+                        </div>
 
                         <div class="search-input">
                             <a class="btn btn-searchset">
@@ -56,6 +56,34 @@
                         </ul>
                     </div>
                 </div>
+
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table datanew" id="mytable">
                         <thead>
@@ -75,9 +103,9 @@
                                         class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="tableData?.length>=0">
+                        <tbody *ngIf="filteredData?.length>=0">
                             <tr
-                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -111,7 +139,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody *ngIf="tableData?.length===0 && !loader">
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
                             <tr>
                                 <td colspan="10">
                                     <p class="center-textt">Data not available</p>

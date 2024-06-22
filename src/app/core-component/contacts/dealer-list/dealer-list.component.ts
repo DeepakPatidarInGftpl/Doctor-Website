@@ -18,7 +18,7 @@ export class DealerListComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any;
-
+  selectActive: any;
   titlee: any;
   p: number = 1
   pageSize: number = 10;
@@ -421,12 +421,16 @@ export class DealerListComponent implements OnInit {
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.selectCredit = null;
     this.selectedCompany = null;
     this.selectCredit = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

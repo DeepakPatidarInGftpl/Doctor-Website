@@ -21,7 +21,7 @@ export class SupplierComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | employee;
-//filter
+  //filter
   titlee: any;
   p: number = 1
   pageSize: number = 10;
@@ -30,7 +30,7 @@ export class SupplierComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
   //end
-  constructor(private contactService: ContactService, private QueryService: QueryService, private cs:CompanyService) {
+  constructor(private contactService: ContactService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -135,7 +135,7 @@ export class SupplierComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any
-  userDetails:any
+  userDetails: any
   ngOnInit(): void {
     this.contactService.getSupplier().subscribe(res => {
       // console.log(res);
@@ -235,8 +235,8 @@ export class SupplierComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Supplier List';
@@ -267,37 +267,37 @@ export class SupplierComponent implements OnInit {
         ],
       })
     doc.save('supplier.pdf');
- }
+  }
 
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Supplier List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Name','Company Name ', 'Mobile Number ','Opening Balance','GSTIN','Supplier Type']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.company_name,
-      row.mobile_no,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-  row?.gstin,
-  row?.supplier_type
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('supplier.pdf');
-}
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Supplier List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name', 'Company Name ', 'Mobile Number ', 'Opening Balance', 'GSTIN', 'Supplier Type']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.company_name,
+        row.mobile_no,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        row?.gstin,
+        row?.supplier_type
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('supplier.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -389,12 +389,12 @@ export class SupplierComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-      //refresh
-      window.addEventListener('afterprint', () => {
-        console.log('afterprint');
-       window.location.reload();
-      });
-      //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
 
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -405,13 +405,15 @@ export class SupplierComponent implements OnInit {
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
+  selectActive: any;
   filterData() {
+    debugger
     let filteredData = this.tableData.slice();
     if (this.supplierType) {
       filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     }
-    
+
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -422,12 +424,17 @@ export class SupplierComponent implements OnInit {
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.supplierType = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectCredit = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

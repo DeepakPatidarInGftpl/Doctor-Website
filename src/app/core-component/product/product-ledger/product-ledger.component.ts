@@ -17,8 +17,9 @@ export class ProductLedgerComponent implements OnInit {
   public tableData: any = []
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false;
+  selectActive: any;
 
-  constructor(private coreService: CoreService, private contactService:ContactService,private cs:CompanyService) { }
+  constructor(private coreService: CoreService, private contactService: ContactService, private cs: CompanyService) { }
 
   titlee: any;
   p: number = 1
@@ -27,31 +28,31 @@ export class ProductLedgerComponent implements OnInit {
   filteredData: any[];
   loader = true;
   productId: any;
-//24-5
-isAdmin = false;
-fyID: any;
-
-//
-ngOnInit(): void {
   //24-5
-  if (localStorage.getItem('financialYear')) {
-    let fy = localStorage.getItem('financialYear');
-    console.warn(JSON.parse(fy));
-    let fyId = JSON.parse(fy);
-    this.fyID = fyId;
-  }
-  this.cs.userDetails$.subscribe((res: any) => {
-    if (res.role == 'admin') {
-      this.isAdmin = true;
-    } else {
-      this.isAdmin = false;
+  isAdmin = false;
+  fyID: any;
+
+  //
+  ngOnInit(): void {
+    //24-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
     }
-  });
- 
-this.getProductLedger();
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+
+    this.getProductLedger();
     this.getVoucher();
     this.getProduct();
-    
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -60,34 +61,34 @@ this.getProductLedger();
       }),
     );
   }
-  getProductLedger(){
+  getProductLedger() {
     console.log(this.productId);
-    
-  this.coreService.getProductLedgerFy(this.productId,this.fyID, this.selectData).subscribe(res => {
-    this.tableData = res;
-    this.loader = false;
-    this.selectedRows = new Array(this.tableData.length).fill(false);
-    this.filteredData = this.tableData.slice();
-    this.filterData();
-  })
-}
-  voucherList:any;
-  getVoucher(){
-    this.contactService.getVoucherType().subscribe(res=>{
+
+    this.coreService.getProductLedgerFy(this.productId, this.fyID, this.selectData).subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
+    })
+  }
+  voucherList: any;
+  getVoucher() {
+    this.contactService.getVoucherType().subscribe(res => {
       console.log(res);
-      this.voucherList=res;
+      this.voucherList = res;
     })
   }
   private _filter(title: string): any[] {
     const filterValue = title ? title.toLowerCase() : '';
     console.log(filterValue);
-    return this.suppliers.filter((option: any) => 
-    (option?.title && option.title.toLowerCase().includes(filterValue)) || 
-    (option?.name && option.name.toLowerCase().includes(filterValue))
-  );
+    return this.suppliers.filter((option: any) =>
+      (option?.title && option.title.toLowerCase().includes(filterValue)) ||
+      (option?.name && option.name.toLowerCase().includes(filterValue))
+    );
   }
   displayFn(user: any): string {
-    return user && user?.title || user?.name ? user?.title || user?.name  : '';
+    return user && user?.title || user?.name ? user?.title || user?.name : '';
   }
   suppliers: any[] = [];
   getProduct() {
@@ -151,9 +152,9 @@ this.getProductLedger();
   }
 
   // filter data
-  filterReverseCharge:any;
-  date:any;
-  selectedVoucherType:any;
+  filterReverseCharge: any;
+  date: any;
+  selectedVoucherType: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -166,12 +167,16 @@ this.getProductLedger();
     if (this.selectedVoucherType) {
       filteredData = filteredData.filter((item) => item?.voucher_type === this.selectedVoucherType);
     }
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
 
   clearFilters() {
     this.selectedVoucherType = null;
     this.date = null;
+    this.selectActive = undefined;
     this.filterData();
   }
 
@@ -208,39 +213,39 @@ this.getProductLedger();
       })
     doc.save('productLedger.pdf');
 
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Product Ledger List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#','Name.','Date','Voucher Type','Voucher No.','Price','In QTY','Out QTY']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.date,
-      row.voucher_type,
-      row.voucher_no,
-      row.price,
-      row.in_qty,
-      row.out_qty
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Product Ledger List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Name.', 'Date', 'Voucher Type', 'Voucher No.', 'Price', 'In QTY', 'Out QTY']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.date,
+        row.voucher_type,
+        row.voucher_no,
+        row.price,
+        row.in_qty,
+        row.out_qty
 
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Product _Ledger.pdf');
-}
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Product _Ledger.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -251,7 +256,7 @@ this.getProductLedger();
     const headerData = [];
     headerRow.querySelectorAll('th').forEach(cell => {
       const columnHeader = cell.textContent.trim();
-        headerData.push(columnHeader);
+      headerData.push(columnHeader);
     });
     visibleData.push(headerData);
 
@@ -280,7 +285,7 @@ this.getProductLedger();
   printTable(): void {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
-  
+
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
@@ -290,7 +295,7 @@ this.getProductLedger();
 
 
     // Loop through each row and remove the "Is Active" column and "Action" column data cells
-  
+
     // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
 
@@ -304,7 +309,7 @@ this.getProductLedger();
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -319,7 +324,7 @@ this.getProductLedger();
       this.itemsPerPage = this.filteredData.length;
     }
   }
-  
+
   //24-5
   branchList: any[] = [];
   filteredBranchList: any[] = [];
@@ -362,13 +367,13 @@ this.getProductLedger();
     }
   }
   //24-5
-   // api call
-   dataId: any;
-   filteredSuppliers: Observable<any[]> | undefined;
-   supplierControl: FormControl = new FormControl('');
-   oncheckAccount(data: any) {
+  // api call
+  dataId: any;
+  filteredSuppliers: Observable<any[]> | undefined;
+  supplierControl: FormControl = new FormControl('');
+  oncheckAccount(data: any) {
     console.warn(data);
     this.productId = data;
     this?.getProductLedger();
-   }
+  }
 }

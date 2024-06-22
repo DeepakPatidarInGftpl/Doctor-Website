@@ -50,7 +50,15 @@ export class UpdateDealerComponent implements OnInit {
 
     this.contactService.getDealerById(this.id).subscribe(res => {
       this.getRes = res;
-      this.dealerForm.patchValue(res);
+
+      const filteredRes = Object.keys(res).reduce((acc, key) => {
+        if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
+          acc[key] = res[key];
+        }
+        return acc;
+      }, {});
+
+      this.dealerForm.patchValue(filteredRes);
       this.dealerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.dealerForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
       this.dealerForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
@@ -76,10 +84,10 @@ export class UpdateDealerComponent implements OnInit {
     return this.fb.group({
       address_line_1: (''),
       address_line_2: (''),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl('23', [Validators.required]),
+      state: new FormControl('28', [Validators.required]),
+      city: new FormControl('42', [Validators.required]),
+      pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -87,7 +95,12 @@ export class UpdateDealerComponent implements OnInit {
     return this.dealerForm.get('address') as FormArray;
   }
   addAddress() {
-    this.getAddresss().push(this.addressAdd())
+    const addressArray = this.getAddresss();
+    this.getAddresss().push(this.addressAdd());
+    const index = addressArray.length - 1;
+    this.selectState('23', index).then(() => {
+      this.selectCity('28', index);
+    });
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
@@ -119,13 +132,13 @@ export class UpdateDealerComponent implements OnInit {
     add.forEach((j: any) => {
       // console.log(j);
       const addressGroup = this.fb.group({
-        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
-        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
+        address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
         state: null,
         city: null,
-        pincode: j?.pincode==null?'':j?.pincode,
-        address_type: j?.address_type==null?'':j?.address_type
+        pincode: j?.pincode == null ? '' : j?.pincode,
+        address_type: j?.address_type == null ? '' : j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -194,19 +207,28 @@ export class UpdateDealerComponent implements OnInit {
     });
   }
 
-  selectState(val: any, i) {
-    // console.log(val);
-    const addressArray = this.getAddresss();
-    const addressControl = addressArray.at(i).get('country');
-    addressControl.setValue(val);
+  selectState(val: any, i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const addressArray = this.getAddresss();
+      const addressControl = addressArray.at(i).get('country');
+      const pinCodeControl = addressArray.at(i).get('pincode');
+      pinCodeControl.setValue('841226');
+      addressControl.setValue(val);
 
-    this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state[i] = res;
-      // console.log(this.state[i]);
-      // Reset city for the current formArray item
-      this.city[i] = [];
+      this.coreService.getStateByCountryId(val).subscribe(
+        res => {
+          this.state[i] = res;
+          const addressControl = addressArray.at(i);
+          addressControl.get('state').setValue('28');
+          // Reset city for the current formArray item
+          this.city[i] = [];
+          resolve();
+        },
+        (err) => reject(err)
+      );
     });
   }
+
   selectedState(val, i) {
     // console.log(val, i);
     if (val) {
@@ -217,17 +239,21 @@ export class UpdateDealerComponent implements OnInit {
       });
     }
   }
+
   selectCity(val: any, i) {
-    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      // console.log(this.city[i]);
+      setTimeout(() => {
+        const addressControl = addressArray.at(i);
+        addressControl.get('city').setValue('42');
+      }, 100);
     });
   }
+
   selectedCity(val: any, i) {
     // console.log(val, i);
     if (val) {
@@ -240,7 +266,7 @@ export class UpdateDealerComponent implements OnInit {
   }
 
   loader = false;
-  mobError:any;
+  mobError: any;
   submit() {
     // console.log(this.dealerForm.value);
     let formdata: any = new FormData();
@@ -323,12 +349,12 @@ export class UpdateDealerComponent implements OnInit {
       }, err => {
         this.loader = false
         // console.log(err.error);
-    
+
         if (err.error.msg) {
           this.toastr.error(err.error.msg);
-          this.mobError=err.error.msg;
+          this.mobError = err.error.msg;
           setTimeout(() => {
-            this.mobError='';
+            this.mobError = '';
           }, 5000);
         }
         else if (err.error) {

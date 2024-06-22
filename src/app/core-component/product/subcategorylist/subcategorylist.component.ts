@@ -32,10 +32,12 @@ export class SubcategorylistComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   navigateData: any;
+  selectActive: any;
+  filteredData: any[];
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,
     private cs: CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -179,6 +181,8 @@ export class SubcategorylistComponent implements OnInit {
       this.tableData = res;
       this.loaders = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
 
     this.productCategory();
@@ -224,6 +228,19 @@ export class SubcategorylistComponent implements OnInit {
   selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
+  }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
   }
 
   selectAll(initChecked: boolean) {
@@ -380,23 +397,23 @@ export class SubcategorylistComponent implements OnInit {
   filteredFeatureGroupData: any[];
   searchFeatureGroup: string = '';
   featureGroup: any[] = []
-  getFeatureGroup() { 
+  getFeatureGroup() {
     this.coreService.getFeatureGroup().subscribe((res: any) => {
       this.featureGroup = res
       this.filteredFeatureGroupData = this.featureGroup.slice();
       // console.log(this.filteredFeatureGroupData);
       this.filterFeatureGroupData();
-      if(this.id){
+      if (this.id) {
         this.featureGroup = res
         this.filteredFeatureGroupData = this.featureGroup.slice();
         // console.log(this.filteredFeatureGroupData);
         this.filterFeatureGroupData();
-  
+
         // update then display
-  
+
         this.featureGroup.map((map: any) => {
           // console.log(this.selectedFeature);
-  
+
           this.selectedFeatureGrp = this.selectedFeature.length
           // console.log(this.selectedFeatureGrp);
           if (this.selectedFeature.includes(map.id)) {
@@ -628,7 +645,7 @@ export class SubcategorylistComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -675,26 +692,26 @@ export class SubcategorylistComponent implements OnInit {
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-            ['#','Image','Sub Category','Category']
+        ['#', 'Image', 'Sub Category', 'Category']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.tableData.map((row: any, index: number) => [
         index + 1,
         row.image,
         row.title,
         row.category_id?.title,
-       
-  
-  
+
+
+
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('Sub _Category.pdf');
   }
@@ -789,7 +806,7 @@ export class SubcategorylistComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -806,7 +823,7 @@ export class SubcategorylistComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

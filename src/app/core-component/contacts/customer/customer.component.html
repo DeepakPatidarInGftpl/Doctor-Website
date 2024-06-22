@@ -1,5 +1,3 @@
-
-
 <div class="page-header">
     <div class="page-title">
         <h4 class="titl">Customer list</h4>
@@ -7,7 +5,7 @@
     </div>
     <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//contacts/addCustomer" class="btn btn-added">
-            <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Customer
+            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Customer
         </a>
     </div>
 </div>
@@ -26,18 +24,19 @@
                 </div>
                 <div class="search-input">
                     <a class="btn btn-searchset">
-                      <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Name..." [(ngModel)]="titlee" (ngModelChange)="search()">
-                    </label>
-                  </div>
-         </div>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search Name..."
+                                [(ngModel)]="titlee" (ngModelChange)="search()">
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -82,10 +81,22 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Select Membership</label>
-                                    <select class="form-select" [(ngModel)]="selectedCustomer" (ngModelChange)="filterData()" >
+                                    <select class="form-select" [(ngModel)]="selectedCustomer"
+                                        (ngModelChange)="filterData()">
                                         <option value="" selected disabled>Select Membership</option>
                                         <option value="">All</option>
-                                        <option value="{{member?.title}}" *ngFor="let member of membershipList">{{member?.title}}</option>
+                                        <option value="{{member?.title}}" *ngFor="let member of membershipList">
+                                            {{member?.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select [(ngModel)]="selectActive" (change)="filterData()" class="form-select">
+                                        <option [ngValue]="undefined" selected disabled>Select Active Status</option>
+                                        <option [ngValue]="true">Yes</option>
+                                        <option [ngValue]="false">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -122,7 +133,8 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0">
-                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -131,16 +143,21 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.membership?.title}}</a>
+                            <a routerLink="//contacts/customerDetails/{{products.id}}"
+                                style="line-height: 3;">{{products?.membership?.title}}</a>
                         </td>
-                        <td><a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.name}}</a></td>
+                        <td><a routerLink="//contacts/customerDetails/{{products.id}}"
+                                style="line-height: 3;">{{products?.name}}</a></td>
                         <td>{{products?.company_name}}</td>
                         <td>{{products?.mobile_no}}</td>
-                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
+                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
+                            products?.opening_balance : '') }}</td>
                         <td>{{products?.gstin}}</td>
                         <td>{{products?.pan_no}}</td>
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            <mat-slide-toggle
+                                (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
                             <a class="me-1" routerLink="//contacts/customerDetails/{{products.id}}">
@@ -149,7 +166,8 @@
                             <a class="me-1" routerLink="//contacts/updateCustomer/{{products?.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
+                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>
@@ -162,31 +180,32 @@
                         </td>
                     </tr>
                 </tbody>
-             </table>
-             <div class="progressbar">
+            </table>
+            <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
-                    <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="-1">All</option>
-                      </select>
+                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
-               <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                <div class="f-right">
-                    <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                    <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                    <div class="f-right">
+                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
+                    </div>
                 </div>
-               </div>
-             </div>
+            </div>
         </div>
     </div>
 </div>

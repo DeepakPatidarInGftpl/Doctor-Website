@@ -1,4 +1,4 @@
- <div class="row">
+<div class="row">
     <div class="col-lg-12 col-sm-12 col-12">
         <div class="page-header">
             <div class="page-title">
@@ -534,6 +534,18 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
 
                                 </div>
@@ -565,7 +577,8 @@
                                 <th (click)="sort('id')" class="thone">Subcategory group <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">SubCategory <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -592,36 +605,36 @@
                             </tr>
                            
                             </td> -->
-                            <td>{{products?.category[0]?.title}}</td>
-                            <!-- <td>
+                                <td>{{products?.category[0]?.title}}</td>
+                                <!-- <td>
                                 <tr *ngFor="let subcatG of products?.subcategory_group">
                                     <td>{{subcatG?.title}}</td>
                                 </tr>
                             </td> -->
-                            <td>{{products?.subcategory_group[0]?.title}}</td>
-                            <!-- <td>
+                                <td>{{products?.subcategory_group[0]?.title}}</td>
+                                <!-- <td>
                                 <tr *ngFor="let subcat of products?.subcategory">
                                     <td>{{subcat?.title}}</td>
                                 </tr>
                             </td> -->
-                            <td>{{products?.subcategory[0]?.title}}</td>
-                            <td>
-                                <mat-slide-toggle
-                                    (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
-                            </td>
-                            <td>
-                                <a class="me-2" routerLink="//product/branddetails/{{products.id}}">
-                                    <img src="assets/img/icons/eye.svg" alt="img">
-                                </a>
-                                <a class="me-2" routerLink="//product/editbrand/{{products?.id}}" *ngIf="isEdit">
-                                    <img src="assets/img/icons/edit.svg" alt="img">
-                                </a>
-                                <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
-                                    href="javascript:void(0);" *ngIf="isDelete">
-                                    <img src="assets/img/icons/delete.svg" alt="img">
-                                </a>
-                            </td>
+                                <td>{{products?.subcategory[0]?.title}}</td>
+                                <td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-2" routerLink="//product/branddetails/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-2" routerLink="//product/editbrand/{{products?.id}}" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="filteredData?.length===0 && !loader">
@@ -651,7 +664,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
 
                             </div>
                         </div>
@@ -660,4 +674,4 @@
             </div>
         </div>
     </div>
-    </div>
+</div>

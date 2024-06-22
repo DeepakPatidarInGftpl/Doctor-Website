@@ -20,17 +20,18 @@ export class CustomerComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | employee;
-//flter
+  //flter
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  selectActive: any;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,
-    private cs:CompanyService, private hrmService:HrmServiceService) {
+    private cs: CompanyService, private hrmService: HrmServiceService) {
     this.QueryService.filterToggle()
   }
 
@@ -53,14 +54,14 @@ export class CustomerComponent implements OnInit {
         this.contactService.deleteCustomer(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit()
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else{
+            this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -88,7 +89,7 @@ export class CustomerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.CustomerIsActive(id,'').subscribe(res => {
+        this.contactService.CustomerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -117,7 +118,7 @@ export class CustomerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.CustomerIsActive(id,'').subscribe(res => {
+        this.contactService.CustomerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -131,52 +132,52 @@ export class CustomerComponent implements OnInit {
       }
     });
   }
-  loader=true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.contactService.getCustomer().subscribe(res => {
       // console.log(res);
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
 
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'customer' && res.codename=='add_customer') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-            
-          } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='change_customer') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-            
-          }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='delete_customer') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);
-            
-        
-          }
-        });
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'add_customer') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'change_customer') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'delete_customer') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+
+
+        }
       });
+    });
 
     this.getMembership();
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -197,7 +198,7 @@ select=false
 
     })
   }
-  
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
@@ -230,19 +231,19 @@ select=false
       this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.name.toLocaleLowerCase();
         const companyNameLower = res.company_name.toLocaleLowerCase();
-        const memberShip=res.membership.toLocaleLowerCase();
+        const memberShip = res.membership.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
           return true;
-        }else if (memberShip.match(searchTerm)) {
+        } else if (memberShip.match(searchTerm)) {
           return true;
         }
         return false;
       });
     }
   }
-  
+
   key = 'id'
   reverse: boolean = true;
   sort(key) {
@@ -282,38 +283,38 @@ select=false
         ],
       })
     doc.save('customer.pdf');
- }
+  }
 
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Customer List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'Membership ','Name','Company Name', 'Mobile Number','Opening Balance','Gstin','PanCard']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-      index + 1,
-      row.membership?.title,
-      row.name,
-      row.company_name,
-      row.mobile_no,
-      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
-  row.gstin,
-  row.pan_no
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('customer.pdf');
-}
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Customer List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Membership ', 'Name', 'Company Name', 'Mobile Number', 'Opening Balance', 'Gstin', 'PanCard']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+        index + 1,
+        row.membership?.title,
+        row.name,
+        row.company_name,
+        row.mobile_no,
+        row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+        row.gstin,
+        row.pan_no
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('customer.pdf');
+  }
 
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -406,12 +407,12 @@ select=false
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -420,22 +421,22 @@ select=false
     document.body.innerHTML = originalContents;
   }
 
-  membershipList:any[]=[];
-  getMembership(){
-    this.hrmService.getMembership().subscribe((res:any)=>{
-      this.membershipList=res;
+  membershipList: any[] = [];
+  getMembership() {
+    this.hrmService.getMembership().subscribe((res: any) => {
+      this.membershipList = res;
     });
   }
   // filter data
-  selectCredit:any;
-  selectedMember:any
-  selectedCustomer:string='';
+  selectCredit: any;
+  selectedMember: any
+  selectedCustomer: string = '';
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
-    
+
     if (this.selectedMember) {
       const searchTerm = this.selectedMember.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -450,15 +451,19 @@ select=false
     if (this.selectedCustomer) {
       filteredData = filteredData.filter((item) => item?.membership?.title === this.selectedCustomer);
     }
-    
+
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
     this.filteredData = filteredData;
   }
 
   clearFilter() {
     this.selectedMember = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
-    this.selectedCustomer=null;
+    this.selectCredit = null;
+    this.selectedCustomer = null;
+    this.selectActive = undefined;
     this.filterData();
   }
   changePg(val: any) {

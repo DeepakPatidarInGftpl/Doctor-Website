@@ -18,8 +18,9 @@ import { Router } from '@angular/router';
 export class FeatureGroupComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
-
+  public tableData: any;
+  selectActive: any;
+  filteredData: any[];
   featureForm!: FormGroup;
   get f() {
     return this.featureForm.controls;
@@ -28,10 +29,10 @@ export class FeatureGroupComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-  navigateData:any;
+  navigateData: any;
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService) {
-    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
-    if (this.navigateData){
+    this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData) {
       this.editForm(this.navigateData)
     }
   }
@@ -174,6 +175,8 @@ export class FeatureGroupComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
     })
     this.getFeature();
 
@@ -184,7 +187,7 @@ export class FeatureGroupComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='add_featuregroup') {
     //       this.isAdd = res.codename;
-          // console.log(this.isAdd);
+    // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='change_featuregroup') {
     //       this.isEdit = res.codename;
     //       console.log(this.isEdit);
@@ -232,6 +235,20 @@ export class FeatureGroupComponent implements OnInit {
       })
     }
   }
+
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectActive !== undefined && this.selectActive !== null) {
+      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+    }
+    this.filteredData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectActive = undefined;
+    this.filterData();
+  }
+
   deleteId(id: number) {
     this.coreService.deleteFuature_group(id).subscribe(res => {
       this.delRes = res
@@ -242,7 +259,7 @@ export class FeatureGroupComponent implements OnInit {
     })
   }
 
-  featureList: any[] = []; 
+  featureList: any[] = [];
   filteredFeatureList: any[] = [];
   searchTerm: string = '';
   features: any = [];
@@ -265,7 +282,7 @@ export class FeatureGroupComponent implements OnInit {
       }
     })
   }
-  
+
   filterFeatures() {
     if (this.searchTerm.trim() === '') {
       this.filteredFeatureList = [...this.featureList];
@@ -287,7 +304,7 @@ export class FeatureGroupComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedFeature++;
-      this.selectedFeatureIds=formArray.value
+      this.selectedFeatureIds = formArray.value
     }
     else {
       // find the unselected element
@@ -374,7 +391,7 @@ export class FeatureGroupComponent implements OnInit {
 
   update() {
     // console.log(this.featureForm.value);
-    
+
     var formData: any = new FormData();
     formData.append("title", this.featureForm.get('title')?.value);
     formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
@@ -450,7 +467,7 @@ export class FeatureGroupComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -502,26 +519,26 @@ export class FeatureGroupComponent implements OnInit {
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
         ['#', 'Feature Group', 'Feature']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
-    
+      body: this.tableData.map((row: any, index: number) => [
+
         index + 1,
         row.title,
         row.feature[0].title
-   
-    
-  
+
+
+
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('Feature Group List  .pdf');
   }
@@ -616,7 +633,7 @@ export class FeatureGroupComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -628,7 +645,7 @@ export class FeatureGroupComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

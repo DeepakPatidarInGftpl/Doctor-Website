@@ -12,11 +12,15 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class DetailEmployeeComponent implements OnInit {
 
 
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location) { }
-  id: any
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location, private coreService: CoreService) { }
+  id: any;
+  profileDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.coreService.profileDetails.subscribe((res) => {
+      this.profileDetails = res;
+    })
   }
 
   ngAfterViewInit() {
