@@ -1,7 +1,7 @@
-import { Component, OnInit, HostListener, Inject } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
+import { FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction, of } from 'rxjs';
 import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { OfferService } from 'src/app/Services/offer/offer.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-pos',
@@ -22,21 +24,19 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 })
 
 
-export class PosComponent implements OnInit {
+export class PosComponent implements OnInit, OnDestroy {
   selectedPaymentsOption: string = 'sales';
 
   salesPayments: any = [];
   purchasePayments: any = [];
   expensePayments: any = [];
+  isFormSubmitted = false;
 
   page: number = 1;
 
   heldBills: any[] = [];
 
   streetcontrol = new FormControl('');
-
-
-
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
   onlineEvent: Observable<Event>;
   offlineEvent: Observable<Event>;
@@ -45,6 +45,12 @@ export class PosComponent implements OnInit {
 
   connectionStatusMessage: string;
   connectionStatus: string;
+  addMorePayment: FormArray;
+  payment_terms: any;
+  due_date: any;
+  selectedReminder: string = '';
+  isModalShown: boolean = false;
+
   options = [
     { id: 1, name: 'Option 1', value: 'option1', price: 10 },
     { id: 2, name: 'Option 2', value: 'option2', price: 20 },
@@ -120,6 +126,7 @@ export class PosComponent implements OnInit {
   partyIsLoading: boolean = false
   chargesErrorMsg!: string;
   chargesIsLoading = false;
+  filteredPaymentAccount: Observable<any[]>[] = [];
   filteredCustomer: any;
   filteredCustomer2: any;
   filteredCharges!: Observable<any[]>;
@@ -148,6 +155,8 @@ export class PosComponent implements OnInit {
   companyBankList: any = [];
   paymentTermsList: any = [];
   currentOrderAdditionalCharges: any = [];
+  accountList: any[] = [];
+  paymentModeList: any;
 
   currentAdditionalCharges: any = [];
   activeBill: any;
@@ -156,10 +165,15 @@ export class PosComponent implements OnInit {
   currentCartIndex: number = 0;
   currentCartIndex1: number = -1;
   currentRoundOff: any;
+  orderDetails: any;
+  paymentForm: FormGroup;
+  cartTotalPrice: number;
+  userAccoutId: any;
+  private receiptTypeSubscriptions: Subscription[] = [];
 
 
   constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService,
-    private offerService: OfferService, private coreService: CoreService,private companyService:CompanyService) {
+    private offerService: OfferService, private coreService: CoreService, private companyService: CompanyService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -174,6 +188,53 @@ export class PosComponent implements OnInit {
       gst_type: [''],
       gstin: ['']
     });
+
+  }
+
+  calculateAmountTotal(): number {
+    let total = 0;
+    this.addMorePaymentData.controls.forEach(control => {
+      const amount = control.get('amount')?.value || 0;
+      total += parseFloat(amount);
+    });
+    return total;
+  }
+
+  addMorePaymentDetails() {
+    const currentTotalAmount = this.totalAmount();
+    const currentAmount = this.calculateCurrentAmount();
+    if (currentAmount < currentTotalAmount) {
+      const remainingAmount = currentTotalAmount - currentAmount;
+      const pendingAmout = remainingAmount % 1 !== 0 ? remainingAmount.toFixed(2) : remainingAmount;
+      const newPayment = this.addNewPayment(pendingAmout);
+      this.addMorePaymentData.push(newPayment);
+      this.subscribeToReceiptTypeChange(newPayment);
+
+      // const index = this.addMorePaymentData.length - 1;
+      // this.subscribeToUserAccountIdChange(newPayment, index);
+    }
+  }
+
+  removePaymentDetails(index: number) {
+    this.addMorePaymentData.removeAt(index);
+    this.filteredPaymentAccount.splice(index, 1);
+  }
+
+  calculateCurrentAmount(): number {
+    return this.addMorePaymentData.controls.reduce((sum, group) => {
+      const amount = group.get('amount').value;
+      if (amount) {
+        const parsedAmount = parseFloat(amount);
+        const roundedAmount = Math.round(parsedAmount * 100) / 100;
+        return sum + roundedAmount;
+      } else {
+        return sum;
+      }
+    }, 0);
+  }
+
+  get addMorePaymentData() {
+    return this.paymentForm.get('addMorePayment') as FormArray;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -224,25 +285,25 @@ export class PosComponent implements OnInit {
     }
   }
 
-  isModalOpen:any;
+  isModalOpen: any;
   ngOnInit(): void {
-// blur bg when modal open
-if(this.companyService.CheckBlur$){
-  this.companyService.CheckBlur$.subscribe((res:any)=>{
-    console.log(res);
-    if(res !== null){
-    if(res){
-      this.isModalOpen = res;
-      console.log(this.isModalOpen);
-    }else if(res==false){
-      this.isModalOpen = res;
-      console.log(this.isModalOpen);
+    // blur bg when modal open
+    if (this.companyService.CheckBlur$) {
+      this.companyService.CheckBlur$.subscribe((res: any) => {
+        console.log(res);
+        if (res !== null) {
+          if (res) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          } else if (res == false) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          }
+        }
+
+      })
     }
-  }
-    
-  })
-}
-//end
+    //end
     this.isQPQ[0] = false;
     this.isQPP[0] = false;
     this.isDiscountSelect[0] = false;
@@ -273,7 +334,7 @@ if(this.companyService.CheckBlur$){
       address_line_2: [''],
       state: ['', [Validators.required]],
       city: ['', [Validators.required]],
-      pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]]
+      pincode: ['841226', [Validators.pattern(/^[0-9]{6}$/)]]
     });
 
     this.upiPaymentMethodForm = this.fb.group({
@@ -586,9 +647,20 @@ if(this.companyService.CheckBlur$){
         // console.log(this.errorMsg, 'errmg');
       });
 
+    this.initializePaymentForm();
+
+    this.getAccountByAlies('cash-in-hand', 0);
+    // this.subscribeToUserAccountIdChanges();
+
+    this.cartService.paymentModesLogo().subscribe((res) => {
+      this.paymentModeList = res;
+    })
+
     this.customerAutoCompleteControl.valueChanges
       .pipe(
-        filter(res => {
+        filter((res: any) => {
+          console.log(res);
+          this.userAccoutId = res?.account;
           return res !== null && res?.length >= this.cusMinLengthTerm
         }),
         distinctUntilChanged(),
@@ -618,6 +690,8 @@ if(this.companyService.CheckBlur$){
         // console.log('data', data)
 
         if (data.length > 0) {
+          console.log(data);
+
           // console.log('data', data)
           this.filteredCustomer = data;
         } else {
@@ -945,7 +1019,108 @@ if(this.companyService.CheckBlur$){
     });
   }
 
+  initializePaymentForm() {
+    this.paymentForm = this.fb.group({
+      addMorePayment: this.fb.array([this.addNewPayment(this.totalAmount())])
+    });
+  }
 
+  addNewPayment(amount): FormGroup {
+    return this.fb.group({
+      mode_type: "AgainstBill",
+      user_account_id: new FormControl(this.userAccoutId),
+      payment_account: new FormControl('', Validators.required),
+      receipt_type: new FormControl('', Validators.required),
+      // payment_mode: new FormControl(''),
+      // transaction_date: new FormControl(''),
+      // transaction_id: new FormControl(''),
+      note: new FormControl(''),
+      amount: new FormControl(amount, Validators.required)
+    });
+  }
+
+  subscribeToReceiptTypeChange(group: FormGroup) {
+    const receiptTypeControl = group.get('receipt_type');
+    if (receiptTypeControl) {
+      const subscription = receiptTypeControl.valueChanges.subscribe(value => {
+        this.toggleAdditionalControls(group, value);
+      });
+      this.receiptTypeSubscriptions.push(subscription);
+    }
+  }
+
+  receiptTypeChange(event, index: number) {
+    const selectedReceiptType = event.target.value;
+    const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
+    const aliesType = event.target.value === 'Cash' ? 'cash-in-hand' : 'bank-accounts';
+    this.getAccountByAlies(aliesType, index);
+    this.toggleAdditionalControls(paymentGroup, selectedReceiptType);
+  }
+
+  toggleAdditionalControls(group: FormGroup, receiptType: string) {
+    const controlNames = ['payment_mode', 'transaction_date', 'transaction_id', 'day', 'date', 'is_send_reminder'];
+    controlNames.forEach(controlName => {
+      if (group.get(controlName)) {
+        group.removeControl(controlName);
+      }
+    });
+
+    if (receiptType === 'Bank') {
+      group.addControl('payment_mode', new FormControl('', Validators.required));
+      group.addControl('transaction_date', new FormControl('', Validators.required));
+      group.addControl('transaction_id', new FormControl('', Validators.required));
+      group.removeControl('day');
+      group.removeControl('date');
+      group.removeControl('is_send_reminder');
+    } else if (receiptType === 'PayLater') {
+      group.addControl('day', new FormControl('', Validators.required));
+      group.addControl('date', new FormControl('', Validators.required));
+      group.addControl('is_send_reminder', new FormControl(true));
+      group.removeControl('payment_account');
+      group.removeControl('payment_mode');
+      group.removeControl('transaction_date');
+      group.removeControl('transaction_id');
+    } else {
+      group.removeControl('payment_mode');
+      group.removeControl('transaction_date');
+      group.removeControl('transaction_id');
+      group.removeControl('day');
+      group.removeControl('date');
+      group.removeControl('is_send_reminder');
+    }
+  }
+
+  onSelectDay(selectedDay: string, index: number) {
+    const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
+    const dateFormControl = paymentGroup.get('date');
+    const selectedDayNumber = parseInt(selectedDay, 10);
+
+    if (!isNaN(selectedDayNumber)) {
+      const currentDate = new Date();
+      const selectedDate = new Date(currentDate.setDate(currentDate.getDate() + selectedDayNumber));
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      dateFormControl.setValue(formattedDate);
+      dateFormControl.disable();
+    } else {
+      dateFormControl.setValue('');
+      dateFormControl.enable();
+    }
+  }
+
+  // getAccount() {
+  //   this.transactionService.getAccount().subscribe((res: any) => {
+  //     this.accountList = res;
+  //     console.log(this.accountList);
+  //   })
+  // }
+
+  getAccountByAlies(value: string, index: number) {
+    this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
+      paymentGroup.get('payment_account').setValue('');
+      this.accountList[index] = res;
+    });
+  }
 
   // optionSelected(event) {
   //   console.log(event.option)
@@ -1145,9 +1320,22 @@ if(this.companyService.CheckBlur$){
       if (cart?.batch) {
         // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
         totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
+        this.cartTotalPrice = totalPrice;
       }
     }
     return totalPrice;
+  }
+
+  multiplePay() {
+    const latestAmount = this.totalAmount();
+    this.initializePaymentForm();
+    this.patchLatestAmount(latestAmount);
+  }
+
+  patchLatestAmount(amount: number): void {
+    if (this.addMorePaymentData && this.addMorePaymentData.length > 0) {
+      this.addMorePaymentData.at(0).patchValue({ amount: amount.toFixed(2) });
+    }
   }
 
   // update tax of an element in current order additional charges
@@ -1566,6 +1754,16 @@ if(this.companyService.CheckBlur$){
 
   }
 
+  getCityNameById(cityId: number): string {
+    const city = this.cityList.find(c => c.id === cityId);
+    return city ? city.city : '';
+  }
+
+  getStateNameById(stateId: number): string {
+    const state = this.stateList.find(s => s.id === stateId);
+    return state ? state.state : '';
+  }
+
   submitCustomerForm() {
     let address = {
       "address_line_1": this.registrationForm.get('address_line_1').value,
@@ -1601,12 +1799,22 @@ if(this.companyService.CheckBlur$){
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.addCusModal');
             clicking.click();
-            this.registrationForm.reset()
             this.addMoreDetails = false;
             this.city.setValue(this.cityList[0].id)
             this.currentCities = this.cityList[0].id;
             this.state.setValue(this.stateList[0].id);
             this.currentState = this.stateList[0].id;
+
+            const newCustomer: any = {
+              address: [
+                {
+                  city: { city: this.getCityNameById(this.registrationForm.get('city').value) },
+                  state: { state: this.getStateNameById(this.registrationForm.get('state').value) }
+                }],
+              mobile_no: this.registrationForm.get('mobile_no').value
+            }
+            this.customerAutoCompleteControl.setValue(newCustomer)
+            this.registrationForm.reset();
           } else {
             this.toastr.error(response.msg);
           }
@@ -1628,8 +1836,171 @@ if(this.companyService.CheckBlur$){
     //   });
   }
 
+  markFormGroupTouched(formGroup: FormGroup | FormArray) {
+    Object.values(formGroup.controls).forEach(control => {
+      if (control instanceof FormControl) {
+        control.markAsTouched();
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
+  closePayLaterModal() {
+    this.isModalShown = false;
+  }
+
+  submitMultiPayLater() {
+    this.isFormSubmitted = true;
+    let pay_later_data = {
+      "day": this.payment_terms,
+      "date": this.due_date,
+      "is_send_reminder": this.selectedReminder
+    };
+
+    if (this.payment_terms && this.due_date && this.selectedReminder) {
+      const formData = new FormData();
+      const paymentDataArray = this.addMorePaymentData.value;
+      console.log(JSON.stringify(paymentDataArray));
+
+      if (this.currentItems.length > 0) {
+        if (this.currentCustomer === null || this.currentCustomer === undefined) {
+          this.toastr.error('Please Select/Add a Customer!');
+        } else {
+          let cartData = this.setItemsArr();
+          formData.append('customer', JSON.stringify(this.currentCustomer.id));
+          formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+          formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+          formData.append('payment_mode', 'Multiple Pay');
+          formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+          formData.append('cart_data', JSON.stringify(cartData));
+          formData.append('PayLatter', JSON.stringify(pay_later_data));
+          formData.append('payment', JSON.stringify(paymentDataArray));
+
+          this.cartService.generateOrderNew(formData).subscribe((res: any) => {
+            console.log(res);
+            this.toastr.success(res?.msg)
+            this.customerAutoCompleteControl.setValue('');
+            this.discardCurrentBill();
+            this.paymentForm.reset();
+            this.payment_terms = '';
+            this.due_date = '';
+            this.selectedReminder = '';
+            var clicking = <HTMLElement>document.querySelector('.multiPayLaterModalClose');
+            clicking.click();
+            var clicking = <HTMLElement>document.querySelector('.paymentModal');
+            clicking.click();
+            this.isFormSubmitted = false;
+          })
+        }
+      }
+    } else {
+      return;
+    }
+  }
+
+  proceedToPay() {
+    this.markFormGroupTouched(this.paymentForm);
+
+    if (!this.paymentForm.valid) {
+      return;
+    }
+
+    const totalCartValue = this.totalAmount();
+    const totalAmountTotal = this.calculateAmountTotal();
+
+    if (totalCartValue !== totalAmountTotal) {
+      this.isModalShown = true;
+      document.body.classList.add('modal-open');
+    } else {
+      this.isModalShown = false;
+      document.body.classList.remove('modal-open');
+      if (!this.paymentForm.valid) {
+        return;
+      } else {
+        const formData = new FormData();
+        const paymentDataArray = this.addMorePaymentData.value;
+        console.log(JSON.stringify(paymentDataArray));
+
+        if (this.currentItems.length > 0) {
+          if (this.currentCustomer === null || this.currentCustomer === undefined) {
+            this.toastr.error('Please Select/Add a Customer!');
+          } else {
+            let cartData = this.setItemsArr();
+            formData.append('customer', JSON.stringify(this.currentCustomer.id));
+            formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+            formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+            formData.append('payment_mode', 'Multiple Pay');
+            formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+            formData.append('cart_data', JSON.stringify(cartData));
+            formData.append('PayLatter', '');
+            formData.append('payment', JSON.stringify(paymentDataArray));
+
+            this.cartService.generateOrderNew(formData).subscribe((res: any) => {
+              console.log(res);
+              this.toastr.success(res?.msg)
+              this.customerAutoCompleteControl.setValue('');
+              this.discardCurrentBill();
+              this.paymentForm.reset();
+              var clicking = <HTMLElement>document.querySelector('.paymentModal');
+              clicking.click();
+            })
+          }
+        }
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.receiptTypeSubscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  // private subscribeToUserAccountIdChanges() {
+  //   debugger
+  //   this.addMorePaymentData.controls.forEach((group, index) => {
+  //     this.subscribeToUserAccountIdChange(group as FormGroup, index);
+  //   });
+  // }
+
+  // private subscribeToUserAccountIdChange(group: FormGroup, index: number) {
+  //   debugger
+  //   const accountControl = group.get('payment_account');
+  //   if (accountControl) {
+  //     accountControl.valueChanges.subscribe(value => {
+  //       console.log('Payment Account Value Changed:', value);
+  //     });
+
+  //     this.filteredPaymentAccount[index] = accountControl.valueChanges.pipe(
+  //       startWith(''),
+  //       map(value => this._filterUserId(value))
+  //     );
+  //   }
+  // }
+
+  onSelectPaymentAccount(value: string, index: number) {
+    const formGroup = this.addMorePaymentData.at(index) as FormGroup;
+    formGroup.get('payment_account').setValue(value);
+  }
+
+  // onInput(event: Event, index: number) {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const value = inputElement.value;
+
+  //   const formGroup = this.addMorePaymentData.at(index) as FormGroup;
+  //   formGroup.get('payment_account').setValue(value);
+  //   this.filteredPaymentAccount[index] = of(this._filterUserId(value));
+  // }
+
+  // private _filterUserId(value: string | number): any[] {
+  //   const filterValue = (value || '').toString().toLowerCase();
+  //   return this.accountList.filter(account => account?.account_id?.toLowerCase()?.includes(filterValue));
+  // }
+
   get formControls() {
     return this.registrationForm.controls;
+  }
+
+  oncheckBank(data: any) {
   }
 
   onStateChange(event: any) {
@@ -2413,6 +2784,10 @@ if(this.companyService.CheckBlur$){
 
   }
 
+  onPaymentTermChange(value) {
+    this.payment_terms = value;
+  }
+
   cardPaymentGenerateOrder(type: any) {
     this.playBeepSound();
     if (this.cardPaymentMethodForm.invalid) {
@@ -2484,6 +2859,29 @@ if(this.companyService.CheckBlur$){
     }
 
 
+  }
+
+  generatePdf(newWindow: Window) {
+    const elementToCapture = document.getElementById('debitNote');
+    elementToCapture.style.display = 'block';
+    html2canvas(elementToCapture, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvasHeight * pdfWidth) / canvasWidth;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+      const pdfBlob = pdf.output('blob');
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      newWindow.location.href = blobUrl;
+
+      elementToCapture.style.display = 'none';
+    });
   }
 
   bankPaymentGenerateOrder(type: any) {
@@ -2677,8 +3075,12 @@ if(this.companyService.CheckBlur$){
                 this.discardCurrentBill();
                 this.tenderedAmount = 0;
                 this.toastr.success(response.msg)
+                this.orderDetails = response?.order;
                 if (type == 'print') {
-                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  // this.generatePdf();
+                  const newWindow = window.open('', '_blank');
+                  setTimeout(() => this.generatePdf(newWindow), 1000);
                   var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
                   clicking.click();
                 } else {
@@ -2999,7 +3401,7 @@ if(this.companyService.CheckBlur$){
                         selling_price_offline: 0,
                         is_active: false,
                         additional_discount: 0,
-                        typeBatch:'Free Item',
+                        typeBatch: 'Free Item',
                         discount: [
                           {
                             discount_offer_type: "",
@@ -3075,7 +3477,7 @@ if(this.companyService.CheckBlur$){
                         cost_price: 0,
                         selling_price_offline: 0,
                         additional_discount: 0,
-                        typeBatch:'Free Item Invoice',
+                        typeBatch: 'Free Item Invoice',
                         discount: [
                           {
                             discount_offer_type: "",
@@ -3281,22 +3683,22 @@ if(this.companyService.CheckBlur$){
           if (this.discountTypeSelect[i]) {
             this.discountTypeSelect.splice(i, 1);
           }
-            //remove free item batch
-            dis.batch.forEach((batch)=>{
-              if(batch.typeBatch=='Free Item Invoice'){
-                this.removeOptionCurrent(dis)
-              }
-            });
+          //remove free item batch
+          dis.batch.forEach((batch) => {
+            if (batch.typeBatch == 'Free Item Invoice') {
+              this.removeOptionCurrent(dis)
+            }
+          });
         });
-       //remove discount
-       this.discount.forEach((res:any,i:any)=>{
-        if(res.id==0){
-          if(res.typeBatch=='Free Item Invoice'){
-            this.discount.splice(i, 1);
+        //remove discount
+        this.discount.forEach((res: any, i: any) => {
+          if (res.id == 0) {
+            if (res.typeBatch == 'Free Item Invoice') {
+              this.discount.splice(i, 1);
+            }
           }
-        }
-       });
-      //end discount
+        });
+        //end discount
         //add into list
         console.warn(val);
         let product1 = {
@@ -3314,7 +3716,7 @@ if(this.companyService.CheckBlur$){
               selling_price_offline: 0,
               is_active: false,
               additional_discount: 0,
-              typeBatch:'Free Item',
+              typeBatch: 'Free Item',
               discount: [
                 {
                   discount_offer_type: "",
@@ -3374,22 +3776,22 @@ if(this.companyService.CheckBlur$){
             if (this.discountTypeSelect[i]) {
               this.discountTypeSelect.splice(i, 1);
             }
-              //remove free item batch
-          dis.batch.forEach((batch)=>{
-            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
-              this.removeOptionCurrent(dis)
-            }
-          });
+            //remove free item batch
+            dis.batch.forEach((batch) => {
+              if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
+                this.removeOptionCurrent(dis)
+              }
+            });
           });
           //remove discount
-          this.discount.forEach((res:any,i:any)=>{
-            if(res.id==0){
-              if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+          this.discount.forEach((res: any, i: any) => {
+            if (res.id == 0) {
+              if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
                 this.discount.splice(i, 1);
               }
             }
-           });
-          console.warn(this.discount,'discount after remove');
+          });
+          console.warn(this.discount, 'discount after remove');
           //end remove
           //add
           console.log(this.currentItems[i]);
@@ -3422,23 +3824,23 @@ if(this.companyService.CheckBlur$){
             if (dis.type = 'Discount Invoice') {
               this.discountInvoice = 0;
             }
-              //remove free item batch
-          dis.batch.forEach((batch)=>{
-            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
-              this.removeOptionCurrent(dis)
+            //remove free item batch
+            dis.batch.forEach((batch) => {
+              if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
+                this.removeOptionCurrent(dis)
+              }
+            });
+          });
+          //remove discount
+          this.discount.forEach((res: any, i: any) => {
+            if (res.id == 0) {
+              if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
+                this.discount.splice(i, 1);
+              }
             }
           });
-          });
-            //remove discount
-            this.discount.forEach((res:any,i:any)=>{
-              if(res.id==0){
-                if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
-                  this.discount.splice(i, 1);
-                }
-              }
-             });
-            console.warn(this.discount,'discount after remove');
-            //end remove
+          console.warn(this.discount, 'discount after remove');
+          //end remove
           //add
           let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(val?.flat_discount);
           console.warn(totalFlatDiscount);
@@ -3477,23 +3879,23 @@ if(this.companyService.CheckBlur$){
           if (this.discountTypeSelect[i]) {
             this.discountTypeSelect.splice(i, 1);
           }
-            //remove free item batch
-            dis.batch.forEach((batch)=>{
-              if(batch.typeBatch=='Free Item'){
-                this.removeOptionCurrent(dis)
-              }
-            });
-        });
-          //remove discount
-          this.discount.forEach((res:any,i:any)=>{
-            if(res.id==0){
-              if(this.discount[i].typeBatch=='Free Item'){
-                this.discount.splice(i, 1);
-              }
+          //remove free item batch
+          dis.batch.forEach((batch) => {
+            if (batch.typeBatch == 'Free Item') {
+              this.removeOptionCurrent(dis)
             }
-           });
-          console.warn(this.discount,'discount after remove');
-          //end remove
+          });
+        });
+        //remove discount
+        this.discount.forEach((res: any, i: any) => {
+          if (res.id == 0) {
+            if (this.discount[i].typeBatch == 'Free Item') {
+              this.discount.splice(i, 1);
+            }
+          }
+        });
+        console.warn(this.discount, 'discount after remove');
+        //end remove
         //end discount
         //add
         console.warn(val);
@@ -3512,7 +3914,7 @@ if(this.companyService.CheckBlur$){
               selling_price_offline: 0,
               is_active: false,
               additional_discount: 0,
-              typeBatch:'Free Item Invoice',
+              typeBatch: 'Free Item Invoice',
               discount: [
                 {
                   discount_offer_type: "",
@@ -3545,53 +3947,53 @@ if(this.companyService.CheckBlur$){
       this.isDiscountSelect[i] = true;
       this.selectedDiscount[i] = 'Discount Invoice';
       console.log(val?.discount_offer_type, 'discont type');
-        //remove mathing item from array
-        this.currentItems.forEach((dis: any) => {
-          console.log(dis);
-          if (dis.id == 0) {
-            if (dis.type == 'Free Item Invoice')
-              // this.currentItems = this.currentItems.filter(d => d.id !== 0);
-              this.removeOptionCurrent(dis)
-            console.log(this.currentItems, 'current item');
-          } else {
-            this.currentItems = this.currentItems.filter(d => d.id !== 0);
-            console.log(this.currentItems, 'current item');
+      //remove mathing item from array
+      this.currentItems.forEach((dis: any) => {
+        console.log(dis);
+        if (dis.id == 0) {
+          if (dis.type == 'Free Item Invoice')
+            // this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            this.removeOptionCurrent(dis)
+          console.log(this.currentItems, 'current item');
+        } else {
+          this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          console.log(this.currentItems, 'current item');
+        }
+        if (dis.discount > 0) {
+          this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
+          this.currentItems[i].discount = 0;
+        }
+        if (dis.quantity > 1) {
+          if (dis.type == 'Qty Per Qty') {
+            this.currentItems[i].quantity = 1;
           }
-          if (dis.discount > 0) {
-            this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
-            this.currentItems[i].discount = 0;
-          }
-          if (dis.quantity > 1) {
-            if (dis.type == 'Qty Per Qty') {
-              this.currentItems[i].quantity = 1;
-            }
-          }
-          if (dis.type = 'Discount Invoice') {
-            this.discountInvoice = 0;
-          }
-          if (this.discountTypeSelect[i]) {
-            this.discountTypeSelect.splice(i, 1);
-          }
-            //remove free item batch
-        dis.batch.forEach((batch)=>{
-          if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+        }
+        if (dis.type = 'Discount Invoice') {
+          this.discountInvoice = 0;
+        }
+        if (this.discountTypeSelect[i]) {
+          this.discountTypeSelect.splice(i, 1);
+        }
+        //remove free item batch
+        dis.batch.forEach((batch) => {
+          if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
             this.removeOptionCurrent(dis)
           }
         });
-        });
-        console.warn(this.currentItems,'discount after remove');
-         //remove discount
-         this.discount.forEach((res:any,i:any)=>{
-          if(res.id==0){
-            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
-              this.discount.splice(i, 1);
-            }
+      });
+      console.warn(this.currentItems, 'discount after remove');
+      //remove discount
+      this.discount.forEach((res: any, i: any) => {
+        if (res.id == 0) {
+          if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
+            this.discount.splice(i, 1);
           }
-         });
-        console.warn(this.discount,'discount after remove');
-        //end remove
+        }
+      });
+      console.warn(this.discount, 'discount after remove');
+      //end remove
       if (this.finalAmount() >= parseInt(val?.invoice_amount)) {
-        if (val?.discount_type == '%') {    
+        if (val?.discount_type == '%') {
           // add
           let flatDisc = this.finalAmount() * parseInt(val?.flat_discount) / 100;
           console.log(flatDisc, 'flat disc');
@@ -3637,23 +4039,23 @@ if(this.companyService.CheckBlur$){
             this.discountInvoice = 0;
           }
           //remove free item batch
-          dis.batch.forEach((batch)=>{
+          dis.batch.forEach((batch) => {
             console.log(batch);
-            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+            if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
               console.log(batch);
               this.removeOptionCurrent(dis)
             }
           });
         });
         //remove discount
-        this.discount.forEach((res:any,i:any)=>{
-          if(res.id==0){
-            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+        this.discount.forEach((res: any, i: any) => {
+          if (res.id == 0) {
+            if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
               this.discount.splice(i, 1);
             }
           }
-         });
-        console.warn(this.discount,'discount after remove');
+        });
+        console.warn(this.discount, 'discount after remove');
         //end remove
         //add
         console.log(this.currentItems[i]);
@@ -3692,22 +4094,22 @@ if(this.companyService.CheckBlur$){
           if (dis.type = 'Discount Invoice') {
             this.discountInvoice = 0;
           }
-        //remove free item batch
-          dis.batch.forEach((batch)=>{
-            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+          //remove free item batch
+          dis.batch.forEach((batch) => {
+            if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
               this.removeOptionCurrent(dis)
             }
           });
         });
         //remove discount
-        this.discount.forEach((res:any,i:any)=>{
-          if(res.id==0){
-            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+        this.discount.forEach((res: any, i: any) => {
+          if (res.id == 0) {
+            if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
               this.discount.splice(i, 1);
             }
           }
-         });
-        console.warn(this.discount,'discount after remove');
+        });
+        console.warn(this.discount, 'discount after remove');
         //end remove
         //add
         console.warn(totalFlatDiscount);
@@ -3721,50 +4123,50 @@ if(this.companyService.CheckBlur$){
       console.warn(val);
       console.warn(this.currentItems[i]?.quantity);
       this.discountTypeSelect.push(val);
-         //remove mathing item from array
-         this.currentItems.forEach((dis: any) => {
-          console.log(dis);
-          if (dis.id == 0) {
-            if (dis.type == 'Free Item Invoice') {
-              // this.currentItems = this.currentItems.filter(d => d.id !== 0);
-              this.removeOptionCurrent(dis)
-              console.log(this.currentItems, 'current item');
-            }
-          } else {
-            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+      //remove mathing item from array
+      this.currentItems.forEach((dis: any) => {
+        console.log(dis);
+        if (dis.id == 0) {
+          if (dis.type == 'Free Item Invoice') {
+            // this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            this.removeOptionCurrent(dis)
             console.log(this.currentItems, 'current item');
           }
-          if (dis.discount > 0) {
-            this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
-            this.currentItems[i].discount = 0;
+        } else {
+          this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          console.log(this.currentItems, 'current item');
+        }
+        if (dis.discount > 0) {
+          this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
+          this.currentItems[i].discount = 0;
+        }
+        if (dis.quantity > 1) {
+          if (dis.type == 'Qty Per Qty') {
+            this.currentItems[i].quantity = 1;
           }
-          if (dis.quantity > 1) {
-            if (dis.type == 'Qty Per Qty') {
-              this.currentItems[i].quantity = 1;
-            }
+        }
+        if (dis.type = 'Discount Invoice') {
+          this.discountInvoice = 0;
+        }
+        //remove free item batch
+        dis.batch.forEach((batch) => {
+          if (batch.typeBatch == 'Free Item' || batch.typeBatch == 'Free Item Invoice') {
+            this.removeOptionCurrent(dis)
           }
-          if (dis.type = 'Discount Invoice') {
-            this.discountInvoice = 0;
-          }
-  //remove free item batch
-  dis.batch.forEach((batch)=>{
-    if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
-      this.removeOptionCurrent(dis)
-    }
-  });
-  console.log(this.currentItems,'currentItems');
-  
         });
-        //remove discount
-        this.discount.forEach((res:any,i:any)=>{
-          if(res.id==0){
-            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
-              this.discount.splice(i, 1);
-            }
+        console.log(this.currentItems, 'currentItems');
+
+      });
+      //remove discount
+      this.discount.forEach((res: any, i: any) => {
+        if (res.id == 0) {
+          if (this.discount[i].typeBatch == 'Free Item' || this.discount[i].typeBatch == 'Free Item Invoice') {
+            this.discount.splice(i, 1);
           }
-         });
-        console.warn(this.discount,'discount after remove');
-        //end remove
+        }
+      });
+      console.warn(this.discount, 'discount after remove');
+      //end remove
       if (this.currentItems[i]?.quantity >= parseInt(val?.purchase_qty)) {
         //add
         this.cartService.increaseCurrent(this.currentItems[i]);
@@ -3779,27 +4181,27 @@ if(this.companyService.CheckBlur$){
     console.warn('index=>' + i);
     console.log(this.discount[i], 'discount');
     console.log(this.discount[i].discount, 'discount');
-    if(this.discount[i].discount[0].id==0){
-    this.cartService.productSearch(cart.product.sku).subscribe((res: any) => {
-      if(res.length>0){
-      console.warn(res[0].batch[0]?.discount, 'search result');
-      console.log(this.discount[i]?.discount, 'discount batch');
-      console.log(this.discount[i], 'discount');
-      this.discount[i].discount = res[0].batch[0]?.discount; // store value into it
-      console.log(this.discount, 'discount');
-      // push value in discountType
-      this.discount.forEach((batch: any, i: any) => {
-        batch?.discount.forEach((discount: any) => {
-          if (!this.discountTyp[i]) {
-            this.discountTyp[i] = [];
-          }
-          this.discountTyp[i].push(discount);
-          console.log(this.discountTyp[i]);
-        });
+    if (this.discount[i].discount[0].id == 0) {
+      this.cartService.productSearch(cart.product.sku).subscribe((res: any) => {
+        if (res.length > 0) {
+          console.warn(res[0].batch[0]?.discount, 'search result');
+          console.log(this.discount[i]?.discount, 'discount batch');
+          console.log(this.discount[i], 'discount');
+          this.discount[i].discount = res[0].batch[0]?.discount; // store value into it
+          console.log(this.discount, 'discount');
+          // push value in discountType
+          this.discount.forEach((batch: any, i: any) => {
+            batch?.discount.forEach((discount: any) => {
+              if (!this.discountTyp[i]) {
+                this.discountTyp[i] = [];
+              }
+              this.discountTyp[i].push(discount);
+              console.log(this.discountTyp[i]);
+            });
+          });
+        }
       });
     }
-    });
-  }
   }
   //end
   discountCartIndex: any;
@@ -3872,9 +4274,6 @@ if(this.companyService.CheckBlur$){
   }
 
 }
-
-
-
 
 export enum KEY_CODE {
   // UP_ARROW = 38,

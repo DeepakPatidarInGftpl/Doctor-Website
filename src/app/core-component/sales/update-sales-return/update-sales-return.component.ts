@@ -25,6 +25,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
+  selectedBillDate: any;
 
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
@@ -88,6 +89,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     //patch value
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       this.editRes = res;
+      this.selectedBillDate = res?.bill_date;
       this.saleReturnForm.patchValue(this.editRes);
       // this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes) // 20-5
       this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
@@ -133,6 +135,12 @@ export class UpdateSalesReturnComponent implements OnInit {
     })
     this.getCategory();
     this.getsalesBill();
+
+    this.saleReturnForm.controls['sale_bill'].valueChanges.subscribe((res: any) => {
+      const selectedBillDate = this.salesBillList?.filter((val) => val?.id === Number(res));
+      this.selectedBillDate = selectedBillDate[0]?.bill_date;
+      console.log(this.selectedBillDate);
+    })
   }
 
   saleReturnDateValidation(financialYear) {
@@ -355,6 +363,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       qty: (1),
       price: (0),
       deduction: (0),
+      mrp: (0),
       // amount: (0),
       // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -525,17 +534,24 @@ export class UpdateSalesReturnComponent implements OnInit {
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
     console.log(landingCost);
-    barcode.patchValue({
-      mrp: address?.mrp,
-      qty: address?.stock,
-      tax: address?.sale_tax,
-      discount: address?.discount,
-      price: address?.cost_price,
-      landing_cost: landingCost
-      // additional_discount: address?.additional_discount,
-      // discount_type: '%',
-      // price: 0,
-    });
+
+    const cartControls: any = this.getCart().controls;
+    cartControls[index].controls?.mrp.setValue(address?.mrp);
+    if (address?.stock > 0) {
+      barcode.patchValue({
+        mrp: address?.mrp,
+        qty: address?.stock,
+        tax: address?.sale_tax,
+        discount: address?.discount,
+        price: address?.cost_price,
+        landing_cost: landingCost
+        // additional_discount: address?.additional_discount,
+        // discount_type: '%',
+        // price: 0,
+      });
+    } else {
+      this.toastrService.error('Stock is not available at this price');
+    }
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -667,6 +683,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
       if (event?.product?.sale_tax_including == true) {
         barcode.patchValue({
+          mrp: event.batch[0]?.mrp,
           barcode: selectedItemId,
           item_name: event?.product_title,
           amount: event.batch[0]?.mrp,
@@ -678,6 +695,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       } else {
         this.tax[index] = 18
         barcode.patchValue({
+          mrp: event.batch[0]?.mrp,
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
@@ -691,6 +709,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.tax[index] = 18
       const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
+        mrp: event.batch[0]?.mrp,
         barcode: selectedItemId,
         item_name: event?.product_title,
         tax: 18,
@@ -974,6 +993,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   loaderDraft = false;
   submit(type: any) {
     console.log(this.saleReturnForm.value);
+    const totalMrp = this.calculateSubtotal()
     if (this.saleReturnForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -994,6 +1014,7 @@ export class UpdateSalesReturnComponent implements OnInit {
         formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
       }
       // end
+      formdata.append('bill_date', this.selectedBillDate);
       formdata.append('sale_bill', this.saleReturnForm.get('sale_bill')?.value);
       formdata.append('note', this.saleReturnForm.get('note')?.value);
       formdata.append('total_qty', this.saleReturnForm.get('total_qty')?.value);
@@ -1002,6 +1023,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       formdata.append('roundoff', this.saleReturnForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleReturnForm.get('subtotal')?.value);
       formdata.append('total', this.saleReturnForm.get('total')?.value);
+      formdata.append('mrp', totalMrp);
       // 22-1
       formdata.append('return_date', this.saleReturnForm.get('return_date')?.value)
       if (type == 'draft') {
@@ -1015,10 +1037,11 @@ export class UpdateSalesReturnComponent implements OnInit {
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
-            cartObject[key] = parseFloat(control.value);
+          let value = (control.value === null || control.value.length === 0) ? 0 : control.value;
+          if (key !== 'item_name' && value !== '' && !isNaN(value)) {
+            cartObject[key] = key === 'barcode' || key === 'qty' ? parseFloat(value) : parseFloat(value).toFixed(2)
           } else {
-            cartObject[key] = control.value;
+            cartObject[key] = value;
           }
         });
         cartData.push(cartObject);

@@ -83,7 +83,7 @@
                         <label>Sales Bill*</label>
                         <select formControlName="sale_bill">
                             <option value="" selected disabled>Select Sales Bill</option>
-                            <option value="{{bill.id}}" *ngFor="let bill of salesBillList">{{bill?.customer_bill_no}}
+                            <option value="{{bill.id}}" *ngFor="let bill of salesBillList">{{bill?.id}}
                             </option>
                         </select>
                         <span class="text-danger" *ngIf="sale_bill && sale_bill.invalid && sale_bill.touched">Select

@@ -7,9 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { InovoiceComponent } from './inovoice/inovoice.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
     MatFormFieldModule,
     MatInputModule,
     NgxPaginationModule,
-    SharedModuleModule
-    ]
+    SharedModuleModule,
+    MatSelectModule
+  ]
 })
 export class PosModule { }
