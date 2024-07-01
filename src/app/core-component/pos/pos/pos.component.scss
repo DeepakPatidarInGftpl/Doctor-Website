@@ -7,15 +7,15 @@
     align-items: center;
 }
 
-.customer-type-div > div:first-child {
+.customer-type-div>div:first-child {
     margin-right: 20px;
 }
 
 .customer-type-div label {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .customer-type-div .radio label input {
@@ -41,8 +41,8 @@ font-size: 16px;
     margin-right: 10px;
     font-weight: 500;
     font-family: 'Roboto';
-font-style: normal;
-font-size: 16px;
+    font-style: normal;
+    font-size: 16px;
 }
 
 .salesman-div select {
@@ -78,9 +78,9 @@ font-size: 16px;
 
 .amt-info-div li p {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
     margin-bottom: 0px;
     line-height: 1;
 }
@@ -99,10 +99,10 @@ font-size: 16px;
 
 .cus-details-wrapper p {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
-margin-top: 8px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 8px;
 }
 
 .btn-pos {
@@ -114,10 +114,10 @@ margin-top: 8px;
     margin-left: auto;
     margin-right: auto;
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 14px;
-color: #9C9C9C;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #9C9C9C;
 }
 
 .btn-pos i {
@@ -140,7 +140,8 @@ color: #9C9C9C;
     font-size: 18px;
 }
 
-.right-btns-wrapper li:last-child, .right-btns-wrapper li:nth-child(5) {
+.right-btns-wrapper li:last-child,
+.right-btns-wrapper li:nth-child(5) {
     margin-bottom: 0;
 }
 
@@ -186,32 +187,35 @@ color: #9C9C9C;
 }
 
 .table-pos thead tr {
-background-color: black;
+    background-color: black;
 }
 
 .table-pos thead tr th {
     color: white;
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .table-pos tbody tr td {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 14px;
-color: #9C9C9C;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #9C9C9C;
 }
 
-.mrp-input-table{
+.mrp-input-table {
     max-width: 95px;
 }
-.disc-input-table, .add-disc-input-table{
+
+.disc-input-table,
+.add-disc-input-table {
     max-width: 85px;
     text-align: left !important;
 }
+
 .table-black-grp span {
     background-color: black;
     color: white;
@@ -233,28 +237,28 @@ color: #9C9C9C;
 
 .amt-info-div h5 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
-line-height: 1.2;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.2;
 }
 
 .amt-info-div button {
     font-size: 12px;
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-padding: 2px 4px;
-width: 90%;
-margin-left: auto;
-margin-right: auto;
+    font-style: normal;
+    font-weight: 500;
+    padding: 2px 4px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .bottom-pos-left .btns-row button {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
     flex-grow: 1;
 }
 
@@ -265,9 +269,9 @@ font-size: 14px;
 
 .cus-details-wrapper h4 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
 }
 
 .pos-container {
@@ -293,7 +297,7 @@ font-size: 18px;
     margin-bottom: 3px;
 }
 
- .pos-s-input {
+.pos-s-input {
     max-width: 70%;
     margin-left: auto;
     margin-right: auto;
@@ -317,7 +321,7 @@ font-size: 18px;
 }
 
 .amt-info-div .flat-disc-wrapper .form-control {
-    padding:  0 5px;
+    padding: 0 5px;
 }
 
 .add-more-details-btn {
@@ -355,10 +359,10 @@ font-size: 18px;
 
 .posmodal .form-group label {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-color: #000;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000;
 }
 
 .posmodal .form-group input {
@@ -390,7 +394,8 @@ color: #000;
 }
 
 .pos-offcanvas {
-    background: #F5F8F5;;
+    background: #F5F8F5;
+    ;
 }
 
 .pos-offcanvas .offcanvas-header {
@@ -400,7 +405,7 @@ color: #000;
 
 .on-hold-card {
     padding: 16px 16px 30px 16px;
-    background-color:white;
+    background-color: white;
     border-radius: 4px;
     position: relative;
 }
@@ -416,9 +421,7 @@ color: #000;
     line-height: 0;
 }
 
-.on-hold-card:hover {
-    
-}
+.on-hold-card:hover {}
 
 .on-hold-card .on-hold-card-header {
     display: flex;
@@ -428,9 +431,9 @@ color: #000;
 
 .on-hold-card h5 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
 }
 
 .modalRedeem .redeem-modal-details {
@@ -441,9 +444,9 @@ font-size: 14px;
 
 .modalRedeem .redeem-modal-details h5 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .modalRedeem .redeem-modal-details input {
@@ -453,9 +456,9 @@ font-size: 16px;
 
 .modalRedeem .redeem-modal-details h4 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
 }
 
 .pos-offcanvas .btn-close {
@@ -477,18 +480,20 @@ font-size: 22px;
     padding: 32px
 }
 
-.fullmodal-pos .left .title, .fullmodal-pos .left .payment-details h3, .right .total-amt h3 {
+.fullmodal-pos .left .title,
+.fullmodal-pos .left .payment-details h3,
+.right .total-amt h3 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
 }
 
 .fullmodal-pos .left .desc {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
 }
 
 .fullmodal-pos .left .other-product-detail {
@@ -498,11 +503,12 @@ font-size: 16px;
     justify-content: space-between;
 }
 
-.fullmodal-pos .left .other-product-detail h5, .fullmodal-pos .left .payment-details h5 {  
-font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 20px;
+.fullmodal-pos .left .other-product-detail h5,
+.fullmodal-pos .left .payment-details h5 {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
 }
 
 .fullmodal-pos .left .payment-details {
@@ -511,8 +517,8 @@ font-size: 20px;
 }
 
 .fullmodal-pos .right .total-amt {
-     display: flex;
-     align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .fullmodal-pos .right .total-amt .input-group {
@@ -562,9 +568,9 @@ font-size: 20px;
     flex-grow: 1;
     text-align: center;
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .posmodal .register-left-wrapper .register-left-div {
@@ -573,10 +579,10 @@ font-size: 16px;
 
 .posmodal .register-left-wrapper .register-left-div h4 {
     font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-padding: 10px 16px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 10px 16px;
 }
 
 .posmodal .register-left-wrapper .register-left-div h4:first-child {
@@ -595,7 +601,8 @@ padding: 10px 16px;
     background-color: #FFFFFF;
 }
 
-.posmodal .register-table .table thead th, .posmodal .register-table .table tbody tr td {
+.posmodal .register-table .table thead th,
+.posmodal .register-table .table tbody tr td {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
@@ -638,44 +645,45 @@ padding: 10px 16px;
 }
 
 .pos-loader svg {
- width: 3.25em;
- transform-origin: center;
- animation: rotate4 2s linear infinite;
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
 }
 
 .pos-loader circle {
- fill: none;
- stroke: hsl(214, 97%, 59%);
- stroke-width: 2;
- stroke-dasharray: 1, 200;
- stroke-dashoffset: 0;
- stroke-linecap: round;
- animation: dash4 1.5s ease-in-out infinite;
+    fill: none;
+    stroke: hsl(214, 97%, 59%);
+    stroke-width: 2;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
 }
 
 @keyframes rotate4 {
- 100% {
-  transform: rotate(360deg);
- }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes dash4 {
- 0% {
-  stroke-dasharray: 1, 200;
-  stroke-dashoffset: 0;
- }
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
 
- 50% {
-  stroke-dasharray: 90, 200;
-  stroke-dashoffset: -35px;
- }
+    50% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
+    }
 
- 100% {
-  stroke-dashoffset: -125px;
- }
+    100% {
+        stroke-dashoffset: -125px;
+    }
 }
 
-.table-pos .form-control, .table-pos .input-group-text {
+.table-pos .form-control,
+.table-pos .input-group-text {
     padding: .2rem .75rem;
     line-height: 1;
 }
@@ -700,16 +708,16 @@ padding: 10px 16px;
     width: 99%;
 }
 
-.final-test > div:first-child {
+.final-test>div:first-child {
     flex-shrink: 0;
 }
 
-.final-test > div:nth-child(2) {
+.final-test>div:nth-child(2) {
     height: 100%;
     overflow: auto;
 }
 
-.final-test >div:last-child {
+.final-test>div:last-child {
     flex-shrink: 0;
 }
 
@@ -738,26 +746,252 @@ padding: 10px 16px;
     justify-content: space-between;
 }
 
-select
-{
-   border: 1px solid rgba(145, 158, 171, 0.32);
-   height: 40px;
-   width: 100%;
-   font-size: 14px;
-   font-weight: 500;
-   color: #637381;
-   padding: 10px 15px;
-   border-radius: 5px;
+select {
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #637381;
+    padding: 10px 15px;
+    border-radius: 5px;
 }
 
-.circle{
+.circle {
     margin-top: 10px;
     display: inline-block;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1px solid #FF9F43;
-      text-align: center;
-      line-height: 16px;
-      color: #FF9F43;
-  }
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #FF9F43;
+    text-align: center;
+    line-height: 16px;
+    color: #FF9F43;
+}
+
+#debitNote {
+    display: none;
+}
+
+#doc-target {
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #000;
+    line-height: 1.6em;
+    margin: 0 auto;
+}
+
+#outer {
+    padding: 72pt 72pt 72pt 72pt;
+    border: 1px solid #000;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pdf-div {
+    background: white;
+    // margin-bottom: 30px;
+    // margin-top: 30px;
+    // padding: 15px 20px;
+}
+
+.right-top {
+    color: black;
+    // text-align: end;
+}
+
+.right-top p {
+    margin-bottom: 2px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.right-top p:first-child {
+    font-weight: 600;
+    margin: 0;
+}
+
+.right-top h1 {
+    margin-bottom: 12px;
+    margin-top: 12px;
+    font-size: 48px;
+    letter-spacing: .8px;
+}
+
+.right-top p:last-child {
+    margin-bottom: 0;
+}
+
+.left-top {
+    color: black;
+    padding: 20px 0;
+}
+
+.left-top p {
+    color: #000;
+    margin-bottom: 2px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.gst {
+    font-weight: 600 !important;
+    margin: 0;
+}
+
+.left-top p:last-child {
+    margin-bottom: 0;
+}
+
+.left-top img {
+    // width: 100px;
+    width: 35%;
+}
+
+.top {
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.pdf-payment-div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.pdf-pd {
+    display: flex;
+}
+
+.pdf-pd p {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+}
+
+.pdf-pd-right {
+    margin-left: 20px;
+}
+
+.pdf-payment {
+    padding: 20px 0;
+    border-top: 2px solid #eee;
+    border-bottom: 2px solid #eee;
+}
+
+.pdf-footer p {
+    text-align: center;
+    padding-top: 15px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+}
+
+.pdf-footer p span {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pdf-table2 table,
+.pdf-table2 th {
+    border: 1px solid #000;
+    border-collapse: collapse;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    margin: 0;
+    padding: 0;
+}
+
+.pdf-table2 table {
+    width: 100%;
+}
+
+.pdf-table2 th {
+    padding: 5px;
+    color: #212B36;
+    background-color: #FF9F43;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.pdf-table2 td {
+    text-align: center;
+    padding: 5px;
+}
+
+.pdf-table2 tbody td {
+    border: 1px solid #000;
+    font-weight: 400;
+    color: black;
+    font-size: 13px;
+}
+
+.pdf-table2 p {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+}
+
+.pdf-address p {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .1px;
+}
+
+.pdf-address .heading {
+    color: #FF9F43;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.pdf-address .heading2 {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    line-height: 1.6;
+}
+
+.pdf-table1 thead tr {
+    background: #FF9F43;
+    border-bottom: 3px solid #FF9F43;
+}
+
+.table tbody tr td {
+    padding: 25px 10px;
+}
+
+button {
+    margin-right: 8px;
+}
+
+.heading {
+    color: #FF9F43;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.transaction-date-wrapper {
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    border-radius: 5px;
+    outline: 0;
+    border: 1px solid rgba(145, 158, 171, 0.32);
+}
+
+.input-radio-wrapper {
+    height: 18px;
+    width: 18px;
+}
+
+.blur-modal {
+    filter: blur(3px);
+}

@@ -152,8 +152,8 @@ export class EditSalesComponent implements OnInit {
     this.saleService.getSaleOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix;
-        this.saleForm.get('sale_order_no').patchValue(this.prefixNo[0]?.id) // 21-5
+        this.prefixNo = res.data[0].prefix;
+        this.saleForm.get('sale_order_no').patchValue(res.data[0]?.id) // 21-5
       } else {
         this.toastrService.error(res.msg)
       }
@@ -381,6 +381,7 @@ export class EditSalesComponent implements OnInit {
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
+      mrp: (0)
     })
   }
   getCart(): FormArray {
@@ -561,17 +562,24 @@ export class EditSalesComponent implements OnInit {
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
     console.log(landingCost);
-    barcode.patchValue({
-      mrp: address?.mrp,
-      qty: address?.stock,
-      tax: address?.sale_tax,
-      discount: address?.discount,
-      price: address?.cost_price,
-      landing_cost: landingCost
-      // additional_discount: address?.additional_discount,
-      // discount_type: '%',
-      // price: 0,
-    });
+
+    const cartControls: any = this.getCart().controls;
+    cartControls[index].controls?.mrp.setValue(address?.mrp);
+    if (address?.stock > 0) {
+      barcode.patchValue({
+        mrp: address?.mrp,
+        qty: address?.stock,
+        tax: address?.sale_tax,
+        discount: address?.discount,
+        price: address?.cost_price,
+        landing_cost: landingCost
+        // additional_discount: address?.additional_discount,
+        // discount_type: '%',
+        // price: 0,
+      });
+    } else {
+      this.toastrService.error('Stock is not available at this price');
+    }
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -707,6 +715,7 @@ export class EditSalesComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
+          mrp: event.batch[0]?.mrp,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           price: this.originalCoastPrice.toFixed(2),
@@ -718,6 +727,7 @@ export class EditSalesComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
+          mrp: event.batch[0]?.mrp,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
           price: this.originalCoastPrice,
@@ -732,6 +742,7 @@ export class EditSalesComponent implements OnInit {
         barcode: selectedItemId,
         item_name: event?.product_title,
         tax: 18,
+        mrp: event.batch[0]?.mrp
       });
     }
   }
@@ -939,6 +950,8 @@ export class EditSalesComponent implements OnInit {
   loaderDraft = false;
   submit(type: any) {
     console.log(this.saleForm.value);
+    const totalMrp = this.calculateSubtotal()
+    const totalTaxAmout = (Number(totalMrp) * 18) / 100;
     if (this.saleForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -968,9 +981,11 @@ export class EditSalesComponent implements OnInit {
       formdata.append('total_qty', this.saleForm.get('total_qty')?.value);
       formdata.append('total_tax', this.saleForm.get('total_tax')?.value);
       formdata.append('total_discount', this.saleForm.get('total_discount')?.value);
-      formdata.append('roundoff', this.saleForm.get('roundoff')?.value);
+      formdata.append('roundoff', this.saleForm.get('roundoff')?.value?.toFixed(2));
       formdata.append('subtotal', this.saleForm.get('subtotal')?.value);
       formdata.append('total', this.saleForm.get('total')?.value);
+      formdata.append('mrp', totalMrp);
+      formdata.append('tax_amount', totalTaxAmout);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -982,10 +997,11 @@ export class EditSalesComponent implements OnInit {
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
-            cartObject[key] = parseFloat(control.value);
+          let value = (control.value === null || control.value.length === 0) ? '' : control.value;
+          if (key !== 'item_name' && value !== '' && !isNaN(value)) {
+            cartObject[key] = parseFloat(value);
           } else {
-            cartObject[key] = control.value;
+            cartObject[key] = value;
           }
         });
         cartData.push(cartObject);
