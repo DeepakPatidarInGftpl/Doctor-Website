@@ -8,17 +8,17 @@ import { environment } from 'src/environments/environment';
 export class PosCartService {
   apiUrl = `${environment.api}`;
 
-  currentItems:any[] = [];
+  currentItems: any[] = [];
   private cartItems: any[] = [];
   private orders: any[] = [];
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     const orders = localStorage.getItem('orders');
     const items = localStorage.getItem('cartItems');
     if (items) {
       this.cartItems = JSON.parse(items);
     }
-    if(orders) {
+    if (orders) {
       this.orders = JSON.parse(orders);
     }
   }
@@ -38,36 +38,36 @@ export class PosCartService {
   addToCurrent(item: any): void {
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
 
-     if (index !== -1) {
+    if (index !== -1) {
       this.currentItems[index].quantity += 1;
     } else {
       this.currentItems.push(item);
     }
   }
 
-  increaseCurrent(item: any):void {
+  increaseCurrent(item: any): void {
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
     if (index !== -1) {
       this.currentItems[index].quantity += 1;
     }
   }
 
-  decreaseCurrent(item: any):void {
+  decreaseCurrent(item: any): void {
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
-    
+
     if (index !== -1) {
-      if(this.currentItems[index].quantity == 1){
+      if (this.currentItems[index].quantity == 1) {
         this.removeFromCurrent(item);
       } else {
         this.currentItems[index].quantity -= 1;
       }
     }
-    
+
   }
 
   removeFromCurrent(item: any): void {
-    console.warn(item,'service');
-    
+    console.warn(item, 'service');
+
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
     if (index !== -1) {
       this.currentItems.splice(index, 1);
@@ -90,19 +90,19 @@ export class PosCartService {
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
   }
 
-  increase(item: any):void {
+  increase(item: any): void {
     const found = this.cartItems.find(cartItem => cartItem.id === item.id);
     found.quantity += 1;
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
   }
 
-  decrease(item: any):void {
+  decrease(item: any): void {
     const found = this.cartItems.find(cartItem => cartItem.id === item.id);
-    if(found.quantity == 1){
+    if (found.quantity == 1) {
       this.removeFromCart(found);
     } else {
       found.quantity -= 1;
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+      localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
     }
   }
 
@@ -126,7 +126,7 @@ export class PosCartService {
     localStorage.setItem('orders', JSON.stringify(this.orders));
   }
 
-  addCustomer(data:any) {
+  addCustomer(data: any) {
     let url = this.apiUrl + '/pv-api/pos/Addcustomers/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -135,7 +135,7 @@ export class PosCartService {
     })
   }
 
-  getCustomer(data:any) {
+  getCustomer(data: any) {
     let url = this.apiUrl + '/pv-api/pos/customer_filter/?search=' + data;
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -153,7 +153,7 @@ export class PosCartService {
     })
   }
 
-  getTaxes(){
+  getTaxes() {
     let url = this.apiUrl + '/pv-api/pos/tax_pos/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -162,7 +162,7 @@ export class PosCartService {
     })
   }
 
-  getCompanyBank(){
+  getCompanyBank() {
     let url = this.apiUrl + '/pv-api/pos/company_bank/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -171,7 +171,7 @@ export class PosCartService {
     })
   }
 
-  getPaymentTerms(){
+  getPaymentTerms() {
     let url = this.apiUrl + '/pv-api/pos/payment_terms_pos/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -180,7 +180,7 @@ export class PosCartService {
     })
   }
 
-  generateOrderNew(data:any) {
+  generateOrderNew(data: any) {
     let url = this.apiUrl + '/pv-api/pos/pos_new_order/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -189,7 +189,7 @@ export class PosCartService {
     })
   }
 
-  receiptPayment(data:any) {
+  receiptPayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/receipt_advance_payment_or_againest_bill/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -198,7 +198,7 @@ export class PosCartService {
     })
   }
 
-  purchasePayment(data:any) {
+  purchasePayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/party_advance_payment_or_againest_bill/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -207,7 +207,7 @@ export class PosCartService {
     })
   }
 
-  expensePayment(data:any) {
+  expensePayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/expance/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -216,7 +216,7 @@ export class PosCartService {
     })
   }
 
-  getPOSOrders(){
+  getPOSOrders() {
     let url = this.apiUrl + '/pv-api/pos/pos_orders/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -225,8 +225,8 @@ export class PosCartService {
     })
   }
 
-  getPOSOrderDetails(id:any){
-    let url = this.apiUrl + '/pv-api/pos/pos_order_detail/?order_id='+ id;
+  getPOSOrderDetails(id: any) {
+    let url = this.apiUrl + '/pv-api/pos/pos_order_detail/?order_id=' + id;
     return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -234,7 +234,7 @@ export class PosCartService {
     })
   }
 
-  getExpensePayments(){
+  getExpensePayments() {
     let url = this.apiUrl + '/pv-api/pos/expance/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -243,7 +243,7 @@ export class PosCartService {
     })
   }
 
-  getPurchasePayments(){
+  getPurchasePayments() {
     let url = this.apiUrl + '/pv-api/pos/all_payments/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -252,7 +252,7 @@ export class PosCartService {
     })
   }
 
-  getSalesPayments(){
+  getSalesPayments() {
     let url = this.apiUrl + '/pv-api/pos/all_receipts/';
     return this.http.get(url, {
       headers: new HttpHeaders({
@@ -261,8 +261,8 @@ export class PosCartService {
     })
   }
 
-  getReceiptDueOrder(id:any){
-    let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
+  getReceiptDueOrder(id: any) {
+    let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id=' + id;
     return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -271,9 +271,13 @@ export class PosCartService {
   }
 
   //20-04
-  productSearch(val:any){
-    let url=this.apiUrl+'/pv-api/pos/product_search/?search=';
+  productSearch(val: any) {
+    let url = this.apiUrl + '/pv-api/pos/product_search/?search=';
     return this.http.get(`${url}${val}`)
   }
 
+  paymentModesLogo() {
+    let url = this.apiUrl + '/pv-api/web/payment_modes_logo/';
+    return this.http.get(`${url}`)
+  }
 }

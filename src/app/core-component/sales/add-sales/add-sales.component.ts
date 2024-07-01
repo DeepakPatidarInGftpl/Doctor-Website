@@ -313,6 +313,7 @@ export class AddSalesComponent implements OnInit {
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
+      tax_amount: (0)
     })
   }
   getCart(): FormArray {
@@ -495,17 +496,25 @@ export class AddSalesComponent implements OnInit {
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
     console.log(landingCost);
-    barcode.patchValue({
-      mrp: address?.mrp,
-      qty: address?.stock,
-      tax: address?.sale_tax,
-      discount: address?.discount,
-      price: address?.cost_price,
-      landing_cost: landingCost
-      // additional_discount: address?.additional_discount,
-      // discount_type: '%',
-      // price: 0,
-    });
+
+    const cartControls: any = this.getCart().controls;
+    cartControls[index].controls?.mrp.setValue(address?.mrp);
+
+    if (address?.stock > 0) {
+      barcode.patchValue({
+        qty: address?.stock,
+        tax: address?.sale_tax,
+        discount: address?.discount,
+        price: address?.cost_price,
+        landing_cost: landingCost,
+        tax_amount: (address?.mrp * 18) / 100
+        // additional_discount: address?.additional_discount,
+        // discount_type: '%',
+        // price: 0,
+      });
+    } else {
+      this.toastrService.error('Stock is not available at this price');
+    }
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -655,6 +664,7 @@ export class AddSalesComponent implements OnInit {
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           price: this.originalCoastPrice.toFixed(2),
+          tax_amount: (event.batch[0]?.mrp * 18) / 100
         });
 
       } else {
@@ -666,6 +676,7 @@ export class AddSalesComponent implements OnInit {
           tax: 18,
           discount: event.batch[0]?.discount || 0,
           price: this.originalCoastPrice,
+          tax_amount: (event.batch[0]?.mrp * 18) / 100
           // landing_cost: this.landingCost || 0
         });
       }
@@ -677,6 +688,7 @@ export class AddSalesComponent implements OnInit {
         barcode: selectedItemId,
         item_name: event?.product_title,
         tax: 18,
+        tax_amount: (event.batch[0]?.mrp * 18) / 100
       });
     }
   }
@@ -1065,11 +1077,11 @@ export class AddSalesComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
-            cartObject[key] = parseFloat(control.value);
+          let value = (control.value === null || control.value.length === 0) ? 0 : control.value;
+          if (key !== 'item_name' && value !== '' && !isNaN(value)) {
+            cartObject[key] = key === 'barcode' || key === 'qty' ? parseFloat(value) : parseFloat(value).toFixed(2)
           } else {
-            cartObject[key] = control.value;
+            cartObject[key] = value;
           }
         });
         cartData.push(cartObject);

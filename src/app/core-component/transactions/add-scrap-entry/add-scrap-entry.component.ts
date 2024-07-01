@@ -24,6 +24,20 @@ export class AddScrapEntryComponent implements OnInit {
   scrapEntryForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  coastprice: any[] = []
+  originalCoastPrice: any;
+  originalPrice: any[] = []
+  apiPurchaseTax: number;
+  isTaxAvailable: any[] = [];
+  taxIntoRupees: any[] = [];
+  tax: any[] = [];
+  batchDiscount: any;
+  landingCost: any;
+  batchCostPrice: any[] = [];
+  selecteProduct: any;
+  selectedProductName: any;
+  selectBatch: any;
+
   get f() {
     return this.scrapEntryForm.controls;
   }
@@ -79,7 +93,8 @@ export class AddScrapEntryComponent implements OnInit {
       item_name: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
       qty: new FormControl(1, [Validators.required]),
-      reason: new FormControl('')
+      reason: new FormControl(''),
+      mrp: (0)
     })
   }
   getCart(): FormArray {
@@ -172,17 +187,110 @@ export class AddScrapEntryComponent implements OnInit {
     console.log(event);
     const selectedItemId = event.id;
     this.barcode[index] = event.sku;
+    this.selecteProduct = event?.product;
+    this.selectedProductName = event.product_title;
+    this.selectBatch = event.batch;
+    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.batchDiscount = event.batch[0]?.discount || 0;
+    this.isTaxAvailable[index] = event?.product?.sale_tax_including;
+    this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
+
+    let offlineprice = event?.batch[0]?.selling_price_offline || 0;
+    let purchaseTax = 18
+    let getDiscountPrice = (offlineprice * 0) / 100
+    let getCoastPrice = offlineprice - getDiscountPrice;
+    let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+    this.taxIntoRupees[index] = taxPrice || 0;
+    this.originalCoastPrice = getCoastPrice + taxPrice;
+
     const barcode = (this.scrapEntryForm.get('cart_item') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId,
       item_code: event?.sku,
       item_name: event?.product_title,
-      unit: event?.product?.unit?.title
+      unit: event?.product?.unit?.title,
+      qty: event.batch[0]?.stock,
+      mrp: this.originalCoastPrice.toFixed(2)
     });
   }
+
+  selecBatchtModel(address: any, index: any, type: string) {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+    const barcode = (this.scrapEntryForm.get('cart_item') as FormArray).at(index) as FormGroup;
+
+    let discountRupees = (address?.cost_price * address?.discount) / 100
+    console.log(discountRupees);
+    let afterDiscountPrice = (address?.cost_price - discountRupees)
+    // let taxRupee: number = (afterDiscountPrice * address?.sale_tax) / 100
+    // console.log(taxRupee);
+    let landingCost = (address?.cost_price - discountRupees) + afterDiscountPrice;
+
+    const cartControls: any = this.getCart().controls;
+    cartControls[index].controls?.mrp.setValue(address?.mrp);
+
+    console.log(landingCost);
+    if (address?.stock > 0) {
+      barcode.patchValue({
+        mrp: address?.mrp,
+        qty: address?.stock
+      });
+    } else {
+      this.toastrService.error('Stock is not available at this price');
+    }
+  }
+
+  closeModalBatch() {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  calculateSubtotal(): number {
+    let subtotal = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const qtyControl = this.getCart().controls[i].get('qty');
+      const mrpControl = this.getCart().controls[i].get('mrp');
+      if (qtyControl && mrpControl) {
+        const qty = +qtyControl.value || 0;
+        const mrp = +mrpControl.value || 0;
+
+        const itemSubtotal = mrp * qty;
+        subtotal += itemSubtotal;
+      }
+    }
+    return subtotal;
+  }
+
+  purchase(index) {
+    const result = this.calculatePurchaseEveryIndex(index);
+    this.coastprice[index] = result.toFixed(2)
+  }
+
+  calculatePurchaseEveryIndex(index: number): number {
+    this.batchCostPrice[index] = this.coastprice[index];
+    return 0
+  }
+
   loader = false;
   submit() {
     console.log(this.scrapEntryForm.value);
+    const totalMrp: any = this.calculateSubtotal();
     if (this.scrapEntryForm.valid) {
       this.loader = true;
       let formData = new FormData();
@@ -197,7 +305,8 @@ export class AddScrapEntryComponent implements OnInit {
         const cartObject: any = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          if (!isNaN(control.value)) {
+          let value = (control.value === null || control.value.length === 0) ? '' : control.value;
+          if (!isNaN(control.value) && value !== '') {
             cartObject[key] = parseFloat(control.value);
           } else {
             cartObject[key] = control.value;
@@ -234,7 +343,7 @@ export class AddScrapEntryComponent implements OnInit {
       this.isSearch = false;
       this.variantList = res;
       console.log(this.variantList);
-      this.myControl.setValue(res[0].product_title);
+      // this.myControl.setValue(res[0].product_title);
 
     });
   }

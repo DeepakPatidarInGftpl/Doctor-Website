@@ -212,6 +212,15 @@ export class AddMaterialOutwardComponent implements OnInit {
       }
     }
   }
+  purchase(index) {
+    const result = this.calculatePurchaseEveryIndex(index);
+    this.coastprice[index] = result.toFixed(2)
+  }
+
+  calculatePurchaseEveryIndex(index: number): number {
+    this.batchCostPrice[index] = this.coastprice[index];
+    return 0
+  }
 
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
@@ -284,6 +293,7 @@ export class AddMaterialOutwardComponent implements OnInit {
       barcode: (0),
       item_name: (''),
       qty: (1),
+      mrp: (0)
     })
   }
   getCart(): FormArray {
@@ -422,14 +432,22 @@ export class AddMaterialOutwardComponent implements OnInit {
     let discountRupees = (address?.cost_price * address?.discount) / 100
     console.log(discountRupees);
     let afterDiscountPrice = (address?.cost_price - discountRupees)
-    let taxRupee: number = (afterDiscountPrice * address?.sale_tax) / 100
-    console.log(taxRupee);
-    let landingCost = (address?.cost_price - discountRupees) + taxRupee;
+    // let taxRupee: number = (afterDiscountPrice * address?.sale_tax) / 100
+    // console.log(taxRupee);
+    let landingCost = (address?.cost_price - discountRupees) + afterDiscountPrice;
+
+    const cartControls: any = this.getCart().controls;
+    cartControls[index].controls?.mrp.setValue(address?.mrp);
+
     console.log(landingCost);
-    barcode.patchValue({
-      mrp: address?.mrp,
-      qty: address?.stock,
-    });
+    if (address?.stock > 0) {
+      barcode.patchValue({
+        mrp: address?.mrp,
+        qty: address?.stock
+      });
+    } else {
+      this.toastrService.error('Stock is not available at this price');
+    }
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -492,6 +510,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   //   }
   // }
 
+  coastprice: any[] = []
   originalCoastPrice: any;
   originalPrice: any[] = []
   apiPurchaseTax: number;
@@ -513,6 +532,14 @@ export class AddMaterialOutwardComponent implements OnInit {
     this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
 
+    let offlineprice = event?.batch[0]?.selling_price_offline || 0;
+    let purchaseTax = 18
+    let getDiscountPrice = (offlineprice * 0) / 100
+    let getCoastPrice = offlineprice - getDiscountPrice;
+    let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+    this.taxIntoRupees[index] = taxPrice || 0;
+    this.originalCoastPrice = getCoastPrice + taxPrice;
+
     if (event.batch.length > 0) {
       const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax;
@@ -521,6 +548,7 @@ export class AddMaterialOutwardComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
+          mrp: this.originalCoastPrice.toFixed(2),
         });
       } else {
         this.tax[index] = 18
@@ -528,6 +556,7 @@ export class AddMaterialOutwardComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
+          mrp: this.originalCoastPrice.toFixed(2),
         });
       }
       console.log(event.batch);
@@ -542,6 +571,11 @@ export class AddMaterialOutwardComponent implements OnInit {
     }
   }
 
+  costPrice: any
+  purchase2(costPrice: any) {
+    this.costPrice = costPrice;
+    console.log(this.costPrice);
+  }
 
   getRes: any;
   loader = false;
