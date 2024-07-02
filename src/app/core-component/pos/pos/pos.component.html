@@ -1626,7 +1626,7 @@
                                                             (change)="onSelectPaymentAccount($event.target.value, i)">
                                                             <option value="" disabled selected>Select Payment Account
                                                             </option>
-                                                            <option *ngFor="let account of accountList[i]"
+                                                            <option *ngFor="let account of accountListAlies[i]"
                                                                 [value]="account?.id">
                                                                 {{ account.title }}
                                                             </option>

@@ -156,7 +156,9 @@ export class PosComponent implements OnInit, OnDestroy {
   paymentTermsList: any = [];
   currentOrderAdditionalCharges: any = [];
   accountList: any[] = [];
+  accountListAlies: any[] = [];
   paymentModeList: any;
+  companyDetails: any;
 
   currentAdditionalCharges: any = [];
   activeBill: any;
@@ -648,8 +650,9 @@ export class PosComponent implements OnInit, OnDestroy {
       });
 
     this.initializePaymentForm();
-
+    this.getAccount();
     this.getAccountByAlies('cash-in-hand', 0);
+    this.getCompanyDetails();
     // this.subscribeToUserAccountIdChanges();
 
     this.cartService.paymentModesLogo().subscribe((res) => {
@@ -956,6 +959,12 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
 
+  getCompanyDetails() {
+    this.companyService.getCompany().subscribe((res) => {
+      this.companyDetails = res[0];
+    })
+  }
+
   // productInputValue() {
   //   let pValue = this.productsAutocompleteControl.value;
   //   return pValue.length < 3 ? true : false;
@@ -1107,18 +1116,18 @@ export class PosComponent implements OnInit, OnDestroy {
     }
   }
 
-  // getAccount() {
-  //   this.transactionService.getAccount().subscribe((res: any) => {
-  //     this.accountList = res;
-  //     console.log(this.accountList);
-  //   })
-  // }
+  getAccount() {
+    this.transactionService.getAccount().subscribe((res: any) => {
+      this.accountList = res;
+      console.log(this.accountList);
+    })
+  }
 
   getAccountByAlies(value: string, index: number) {
     this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
       const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
       paymentGroup.get('payment_account').setValue('');
-      this.accountList[index] = res;
+      this.accountListAlies[index] = res;
     });
   }
 
@@ -1981,20 +1990,6 @@ export class PosComponent implements OnInit, OnDestroy {
     const formGroup = this.addMorePaymentData.at(index) as FormGroup;
     formGroup.get('payment_account').setValue(value);
   }
-
-  // onInput(event: Event, index: number) {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   const value = inputElement.value;
-
-  //   const formGroup = this.addMorePaymentData.at(index) as FormGroup;
-  //   formGroup.get('payment_account').setValue(value);
-  //   this.filteredPaymentAccount[index] = of(this._filterUserId(value));
-  // }
-
-  // private _filterUserId(value: string | number): any[] {
-  //   const filterValue = (value || '').toString().toLowerCase();
-  //   return this.accountList.filter(account => account?.account_id?.toLowerCase()?.includes(filterValue));
-  // }
 
   get formControls() {
     return this.registrationForm.controls;
@@ -2861,27 +2856,193 @@ export class PosComponent implements OnInit, OnDestroy {
 
   }
 
-  generatePdf(newWindow: Window) {
-    const elementToCapture = document.getElementById('debitNote');
-    elementToCapture.style.display = 'block';
-    html2canvas(elementToCapture, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvasHeight * pdfWidth) / canvasWidth;
+  getCustomer(id) {
+    const customer: any = this.accountList.filter((val) => val?.id === id);
+    return customer[0]?.created_by;
+  }
 
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+  formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+    return `${formattedDate}`;
+  }
 
-      const pdfBlob = pdf.output('blob');
-      const blobUrl = URL.createObjectURL(pdfBlob);
-      newWindow.location.href = blobUrl;
+  formatHours(dateString) {
+    const date = new Date(dateString);
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
 
-      elementToCapture.style.display = 'none';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    return `${formattedTime}`;
+  }
+
+  truncateWithEllipsis(str, maxLength) {
+    if (str.length > maxLength) {
+      return str.substring(0, maxLength - 3) + '...';
+    }
+    return str;
+  }
+
+  // generatePdf(newWindow: Window) {
+  //   const elementToCapture = document.getElementById('debitNote');
+  //   elementToCapture.style.display = 'block';
+  //   html2canvas(elementToCapture, { scale: 2 }).then((canvas) => {
+  //     const imgData = canvas.toDataURL('image/png');
+  //     const pdf = new jsPDF('p', 'mm', 'a4');
+  //     const pdfWidth = pdf.internal.pageSize.getWidth();
+  //     const pdfHeight = pdf.internal.pageSize.getHeight();
+  //     const canvasWidth = canvas.width;
+  //     const canvasHeight = canvas.height;
+  //     const imgWidth = pdfWidth;
+  //     const imgHeight = (canvasHeight * pdfWidth) / canvasWidth;
+
+  //     pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+  //     const pdfBlob = pdf.output('blob');
+  //     const blobUrl = URL.createObjectURL(pdfBlob);
+  //     newWindow.location.href = blobUrl;
+
+  //     elementToCapture.style.display = 'none';
+  //   });
+  // }
+
+  generatePdf(orderList) {
+    const doc = new jsPDF();
+    const title = 'Pramod Fashion Retail Limited';
+
+    doc.addImage('assets/dummy/pos.png', 'PNG', 10, 10, 50, 20);
+
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 80, 40);
+
+    let textY = 48;
+
+    doc.setFontSize(10);
+    doc.text(`${this.companyDetails?.name ?? ''}`, 10, textY);
+    textY += 5;
+    doc.text(`${this.companyDetails?.address ?? ''}`, 10, textY);
+    textY += 5;
+    doc.text(`${this.companyDetails?.city?.city ?? ''}, ${this.companyDetails?.state?.state ?? ''}, ${this.companyDetails?.country
+      ?.country_name ?? ''}, ${this.companyDetails?.pincode ?? ''}`, 10, textY);
+    textY += 5;
+    doc.text(`Customer Care: ${this.companyDetails?.phone ?? '--'}`, 10, textY);
+    textY += 5;
+    doc.text(`GSTIN: ${this.companyDetails?.gst ?? '--'}`, 10, textY);
+    textY += 5;
+    doc.text(`Place of Supply & State code: ${this.companyDetails?.state_code?.gst_code} ${this.companyDetails?.state_code?.state_code}`, 10, textY);
+
+    textY += 10;
+    doc.text('----------------------------------------------------', 10, textY);
+
+    textY += 10;
+
+    // Customer Details
+    doc.text(`Customer GSTIN: ${orderList?.customer?.gstin ? orderList?.customer?.gstin : 'URD'}`, 10, textY);
+
+    textY += 5;
+    doc.text(`Customer Details`, 10, textY);
+    textY += 5;
+    doc.text(`${this.getCustomer(orderList?.customer?.account)}`, 10, textY);
+    textY += 5;
+    const customerAddress = {
+      address_line_1: orderList?.customer?.address[0]?.address_line_1 ?? '',
+      address_line_2: orderList?.customer?.address[0]?.address_line_2 ?? '',
+      city: orderList?.customer?.address[0]?.city?.city ?? '',
+      state: orderList?.customer?.address[0]?.state?.state ?? '',
+      country: orderList?.customer?.address[0]?.country?.country_name ?? '',
+      pincode: orderList?.customer?.address[0]?.pincode ?? ''
+    };
+
+    let addressLine1 = customerAddress.address_line_1;
+    let addressLine2 = customerAddress.address_line_2;
+    let fullAddress = `${addressLine1}, ${addressLine2}`;
+    doc.setFontSize(10);
+    doc.text(fullAddress, 10, textY);
+    textY += 5;
+    doc.text(`City: ${customerAddress.city}`, 10, textY);
+    textY += 5;
+    doc.text(`State: ${customerAddress.state}`, 10, textY);
+    textY += 5;
+    doc.text(`Country: ${customerAddress.country}`, 10, textY);
+    textY += 5;
+    doc.text(`Pincode: ${customerAddress.pincode}`, 10, textY);
+    textY += 10;
+    doc.text('----------------------------------------------------', 10, textY);
+
+    textY += 10;
+    doc.text(`TAX INVOICE`, 25, textY);
+    textY += 10;
+    doc.text(`Bill No.: ${orderList?.bill_no}`, 10, textY);
+    textY += 5;
+    doc.text(`Date: ${this.formatDate(orderList?.created_date)}   Time:${this.formatHours(orderList?.created_date)}`, 10, textY);
+
+    textY += 10;
+    doc.text('----------------------------------------------------', 10, textY);
+    textY += 5;
+
+    doc.text('HSN', 10, textY);
+    doc.text('Net Price', 25, textY);
+    doc.text('Qty', 45, textY);
+    doc.text('Value', 60, textY);
+
+    textY += 5;
+    doc.setFontSize(10);
+    doc.setTextColor(33, 43, 54);
+    doc.text('----------------------------------------------------', 10, textY);
+    textY += 5;
+
+    orderList?.cart?.forEach((row) => {
+      doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, textY);
+      doc.text(row.net_cost.toFixed(2).toString(), 25, textY);
+      doc.text(row.qty.toString(), 45, textY);
+      doc.text((row.net_cost * row.qty).toFixed(2).toString(), 60, textY);
+      textY += 5;
+      doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, textY);
+      textY += 5;
     });
+
+    textY += 10;
+    doc.text(`Item Count: ${orderList?.cart?.length}`, 10, textY);
+    textY += 5;
+    doc.text(`QTY: ${orderList?.total_qty}`, 10, textY);
+    textY += 5;
+    doc.text(`SubTotal: ${orderList?.total_amount}`, 10, textY);
+    textY += 5;
+    doc.text(`Total discount: ${orderList?.total_discount}`, 10, textY);
+    textY += 5;
+    doc.text(`Credit Redeem: ${orderList?.credit_redeem}`, 10, textY);
+    textY += 5;
+    doc.text(`Total Tax Amount: ${orderList?.total_tax}`, 10, textY);
+    textY += 5;
+    doc.text(`total amount: ${orderList?.total_amount}`, 10, textY);
+    textY += 5;
+    doc.text(`amount paid: 0`, 10, textY);
+    textY += 5;
+    doc.text(`amount pending: 0`, 10, textY);
+
+    textY += 5;
+    doc.text('----------------------------------------------------', 10, textY);
+
+    textY += 10;
+    doc.text(`*  Thank You for Shopping with us  *`, 10, textY);
+    textY += 5;
+    doc.text(`Website: https://pramodfashion.com/`, 10, textY);
+    textY += 5;
+    doc.text(`Customer Care email: ${this.companyDetails?.email}`, 10, textY);
+
+    const newWindow = window.open('', '_blank');
+
+    const pdfBlob = doc.output('blob');
+    const blobUrl = URL.createObjectURL(pdfBlob);
+
+    newWindow.location.href = blobUrl;
   }
 
   bankPaymentGenerateOrder(type: any) {
@@ -3059,6 +3220,8 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('payment_mode', 'Cash');
         formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
         formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('total_qty', this.totalCartQuantity());
+        formData.append('total_discount', '0');
         formData.append('card_detail', '');
         formData.append('Multipay', '');
         formData.append('PayLatter', '');
@@ -3079,8 +3242,10 @@ export class PosComponent implements OnInit, OnDestroy {
                 if (type == 'print') {
                   // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
                   // this.generatePdf();
-                  const newWindow = window.open('', '_blank');
-                  setTimeout(() => this.generatePdf(newWindow), 1000);
+                  // const newWindow = window.open('', '_blank');
+                  setTimeout(() => {
+                    this.generatePdf(response?.order);
+                  }, 1000);
                   var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
                   clicking.click();
                 } else {
@@ -3120,7 +3285,7 @@ export class PosComponent implements OnInit, OnDestroy {
         "variant": element.id,
         "qty": element.quantity,
         "mrp": element.batch[0].mrp,
-        "discount": element.batch[0].discount,
+        "discount": element.batch[0].discount && element.batch[0].discount.length !== 0 ? element.batch[0].discount : 0,
         "add_discount": element.batch[0].additional_discount,
         "unit_cost": element.batch[0]?.selling_price_offline,
         "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
@@ -3131,6 +3296,11 @@ export class PosComponent implements OnInit, OnDestroy {
       cart.push(item);
     }
     return cart;
+  }
+
+  totalCartQuantity() {
+    const totalQuantity = this.currentItems.reduce((sum, item) => sum + item.quantity, 0);
+    return totalQuantity;
   }
 
   getDateForOrders(timestamp: any) {
