@@ -2760,6 +2760,9 @@ export class PosComponent implements OnInit, OnDestroy {
                 this.customerAutoCompleteControl.setValue('');
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
+                setTimeout(() => {
+                  this.generatePdf(response?.order, 'payLater');
+                }, 1000);
                 var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
                 clicking.click();
                 this.payLaterMethodForm.reset();
@@ -2841,7 +2844,10 @@ export class PosComponent implements OnInit, OnDestroy {
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
-                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  setTimeout(() => {
+                    this.generatePdf(response?.order, 'card');
+                  }, 1000);
                   var clicking = <HTMLElement>document.querySelector('.cardPrintModalClose');
                   clicking.click();
                 } else {
@@ -3032,7 +3038,7 @@ export class PosComponent implements OnInit, OnDestroy {
     }
   }
 
-  generatePdf(orderList) {
+  generatePdf(orderList, type?) {
     const doc = new jsPDF();
     const title = 'Pramod Fashion Retail Limited';
 
@@ -3156,11 +3162,43 @@ export class PosComponent implements OnInit, OnDestroy {
     doc.text(`Total Amount:`, 10, this.textY);
     doc.text(`${orderList?.total_amount}`, 65, this.textY);
     this.textY += 5;
-    doc.text(`Amount Paid:`, 10, this.textY);
-    doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
-    this.textY += 5;
-    doc.text(`Amount Pending:`, 10, this.textY);
-    doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    if (type === 'upi') {
+      doc.text(`Amount Paid By UPI:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending By UPI:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    } else if (type === 'bank') {
+      doc.text(`Amount Paid By Bank:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending By Bank:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    } else if (type === 'cash') {
+      doc.text(`Amount Paid By Cash:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending By Cash:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    } else if (type === 'card') {
+      doc.text(`Amount Paid By Card:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending By Card:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    } else if (type === 'payLater') {
+      doc.text(`Amount Paid By PayLater:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending By PayLater:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    } else {
+      doc.text(`Amount Paid:`, 10, this.textY);
+      doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending:`, 10, this.textY);
+      doc.text(`${orderList?.due_amount}`, 65, this.textY);
+    }
 
     this.textY += 5;
     doc.text('-------------------------------------------------------', 10, this.textY);
@@ -3269,7 +3307,10 @@ export class PosComponent implements OnInit, OnDestroy {
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
-                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  setTimeout(() => {
+                    this.generatePdf(response?.order, 'bank');
+                  }, 1000);
+                  // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
                   var clicking = <HTMLElement>document.querySelector('.bankPrintModalClose');
                   clicking.click();
                 } else {
@@ -3350,7 +3391,10 @@ export class PosComponent implements OnInit, OnDestroy {
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
-                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  setTimeout(() => {
+                    this.generatePdf(response?.order, 'upi');
+                  }, 1000);
+                  // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
                   var clicking = <HTMLElement>document.querySelector('.upiPrintModalClose');
                   clicking.click();
                 } else {
@@ -3427,7 +3471,7 @@ export class PosComponent implements OnInit, OnDestroy {
                   // this.generatePdf();
                   // const newWindow = window.open('', '_blank');
                   setTimeout(() => {
-                    this.generatePdf(response?.order);
+                    this.generatePdf(response?.order, 'cash');
                   }, 1000);
                   var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
                   clicking.click();
