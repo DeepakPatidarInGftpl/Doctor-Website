@@ -170,6 +170,8 @@ export class UpdateCreditNoteComponent implements OnInit {
       formdata.append('note', this.debitNoteForm.get('note')?.value);
       formdata.append('tax', this.debitNoteForm.get('tax')?.value);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
+      formdata.append('pos_bill', '');
+      formdata.append('type', '');
 
       this.transactionService.updateCreditNote(formdata, this.id).subscribe(res => {
         // console.log(res);

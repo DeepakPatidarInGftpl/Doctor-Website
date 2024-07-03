@@ -400,6 +400,9 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       formdata.append('amount', this.recieptVoucherForm.get('amount')?.value);
       formdata.append('note', this.recieptVoucherForm.get('note')?.value);
       formdata.append('payer', this.recieptVoucherForm.get('payer')?.value);
+      formdata.append('tax_percentage', '');
+      formdata.append('tax_amount', '');
+      formdata.append('place_of_supply', '');
       const cartArray = this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {

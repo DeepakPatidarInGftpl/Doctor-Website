@@ -79,9 +79,9 @@
                                 [matAutocomplete]="autos" style="box-sizing: border-box;" />
                             <mat-autocomplete #autos="matAutocomplete">
                                 <ng-container *ngFor="let option of FiltersaleBillList">
-                                    <mat-option *ngIf="option?.is_active==true" [value]="option?.customer_bill_no"
+                                    <mat-option *ngIf="option?.is_active==true" [value]="option?.id"
                                         (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
-                                        {{ option?.customer_bill_no}}
+                                        {{ option?.id}}
                                     </mat-option>
                                 </ng-container>
                                 <mat-option *ngIf="FiltersaleBillList?.length === 0" [value]="'No data found'">

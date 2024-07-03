@@ -171,7 +171,7 @@
 
                                 <tbody>
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
-                                        <td>{{i}}</td>
+                                        <td>{{i + 1}}</td>
                                         <td>{{cart?.sku}}</td>
                                         <td>
                                             <div class="product-title-div">
@@ -190,7 +190,8 @@
                                             </div>
                                             <div class="product-notes" *ngIf="currentCartIndex1 == i">
                                                 <textarea rows="3" cols="3" class="form-control"
-                                                    [(ngModel)]="cart.notes"></textarea>
+                                                    [(ngModel)]="cart.notes"
+                                                    [ngModelOptions]="{standalone: true}"></textarea>
                                             </div>
                                         </td>
                                         <td>
@@ -339,7 +340,7 @@
                                         </div></td> -->
                                         <td>{{getProductAddDisc(cart?.batch[0])}}</td>
                                         <td>{{getProductTax(cart?.batch[0])}}</td>
-                                        <td>{{getNetAmount2(cart?.batch[0], cart?.quantity)}}</td>
+                                        <td>{{getNetAmount2(cart?.batch[0], cart?.quantity).toFixed(2)}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                                 <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                             </button></td>
@@ -418,31 +419,31 @@
                         <div class="col-sm-12">
                             <div class="btns-row">
                                 <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal3" (click)="playBeepSound()">
+                                    data-bs-target="#exampleModal3" (click)="playBeepSound('btn')">
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                     Redeem Credit</button>
                                 <button type="button" class="btn btn-dark holdF6" (click)="holdBill()">
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Hold(F6)</button>
                                 <button type="button" class="btn btn-dark upiF5" data-bs-toggle="modal"
-                                    data-bs-target="#upiMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#upiMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                     UPI(F5)</button>
                                 <button type="button" class="btn btn-dark cardF3" data-bs-toggle="modal"
-                                    data-bs-target="#cardMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#cardMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip"
                                         title="fas fa-credit-card"></i>
                                     Card(F3)</button>
                                 <button type="button" class="btn btn-dark cashF4" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal5" (click)="playBeepSound()">
+                                    data-bs-target="#exampleModal5" (click)="playBeepSound('btn')">
                                     <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Cash(F4)</button>
                                 <button type="button" class="btn btn-dark bankF9" data-bs-toggle="modal"
-                                    data-bs-target="#bankMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#bankMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Bank(F9)</button>
                                 <button type="button" class="btn btn-dark mpF12" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal4" (click)="playBeepSound(); multiplePay()">
+                                    data-bs-target="#exampleModal4" (click)="playBeepSound('btn'); multiplePay()">
                                     <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
                                     Multiple Pay(F12)</button>
 
@@ -453,31 +454,31 @@
                         <div class="col-sm-12">
                             <div class="btns-row">
                                 <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal6" (click)="playBeepSound()">
+                                    data-bs-target="#exampleModal6" (click)="playBeepSound('btn')">
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                     Apply Coupon</button>
-                                <button type="button" class="btn btn-dark w-100">
+                                <button type="button" class="btn btn-dark w-100" (click)="holdAndPrint()">
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Hold&Print</button>
                                 <button type="button" class="btn btn-dark w-100 upF10" data-bs-toggle="modal"
-                                    data-bs-target="#upiPrintMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#upiPrintMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                     UPI&Print(F10)</button>
                                 <button type="button" class="btn btn-dark w-100 cpF7" data-bs-toggle="modal"
-                                    data-bs-target="#cardPrintMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#cardPrintMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Card&Print(F7)</button>
                                 <button type="button" class="btn btn-dark w-100 cashprintF8" data-bs-toggle="modal"
-                                    data-bs-target="#printCashModal" (click)="playBeepSound()">
+                                    data-bs-target="#printCashModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-rupee-sign" data-bs-toggle="tooltip"
                                         title="fas fa-credit-card"></i>
                                     Cash&Print(F8)</button>
                                 <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal"
-                                    data-bs-target="#bankPrintMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#bankPrintMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Bank&Print</button>
                                 <button type="button" class="btn btn-dark w-100 plF11" data-bs-toggle="modal"
-                                    data-bs-target="#payLaterMethodModal" (click)="playBeepSound()">
+                                    data-bs-target="#payLaterMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                     Pay Later(F11)</button>
                             </div>
@@ -617,7 +618,8 @@
                                     Payments</button>
                             </li>
                             <li>
-                                <button type="button" class="btn-pos">
+                                <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                    data-bs-target="#creditNoteModal" (click)="playBeepSound()">
                                     <i class="fas fa-sticky-note" data-bs-toggle="tooltip"
                                         title="fas fa-sticky-note"></i>
                                     Credit Notes</button>
@@ -1424,7 +1426,8 @@
 </div>
 
 <!-- Modal 4-->
-<div class="modal fade modalRedeem posmodal" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade modalRedeem posmodal" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -1501,7 +1504,8 @@
 </div>
 
 <!-- Modal 5-->
-<div class="modal fade posmodal fullmodal-pos" [ngClass]="{'blur-modal': isModalShown}" id="exampleModal4" tabindex="-1"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal fullmodal-pos" [ngClass]="{'blur-modal': isModalShown}" id="exampleModal4" tabindex="-1"
     aria-labelledby="exampleModal4Label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
@@ -1820,7 +1824,8 @@
 </div>
 
 <!-- Modal 6-->
-<div class="modal fade posmodal" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModal5Label"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModal5Label"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -1842,8 +1847,8 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Tendered</label>
-                            <input type="number" [(ngModel)]="tenderedAmount" class="form-control"
-                                placeholder="Tendered">
+                            <input type="number" [(ngModel)]="tenderedAmount" [ngModelOptions]="{standalone: true}"
+                                class="form-control" placeholder="Tendered">
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -1924,7 +1929,8 @@
 </div>
 
 <!-- Modal 7-->
-<div class="modal fade posmodal" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModal6Label"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModal6Label"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -2135,7 +2141,7 @@
             <div class="modal-body">
                 <!-- <div class="radio" *ngFor="let batch of currentProduct?.batch">
                 <label>
-                    <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" > Price: {{batch?.selling_price_offline}}
+                    <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" [ngModelOptions]="{standalone: true}" > Price: {{batch?.selling_price_offline}}
                 </label>
             </div> -->
                 <table class="table mb-0">
@@ -2159,7 +2165,8 @@
                                 <td>
                                     <label>
                                         <input type="radio" name="batchProduct" value="{{batch?.id}}"
-                                            (change)="selectedBatch(batch,i)" [(ngModel)]="currentBatch">
+                                            (change)="selectedBatch(batch,i)" [(ngModel)]="currentBatch"
+                                            [ngModelOptions]="{standalone: true}">
                                     </label>
                                 </td>
                                 <td>{{batch?.mrp}}</td>
@@ -2210,7 +2217,7 @@
                         <tr *ngFor="let charges of currentOrderAdditionalCharges;let ci=index">
                             <td>
                                 <select class="form-select" (change)="updateACInCAC(ci, $event)"
-                                    [(ngModel)]="charges.additional_charge">
+                                    [(ngModel)]="charges.additional_charge" [ngModelOptions]="{standalone: true}">
                                     <option>-- Select --</option>
                                     <option value="{{d.id}}" *ngFor="let d of additionalChargesList">
                                         {{d.additional_charge}}</option>
@@ -2219,7 +2226,8 @@
                             <td>
                                 <div class="input-group">
                                     <input type="text" (change)="updateValueInCAC(ci, $event)" class="form-control"
-                                        placeholder="value" [(ngModel)]="charges.value" aria-label="value"
+                                        placeholder="value" [(ngModel)]="charges.value"
+                                        [ngModelOptions]="{standalone: true}" aria-label="value"
                                         aria-describedby="basic-addon2">
                                     <span class="input-group-text" id="basic-addon2"
                                         (click)="updateValueTypeInCAC(ci, charges.value_type)">{{charges.value_type ===
@@ -2228,7 +2236,7 @@
                             </td>
                             <td>
                                 <select class="form-select" (change)="updateTaxInCAC(ci, $event)"
-                                    [(ngModel)]="charges.tax">
+                                    [(ngModel)]="charges.tax" [ngModelOptions]="{standalone: true}">
                                     <option>-- Select --</option>
                                     <option value="{{d.id}}" *ngFor="let d of taxesList">{{d.title}}</option>
                                 </select>
@@ -2321,7 +2329,8 @@
 </div>
 
 <!-- Modal UPI-->
-<div class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2399,7 +2408,8 @@
 
 
 <!-- Modal Bank-->
-<div class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2463,7 +2473,8 @@
 </div>
 
 <!-- Modal Pay Later-->
-<div class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -2555,7 +2566,8 @@
 </div>
 
 <!-- Modal Card Payment-->
-<div class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -2675,7 +2687,7 @@
     <div class="offcanvas-body">
         <div class="row" *ngFor="let bill of heldBills" (click)="resumeBill(bill.id)">
             <div class="col-sm-12">
-
+                {{test(bill)}}
                 <div class="on-hold-card">
                     <button type="button" class="holdRemove" (click)="removeFromHold(bill.id)">
                         <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
@@ -2846,12 +2858,12 @@ Payment Account is required.
                                 <td>{{i+1}}</td>
                                 <td class="productimgname"><a
                                         routerLink="//transaction/detailsexpensesVoucher/{{products.id}}"
-                                        style="line-height: 3;">{{products?.party?.name}}</a></td>
-                                <td class="text-center">{{products?.expense_no}}</td>
-                                <td class="text-center">{{products?.refrence_bill_no}}</td>
-                                <td class="text-center">{{products?.expense_date}}</td>
-                                <td class="text-center">{{products?.tax_amount}}</td>
-                                <td class="text-center">{{products?.total_amount}}</td>
+                                        style="line-height: 3;">{{products?.party?.name ?? '--'}}</a></td>
+                                <td class="text-center">{{products?.expense_no ?? '--'}}</td>
+                                <td class="text-center">{{products?.refrence_bill_no ?? '--'}}</td>
+                                <td class="text-center">{{products?.expense_date ?? '--'}}</td>
+                                <td class="text-center">{{products?.tax_amount ?? '--'}}</td>
+                                <td class="text-center">{{products?.total_amount ?? '--'}}</td>
                                 <!-- <td>{{products?.reverse_charge}}</td> -->
                             </tr>
                         </tbody>
@@ -3141,19 +3153,83 @@ Payment Account is required.
                                 <td>{{i+1}}</td>
                                 <td class="productimgname"><a
                                         routerLink="//transaction/detailsrecieptVoucher/{{products.id}}"
-                                        style="line-height: 3;">{{products?.payer?.account_id}}</a></td>
-                                <td class="text-center">{{products?.receipt_type}}</td>
-                                <td>{{products.mode_type}}</td>
-                                <td>{{products.receipt_voucher_no}}</td>
-                                <td>{{products?.payer?.account_id}}</td>
-                                <td>{{products?.bank_payment}}</td>
-                                <td>{{products?.date}}</td>
-                                <td>{{products?.transaction_date}}</td>
-                                <td class="text-center">{{products?.transaction_id}}</td>
-                                <td>{{products?.amount}}</td>
+                                        style="line-height: 3;">{{products?.payer?.account_id ?? '--'}}</a></td>
+                                <td class="text-center">{{products?.receipt_type ?? '--'}}</td>
+                                <td>{{products.mode_type ?? '--'}}</td>
+                                <td>{{products.receipt_voucher_no ?? '--'}}</td>
+                                <td>{{products?.payer?.account_id ?? '--'}}</td>
+                                <td>{{products?.bank_payment ?? '--'}}</td>
+                                <td>{{products?.date ?? '--'}}</td>
+                                <td>{{products?.transaction_date ?? '--'}}</td>
+                                <td class="text-center">{{products?.transaction_id ?? '--'}}</td>
+                                <td>{{products?.amount ?? '--'}}</td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="recieptList?.length===0 && !loader">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CreditNote Modal -->
+<div class="modal fade modalPayment posmodal" id="creditNoteModal" tabindex="-1" aria-labelledby="creditNoteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="creditNoteModalLabel">Credit Notes</h5>
+                <button type="button" class="btn-close salesModalClose" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="playBeepSound()">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table datanew" id="mytable">
+                        <thead>
+                            <tr class="payment-voucher-wrapper">
+                                <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Credit Note Date<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Credit Note No<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Sales Bill<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Round off <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="creditNoteList?.length >= 0">
+                            <tr class="payment-voucher-wrapper" *ngFor="let products of creditNoteList; let i = index">
+                                <td>{{i+1}}</td>
+                                <td class="productimgname">
+                                    <a routerLink="//transaction/detailscreditnote/{{products?.id}}"
+                                        style="line-height: 3;">{{products?.account?.account_id ?? '--'}}</a>
+                                </td>
+                                <td>{{products?.date ?? '--'}}</td>
+                                <td>{{products?.credit_note_no ?? '--'}}</td>
+                                <td>{{products?.sale_bill_no?.id ?? '--'}}</td>
+                                <td>{{products?.reason ?? '--'}}</td>
+                                <td>{{products?.roundoff ?? '--'}}</td>
+                                <td>{{products?.tax ?? '--'}}</td>
+                                <td>{{products?.total ?? '--'}}</td>
+                                <td>
+                                    <span
+                                        [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}"
+                                        class="badges">{{products.status}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="creditNoteList?.length===0 && !loader">
                             <tr>
                                 <td colspan="10">
                                     <p class="center-textt">Data not available</p>
@@ -3466,7 +3542,7 @@ Customer is required.
                     <!-- <label class="d-block">Select Payment Type</label> -->
                     <!-- <div class="radio-payments-modal-wrapper d-flex justify-content-around">
                             <div class="form-check" *ngFor="let option of voucherType2">
-                                <input class="form-check-input" type="radio" [value]="option.value" [(ngModel)]="selectedPaymentsOption">
+                                <input class="form-check-input" type="radio" [value]="option.value" [(ngModel)]="selectedPaymentsOption" [ngModelOptions]="{standalone: true}">
                                 <label class="form-check-label">{{option.label}}</label>
                             </div>
                         </div>
@@ -3546,7 +3622,7 @@ Customer is required.
                     <div class="table-responsive">
                         <table class="table datanew" id="mytable">
                             <thead>
-                                <tr>
+                                <tr class="payment-voucher-wrapper">
                                     <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">Supplier<i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
@@ -3562,22 +3638,23 @@ Customer is required.
                                 </tr>
                             </thead>
                             <tbody *ngIf="paymentList?.length>=0 ">
-                                <tr
+                                <tr class="payment-voucher-wrapper"
                                     *ngFor="let products of paymentList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
 
                                     <td>{{i+1+'.'}}</td>
                                     <td class="productimgname"><a
                                             routerLink="//transaction/detailspaymentVoucher/{{products.id}}"
-                                            style="line-height: 3;">{{products?.supplier?.company_name}}</a></td>
-                                    <td class="text-center">{{products?.payment_type}}</td>
-                                    <td>{{products?.mode_type}}</td>
-                                    <td>{{products?.payment_voucher_no}}</td>
-                                    <td>{{products?.payment_account?.account_id}}</td>
-                                    <td>{{products?.bank_payment}}</td>
-                                    <td>{{products?.date}}</td>
-                                    <td>{{products?.transaction_date}}</td>
-                                    <td class="text-center">{{products?.transaction_id}}</td>
-                                    <td>{{products?.amount}}</td>
+                                            style="line-height: 3;">{{products?.supplier?.company_name ?? '--'}}</a>
+                                    </td>
+                                    <td class="text-center">{{products?.payment_type ?? '--'}}</td>
+                                    <td>{{products?.mode_type ?? '--'}}</td>
+                                    <td>{{products?.payment_voucher_no ?? '--'}}</td>
+                                    <td>{{products?.payment_account?.account_id ?? '--'}}</td>
+                                    <td>{{products?.bank_payment ?? '--'}}</td>
+                                    <td>{{products?.date ?? '--'}}</td>
+                                    <td>{{products?.transaction_date ?? '--'}}</td>
+                                    <td class="text-center">{{products?.transaction_id ?? '--'}}</td>
+                                    <td>{{products?.amount ?? '--'}}</td>
                                 </tr>
                             </tbody>
                             <tbody *ngIf="paymentList?.length===0 && !loader">
@@ -3609,7 +3686,8 @@ Customer is required.
 </div>
 
 <!-- Print Cash Modal -->
-<div class="modal fade posmodal" id="printCashModal" tabindex="-1" aria-labelledby="printCashModalLabel"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="printCashModal" tabindex="-1" aria-labelledby="printCashModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -3632,7 +3710,7 @@ Customer is required.
                         <div class="form-group">
                             <label>Tendered</label>
                             <input type="number" [(ngModel)]="tenderedAmount" class="form-control"
-                                placeholder="Tendered">
+                                [ngModelOptions]="{standalone: true}" placeholder="Tendered">
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -3713,7 +3791,8 @@ Customer is required.
 </div>
 
 <!-- Modal UPI Print-->
-<div class="modal fade posmodal" id="upiPrintMethodModal" tabindex="-1" aria-labelledby="upiPrintModalLabel"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="upiPrintMethodModal" tabindex="-1" aria-labelledby="upiPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -3802,7 +3881,8 @@ Customer is required.
                 <form (ngSubmit)="submitMultiPayLater()">
                     <div class="form-group me-3">
                         <label>Payment Terms:</label>
-                        <select [(ngModel)]="payment_terms" (change)="onPaymentTermChange($event.target.value)">
+                        <select [(ngModel)]="payment_terms" [ngModelOptions]="{standalone: true}"
+                            (change)="onPaymentTermChange($event.target.value)">
                             <option value="" selected disabled>Select days
                             </option>
                             <option value="{{payment?.days}}" *ngFor="let payment of paymentTermsList">
@@ -3815,7 +3895,8 @@ Customer is required.
 
                     <div class="form-group me-3">
                         <label>Due Date:</label>
-                        <input class="transaction-date-wrapper" type="date" [(ngModel)]="due_date" />
+                        <input class="transaction-date-wrapper" type="date" [(ngModel)]="due_date"
+                            [ngModelOptions]="{standalone: true}" />
                         <span class="text-danger" *ngIf="!due_date && isFormSubmitted">Due Date
                             is required</span>
                     </div>
@@ -3827,10 +3908,10 @@ Customer is required.
                         </div>
                         <div class="col-6 d-flex align-items-center">
                             <input type="radio" class="input-radio-wrapper" name="option" [(ngModel)]="selectedReminder"
-                                value="True" />
+                                [ngModelOptions]="{standalone: true}" value="True" />
                             <label class="form-check-label ms-2" for="sendReminderYes">Yes</label>
                             <input type="radio" class="input-radio-wrapper ms-3" name="option"
-                                [(ngModel)]="selectedReminder" value="False" />
+                                [(ngModel)]="selectedReminder" [ngModelOptions]="{standalone: true}" value="False" />
                             <label class="form-check-label ms-2" for="sendReminderYes">No</label>
                         </div>
                         <span class="text-danger" *ngIf="!selectedReminder && isFormSubmitted">Send Reminder
@@ -3849,7 +3930,8 @@ Customer is required.
 <div class="modal-backdrop fade show blur-background2" *ngIf="isModalShown"></div>
 
 <!-- Modal Card Payment And Print-->
-<div class="modal fade posmodal" id="cardPrintMethodModal" tabindex="-1" aria-labelledby="cardPrintModalLabel"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="cardPrintMethodModal" tabindex="-1" aria-labelledby="cardPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -3958,7 +4040,8 @@ Customer is required.
 </div>
 
 <!-- Modal Bank Print-->
-<div class="modal fade posmodal" id="bankPrintMethodModal" tabindex="-1" aria-labelledby="bankPrintModalLabel"
+<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+    class="modal fade posmodal" id="bankPrintMethodModal" tabindex="-1" aria-labelledby="bankPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
