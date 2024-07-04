@@ -11,11 +11,20 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { InovoiceComponent } from './inovoice/inovoice.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { MatSelectModule } from '@angular/material/select';
+import { AddPaymentVoucherModule } from '../transactions/add-payment-voucher/add-payment-voucher.module';
+import { PosAddPaymentVoucherComponent } from './pos-add-payment-voucher/pos-add-payment-voucher.component';
+import { PosAddExpenseVoucherComponent } from './pos-add-expense-voucher/pos-add-expense-voucher.component';
+import { PosAddReceiptsVoucherComponent } from './pos-add-receipts-voucher/pos-add-receipts-voucher.component';
+import { PosAddCreditNoteComponent } from './pos-add-credit-note/pos-add-credit-note.component';
 
 @NgModule({
   declarations: [
     PosComponent,
-    InovoiceComponent
+    InovoiceComponent,
+    PosAddPaymentVoucherComponent,
+    PosAddExpenseVoucherComponent,
+    PosAddReceiptsVoucherComponent,
+    PosAddCreditNoteComponent
   ],
   imports: [
     CommonModule,
