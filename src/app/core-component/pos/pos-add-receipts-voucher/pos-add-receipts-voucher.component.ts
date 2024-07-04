@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
-  selector: 'app-update-reciept-voucher',
-  templateUrl: './update-reciept-voucher.component.html',
-  styleUrls: ['./update-reciept-voucher.component.scss']
+  selector: 'app-pos-add-receipts-voucher',
+  templateUrl: './pos-add-receipts-voucher.component.html',
+  styleUrls: ['./pos-add-receipts-voucher.component.scss']
 })
-export class UpdateRecieptVoucherComponent implements OnInit {
+export class PosAddReceiptsVoucherComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private router: Router,
-    private transactionService: TransactionService, private commonService: CommonServiceService,
-    private Arout: ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService, private router: Router,
+    private transactionService: TransactionService, private commonService: CommonServiceService, private posCartService: PosCartService) { }
 
+  customerControlName = 'payment_account';
   customerControl = new FormControl();
   filteredCustomer: Observable<any[]>;
 
@@ -26,6 +28,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   //sale bill
   saleBillControl = new FormControl();
   filteredsaleBill: Observable<any[]>;
+  @Output() modalClose = new EventEmitter<any>();
 
   recieptVoucherForm!: FormGroup;
   minDate: string = '';
@@ -42,25 +45,20 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     return this.recieptVoucherBankForm.controls;
   }
   myControls: FormArray;
-  id: any;
-  editRes: any;
+
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.myControls = new FormArray([]);
-    this.id = this.Arout.snapshot.paramMap.get('id');
-    this.customerControl.setValue('Loading...');
-    this.payerControl.setValue('Loading...');
-
 
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
-      customer: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
-      receipt_voucher_no: new FormControl('', [Validators.required]),
+      payment_account: new FormControl('', [Validators.required]),
+      date: new FormControl(defaultDate,),
+      receipt_voucher_no: new FormControl('',),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
-      payer: new FormControl(''), // account foreign key
+      payer: new FormControl('', [Validators.required]), // account foreign key
       // against bill
       receipt_voucher_cart: this.fb.array([]),
     })
@@ -68,12 +66,12 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.recieptVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate,),
       receipt_voucher_no: new FormControl(''),
-      mode_type: new FormControl('', [Validators.required]),
+      mode_type: new FormControl('',),
       amount: new FormControl(0),
       note: new FormControl(''),
-      payer: new FormControl(''), // account foreign key
+      payer: new FormControl('', [Validators.required]), // account foreign key
       // against bill
       bank_payment: new FormControl(''),
       transaction_id: new FormControl(''),
@@ -99,43 +97,6 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.getAccount();
     this.getSaleBill();
     this.getprefix();
-
-    this.transactionService.getRecieptVoucherById(this.id).subscribe(res => {
-      this.editRes = res;
-      // bank
-      if (this.editRes?.receipt_type == 'Bank') {
-        this.isBank = true;
-        this.isCash = false;
-        this.recieptVoucherBankForm.patchValue(this.editRes)
-        this.recieptVoucherBankForm.get('payment_account')?.patchValue(this.editRes?.payment_account?.id);
-        this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
-        // this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
-        if (this.editRes?.bill_cart.length > 0) {
-          this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
-        } else {
-          this.isCartBank = true;
-          this.isAgainstBillBank = true;
-        }
-
-        this.customerControl.setValue(this.editRes?.customer?.account_id);
-        this.payerControl.setValue(this.editRes?.payer?.account_id);
-      } else {
-        this.recieptVoucherForm.patchValue(this.editRes);
-        this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
-        this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
-        // this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
-        if (this.editRes?.bill_cart.length > 0) {
-          this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
-        } else {
-          this.isCart = true;
-          this.isAgainstBill = true;
-        }
-        this.payerControl.setValue(this.editRes?.payer?.account_id);
-        this.customerControl.setValue(this.editRes?.customer?.account_id);
-
-      }
-
-    })
   }
 
   dateValidation(financialYear) {
@@ -163,50 +124,19 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   getprefix() {
     this.transactionService.getReceiptVoucherPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.data
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo = res?.data;
+        this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.prefixNo[0]?.id);
+        this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastr.error(res.msg)
+        this.toastr.error(res.msg);
       }
     }, err => {
       this.toastr.error(err.error.msg)
     })
   }
   //
-  udateCart(add: any): FormArray {
-    let formarr = new FormArray([]);
-    add.forEach((j: any, i) => {
-      this.isAgainstBill = true;
-      formarr.push(this.fb.group({
-        sale_bill: j.sale_bill?.id,
-        original_amount: j?.original_amount,
-        paid_amount: j?.paid_amount,
-        pending_amount: j?.pending_amount,
-        payment: j?.payment,
-      }))
-
-
-      this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
-    })
-    return formarr
-  }
-  udateCartBank(add: any): FormArray {
-    let formarr = new FormArray([]);
-    add.forEach((j: any, i) => {
-      this.isAgainstBillBank = true;
-      formarr.push(this.fb.group({
-        sale_bill: j.sale_bill?.id,
-        original_amount: j?.original_amount,
-        paid_amount: j?.paid_amount,
-        pending_amount: j?.pending_amount,
-        payment: j?.payment,
-      }))
-      console.log(j);
-
-      this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
-    })
-    return formarr
-  }
   cart(): FormGroup {
     return this.fb.group({
       sale_bill: new FormControl(0),
@@ -219,13 +149,12 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
   }
-  isCart = false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
     this.myControls.push(new FormControl(''));
     this.isCart = false;
   }
-
+  isCart = false;
   removeCart(i: any) {
     this.getCart().removeAt(i);
     if (i == 0) {
@@ -236,12 +165,12 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   getCartBank(): FormArray {
     return this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray;
   }
+  isCartBank = false;
   addCartBank() {
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
     this.isCartBank = false;
   }
-  isCartBank = false;
   removeCartBank(i: any) {
     this.getCartBank().removeAt(i);
     if (this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length == 0) {
@@ -345,9 +274,13 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     });
   }
   oncheck3(data: any, index: number) {
+    console.log(data);
     const cart = (this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       sale_bill: data?.id,
+      original_amount: data?.original_amount,
+      paid_amount: data?.paid_amount,
+      pending_amount: data?.pending_amount,
     });
   }
   //bank
@@ -367,6 +300,9 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     const cart = (this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       sale_bill: data?.id,
+      original_amount: data?.original_amount,
+      paid_amount: data?.paid_amount,
+      pending_amount: data?.pending_amount,
     });
   }
 
@@ -387,7 +323,6 @@ export class UpdateRecieptVoucherComponent implements OnInit {
 
   loaders = false
   addRes: any;
-  modeError: any
   onSubmit() {
     console.log(this.recieptVoucherForm.value);
     if (this.recieptVoucherForm.valid) {
@@ -412,7 +347,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number
           if (!isNaN(control.value)) {
-            cartObject[key] = parseFloat(control.value);
+            cartObject[key] = parseFloat(control.value).toFixed(2);
           } else {
             cartObject[key] = control.value;
           }
@@ -421,26 +356,29 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       });
       formdata.append('receipt_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.updateRecieptVoucher(formdata, this.id).subscribe(
+      this.transactionService.addRecieptVoucher(formdata).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
             this.toastr.success(res.msg);
-            this.router.navigate(['//transaction/recieptVoucherList'])
+            this.recieptVoucherForm.reset();
+            this.customerControl.setValue('');
+            this.payerControl.setValue('');
+            this.modalClose.next(new Date());
           } else {
             this.loaders = false
             // this.toastr.error(res.msg);
+            if (res.error?.mode_type) {
+              this.toastr.error('Select Mode Type', res.error?.mode_type[0])
+              this.modeError = res.error?.mode_type[0]
+              setTimeout(() => {
+                this.modeError = ''
+              }, 5000);
+            }
           }
         },
         (err) => {
           this.loaders = false;
-          if (err.error.error?.mode_type) {
-            this.toastr.error('Select Mode Type', err.error.error?.mode_type[0])
-            this.modeError = err.error.error?.mode_type[0]
-            setTimeout(() => {
-              this.modeError = ''
-            }, 5000);
-          }
         }
       );
     } else {
@@ -449,6 +387,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       this.toastr.error('Please Fill All The Required Fields')
     }
   }
+  modeError: any;
   onBankSubmit() {
     console.log(this.recieptVoucherBankForm.value);
     if (this.recieptVoucherBankForm.valid) {
@@ -476,7 +415,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number
           if (!isNaN(control.value)) {
-            cartObject[key] = parseFloat(control.value);
+            cartObject[key] = parseFloat(control.value).toFixed(2);
           } else {
             cartObject[key] = control.value;
           }
@@ -485,15 +424,18 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       });
       formdata.append('receipt_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.updateRecieptVoucher(formdata, this.id).subscribe(
+      this.posCartService.addPosRecieptVoucher(formdata).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
             this.toastr.success(res.msg);
-            this.router.navigate(['//transaction/recieptVoucherList'])
+            this.recieptVoucherBankForm.reset();
+            this.customerControl.setValue('');
+            this.payerControl.setValue('');
+            this.modalClose.next(new Date());
           } else {
             this.loaders = false
-            this.toastr.error(res.msg);
+            // this.toastr.error(res.msg);
             if (res.error?.mode_type) {
               this.toastr.error('Select Mode Type', res.error?.mode_type[0])
               this.modeError = res.error?.mode_type[0]
@@ -505,16 +447,10 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         },
         (err) => {
           this.loaders = false;
-          if (err.error.error?.mode_type) {
-            this.toastr.error('Select Mode Type', err.error.error?.mode_type[0])
-            this.modeError = err.error.error?.mode_type[0]
-            setTimeout(() => {
-              this.modeError = ''
-            }, 5000);
-          }
         }
       );
     } else {
+      console.log('invalid');
       this.recieptVoucherBankForm.markAllAsTouched();
       this.toastr.error('Please Fill All The Required Fields')
     }
@@ -596,6 +532,5 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   payment(index: number) {
     return this.getCart().controls[index].get('payment');
   }
-
 
 }

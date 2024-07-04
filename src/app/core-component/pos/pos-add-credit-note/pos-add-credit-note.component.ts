@@ -1,46 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { Observable, map, startWith } from 'rxjs';
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
-  selector: 'app-update-credit-note',
-  templateUrl: './update-credit-note.component.html',
-  styleUrls: ['./update-credit-note.component.scss']
+  selector: 'app-pos-add-credit-note',
+  templateUrl: './pos-add-credit-note.component.html',
+  styleUrls: ['./pos-add-credit-note.component.scss']
 })
-export class UpdateCreditNoteComponent implements OnInit {
+export class PosAddCreditNoteComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private transactionService: TransactionService,
-    private saleService: SalesService, private toastr: ToastrService, private router: Router,
-    private Aroute: ActivatedRoute, private commonService: CommonServiceService) { }
+    private saleService: SalesService, private toastr: ToastrService, private router: Router, private commonService: CommonServiceService, private posCartService: PosCartService) { }
   debitNoteForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  @Output() modalClose = new EventEmitter<any>();
 
   get f() {
     return this.debitNoteForm.controls;
   }
-
   fromAccountControl = new FormControl();
   filteredFromAccount: Observable<any[]>;
   //salebill
   billControl = new FormControl();
-
-  id: any;
   ngOnInit(): void {
-    this.id = this.Aroute.snapshot.paramMap.get('id');
-    this.fromAccountControl.setValue('Loading...');
-    this.billControl.setValue('Loading...');
+    const defaultDate = new Date().toISOString().split('T')[0];
     this.debitNoteForm = this.fb.group({
       account: new FormControl('', [Validators.required]),
-      date: new FormControl('', [Validators.required]),
+      date: new FormControl(defaultDate, [Validators.required]),
       credit_note_no: new FormControl('',),
-      sale_bill_no: new FormControl(''),
+      sale_bill_no: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
       tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -49,19 +44,14 @@ export class UpdateCreditNoteComponent implements OnInit {
       status: new FormControl('')
     })
 
-    this.getAccount()
-    this.getSaleBill()
-    this.getprefix()
+    this.getAccount();
+    this.getprefix();
+    this.getSaleBill();
 
-    this.transactionService.getCreditNoteById(this.id).subscribe(res => {
-      console.log(res);
-      this.debitNoteForm.patchValue(res);
-      this.debitNoteForm.get('account').patchValue(res?.account?.id);
-      this.debitNoteForm.get('sale_bill_no').patchValue(res?.sale_bill_no?.id);
-      // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
-      this.fromAccountControl.setValue(res?.account?.account_id);
-      this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
-    })
+    this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, true))
+    );
 
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
@@ -78,10 +68,12 @@ export class UpdateCreditNoteComponent implements OnInit {
   getprefix() {
     this.transactionService.getCreditNotePrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.data;
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo = res?.data;
+        this.debitNoteForm.get('credit_note_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastr.error(res.msg)
+        this.toastr.error(res.msg);
       }
     }, err => {
       this.toastr.error(err.error.msg)
@@ -138,8 +130,6 @@ export class UpdateCreditNoteComponent implements OnInit {
       this.totals = this.amounts.toFixed(2)
     }
   }
-
-
   oncheck(event: any) {
     this.debitNoteForm.patchValue({
       account: event.id
@@ -152,14 +142,12 @@ export class UpdateCreditNoteComponent implements OnInit {
     })
   }
 
-
   addRes: any;
   dateError = null;
   loaders = false;
   submit() {
     if (this.debitNoteForm.valid) {
       this.loaders = true;
-
       const formdata = new FormData();
       formdata.append('account', this.debitNoteForm.get('account')?.value);
       formdata.append('sale_bill_no', this.debitNoteForm.get('sale_bill_no')?.value);
@@ -173,14 +161,15 @@ export class UpdateCreditNoteComponent implements OnInit {
       formdata.append('pos_bill', '');
       formdata.append('type', '');
 
-      this.transactionService.updateCreditNote(formdata, this.id).subscribe(res => {
-        // console.log(res);
+      this.posCartService.addPosCreditNoteList(formdata).subscribe(res => {
         this.loaders = false;
         this.addRes = res
         if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
-          this.debitNoteForm.reset()
-          this.router.navigate(['//transaction/creditnoteList'])
+          this.debitNoteForm.reset();
+          this.billControl.setValue('');
+          this.fromAccountControl.setValue('');
+          this.modalClose.next(new Date());
         } else {
           this.loaders = false;
         }
@@ -220,6 +209,4 @@ export class UpdateCreditNoteComponent implements OnInit {
   get roundoff() {
     return this.debitNoteForm.get('roundoff')
   }
-
 }
-

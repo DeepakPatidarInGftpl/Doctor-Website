@@ -995,3 +995,19 @@ button {
 .blur-modal {
     filter: blur(3px);
 }
+
+.add-icon-wrapper {
+    padding: 4px;
+    border: 1px solid #000;
+    border-radius: 50%;
+}
+
+.payment-voucher-wrapper {
+    td {
+        text-align: center;
+    }
+
+    th {
+        text-align: center;
+    }
+}

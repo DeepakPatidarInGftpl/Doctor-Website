@@ -1,10 +1,3 @@
-<div class="page-header">
-    <div class="page-title">
-        <h4>Add Credit Note</h4>
-        <h6>Create new Credit Note </h6>
-    </div>
-</div>
-<!-- /add -->
 <div class="card">
     <div class="card-body">
         <form [formGroup]="debitNoteForm" (ngSubmit)="submit()">
@@ -12,11 +5,6 @@
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="form-group">
                         <label>Account Name*</label>
-                        <!-- <select formControlName="account"  required id="account" [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
-                            <option value="" selected disabled>Select Account</option>
-                            <option value="{{account?.id}}" *ngFor="let account of accountList"> {{account?.accounts_type}}</option>
-                        </select> -->
-
                         <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Select From Account" aria-label="from_account" matInput
                                 [formControl]="fromAccountControl" [matAutocomplete]="auto"
@@ -53,7 +41,6 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Credit Note Series</label>
-                        <!-- <input type="text" formControlName="credit_note_no" placeholder="Enter Credit Note No." id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}"> -->
                         <select formControlName="credit_note_no">
                             <option value="" selected disabled>Select Credit Note Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -67,11 +54,6 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Select Sale Bill*</label>
-                        <!-- <select formControlName="sale_bill_no"  id="sale_bill_no" [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
-                            <option value="" selected disabled>Select Sale Bill</option>
-                            <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of accountList"> {{purchasebill?.refrence_bill_no}}</option>
-                        </select> -->
-
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
                             <input type="text" placeholder="Search Sale Bill" aria-label="Search sale Bills" matInput
@@ -154,4 +136,3 @@
         </form>
     </div>
 </div>
-<!-- /add -->
