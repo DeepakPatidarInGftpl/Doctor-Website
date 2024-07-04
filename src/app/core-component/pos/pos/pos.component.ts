@@ -31,6 +31,10 @@ export class PosComponent implements OnInit, OnDestroy {
   purchasePayments: any = [];
   expensePayments: any = [];
   isFormSubmitted = false;
+  isExpanseModalShown = false;
+  isReceiptModalShown = false;
+  isCreditNoteModalShown = false;
+  isPaymentModalShown = false;
 
   page: number = 1;
 
@@ -1993,6 +1997,38 @@ export class PosComponent implements OnInit, OnDestroy {
   //     );
   //   }
   // }
+
+  modalClose(event) {
+    if (event) {
+      var clicking = <HTMLElement>document.querySelector('.posPaymentVoucher');
+      clicking.click();
+      this.isPaymentModalShown = false;
+    }
+  }
+
+  expenseModalClose(event) {
+    if (event) {
+      var clicking = <HTMLElement>document.querySelector('.posExpenseVoucher');
+      clicking.click();
+      this.isExpanseModalShown = false;
+    }
+  }
+
+  receiptModalClose(event) {
+    if (event) {
+      var clicking = <HTMLElement>document.querySelector('.posReceiptVoucher');
+      clicking.click();
+      this.isReceiptModalShown = false;
+    }
+  }
+
+  creditNoteModalClose(event) {
+    if (event) {
+      var clicking = <HTMLElement>document.querySelector('.posCreditNote');
+      clicking.click();
+      this.isCreditNoteModalShown = false;
+    }
+  }
 
   onSelectPaymentAccount(value: string, index: number) {
     const formGroup = this.addMorePaymentData.at(index) as FormGroup;

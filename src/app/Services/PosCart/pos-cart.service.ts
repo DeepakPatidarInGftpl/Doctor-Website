@@ -280,4 +280,24 @@ export class PosCartService {
     let url = this.apiUrl + '/pv-api/web/payment_modes_logo/';
     return this.http.get(`${url}`)
   }
+
+  addPosPaymentVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/payment_voucher/';
+    return this.http.post(url, data)
+  }
+
+  addPosCreditNoteList(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/credit_note/';
+    return this.http.post(url, data)
+  }
+
+  addPosExpenseVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/expence_voucher/';
+    return this.http.post(url, data)
+  }
+
+  addPosRecieptVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/receipt_voucher/';
+    return this.http.post(url, data)
+  }
 }

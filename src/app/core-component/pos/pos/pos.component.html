@@ -588,10 +588,18 @@
                             </li>
 
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#posPaymentsModal" (click)="playBeepSound()">
-                                    <i class="fa fa-cash-register" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
-                                    Payments</button>
+                                <div class="d-flex align-items-baseline">
+                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                        data-bs-target="#posPaymentsModal" (click)="playBeepSound()">
+                                        <i class="fa fa-cash-register" data-bs-toggle="tooltip"
+                                            title="fa fa-th-list"></i>
+                                        Payments</button>
+                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
+                                        data-bs-target="#posPaymentsVoucherModal"
+                                        (click)="playBeepSound(); isPaymentModalShown = true;">
+                                        <i class="fas fa-plus add-icon-wrapper"></i>
+                                    </button>
+                                </div>
                             </li>
                             <!-- <li>
                                 <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
@@ -599,17 +607,32 @@
                                         Add Payment</button> 
                             </li> -->
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#expenseModal" (click)="playBeepSound()">
-                                    <i class="fas fa-money-check" data-bs-toggle="tooltip"
-                                        title="fas fa-money-bill"></i>
-                                    Expense</button>
+                                <div class="d-flex align-items-baseline">
+                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                        data-bs-target="#expenseModal" (click)="playBeepSound()">
+                                        <i class="fas fa-money-check" data-bs-toggle="tooltip"
+                                            title="fas fa-money-bill"></i>
+                                        Expense</button>
+                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
+                                        data-bs-target="#posExpenseVoucherModal"
+                                        (click)="playBeepSound(); isExpanseModalShown = true;">
+                                        <i class="fas fa-plus add-icon-wrapper"></i>
+                                    </button>
+                                </div>
                             </li>
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#salesModal" (click)="playBeepSound()">
-                                    <i class="fas fa-receipt" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
-                                    Receipts</button>
+                                <div class="d-flex align-items-baseline">
+                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                        data-bs-target="#salesModal" (click)="playBeepSound()">
+                                        <i class="fas fa-receipt" data-bs-toggle="tooltip"
+                                            title="fas fa-money-bill"></i>
+                                        Receipts</button>
+                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
+                                        data-bs-target="#posReceiptVoucherModal"
+                                        (click)="playBeepSound(); isReceiptModalShown = true;">
+                                        <i class="fas fa-plus add-icon-wrapper"></i>
+                                    </button>
+                                </div>
                             </li>
                             <li>
                                 <button type="button" class="btn-pos" data-bs-toggle="modal"
@@ -618,11 +641,18 @@
                                     Payments</button>
                             </li>
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#creditNoteModal" (click)="playBeepSound()">
-                                    <i class="fas fa-sticky-note" data-bs-toggle="tooltip"
-                                        title="fas fa-sticky-note"></i>
-                                    Credit Notes</button>
+                                <div class="d-flex align-items-baseline">
+                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                        data-bs-target="#creditNoteModal" (click)="playBeepSound()">
+                                        <i class="fas fa-sticky-note" data-bs-toggle="tooltip"
+                                            title="fas fa-sticky-note"></i>
+                                        Credit Notes</button>
+                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
+                                        data-bs-target="#posCreditNoteModal"
+                                        (click)="playBeepSound(); isCreditNoteModalShown = true;">
+                                        <i class="fas fa-plus add-icon-wrapper"></i>
+                                    </button>
+                                </div>
                             </li>
                             <li>
                                 <button type="button" class="btn-pos">
@@ -3524,8 +3554,92 @@ Customer is required.
     </div>
 </div>
 
+<!--Pos Add Payment Voucher Modal -->
+<div class="modal fade posmodal" id="posPaymentsVoucherModal" tabindex="-1" aria-labelledby="posPaymentsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="posPaymentsModalLabel">Payment Voucher Add</h5>
+                <button type="button" class="btn-close posPaymentVoucher" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="playBeepSound()">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isPaymentModalShown">
+                    <app-pos-add-payment-voucher (modalClose)="modalClose($event)"></app-pos-add-payment-voucher>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--Pos Add Expense Voucher Modal -->
+<div class="modal fade posmodal" id="posExpenseVoucherModal" tabindex="-1" aria-labelledby="posExpenseVoucherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="posExpenseVoucherModalLabel">Expense Voucher Add</h5>
+                <button type="button" class="btn-close posExpenseVoucher" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="playBeepSound()">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isExpanseModalShown">
+                    <app-pos-add-expense-voucher (modalClose)="expenseModalClose($event)"></app-pos-add-expense-voucher>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--Pos Add Receipts Voucher Modal -->
+<div class="modal fade posmodal" id="posReceiptVoucherModal" tabindex="-1" aria-labelledby="posReceiptVoucherModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="posReceiptVoucherModalLabel">Reciept Voucher Add</h5>
+                <button type="button" class="btn-close posReceiptVoucher" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="playBeepSound()">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isReceiptModalShown">
+                    <app-pos-add-receipts-voucher
+                        (modalClose)="receiptModalClose($event)"></app-pos-add-receipts-voucher>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Pos Add Credit Note Modal -->
+<div class="modal fade posmodal" id="posCreditNoteModal" tabindex="-1" aria-labelledby="posCreditNoteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="posCreditNoteModalLabel">Add Credit Note</h5>
+                <button type="button" class="btn-close posCreditNote" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="playBeepSound()">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isCreditNoteModalShown">
+                    <app-pos-add-credit-note (modalClose)="creditNoteModalClose($event)"></app-pos-add-credit-note>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Pos Payment Voucher Modal -->
 <div class="modal fade posmodal" id="posPaymentsModal" tabindex="-1" aria-labelledby="posPaymentsModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
