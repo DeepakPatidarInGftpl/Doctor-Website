@@ -19,7 +19,6 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
     private transactionService: TransactionService, private commonService: CommonServiceService, private posCartService: PosCartService) { }
 
   customerControlName = 'payment_account';
-  customerControl = new FormControl();
   filteredCustomer: Observable<any[]>;
 
   // payer 
@@ -37,6 +36,7 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
   bankMaxDate: string = '';
   transactionMinDate: string = '';
   transactionMaxDate: string = '';
+  accountListData: any;
   get h() {
     return this.recieptVoucherForm.controls;
   }
@@ -79,10 +79,6 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
       receipt_voucher_cart: this.fb.array([]),
     })
 
-    this.filteredCustomer = this.customerControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, true))
-    );
     //payer
     this.filteredPayer = this.payerControl.valueChanges.pipe(
       startWith(''),
@@ -97,6 +93,7 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
     this.getAccount();
     this.getSaleBill();
     this.getprefix();
+    this.getAccountByAlies('cash-in-hand');
   }
 
   dateValidation(financialYear) {
@@ -249,7 +246,7 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
   }
 
   private _filterr(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
     const filteredCustomer = include
       ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
@@ -311,14 +308,20 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
   toggleBank() {
     this.isBank = true;
     this.isCash = false;
-    this.customerControl.reset();
     this.payerControl.reset();
+    this.getAccountByAlies('bank-accounts');
   }
   toggleCash() {
     this.isBank = false;
     this.isCash = true;
-    this.customerControl.reset();
     this.payerControl.reset();
+    this.getAccountByAlies('cash-in-hand');
+  }
+
+  getAccountByAlies(value: string) {
+    this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      this.accountListData = res;
+    });
   }
 
   loaders = false
@@ -356,13 +359,12 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
       });
       formdata.append('receipt_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.addRecieptVoucher(formdata).subscribe(
+      this.posCartService.addPosRecieptVoucher(formdata).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
             this.toastr.success(res.msg);
             this.recieptVoucherForm.reset();
-            this.customerControl.setValue('');
             this.payerControl.setValue('');
             this.modalClose.next(new Date());
           } else {
@@ -430,7 +432,6 @@ export class PosAddReceiptsVoucherComponent implements OnInit {
           if (res.success) {
             this.toastr.success(res.msg);
             this.recieptVoucherBankForm.reset();
-            this.customerControl.setValue('');
             this.payerControl.setValue('');
             this.modalClose.next(new Date());
           } else {

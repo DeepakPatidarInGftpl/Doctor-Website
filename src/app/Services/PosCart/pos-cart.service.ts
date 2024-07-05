@@ -297,7 +297,32 @@ export class PosCartService {
   }
 
   addPosRecieptVoucher(data: any) {
-    let url = this.apiUrl + '/pv-api/pos/receipt_voucher/';
+    let url = this.apiUrl + '/pv-api/pos/recipt_voucher/';
     return this.http.post(url, data)
+  }
+
+  getPosPaymentVoucher() {
+    let url = this.apiUrl + '/pv-api/pos/payment_voucher/';
+    return this.http.get(url)
+  }
+
+  getPosCreditNoteList() {
+    let url = this.apiUrl + '/pv-api/pos/credit_note/';
+    return this.http.get(url)
+  }
+
+  getPosExpenseVoucher() {
+    let url = this.apiUrl + '/pv-api/pos/expence_voucher/';
+    return this.http.get(url)
+  }
+
+  getPosRecieptVoucher() {
+    let url = this.apiUrl + '/pv-api/pos/recipt_voucher/';
+    return this.http.get(url)
+  }
+
+  getPosCreditNoteByAccountId(accountId: any) {
+    let url = this.apiUrl + '/pv-api/pos/credit_note/?account_id=' + accountId;
+    return this.http.get(url)
   }
 }

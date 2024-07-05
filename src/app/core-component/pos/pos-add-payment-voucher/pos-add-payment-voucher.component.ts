@@ -17,7 +17,6 @@ export class PosAddPaymentVoucherComponent implements OnInit {
   supplierControl = new FormControl();
   filteredsupplier: Observable<any[]>;
   // payer 
-  payerControl = new FormControl();
   filteredPayer: Observable<any[]>;
   //sale bill
   saleBillControl = new FormControl();
@@ -35,6 +34,7 @@ export class PosAddPaymentVoucherComponent implements OnInit {
   bankMaxDate: string = '';
   transactionMinDate: string = '';
   transactionMaxDate: string = '';
+  accountListData: any;
   get g() {
     return this.paymentVoucherBankForm.controls;
   }
@@ -73,7 +73,7 @@ export class PosAddPaymentVoucherComponent implements OnInit {
       amount: new FormControl(0),
       note: new FormControl(''),
       // against bill
-      bank_payment: new FormControl('',),
+      bank_payment: new FormControl(''),
       transaction_id: new FormControl(''),
       transaction_date: new FormControl(defaultDate),
       payment_voucher_cart: this.fb.array([]),
@@ -90,7 +90,7 @@ export class PosAddPaymentVoucherComponent implements OnInit {
     this.bankTransactionDateValidation(financialYear);
 
     this.supplierControl.valueChanges.subscribe((res) => {
-      if (res.length >= 3) {
+      if (res?.length >= 3) {
         this.getSupplier(res);
       } else {
         this.supplierList = [];
@@ -101,15 +101,11 @@ export class PosAddPaymentVoucherComponent implements OnInit {
       }
     })
 
-    //payer
-    this.filteredPayer = this.payerControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterr(value, true))
-    );
     this.getAccount();
     this.getPurchaseBill();
     this.getDebitNote()
     this.getprefix();
+    this.getAccountByAlies('cash-in-hand');
   }
 
   dateValidation(financialYear) {
@@ -441,13 +437,19 @@ export class PosAddPaymentVoucherComponent implements OnInit {
     this.isBank = true;
     this.isCash = false;
     this.supplierControl.reset();
-    this.payerControl.reset();
+    this.getAccountByAlies('bank-accounts');
   }
   toggleCash() {
     this.isBank = false;
     this.isCash = true;
     this.supplierControl.reset();
-    this.payerControl.reset();
+    this.getAccountByAlies('cash-in-hand');
+  }
+
+  getAccountByAlies(value: string) {
+    this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      this.accountListData = res;
+    });
   }
 
   loaders = false
@@ -515,7 +517,6 @@ export class PosAddPaymentVoucherComponent implements OnInit {
           if (res.success) {
             this.toastr.success(res.msg);
             this.paymentVoucherForm.reset();
-            this.payerControl.setValue('');
             this.supplierControl.setValue('');
             this.modalClose.next(new Date());
           } else {
@@ -598,7 +599,6 @@ export class PosAddPaymentVoucherComponent implements OnInit {
           if (res.success) {
             this.toastr.success(res.msg);
             this.paymentVoucherBankForm.reset();
-            this.payerControl.setValue('');
             this.supplierControl.setValue('');
             this.modalClose.next(new Date());
           } else {

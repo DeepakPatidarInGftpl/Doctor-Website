@@ -35,12 +35,17 @@ export class PosComponent implements OnInit, OnDestroy {
   isReceiptModalShown = false;
   isCreditNoteModalShown = false;
   isPaymentModalShown = false;
+  accountListData: any;
+  selectedCustomerAccountId: any;
+  selectedAccountCreditData: any;
+  creditLimitData: any[] = [];
 
   page: number = 1;
 
   heldBills: any[] = [];
 
   streetcontrol = new FormControl('');
+  applyCredit = new FormControl(0);
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
   onlineEvent: Observable<Event>;
   offlineEvent: Observable<Event>;
@@ -103,6 +108,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
   selectedOptions: any[] = [];
   productsAutocompleteControl = new FormControl();
+  redeemCreditControl = new FormControl();
   //filteredOptions$: Observable<any[]> | undefined;
   filteredOptions$: any;
   customers: any = [];
@@ -180,6 +186,9 @@ export class PosComponent implements OnInit, OnDestroy {
   cartTotalPrice: number;
   userAccoutId: any;
   holdBillActive: boolean = false;
+  cartProductTotalAmout: any;
+  creditRedeemTotalAmount: any;
+  isErrorMessageShown: any;
   private receiptTypeSubscriptions: Subscription[] = [];
 
 
@@ -330,6 +339,15 @@ export class PosComponent implements OnInit, OnDestroy {
       startWith(''),
       map(value => this.__filter(value || '')),
     );
+
+    this.applyCredit.valueChanges.subscribe((res: any) => {
+      if (res <= this.selectedAccountCreditData[0]?.pending_amount) {
+        this.creditRedeemTotalAmount = this.creditRedeemTotalAmount - res;
+        this.isErrorMessageShown = false;
+      } else {
+        this.isErrorMessageShown = true;
+      }
+    })
 
     this.heldBills = this.billHoldService.getHeldBills();
 
@@ -1138,6 +1156,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
   getAccountByAlies(value: string, index: number) {
     this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      this.accountListData = res;
       const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
       paymentGroup.get('payment_account').setValue('');
       this.accountListAlies[index] = res;
@@ -1528,6 +1547,7 @@ export class PosComponent implements OnInit, OnDestroy {
   optionSelected1(event) {
     this.playBeepSound();
     this.currentCustomer = event.option.value;
+    this.selectedCustomerAccountId = event.option.value?.account;
     // console.log(event.option.value, 'cus');
   }
 
@@ -2365,6 +2385,16 @@ export class PosComponent implements OnInit, OnDestroy {
     } else {
       this.formSubmitExpense()
     }
+  }
+
+  applyCreditRedeem() {
+    const creditLimit = {
+      credit_note_id: this.selectedAccountCreditData[0]?.credit_note_no,
+      applyCredit: this.applyCredit.value
+    }
+    this.creditLimitData.push(creditLimit);
+    var clicking = <HTMLElement>document.querySelector('.creditRedeemClose');
+    clicking.click();
   }
 
   formSubmitExpense() {
@@ -3598,7 +3628,7 @@ export class PosComponent implements OnInit, OnDestroy {
   // 20-02
   expenseList: any;
   getExpense() {
-    this.transactionService.getExpensVoucher().subscribe((res: any) => {
+    this.cartService.getPosExpenseVoucher().subscribe((res: any) => {
       this.expenseList = res;
     })
   }
@@ -3610,20 +3640,30 @@ export class PosComponent implements OnInit, OnDestroy {
   }
   recieptList: any;
   getReciept() {
-    this.transactionService.getRecieptVoucher().subscribe((res: any) => {
+    this.cartService.getPosRecieptVoucher().subscribe((res: any) => {
       this.recieptList = res;
     })
   }
   paymentList: any;
   getPayment() {
-    this.transactionService.getPaymentVoucher().subscribe((res: any) => {
+    this.cartService.getPosPaymentVoucher().subscribe((res: any) => {
       this.paymentList = res;
     })
   }
   creditNoteList: any;
   getCreditNote() {
-    this.transactionService.getCreditNote().subscribe(res => {
+    this.cartService.getPosCreditNoteList().subscribe(res => {
       this.creditNoteList = res;
+      console.log(res);
+    })
+  }
+
+  redeemCredit() {
+    this.cartProductTotalAmout = this.finalAmount();
+    this.creditRedeemTotalAmount = this.finalAmount();
+    this.cartService.getPosCreditNoteByAccountId(this.selectedCustomerAccountId).subscribe((res) => {
+      this.selectedAccountCreditData = res;
+      this.redeemCreditControl.setValue(`${res[0]?.credit_note_no} - ${res[0]?.total ?? 0}`);
       console.log(res);
     })
   }
