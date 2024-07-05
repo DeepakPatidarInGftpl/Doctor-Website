@@ -419,7 +419,7 @@
                         <div class="col-sm-12">
                             <div class="btns-row">
                                 <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal3" (click)="playBeepSound('btn')">
+                                    data-bs-target="#exampleModal3" (click)="playBeepSound('btn'); redeemCredit()">
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                     Redeem Credit</button>
                                 <button type="button" class="btn btn-dark holdF6" (click)="holdBill()">
@@ -588,8 +588,15 @@
                             </li>
 
                             <li>
-                                <div class="d-flex align-items-baseline">
-                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                    data-bs-target="#posOrdersModal" (click)="playBeepSound()">
+                                    <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
+                                    Orders</button>
+                            </li>
+
+                            <li>
+                                <div class="d-flex align-items-start">
+                                    <button type="button" class="btn-pos me-0" data-bs-toggle="modal"
                                         data-bs-target="#posPaymentsModal" (click)="playBeepSound()">
                                         <i class="fa fa-cash-register" data-bs-toggle="tooltip"
                                             title="fa fa-th-list"></i>
@@ -606,23 +613,10 @@
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                         Add Payment</button> 
                             </li> -->
+
                             <li>
-                                <div class="d-flex align-items-baseline">
-                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                        data-bs-target="#expenseModal" (click)="playBeepSound()">
-                                        <i class="fas fa-money-check" data-bs-toggle="tooltip"
-                                            title="fas fa-money-bill"></i>
-                                        Expense</button>
-                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
-                                        data-bs-target="#posExpenseVoucherModal"
-                                        (click)="playBeepSound(); isExpanseModalShown = true;">
-                                        <i class="fas fa-plus add-icon-wrapper"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="d-flex align-items-baseline">
-                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                <div class="d-flex align-items-start">
+                                    <button type="button" class="btn-pos me-0" data-bs-toggle="modal"
                                         data-bs-target="#salesModal" (click)="playBeepSound()">
                                         <i class="fas fa-receipt" data-bs-toggle="tooltip"
                                             title="fas fa-money-bill"></i>
@@ -634,15 +628,25 @@
                                     </button>
                                 </div>
                             </li>
+
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#purchaseModal" (click)="playBeepSound()">
-                                    <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
-                                    Payments</button>
+                                <div class="d-flex align-items-start">
+                                    <button type="button" class="btn-pos me-0" data-bs-toggle="modal"
+                                        data-bs-target="#expenseModal" (click)="playBeepSound()">
+                                        <i class="fas fa-money-check" data-bs-toggle="tooltip"
+                                            title="fas fa-money-bill"></i>
+                                        Expense</button>
+                                    <button class="p-0 m-0 border-0" data-bs-toggle="modal"
+                                        data-bs-target="#posExpenseVoucherModal"
+                                        (click)="playBeepSound(); isExpanseModalShown = true;">
+                                        <i class="fas fa-plus add-icon-wrapper"></i>
+                                    </button>
+                                </div>
                             </li>
+
                             <li>
-                                <div class="d-flex align-items-baseline">
-                                    <button type="button" class="btn-pos" data-bs-toggle="modal"
+                                <div class="d-flex align-items-start">
+                                    <button type="button" class="btn-pos me-0" data-bs-toggle="modal"
                                         data-bs-target="#creditNoteModal" (click)="playBeepSound()">
                                         <i class="fas fa-sticky-note" data-bs-toggle="tooltip"
                                             title="fas fa-sticky-note"></i>
@@ -654,17 +658,13 @@
                                     </button>
                                 </div>
                             </li>
-                            <li>
+
+                            <!-- <li>
                                 <button type="button" class="btn-pos">
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                     Redeem Loyalty</button>
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal"
-                                    data-bs-target="#posOrdersModal" (click)="playBeepSound()">
-                                    <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
-                                    Orders</button>
-                            </li>
+                            </li> -->
+
                             <li *ngIf="showSyncButton()">
                                 <button type="button" class="btn-pos">
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
@@ -1463,7 +1463,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModal3Label">Redeem Credit</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close creditRedeemClose" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
             </div>
@@ -1471,7 +1471,8 @@
                 <div class="row">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-8">
-                        <button type="button" class="btn btn-dark w-100">Invoice Balance: 7150</button>
+                        <button type="button" class="btn btn-dark w-100">Invoice Balance: {{cartProductTotalAmout ?? 0}}
+                        </button>
                     </div>
                     <div class="col-sm-2"></div>
                 </div>
@@ -1479,7 +1480,12 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                            <select [formControl]="redeemCreditControl">
+                                <option *ngFor="let item of selectedAccountCreditData"
+                                    [value]="item?.credit_note_no + ' - ' + (item?.total ?? 0)">
+                                    {{item?.credit_note_no}} - {{item?.total ?? 0}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -1489,45 +1495,48 @@
                             <h5>
                                 Credit Note Date
                             </h5>
-                            <h5>
-                                N/A
+                            <h5 *ngIf="selectedAccountCreditData">
+                                {{selectedAccountCreditData[0]?.date}}
                             </h5>
                         </div>
                         <div class="redeem-modal-details">
                             <h5>
                                 Credit Amount
                             </h5>
-                            <h5>
-                                0
+                            <h5 *ngIf="selectedAccountCreditData">
+                                {{selectedAccountCreditData[0]?.total ?? 0}}
                             </h5>
                         </div>
                         <div class="redeem-modal-details">
                             <h5>
                                 Credit Available
                             </h5>
-                            <h5>
-                                0
+                            <h5 *ngIf="selectedAccountCreditData">
+                                {{selectedAccountCreditData[0]?.pending_amount ?? 0}}
                             </h5>
                         </div>
                         <div class="redeem-modal-details">
                             <h5>
                                 Apply Credit
                             </h5>
-                            <input type="number" class="form-control" value="0" />
+                            <input type="number" class="form-control" [formControl]="applyCredit" value="0" />
                         </div>
+                        <p *ngIf="isErrorMessageShown" class="text-danger">Apply Credit value must be less than or
+                            equal to the Credit Available</p>
                         <div class="redeem-modal-details mt-2">
                             <h4>
                                 ₹Payable Amt
                             </h4>
                             <h4>
-                                7150
+                                {{creditRedeemTotalAmount ?? 0}}
                             </h4>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer mt-2">
-                <button type="button" class="btn btn-dark modal2BtnPos">Apply Credit</button>
+                <button type="button" class="btn btn-dark modal2BtnPos" (click)="applyCreditRedeem()">Apply
+                    Credit</button>
             </div>
         </div>
     </div>
@@ -3269,287 +3278,6 @@ Payment Account is required.
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Purchase Payment Modal -->
-<div class="modal fade modalPayment posmodal" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="purchaseModalLabel">Purchase</h5>
-                <button type="button" class="btn-close purchaseModalClose" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="playBeepSound()">
-                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="purchasePaymentForm" (ngSubmit)="formSubmitPurchase()">
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="d-block">Select Payment Type</label>
-                                <div class="radio-payments-modal-wrapper d-flex justify-content-around">
-                                    <div class="form-check" *ngFor="let option of paymentType">
-                                        <input class="form-check-input" type="radio" formControlName="payment_type"
-                                            [value]="option.value">
-                                        <label class="form-check-label">{{option.label}}</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="purchase_payment_type.invalid && (purchase_payment_type.dirty || purchase_payment_type.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_payment_type.errors?.['required']">
-                                    Payment Type is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Party</label>
-                                <input type="text" placeholder="Search for a Party"
-                                    [formControl]="purchasePaymentForm.get('party')" [matAutocomplete]="partyPurchase"
-                                    class="form-control">
-                                <mat-autocomplete #partyPurchase="matAutocomplete" [displayWith]="displayParty"
-                                    (optionSelected)="optionSelectedParty($event)">
-
-                                    <mat-option *ngIf="purchasePaymentForm.get('party').value?.length < 3"
-                                        class="is-loading">Please Enter 3 or more characters</mat-option>
-                                    <mat-option *ngIf="partyIsLoading" class="is-loading">Loading...</mat-option>
-                                    <mat-option *ngIf="partyErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
-                                    <mat-option *ngFor="let party of filteredParty" [value]="party">
-                                        {{ displayParty(party) }}
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </div>
-                            <div *ngIf="purchase_party.invalid && (purchase_party.dirty || purchase_party.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_party.errors?.['required']">
-                                    Party is required.
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Customer</label>
-                                    <input type="text"
-                                    placeholder="Search for a Customer"
-                                    [formControl]="salesPaymentForm.get('customer')"
-                                    [matAutocomplete]="autoReceipt"
-                                    class="form-control">
-                             <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
-                                 
-                                 <mat-option *ngIf="salesPaymentForm.get('customer').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
-                                 <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
-                                 <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
-                               <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
-                                 {{ displayCus(customer) }}
-                               </mat-option>
-                             </mat-autocomplete>
-                                </div>
-                                <div *ngIf="sales_customer.invalid && (sales_customer.dirty || sales_customer.touched)"
-class="alert alert-danger">
-
-<div *ngIf="sales_customer.errors?.['required']">
-Customer is required.
-</div>
-</div>
-                                
-                                   
-                                
-                            </div> -->
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Payment Mode</label>
-                                <select class="form-select" formControlName="payment_mode">
-                                    <option disabled selected value="">-- Select Payment Mode --</option>
-                                    <option *ngFor="let option of paymentMode" [value]="option.value">{{option.label}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div *ngIf="purchase_payment_mode.invalid && (purchase_payment_mode.dirty || purchase_payment_mode.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_payment_mode.errors?.['required']">
-                                    Payment Mode is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" *ngIf="purchasePaymentForm.get('payment_type').value === 'Against Bill'">
-                            <div class="form-group">
-                                <label>Select Sales</label>
-                                <select class="form-select" formControlName="sales">
-                                    <option disabled selected value="">-- Select Sales --</option>
-                                    <option *ngFor="let option of receiptSales" [value]="option?.id">
-                                        {{option?.dueAmount}}</option>
-                                </select>
-                            </div>
-                            <div *ngIf="purchase_sales.invalid && (purchase_sales.dirty || purchase_sales.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_sales.errors?.['required']">
-                                    Selecting Sales is required.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Amount</label>
-                                <input type="number" formControlName="amount" class="form-control"
-                                    placeholder="Enter Amount">
-                            </div>
-                            <div *ngIf="purchase_amount.invalid && (purchase_amount.dirty || purchase_amount.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_amount.errors?.['required']">
-                                    Amount is required.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Payment Account</label>
-                                <select class="form-select" formControlName="payment_account">
-                                    <option value="" disabled selected>Select Payment Account</option>
-                                    <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div *ngIf="purchase_payment_account.invalid && (purchase_payment_account.dirty || purchase_payment_account.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_payment_account.errors?.['required']">
-                                    Payment Account is required.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Remark</label>
-                                <input type="text" formControlName="remark" class="form-control"
-                                    placeholder="Enter Remark">
-                            </div>
-                            <div *ngIf="purchase_remark.invalid && (purchase_remark.dirty || purchase_remark.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_remark.errors?.['required']">
-                                    Remark is required.
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row" *ngIf="purchasePaymentForm.get('payment_mode').value === 'UPI'">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>UPI Id</label>
-                                <input type="text" class="form-control" placeholder="UPI ID" formControlName="upi_id">
-                            </div>
-                            <div *ngIf="purchase_upi_id.invalid && (purchase_upi_id.dirty || purchase_upi_id.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_upi_id.errors?.['required']">
-                                    UPI ID is required.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" *ngIf="purchasePaymentForm.get('payment_mode').value === 'Bank'">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Account No</label>
-                                <input type="text" class="form-control" placeholder="Account No"
-                                    formControlName="account_no">
-                            </div>
-                            <div *ngIf="purchase_account_no.invalid && (purchase_account_no.dirty || purchase_account_no.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_account_no.errors?.['required']">
-                                    Account No is required.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" *ngIf="purchasePaymentForm.get('payment_mode').value === 'Card'">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Customer Bank Name</label>
-                                <input type="text" class="form-control" placeholder="Customer Bank Name"
-                                    formControlName="customer_bank_name">
-                            </div>
-                            <div *ngIf="purchase_customer_bank_name.invalid && (purchase_customer_bank_name.dirty || purchase_customer_bank_name.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_customer_bank_name.errors?.['required']">
-                                    Customer Bank Name is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Card Payment Amount</label>
-                                <input type="number" class="form-control" placeholder="Card Payment Amount"
-                                    formControlName="card_payment_amount">
-                            </div>
-                            <div *ngIf="purchase_card_payment_amount.invalid && (purchase_card_payment_amount.dirty || purchase_card_payment_amount.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_card_payment_amount.errors?.['required']">
-                                    Card Payment Amount is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Card Holder Name</label>
-                                <input type="text" class="form-control" placeholder="Card Holder Name"
-                                    formControlName="card_holder_name">
-                            </div>
-                            <div *ngIf="purchase_card_holder_name.invalid && (purchase_card_holder_name.dirty || purchase_card_holder_name.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_card_holder_name.errors?.['required']">
-                                    Card Holder Name is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Card Transaction No</label>
-                                <input type="number" class="form-control" placeholder="Card Transaction No"
-                                    formControlName="cart_transactions_no">
-                            </div>
-                            <div *ngIf="purchase_cart_transactions_no.invalid && (purchase_cart_transactions_no.dirty || purchase_cart_transactions_no.touched)"
-                                class="alert alert-danger">
-
-                                <div *ngIf="purchase_cart_transactions_no.errors?.['required']">
-                                    Card Transaction No. is required.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-sm-12 d-flex justify-content-center">
-                            <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
-
-                        </div>
-                    </div>
-                </form>
-            </div>
-
         </div>
     </div>
 </div>
