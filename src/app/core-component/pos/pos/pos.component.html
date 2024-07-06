@@ -127,7 +127,8 @@
                                 (optionSelected)="optionSelected1($event)">
                                 <mat-option class="is-loading">
                                     <button type="button" class="btn" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal1">Add New Customer</button>
+                                        data-bs-target="#exampleModal1">Add New
+                                        Customer</button>
                                 </mat-option>
                                 <mat-option *ngIf="customerAutoCompleteControl.value?.length < 3"
                                     class="is-loading">Please Enter 3 or more characters</mat-option>
@@ -478,7 +479,7 @@
                                     <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Bank&Print</button>
                                 <button type="button" class="btn btn-dark w-100 plF11" data-bs-toggle="modal"
-                                    data-bs-target="#payLaterMethodModal" (click)="playBeepSound('btn')">
+                                    (click)="playBeepSound('btn'); payLater()">
                                     <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                     Pay Later(F11)</button>
                             </div>
@@ -2512,7 +2513,7 @@
 </div>
 
 <!-- Modal Pay Later-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="(this.currentItems.length !== 0) && (this.currentCustomer !== null && this.currentCustomer !== undefined) && (creditLimit !== 0) && (isPayLaterModalShown)"
     class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
