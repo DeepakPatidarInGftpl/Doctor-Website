@@ -156,7 +156,7 @@ export class AddCreditNoteComponent implements OnInit {
       formdata.append('tax', this.debitNoteForm.get('tax')?.value);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
       formdata.append('pos_bill', '');
-      formdata.append('type', '');
+      formdata.append('type', 'ERP');
 
       this.transactionService.addCreditNote(formdata).subscribe(res => {
         // console.log(res);

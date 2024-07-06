@@ -20,6 +20,7 @@ export class PosAddCreditNoteComponent implements OnInit {
   debitNoteForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  filteredPosBillList: any[] = [];
   @Output() modalClose = new EventEmitter<any>();
 
   get f() {
@@ -28,14 +29,13 @@ export class PosAddCreditNoteComponent implements OnInit {
   fromAccountControl = new FormControl();
   filteredFromAccount: Observable<any[]>;
   //salebill
-  billControl = new FormControl();
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.debitNoteForm = this.fb.group({
       account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       credit_note_no: new FormControl('',),
-      sale_bill_no: new FormControl('', [Validators.required]),
+      pos_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
       tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -47,6 +47,7 @@ export class PosAddCreditNoteComponent implements OnInit {
     this.getAccount();
     this.getprefix();
     this.getSaleBill();
+    this.getPosOrder();
 
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
       startWith(''),
@@ -142,6 +143,12 @@ export class PosAddCreditNoteComponent implements OnInit {
     })
   }
 
+  getPosOrder() {
+    this.posCartService.getPOSOrders().subscribe((res: any) => {
+      this.filteredPosBillList = res.filter((val) => val?.bill_no !== null && !!val?.bill_no && val?.bill_no !== undefined);
+    })
+  }
+
   addRes: any;
   dateError = null;
   loaders = false;
@@ -150,7 +157,7 @@ export class PosAddCreditNoteComponent implements OnInit {
       this.loaders = true;
       const formdata = new FormData();
       formdata.append('account', this.debitNoteForm.get('account')?.value);
-      formdata.append('sale_bill_no', this.debitNoteForm.get('sale_bill_no')?.value);
+      formdata.append('sale_bill_no', '');
       formdata.append('date', this.debitNoteForm.get('date')?.value);
       formdata.append('credit_note_no', this.debitNoteForm.get('credit_note_no')?.value);
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
@@ -158,8 +165,8 @@ export class PosAddCreditNoteComponent implements OnInit {
       formdata.append('note', this.debitNoteForm.get('note')?.value);
       formdata.append('tax', this.debitNoteForm.get('tax')?.value);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
-      formdata.append('pos_bill', '');
-      formdata.append('type', '');
+      formdata.append('pos_bill', this.debitNoteForm.get('pos_bill')?.value);
+      formdata.append('type', 'POS');
 
       this.posCartService.addPosCreditNoteList(formdata).subscribe(res => {
         this.loaders = false;
@@ -167,7 +174,6 @@ export class PosAddCreditNoteComponent implements OnInit {
         if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.debitNoteForm.reset();
-          this.billControl.setValue('');
           this.fromAccountControl.setValue('');
           this.modalClose.next(new Date());
         } else {
@@ -190,6 +196,9 @@ export class PosAddCreditNoteComponent implements OnInit {
   }
   get credit_note_no() {
     return this.debitNoteForm.get('credit_note_no')
+  }
+  get pos_bill() {
+    return this.debitNoteForm.get('pos_bill')
   }
   get reason() {
     return this.debitNoteForm.get('reason')
