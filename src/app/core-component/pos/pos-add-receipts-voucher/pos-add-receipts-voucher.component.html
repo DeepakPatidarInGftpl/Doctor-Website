@@ -121,6 +121,21 @@
 
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
+                        <label>Tax Percentage</label>
+                        <select [formControl]="taxPercentage" (change)="onChangePercentage($event, 'bank')">
+                            <option value="" selected disabled>Select Tax Percentage</option>
+                            <option [value]="prefix?.id" *ngFor="let prefix of taxSlabList">
+                                {{prefix?.slab_title}}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="taxPercentage && taxPercentage.invalid && taxPercentage.touched">Select
+                            Tax Slab</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
                         <label>Payer*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
@@ -144,6 +159,21 @@
                         </mat-form-field>
                         <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select
                             Payer</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Place of Supply</label>
+                        <select formControlName="place_of_supply">
+                            <option value="" selected disabled>Select state code
+                            </option>
+                            <option value="{{prefix?.id}}" *ngFor="let prefix of stateList">
+                                {{prefix?.state_code}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="place_of_supply && place_of_supply.invalid && place_of_supply.touched">Select
+                            State Code</span>
                     </div>
                 </div>
 
@@ -293,7 +323,7 @@
 </div>
 <!-- Bank -->
 <div class="card" *ngIf="isBank">
-    <div class="card-body">
+    <div class="card-body border-0">
         <form [formGroup]="recieptVoucherBankForm" (ngSubmit)="onBankSubmit()">
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
@@ -446,6 +476,22 @@
                             Amount</span>
                     </div>
                 </div>
+
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Tax Percentage</label>
+                        <select [formControl]="bankTaxPercentage" (change)="onChangePercentage($event, 'bank')">
+                            <option value="" selected disabled>Select Tax Percentage
+                            </option>
+                            <option [value]="prefix?.id" *ngFor="let prefix of taxSlabList">
+                                {{prefix?.slab_title}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="bankTaxPercentage && bankTaxPercentage.invalid && bankTaxPercentage.touched">Select
+                            Tax Slab</span>
+                    </div>
+                </div>
+
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
                         <label>Payer*</label>
@@ -471,6 +517,21 @@
                         </mat-form-field>
                         <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Select
                             Payer</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Place of Supply</label>
+                        <select formControlName="place_of_supply">
+                            <option value="" selected disabled>Select state code
+                            </option>
+                            <option value="{{prefix?.id}}" *ngFor="let prefix of stateList">
+                                {{prefix?.state_code}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="place_of_supply1 && place_of_supply1.invalid && place_of_supply1.touched">Select
+                            State Code</span>
                     </div>
                 </div>
 

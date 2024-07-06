@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -15,7 +16,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class AddRecieptVoucherComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService, private router: Router,
-    private transactionService: TransactionService, private commonService: CommonServiceService) { }
+    private transactionService: TransactionService, private commonService: CommonServiceService, private coreService: CoreService) { }
 
   customerControlName = 'payment_account';
   customerControl = new FormControl();
@@ -35,6 +36,13 @@ export class AddRecieptVoucherComponent implements OnInit {
   bankMaxDate: string = '';
   transactionMinDate: string = '';
   transactionMaxDate: string = '';
+  stateList: any[] = [];
+  taxSlabList: any[] = [];
+  taxAmount: any;
+  selectedPercentageData: any;
+  totalAmout: any;
+  taxPercentage = new FormControl('', [Validators.required]);
+  bankTaxPercentage = new FormControl('', [Validators.required]);
   get h() {
     return this.recieptVoucherForm.controls;
   }
@@ -53,6 +61,7 @@ export class AddRecieptVoucherComponent implements OnInit {
       payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate,),
       receipt_voucher_no: new FormControl('',),
+      place_of_supply: new FormControl('', [Validators.required]),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
@@ -66,6 +75,7 @@ export class AddRecieptVoucherComponent implements OnInit {
       payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate,),
       receipt_voucher_no: new FormControl(''),
+      place_of_supply: new FormControl('', [Validators.required]),
       mode_type: new FormControl('',),
       amount: new FormControl(0),
       note: new FormControl(''),
@@ -95,6 +105,8 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.getAccount();
     this.getSaleBill();
     this.getprefix();
+    this.getStateList();
+    this.getTaxSlabList();
   }
 
   dateValidation(financialYear) {
@@ -224,6 +236,13 @@ export class AddRecieptVoucherComponent implements OnInit {
     })
   }
 
+  getStateList() {
+    this.coreService.getstate().subscribe((res: any) => {
+      console.log(res);
+      this.stateList = res;
+    })
+  }
+
   getFilter(data: any) {
     this.filterSaleBill = this.saleBillList.filter(salebill => {
       if (salebill && salebill?.customer_bill_no) {
@@ -236,7 +255,7 @@ export class AddRecieptVoucherComponent implements OnInit {
   }
 
   private _filter(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
     const filteredCustomer = include
       ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
@@ -247,7 +266,7 @@ export class AddRecieptVoucherComponent implements OnInit {
   }
 
   private _filterr(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
     const filteredCustomer = include
       ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
       : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
@@ -319,9 +338,71 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.payerControl.reset();
   }
 
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
+  calculateTaxAmout(type) {
+    if (this.selectedPercentageData?.variable_tax) {
+      if (type === 'cash') {
+        this.totalAmout = this.recieptVoucherForm.get('amount')?.value;
+      } else {
+        this.totalAmout = this.recieptVoucherBankForm.get('amount')?.value;
+      }
+      if (this.selectedPercentageData?.amount_tax_slabs[1]?.from_amount < this.totalAmout) {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        if (type === 'cash') {
+          const amount = this.recieptVoucherForm.get('amount')?.value;
+          this.taxPercentage.setValue(taxPercentage);
+          this.taxAmount = (amount * taxPercentage) / 100;
+        } else {
+          const amount = this.recieptVoucherBankForm.get('amount')?.value;
+          this.bankTaxPercentage.setValue(taxPercentage);
+          this.taxAmount = (amount * taxPercentage) / 100;
+        }
+      } else {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        if (type === 'cash') {
+          const amount = this.recieptVoucherForm.get('amount')?.value;
+          this.taxPercentage.setValue(taxPercentage);
+          this.taxAmount = (amount * taxPercentage) / 100;
+        } else {
+          const amount = this.recieptVoucherBankForm.get('amount')?.value;
+          this.bankTaxPercentage.setValue(taxPercentage);
+          this.taxAmount = (amount * taxPercentage) / 100;
+        }
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      if (type === 'cash') {
+        const totalAmount = this.recieptVoucherForm.get('amount')?.value;
+        this.taxPercentage.setValue(taxPercentage);
+        this.taxAmount = (totalAmount * taxPercentage) / 100;
+      } else {
+        const totalAmount = this.recieptVoucherBankForm.get('amount')?.value;
+        this.bankTaxPercentage.setValue(taxPercentage);
+        this.taxAmount = (totalAmount * taxPercentage) / 100;
+      }
+    }
+  }
+
+  onChangePercentage(event: Event, type: string): void {
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix.id === Number(selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData = selectedPrefix;
+    }
+  }
+
   loaders = false
   addRes: any;
   onSubmit() {
+    this.calculateTaxAmout('cash');
     console.log(this.recieptVoucherForm.value);
     if (this.recieptVoucherForm.valid) {
       const formdata = new FormData();
@@ -333,9 +414,9 @@ export class AddRecieptVoucherComponent implements OnInit {
       formdata.append('amount', this.recieptVoucherForm.get('amount')?.value);
       formdata.append('note', this.recieptVoucherForm.get('note')?.value);
       formdata.append('payer', this.recieptVoucherForm.get('payer')?.value);
-      formdata.append('tax_percentage', '');
-      formdata.append('tax_amount', '');
-      formdata.append('place_of_supply', '');
+      formdata.append('tax_percentage', this.taxPercentage.value);
+      formdata.append('tax_amount', this.taxAmount);
+      formdata.append('place_of_supply', this.recieptVoucherForm.get('place_of_supply')?.value);
       const cartArray = this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -384,6 +465,7 @@ export class AddRecieptVoucherComponent implements OnInit {
   }
   modeError: any;
   onBankSubmit() {
+    this.calculateTaxAmout('bank');
     console.log(this.recieptVoucherBankForm.value);
     if (this.recieptVoucherBankForm.valid) {
       const formdata = new FormData();
@@ -399,6 +481,9 @@ export class AddRecieptVoucherComponent implements OnInit {
       formdata.append('bank_payment', this.recieptVoucherBankForm.get('bank_payment')?.value);
       formdata.append('transaction_id', this.recieptVoucherBankForm.get('transaction_id')?.value);
       formdata.append('transaction_date', this.recieptVoucherBankForm.get('transaction_date')?.value);
+      formdata.append('tax_percentage', this.bankTaxPercentage.value);
+      formdata.append('tax_amount', this.taxAmount);
+      formdata.append('place_of_supply', this.recieptVoucherBankForm.get('place_of_supply')?.value);
 
 
       const cartArray = this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray;
@@ -463,6 +548,9 @@ export class AddRecieptVoucherComponent implements OnInit {
   get receipt_voucher_no1() {
     return this.recieptVoucherBankForm.get('receipt_voucher_no')
   }
+  get place_of_supply1() {
+    return this.recieptVoucherBankForm.get('place_of_supply')
+  }
   get mode_type1() {
     return this.recieptVoucherBankForm.get('mode_type')
   }
@@ -505,6 +593,9 @@ export class AddRecieptVoucherComponent implements OnInit {
   }
   get receipt_voucher_no() {
     return this.recieptVoucherForm.get('receipt_voucher_no')
+  }
+  get place_of_supply() {
+    return this.recieptVoucherForm.get('place_of_supply')
   }
   get mode_type() {
     return this.recieptVoucherForm.get('mode_type')
