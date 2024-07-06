@@ -325,4 +325,9 @@ export class PosCartService {
     let url = this.apiUrl + '/pv-api/pos/credit_note/?account_id=' + accountId;
     return this.http.get(url)
   }
+
+  getPosCreditLimitByUserId(userId) {
+    let url = this.apiUrl + '/pv-api/get_credit_limit/?user_by_credit_id=' + userId;
+    return this.http.get(url)
+  }
 }

@@ -16,6 +16,7 @@ import { OfferService } from 'src/app/Services/offer/offer.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-pos',
@@ -37,8 +38,10 @@ export class PosComponent implements OnInit, OnDestroy {
   isPaymentModalShown = false;
   accountListData: any;
   selectedCustomerAccountId: any;
+  selectedCustomerUserId: any;
   selectedAccountCreditData: any;
   creditLimitData: any[] = [];
+  isPayLaterModalShown = false;
 
   page: number = 1;
 
@@ -173,7 +176,8 @@ export class PosComponent implements OnInit, OnDestroy {
   accountListAlies: any[] = [];
   paymentModeList: any;
   companyDetails: any;
-
+  creditLimitList: any;
+  creditLimit: any;
   currentAdditionalCharges: any = [];
   activeBill: any;
 
@@ -365,7 +369,7 @@ export class PosComponent implements OnInit, OnDestroy {
       gst_type: [''],
       address_line_1: [''],
       address_line_2: [''],
-      state: ['', [Validators.required]],
+      state: ['28', [Validators.required]],
       city: ['', [Validators.required]],
       pincode: ['841226', [Validators.pattern(/^[0-9]{6}$/)]]
     });
@@ -881,13 +885,15 @@ export class PosComponent implements OnInit, OnDestroy {
           next: (response) => {
             // console.log(response, 'state');
             this.stateList = response;
-            this.state.setValue(response[0].id);
-            this.currentState = response[0].id;
-            this.coreService.getCityByStateId(response[0].id).subscribe({
+            const defaultState = this.stateList.filter((val) => val?.state === 'Bihar');
+            this.state.setValue(defaultState[0]?.id);
+            this.currentState = defaultState[0]?.id;
+            this.coreService.getCityByStateId(defaultState[0]?.id).subscribe({
               next: (response) => {
                 // console.log(response, 'city');
-                this.city.setValue(response[0].id)
-                this.currentCities = response[0].id
+                const defaultCity = response.filter((val) => val?.city === 'Samastipur');
+                this.city.setValue(defaultCity[0].id)
+                this.currentCities = defaultCity[0].id
                 this.cityList = response
               },
               error: (error) => {
@@ -1364,7 +1370,7 @@ export class PosComponent implements OnInit, OnDestroy {
         this.cartTotalPrice = totalPrice;
       }
     }
-    return totalPrice;
+    return Number(totalPrice.toFixed(2));
   }
 
   multiplePay() {
@@ -1548,6 +1554,8 @@ export class PosComponent implements OnInit, OnDestroy {
     this.playBeepSound();
     this.currentCustomer = event.option.value;
     this.selectedCustomerAccountId = event.option.value?.account;
+    this.selectedCustomerUserId = event.option.value?.userid;
+    this.getPosCreditLimit();
     // console.log(event.option.value, 'cus');
   }
 
@@ -1817,7 +1825,7 @@ export class PosComponent implements OnInit, OnDestroy {
       "address_type": ""
     }
     let formData: any = new FormData();
-    formData.append('name', this.registrationForm.get('name').value || '');
+    formData.append('name', this.registrationForm.get('name').value || this.registrationForm.get('mobile_no').value);
     formData.append('mobile_no', this.registrationForm.get('mobile_no').value || '');
     formData.append('whatsapp_no', this.registrationForm.get('whatsapp_no').value || '');
     formData.append('date_of_birth', this.registrationForm.get('date_of_birth').value || '');
@@ -1842,10 +1850,10 @@ export class PosComponent implements OnInit, OnDestroy {
             var clicking = <HTMLElement>document.querySelector('.addCusModal');
             clicking.click();
             this.addMoreDetails = false;
-            this.city.setValue(this.cityList[0].id)
-            this.currentCities = this.cityList[0].id;
-            this.state.setValue(this.stateList[0].id);
-            this.currentState = this.stateList[0].id;
+            // this.city.setValue(this.cityList[0].id)
+            // this.currentCities = this.cityList[0].id;
+            // this.state.setValue(this.stateList[0].id);
+            // this.currentState = this.stateList[0].id;
 
             const newCustomer: any = {
               address: [
@@ -1890,6 +1898,30 @@ export class PosComponent implements OnInit, OnDestroy {
 
   closePayLaterModal() {
     this.isModalShown = false;
+  }
+
+  payLater() {
+    if (this.creditLimit === 0) {
+      this.toastr.error("You don't have credit Limit to done pay Later.");
+      return;
+    } else if (this.totalAmount() > this.creditLimit) {
+      this.toastr.error("Your total amount exceeds your credit limit, so Pay Later is not available.");
+      this.isPayLaterModalShown = false;
+      return;
+    }
+
+    this.isPayLaterModalShown = true;
+    setTimeout(() => {
+      this.showModal('payLaterMethodModal');
+    }, 0);
+  }
+
+  showModal(modalId: string) {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
   }
 
   submitMultiPayLater() {
@@ -1948,12 +1980,21 @@ export class PosComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const totalCartValue = this.totalAmount();
-    const totalAmountTotal = this.calculateAmountTotal();
+    let totalCartValue = this.totalAmount();
+    let totalAmountTotal = this.calculateAmountTotal();
+    let totalPendingAmount = totalCartValue - totalAmountTotal;
 
     if (totalCartValue !== totalAmountTotal) {
-      this.isModalShown = true;
-      document.body.classList.add('modal-open');
+      if (this.creditLimit !== 0) {
+        if (this.creditLimit >= totalPendingAmount) {
+          this.isModalShown = true;
+          document.body.classList.add('modal-open');
+        } else {
+          this.toastr.error("Your total amount exceeds your credit limit, so Pay Later is not available.");
+        }
+      } else {
+        this.toastr.error("You don't have credit Limit to done pay Later.");
+      }
     } else {
       this.isModalShown = false;
       document.body.classList.remove('modal-open');
@@ -1972,7 +2013,7 @@ export class PosComponent implements OnInit, OnDestroy {
             formData.append('customer', JSON.stringify(this.currentCustomer.id));
             formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
             formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-            formData.append('payment_mode', 'Multiple Pay');
+            formData.append('payment_mode', 'Multipay');
             formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
             formData.append('cart_data', JSON.stringify(cartData));
             formData.append('PayLatter', '');
@@ -2063,6 +2104,7 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   onStateChange(event: any) {
+    debugger
     this.currentState = event.target.value;
     const selectedState = event.target.value;
     // const stateCode = this.stateList.find(state => state.id == selectedState.id);
@@ -3102,6 +3144,14 @@ export class PosComponent implements OnInit, OnDestroy {
     if (this.holdBillActive) {
       setTimeout(() => { this.holdDataPdf() }, 1000);
     }
+  }
+
+  getPosCreditLimit() {
+    this.cartService.getPosCreditLimitByUserId(this.selectedCustomerUserId).subscribe((res: any) => {
+      console.log(res);
+      this.creditLimitList = res;
+      this.creditLimit = res?.credit_Limit;
+    })
   }
 
   generatePdf(orderList, type?) {
