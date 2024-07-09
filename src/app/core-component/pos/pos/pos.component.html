@@ -145,7 +145,8 @@
                         </select> -->
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" placeholder="Scan Sales Invoice">
+                        <input type="text" class="form-control" [formControl]="saleInvoice"
+                            (keyup.enter)="onSaleInvoice($event)" placeholder="Scan Sales Invoice">
                     </div>
 
 
@@ -174,10 +175,10 @@
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i + 1}}</td>
                                         <td>{{cart?.sku}}</td>
-                                        <td>
+                                        <td class="product-title-wrapper">
                                             <div class="product-title-div">
                                                 <p class="product-title-cart">
-                                                    {{cart?.product?.title?cart.product?.title:cart.product.name}} |
+                                                    {{cart?.product?.title ? cart.product?.title : cart.product.name}} |
                                                     {{cart?.variant_name}}
                                                     <button class="cart-btn2 cart-btn1" data-bs-toggle="modal"
                                                         data-bs-target="#productDetailsModal"
@@ -208,7 +209,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            {{cart?.batch[0]?.mrp?cart?.batch[0]?.mrp:cart?.product?.mrp}}
+                                            {{cart?.batch[0]?.mrp ? cart?.batch[0]?.mrp :cart?.product?.mrp}}
                                             <!-- <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1"> -->
                                         </td>
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
@@ -420,18 +421,22 @@
                         <div class="col-sm-12">
                             <div class="btns-row">
                                 <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal3" (click)="playBeepSound('btn'); redeemCredit()">
+                                    [disabled]="!isInternetConnection" data-bs-target="#exampleModal3"
+                                    (click)="playBeepSound('btn'); redeemCredit()">
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                     Redeem Credit</button>
-                                <button type="button" class="btn btn-dark holdF6" (click)="holdBill()">
+                                <button type="button" class="btn btn-dark holdF6" [disabled]="!isInternetConnection"
+                                    (click)="holdBill()">
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Hold(F6)</button>
-                                <button type="button" class="btn btn-dark upiF5" data-bs-toggle="modal"
-                                    data-bs-target="#upiMethodModal" (click)="playBeepSound('btn')">
+                                <button type="button" class="btn btn-dark upiF5" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#upiMethodModal"
+                                    (click)="playBeepSound('btn')">
                                     <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                     UPI(F5)</button>
-                                <button type="button" class="btn btn-dark cardF3" data-bs-toggle="modal"
-                                    data-bs-target="#cardMethodModal" (click)="playBeepSound('btn')">
+                                <button type="button" class="btn btn-dark cardF3" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#cardMethodModal"
+                                    (click)="playBeepSound('btn')">
                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip"
                                         title="fas fa-credit-card"></i>
                                     Card(F3)</button>
@@ -439,12 +444,14 @@
                                     data-bs-target="#exampleModal5" (click)="playBeepSound('btn')">
                                     <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Cash(F4)</button>
-                                <button type="button" class="btn btn-dark bankF9" data-bs-toggle="modal"
-                                    data-bs-target="#bankMethodModal" (click)="playBeepSound('btn')">
+                                <button type="button" class="btn btn-dark bankF9" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#bankMethodModal"
+                                    (click)="playBeepSound('btn')">
                                     <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Bank(F9)</button>
-                                <button type="button" class="btn btn-dark mpF12" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal4" (click)="playBeepSound('btn'); multiplePay()">
+                                <button type="button" class="btn btn-dark mpF12" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal4"
+                                    (click)="playBeepSound('btn'); multiplePay()">
                                     <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
                                     Multiple Pay(F12)</button>
 
@@ -454,19 +461,28 @@
                     <div class="row mt-1">
                         <div class="col-sm-12">
                             <div class="btns-row">
-                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal6" (click)="playBeepSound('btn')">
+                                <button type="button" class="btn btn-dark w-100" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal6"
+                                    (click)="playBeepSound('btn')">
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                     Apply Coupon</button>
-                                <button type="button" class="btn btn-dark w-100" (click)="holdAndPrint()">
+                                <button type="button" class="btn btn-dark w-100" [disabled]="!isInternetConnection"
+                                    (click)="playBeepSound('sale'); saleReturn()">
+                                    <i class="fas fa-exchange-alt" data-bs-toggle="tooltip"
+                                        title="fas fa-exchange-alt"></i>
+                                    Sale Return</button>
+                                <button type="button" class="btn btn-dark w-100" [disabled]="!isInternetConnection"
+                                    (click)="holdAndPrint()">
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Hold&Print</button>
-                                <button type="button" class="btn btn-dark w-100 upF10" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-dark w-100 upF10"
+                                    [disabled]="!isInternetConnection" data-bs-toggle="modal"
                                     data-bs-target="#upiPrintMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                     UPI&Print(F10)</button>
-                                <button type="button" class="btn btn-dark w-100 cpF7" data-bs-toggle="modal"
-                                    data-bs-target="#cardPrintMethodModal" (click)="playBeepSound('btn')">
+                                <button type="button" class="btn btn-dark w-100 cpF7" [disabled]="!isInternetConnection"
+                                    data-bs-toggle="modal" data-bs-target="#cardPrintMethodModal"
+                                    (click)="playBeepSound('btn')">
                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                     Card&Print(F7)</button>
                                 <button type="button" class="btn btn-dark w-100 cashprintF8" data-bs-toggle="modal"
@@ -474,11 +490,13 @@
                                     <i class="fas fa-rupee-sign" data-bs-toggle="tooltip"
                                         title="fas fa-credit-card"></i>
                                     Cash&Print(F8)</button>
-                                <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-dark w-100 bankF9"
+                                    [disabled]="!isInternetConnection" data-bs-toggle="modal"
                                     data-bs-target="#bankPrintMethodModal" (click)="playBeepSound('btn')">
                                     <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                     Bank&Print</button>
-                                <button type="button" class="btn btn-dark w-100 plF11" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-dark w-100 plF11"
+                                    [disabled]="!isInternetConnection" data-bs-toggle="modal"
                                     (click)="playBeepSound('btn'); payLater()">
                                     <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                     Pay Later(F11)</button>
@@ -1457,7 +1475,7 @@
 </div>
 
 <!-- Modal 4-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade modalRedeem posmodal" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1544,7 +1562,7 @@
 </div>
 
 <!-- Modal 5-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal fullmodal-pos" [ngClass]="{'blur-modal': isModalShown}" id="exampleModal4" tabindex="-1"
     aria-labelledby="exampleModal4Label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
@@ -1864,7 +1882,7 @@
 </div>
 
 <!-- Modal 6-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModal5Label"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -1950,8 +1968,9 @@
                     </div>
                     <div class="col-sm-7">
                         <div>
-                            <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
-                            <button type="button" class="btn btn-dark mb-2 w-100"
+                            <button *ngIf="!isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
+                                (click)="this.generateOrder()">Submit11</button>
+                            <button *ngIf="isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
                                 (click)="this.cashPaymentGenerateOrder('normal')">Submit</button>
                         </div>
                         <div>
@@ -1969,7 +1988,7 @@
 </div>
 
 <!-- Modal 7-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModal6Label"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
@@ -2157,12 +2176,13 @@
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4 px-3">
                 <h4>Do you want to sync your orders?</h4>
             </div>
-            <div class="modal-footer mt-5">
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="button" class="btn btn-dark modal1BtnPos">Sync Orders</button>
+            <div class="modal-footer d-flex align-items-center justify-content-end p-3">
+                <button type="button" (click)="closeSyncModal()" class="btn close-btn-wrapper m-0 me-3 p-2"
+                    data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-dark p-2 m-0">Sync Orders</button>
             </div>
         </div>
     </div>
@@ -2369,7 +2389,7 @@
 </div>
 
 <!-- Modal UPI-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -2448,7 +2468,7 @@
 
 
 <!-- Modal Bank-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -2513,7 +2533,7 @@
 </div>
 
 <!-- Modal Pay Later-->
-<div *ngIf="(this.currentItems.length !== 0) && (this.currentCustomer !== null && this.currentCustomer !== undefined) && (creditLimit !== 0) && (isPayLaterModalShown)"
+<div *ngIf="(currentItems?.length !== 0) && (currentCustomer !== null && currentCustomer !== undefined) && (creditLimit !== 0) && (isPayLaterModalShown)"
     class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -2606,7 +2626,7 @@
 </div>
 
 <!-- Modal Card Payment-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -3529,7 +3549,7 @@ Payment Account is required.
 </div>
 
 <!-- Print Cash Modal -->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="printCashModal" tabindex="-1" aria-labelledby="printCashModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -3634,7 +3654,7 @@ Payment Account is required.
 </div>
 
 <!-- Modal UPI Print-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="upiPrintMethodModal" tabindex="-1" aria-labelledby="upiPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -3773,7 +3793,7 @@ Payment Account is required.
 <div class="modal-backdrop fade show blur-background2" *ngIf="isModalShown"></div>
 
 <!-- Modal Card Payment And Print-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="cardPrintMethodModal" tabindex="-1" aria-labelledby="cardPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -3883,7 +3903,7 @@ Payment Account is required.
 </div>
 
 <!-- Modal Bank Print-->
-<div *ngIf="this.currentItems.length !== 0 && (this.currentCustomer !== null && this.currentCustomer !== undefined)"
+<div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="bankPrintMethodModal" tabindex="-1" aria-labelledby="bankPrintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -3973,7 +3993,8 @@ Payment Account is required.
                         <!-- <tr *ngFor="let order of posOrders"> -->
                         <tr>
                             <td>Available Stock</td>
-                            <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>
+                            <td>{{currentItems[currentCartIndex]?.batch?.length ?
+                                currentItems[currentCartIndex]?.batch[0]?.stock : 0}}</td>
                         </tr>
                         <tr>
                             <td>Category</td>

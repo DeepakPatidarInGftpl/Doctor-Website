@@ -144,6 +144,33 @@ export class PosCartService {
     })
   }
 
+  getAllCustomer() {
+    let url = this.apiUrl + '/pv-api/pos/customer_filter/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getAllProducts() {
+    let url = this.apiUrl + '/pv-api/pos/all_products/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getAllCustomers() {
+    let url = this.apiUrl + '/pv-api/pos/all_customers/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   getAdditionalCharge() {
     let url = this.apiUrl + '/pv-api/pos/additional_charge_pos/';
     return this.http.get(url, {
@@ -329,5 +356,10 @@ export class PosCartService {
   getPosCreditLimitByUserId(userId) {
     let url = this.apiUrl + '/pv-api/get_credit_limit/?user_by_credit_id=' + userId;
     return this.http.get(url)
+  }
+
+  posOrderReturn(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/pos_order_return/';
+    return this.http.post(url, data);
   }
 }

@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, OnDestroy, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction, of } from 'rxjs';
-import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
+import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError, mapTo } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -17,6 +17,8 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import * as bootstrap from 'bootstrap';
+import { ConnectionService, ConnectionState } from 'ng-connection-service';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 
 @Component({
   selector: 'app-pos',
@@ -42,6 +44,12 @@ export class PosComponent implements OnInit, OnDestroy {
   selectedAccountCreditData: any;
   creditLimitData: any[] = [];
   isPayLaterModalShown = false;
+  isInternetConnection = false;
+  subscription = new Subscription();
+  customerList: any;
+  productList: any;
+  selectedOrderData: any;
+  saleReturnData: any;
 
   page: number = 1;
 
@@ -120,6 +128,7 @@ export class PosComponent implements OnInit, OnDestroy {
   customerAutoCompleteControl = new FormControl('');
   chargesAutoCompleteControl = new FormControl('');
   customerAutoCompleteControl2 = new FormControl('');
+  saleInvoice = new FormControl('');
 
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
@@ -197,7 +206,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
 
   constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService,
-    private offerService: OfferService, private coreService: CoreService, private companyService: CompanyService) {
+    private offerService: OfferService, private coreService: CoreService, private companyService: CompanyService, private connectionService: ConnectionService, private contactService: ContactService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -339,6 +348,8 @@ export class PosComponent implements OnInit, OnDestroy {
     this.getPayment();
     this.getReciept();
     this.getCreditNote();
+    this.getCustomerList();
+    this.getAllProductList();
     this.filteredStreets = this.streetcontrol.valueChanges.pipe(
       startWith(''),
       map(value => this.__filter(value || '')),
@@ -357,6 +368,15 @@ export class PosComponent implements OnInit, OnDestroy {
 
     console.log(this.heldBills);
 
+    this.subscription.add(
+      this.connectionService.monitor().pipe(
+        tap((newState: ConnectionState) => {
+          this.isInternetConnection = newState?.hasInternetAccess;
+        })
+      ).subscribe()
+    );
+
+    this.monitorInternetConnection();
 
     this.registrationForm = this.fb.group({
       name: [''],
@@ -569,10 +589,16 @@ export class PosComponent implements OnInit, OnDestroy {
     });
 
     window.addEventListener('online', () => {
+      this.isInternetConnection = true;
       if (this.showSyncButton) {
         document.getElementById("exampleModal7").classList.add('show');
       }
     })
+
+    window.addEventListener('offline', () => {
+      this.isInternetConnection = false;
+    })
+
     // this.httpClient.get("assets/data.json").subscribe(data =>{
     // console.log(data);
     //   this.customers = data;
@@ -623,8 +649,9 @@ export class PosComponent implements OnInit, OnDestroy {
     //   this.filterArray(value);
     // });
 
+    const token = localStorage.getItem('token');
 
-    let api_token = "4d586523c3dbbc989192bec34006e72a4edebf00";
+    let api_token = token;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Token ${api_token}`
@@ -643,22 +670,39 @@ export class PosComponent implements OnInit, OnDestroy {
           this.filteredProducts = [];
           this.isLoading = true;
         }),
-        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/product_search/?search=${value}`, requestOptions)
-          // switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/sales_product_filter/?search=${value}`, requestOptions)
-          .pipe(
-            catchError(err => {
-              // handleError(err);
-              // console.log('err catch', err);
-              this.errorMsg = 'No Products Found';
-              this.isLoading = false;
-              return [];
-            }),
-            finalize(() => {
-              this.isLoading = false
-              // console.log('search', value)
-            }),
-          )
-        )
+        switchMap(value => {
+          if (this.isInternetConnection) {
+            return this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/product_search/?search=${value}`, requestOptions)
+              .pipe(
+                catchError(err => {
+                  this.errorMsg = 'No Products Found';
+                  this.isLoading = false;
+                  return [];
+                }),
+                finalize(() => {
+                  this.isLoading = false;
+                })
+              );
+          } else {
+            const products = localStorage.getItem('productsList');
+            const productsList = JSON.parse(products);
+            const filteredStaticData = productsList.filter(product =>
+              (product?.product?.title?.toLowerCase()?.includes(value?.toLowerCase())) ||
+              (product?.variant_name?.toLowerCase()?.includes(value?.toLowerCase())) ||
+              (product?.batch[0]?.selling_price_offline?.toString().toLowerCase()?.includes(value?.toLowerCase()))
+            );
+            return of(filteredStaticData).pipe(
+              catchError(err => {
+                this.errorMsg = 'No Products Found';
+                this.isLoading = false;
+                return [];
+              }),
+              finalize(() => {
+                this.isLoading = false;
+              })
+            );
+          }
+        })
       )
       .subscribe((data: any) => {
         // console.log('data', data)
@@ -699,7 +743,7 @@ export class PosComponent implements OnInit, OnDestroy {
         filter((res: any) => {
           console.log(res);
           this.userAccoutId = res?.account;
-          return res !== null && res?.length >= this.cusMinLengthTerm
+          return res !== null && res?.length >= this.cusMinLengthTerm;
         }),
         distinctUntilChanged(),
         debounceTime(100),
@@ -708,46 +752,51 @@ export class PosComponent implements OnInit, OnDestroy {
           this.filteredCustomer = [];
           this.cusIsLoading = true;
         }),
-        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/customer_filter/?search=${value}`, requestOptions)
-          .pipe(
-            catchError(err => {
-              // handleError(err);
-              // console.log('err catch', err);
-              this.cusErrorMsg = 'No Customer Found';
-              this.cusIsLoading = false;
-              return [];
-            }),
-            finalize(() => {
-              this.cusIsLoading = false
-              // console.log('search', value)
-            }),
-          )
-        )
+        switchMap(value => {
+          if (this.isInternetConnection) {
+            return this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/customer_filter/?search=${value}`, requestOptions)
+              .pipe(
+                catchError(err => {
+                  this.cusErrorMsg = 'No Customer Found';
+                  this.cusIsLoading = false;
+                  return of([]);
+                }),
+                finalize(() => {
+                  this.cusIsLoading = false;
+                })
+              );
+          } else {
+            const customer = localStorage.getItem('customerList');
+            const customerList = JSON.parse(customer);
+            const filteredStaticData = customerList.filter(customer =>
+              customer.mobile_no.includes(value) ||
+              customer.address.some(addr =>
+                addr.city.city.toLowerCase().includes(value.toLowerCase()) ||
+                addr.state.state.toLowerCase().includes(value.toLowerCase())
+              )
+            );
+            return of(filteredStaticData).pipe(
+              catchError(err => {
+                this.cusErrorMsg = 'No Customer Found';
+                this.cusIsLoading = false;
+                return of([]);
+              }),
+              finalize(() => {
+                this.cusIsLoading = false;
+              })
+            );
+          }
+        })
       )
       .subscribe((data: any) => {
-        // console.log('data', data)
-
         if (data.length > 0) {
           console.log(data);
-
-          // console.log('data', data)
           this.filteredCustomer = data;
         } else {
           this.filteredCustomer = [];
           this.cusErrorMsg = 'No Customers Found';
         }
-
-        // if (data['Search'] == undefined) {
-        //   this.errorMsg = data['Error'];
-        //   this.filteredProducts = [];
-        //   console.log('if');
-        // } else {
-        //   this.errorMsg = "";
-        //   this.filteredProducts = data['Search'];
-        //   console.log('else');
-        // }
       });
-
 
     this.salesPaymentForm.get('customer').valueChanges
       .pipe(
@@ -1025,6 +1074,20 @@ export class PosComponent implements OnInit, OnDestroy {
     //   control.clearValidators();
     //   control.updateValueAndValidity();
     // });
+  }
+
+  monitorInternetConnection() {
+    const online$ = fromEvent(window, 'online').pipe(mapTo(true));
+    const offline$ = fromEvent(window, 'offline').pipe(mapTo(false));
+    const internet$ = merge(online$, offline$).pipe(
+      startWith(navigator.onLine)
+    );
+
+    this.subscription.add(
+      internet$.subscribe(isOnline => {
+        this.isInternetConnection = isOnline;
+      })
+    );
   }
 
   private __filter(value: string): string[] {
@@ -1464,7 +1527,20 @@ export class PosComponent implements OnInit, OnDestroy {
     return total;
   }
 
+  getCustomerList() {
+    this.cartService.getAllCustomers().subscribe((res) => {
+      this.customerList = res;
+      localStorage.setItem('customerList', JSON.stringify(this.customerList));
+    })
+  }
 
+  getAllProductList() {
+    this.cartService.getAllProducts().subscribe((res) => {
+      this.productList = res;
+      console.log(res);
+      localStorage.setItem('productsList', JSON.stringify(this.productList));
+    })
+  }
 
   confirmBatch() {
     this.playBeepSound();
@@ -1515,7 +1591,7 @@ export class PosComponent implements OnInit, OnDestroy {
     let product1;
     const selectedOption = event.option.value;
     // console.log('prod', selectedOption?.batch);
-    if (selectedOption.batch.length > 1) {
+    if (selectedOption?.batch?.length > 1) {
       // console.log('length > 1');
       this.currentProduct = selectedOption;
       const element = document.getElementById('batchModal') as HTMLElement;
@@ -1749,8 +1825,50 @@ export class PosComponent implements OnInit, OnDestroy {
     return document.getElementById("exampleModal7").classList.remove('show');
   }
 
-  generateOrder() {
+  onSaleInvoice(event) {
+    const orderId = event.target.value;
+    const filteredData = this.posOrders.filter((val) => val?.id === Number(orderId));
+    this.selectedOrderData = filteredData;
+    this.currentCustomer = filteredData[0]?.customer;
+    const customerData = this.customerList.filter((val) => val?.id === filteredData[0]?.customer?.id);
+    const newCustomer: any = {
+      address: [
+        {
+          city: { city: filteredData[0]?.customer?.address[0]?.city?.city },
+          state: { state: filteredData[0]?.customer?.address[0]?.state?.state }
+        }],
+      mobile_no: filteredData[0]?.customer?.mobile_no
+    }
+    this.customerAutoCompleteControl.setValue(newCustomer)
+    console.log(filteredData);
+    console.log(customerData);
 
+    const formattedArray = filteredData[0]?.cart?.map(item => ({
+      id: item?.variant?.id,
+      variant_name: item.variant.variant_name,
+      sku: item?.variant?.sku,
+      product: {
+        id: item.variant.product.id,
+        title: item.variant.product.title,
+        product_store: item.variant.product.product_store,
+        hsncode: item.variant.product.hsncode,
+        brand: item.variant.product.brand,
+        category: item.variant.product.category
+      },
+      batch: item.variant.batch,
+      quantity: item.qty,
+      notes: item.remarks,
+      discount: parseFloat(item.discount)
+    }));
+    console.log(formattedArray);
+    this.currentItems = formattedArray;
+
+    this.currentItems.forEach(product => {
+      this.addToCurrent(product);
+    });
+  }
+
+  generateOrder() {
     if (navigator.onLine) {
       this.selectedOptions = [];
       this.currentCustomer = '';
@@ -1775,8 +1893,31 @@ export class PosComponent implements OnInit, OnDestroy {
       this.toastr.success('Created Offline', 'Order', {
         timeOut: 5000
       });
+
+      let cartData = this.setItemsArr();
+      const payload = {
+        customer: JSON.stringify(this.currentCustomer?.id),
+        additional_charge: JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())),
+        total_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
+        payment_mode: 'Cash',
+        total_tax: JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())),
+        cart_data: JSON.stringify(cartData),
+        total_qty: this.totalCartQuantity(),
+        total_discount: '0',
+        subtotal: this.calculateSubTotal(),
+        Roundoff: this.getRoundOff(),
+        card_detail: '',
+        Multipay: '',
+        PayLatter: '',
+        bank_detail: '',
+        upi_detail: ''
+      }
       this.selectedOptions = [];
       this.currentCustomer = '';
+      this.customerAutoCompleteControl.setValue('');
+      this.saleInvoice.setValue('');
+      this.discardCurrentBill();
+      this.tenderedAmount = 0;
       document.getElementById("exampleModal5Close").click();
     }
   }
@@ -1812,6 +1953,54 @@ export class PosComponent implements OnInit, OnDestroy {
   getStateNameById(stateId: number): string {
     const state = this.stateList.find(s => s.id === stateId);
     return state ? state.state : '';
+  }
+
+  saleReturn() {
+    if (this.selectedOrderData && !!this.saleInvoice.value) {
+      let cartData = this.setItemsArr();
+      let saleReturnCart: any;
+
+      if (cartData?.length > 0) {
+        saleReturnCart = cartData.map(item => ({
+          barcode: item.variant,
+          item_name: item.title,
+          qty: item.qty,
+          price: parseFloat(item.unit_cost).toFixed(2),
+          discount: parseFloat(item.discount).toFixed(2),
+          tax: parseFloat(item.tax_amount).toFixed(2),
+          amount: parseFloat(item.unit_cost) * item.qty - parseFloat(item.discount) + parseFloat(item.tax_amount),
+          total: parseFloat(item.net_cost).toFixed(2)
+        }));
+      } else {
+        saleReturnCart = []
+      }
+
+      let formData: any = new FormData();
+      formData.append('customer', JSON.stringify(this.currentCustomer?.id));
+      formData.append('return_date', this.formatedDate(new Date()));
+      formData.append('pos_bill', JSON.stringify(this.selectedOrderData[0]?.id));
+      formData.append('note', '');
+      formData.append('total_qty', this.totalCartQuantity());
+      formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+      formData.append('total_discount', '0');
+      formData.append('subtotal', this.calculateSubTotal());
+      formData.append('roundoff', this.getRoundOff());
+      formData.append('total', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+      formData.append('flat_discount', '0');
+      formData.append('sale_return_cart', JSON.stringify(saleReturnCart));
+
+      this.cartService.posOrderReturn(formData).subscribe((res: any) => {
+        console.log(res);
+        this.saleReturnData = res;
+        this.customerAutoCompleteControl.setValue('');
+        this.saleInvoice.setValue('');
+        this.discardCurrentBill();
+        this.generatePdf(res?.data, 'posReturn');
+
+      })
+    } else {
+      return;
+    }
   }
 
   submitCustomerForm() {
@@ -1960,6 +2149,7 @@ export class PosComponent implements OnInit, OnDestroy {
             this.payment_terms = '';
             this.due_date = '';
             this.selectedReminder = '';
+            this.saleInvoice.setValue('');
             var clicking = <HTMLElement>document.querySelector('.multiPayLaterModalClose');
             clicking.click();
             var clicking = <HTMLElement>document.querySelector('.paymentModal');
@@ -2023,6 +2213,7 @@ export class PosComponent implements OnInit, OnDestroy {
               console.log(res);
               this.toastr.success(res?.msg)
               this.customerAutoCompleteControl.setValue('');
+              this.saleInvoice.setValue('');
               this.discardCurrentBill();
               this.paymentForm.reset();
               var clicking = <HTMLElement>document.querySelector('.paymentModal');
@@ -2036,6 +2227,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.receiptTypeSubscriptions.forEach(sub => sub.unsubscribe());
+    this.subscription.unsubscribe();
   }
 
   // private subscribeToUserAccountIdChanges() {
@@ -2104,7 +2296,6 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   onStateChange(event: any) {
-    debugger
     this.currentState = event.target.value;
     const selectedState = event.target.value;
     // const stateCode = this.stateList.find(state => state.id == selectedState.id);
@@ -2393,6 +2584,7 @@ export class PosComponent implements OnInit, OnDestroy {
         // this.currentCustomer = null;
         this.discardCurrentBill();
         this.customerAutoCompleteControl.setValue('');
+        this.saleInvoice.setValue('');
       }
     } else {
       this.toastr.error("Please Items To Cart!");
@@ -2866,6 +3058,7 @@ export class PosComponent implements OnInit, OnDestroy {
               // console.log('response order', response);
               if (response.isSuccess) {
                 this.customerAutoCompleteControl.setValue('');
+                this.saleInvoice.setValue('');
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 setTimeout(() => {
@@ -2949,6 +3142,7 @@ export class PosComponent implements OnInit, OnDestroy {
               // console.log('response order', response);
               if (response.isSuccess) {
                 this.customerAutoCompleteControl.setValue('');
+                this.saleInvoice.setValue('');
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
@@ -2984,6 +3178,13 @@ export class PosComponent implements OnInit, OnDestroy {
   getCustomer(id) {
     const customer: any = this.accountList.filter((val) => val?.id === id);
     return customer[0]?.created_by;
+  }
+
+  formatedDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   formatDate(dateString) {
@@ -3221,9 +3422,13 @@ export class PosComponent implements OnInit, OnDestroy {
     this.textY += 10;
     doc.text(`TAX INVOICE`, 25, this.textY);
     this.textY += 10;
-    doc.text(`Bill No.: ${orderList?.bill_no}`, 10, this.textY);
+    if (type === 'posReturn') {
+      doc.text(`POS Return No.:  ${orderList?.pos_return_no ?? ''}`, 10, this.textY);
+    } else {
+      doc.text(`Bill No.:  ${orderList?.bill_no}`, 10, this.textY);
+    }
     this.textY += 5;
-    doc.text(`Date: ${this.formatDate(orderList?.created_date)}   Time:${this.formatHours(orderList?.created_date)}`, 10, this.textY);
+    doc.text(`Date: ${this.formatDate(type === 'posReturn' ? orderList?.pos_bill?.created_date : orderList?.created_date)}   Time:${this.formatHours(type === 'posReturn' ? orderList?.pos_bill?.created_date : orderList?.created_date)}`, 10, this.textY);
 
     this.textY += 10;
     doc.text('-------------------------------------------------------', 10, this.textY);
@@ -3242,15 +3447,27 @@ export class PosComponent implements OnInit, OnDestroy {
     doc.text('-------------------------------------------------------', 10, this.textY);
     this.textY += 5;
 
-    orderList?.cart?.forEach((row) => {
-      doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, this.textY);
-      doc.text(row.net_cost.toFixed(2).toString(), 25, this.textY);
-      doc.text(row.qty.toString(), 45, this.textY);
-      doc.text((row.net_cost * row.qty).toFixed(2).toString(), 60, this.textY);
-      this.textY += 5;
-      doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, this.textY);
-      this.textY += 5;
-    });
+    if (type === 'posReturn') {
+      orderList?.pos_bill?.cart?.forEach((row) => {
+        doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, this.textY);
+        doc.text(row.net_cost?.toString(), 25, this.textY);
+        doc.text(row?.qty?.toString(), 45, this.textY);
+        doc.text((row?.net_cost * row?.qty)?.toFixed(2)?.toString(), 60, this.textY);
+        this.textY += 5;
+        doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, this.textY);
+        this.textY += 5;
+      });
+    } else {
+      orderList?.cart?.forEach((row) => {
+        doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, this.textY);
+        doc.text(row.net_cost?.toString(), 25, this.textY);
+        doc.text(row?.qty?.toString(), 45, this.textY);
+        doc.text((row?.net_cost * row?.qty)?.toFixed(2)?.toString(), 60, this.textY);
+        this.textY += 5;
+        doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, this.textY);
+        this.textY += 5;
+      });
+    }
 
     doc.text('-------------------------------------------------------', 10, this.textY);
 
@@ -3258,25 +3475,25 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.textY += 5;
     doc.text(`Item Count:`, 10, this.textY);
-    doc.text(`${orderList?.get_item_count}`, 65, this.textY);
+    doc.text(`${type === 'posReturn' ? orderList?.pos_bill?.get_item_count : orderList?.get_item_count}`, 65, this.textY);
     this.textY += 5;
     doc.text(`QTY:`, 10, this.textY);
     doc.text(`${orderList?.total_qty}`, 65, this.textY);
     this.textY += 5;
     doc.text(`SubTotal:`, 10, this.textY);
-    doc.text(`${orderList?.total_amount}`, 65, this.textY);
+    doc.text(`${type === 'posReturn' ? orderList?.subtotal : orderList?.total_amount}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Total discount:`, 10, this.textY);
     doc.text(`${orderList?.total_discount}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Credit Redeem:`, 10, this.textY);
-    doc.text(`${orderList?.credit_redeem}`, 65, this.textY);
+    doc.text(`${type === 'posReturn' ? orderList?.pos_bill?.credit_redeem : orderList?.credit_redeem}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Total Tax Amount:`, 10, this.textY);
     doc.text(`${orderList?.total_tax}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Total Amount:`, 10, this.textY);
-    doc.text(`${orderList?.total_amount}`, 65, this.textY);
+    doc.text(`${type === 'posReturn' ? orderList?.pos_bill?.total_amount : orderList?.total_amount}`, 65, this.textY);
     this.textY += 5;
     if (type === 'upi') {
       doc.text(`Amount Paid By UPI:`, 10, this.textY);
@@ -3308,7 +3525,14 @@ export class PosComponent implements OnInit, OnDestroy {
       this.textY += 5;
       doc.text(`Amount Pending By PayLater:`, 10, this.textY);
       doc.text(`${orderList?.due_amount}`, 65, this.textY);
-    } else {
+    } else if (type === 'posReturn') {
+      doc.text(`Amount Paid:`, 10, this.textY);
+      doc.text(`${orderList?.pos_bill?.total_amount - orderList?.pos_bill?.due_amount}`, 65, this.textY);
+      this.textY += 5;
+      doc.text(`Amount Pending:`, 10, this.textY);
+      doc.text(`${orderList?.pos_bill?.due_amount}`, 65, this.textY);
+    }
+    else {
       doc.text(`Amount Paid:`, 10, this.textY);
       doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
       this.textY += 5;
@@ -3346,17 +3570,31 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.textY += 5;
 
-    orderList?.tax_summary?.forEach((row) => {
-      doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
-      doc.text(row.taxable_amount.toFixed(2).toString(), 25, this.textY);
-      doc.text(row.cgst.toFixed(2).toString(), 45, this.textY);
-      doc.text(row.sgst.toFixed(2).toString(), 60, this.textY);
-      this.textY += 10;
+    if (type === 'posReturn') {
+      orderList?.pos_bill?.tax_summary?.forEach((row) => {
+        doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
+        doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
+        doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
+        doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
+        this.textY += 10;
 
-      this.totalTaxableAmount += row.taxable_amount;
-      this.totalCGST += row.cgst;
-      this.totalSGST += row.sgst;
-    });
+        this.totalTaxableAmount += row.taxable_amount;
+        this.totalCGST += row.cgst;
+        this.totalSGST += row.sgst;
+      });
+    } else {
+      orderList?.tax_summary?.forEach((row) => {
+        doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
+        doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
+        doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
+        doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
+        this.textY += 10;
+
+        this.totalTaxableAmount += row.taxable_amount;
+        this.totalCGST += row.cgst;
+        this.totalSGST += row.sgst;
+      });
+    }
 
     doc.text('Total', 10, this.textY);
     doc.text(`${this.totalTaxableAmount.toFixed(2)}`, 25, this.textY);
@@ -3420,6 +3658,7 @@ export class PosComponent implements OnInit, OnDestroy {
               // console.log('response order', response);
               if (response.isSuccess) {
                 this.customerAutoCompleteControl.setValue('');
+                this.saleInvoice.setValue('');
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
@@ -3504,6 +3743,7 @@ export class PosComponent implements OnInit, OnDestroy {
               // console.log('response order', response);
               if (response.isSuccess) {
                 this.customerAutoCompleteControl.setValue('');
+                this.saleInvoice.setValue('');
                 this.discardCurrentBill();
                 this.toastr.success(response.msg)
                 if (type == 'print') {
@@ -3578,6 +3818,7 @@ export class PosComponent implements OnInit, OnDestroy {
               // console.log('response order', response);
               if (response.isSuccess) {
                 this.customerAutoCompleteControl.setValue('');
+                this.saleInvoice.setValue('');
                 this.discardCurrentBill();
                 this.tenderedAmount = 0;
                 this.toastr.success(response.msg)
@@ -3634,7 +3875,8 @@ export class PosComponent implements OnInit, OnDestroy {
         "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
         "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": element.notes,
-        "tax_percentage": element?.batch[0]?.sale_tax || 0
+        "tax_percentage": element?.batch[0]?.sale_tax || 0,
+        "title": element?.product?.title
       };
       cart.push(item);
     }
@@ -3670,6 +3912,12 @@ export class PosComponent implements OnInit, OnDestroy {
     if ((this.currentCustomer === null || this.currentCustomer === undefined) && type === 'btn') {
       this.toastr.error('Please Select/Add a Customer!');
       return;
+    }
+
+    if (type === 'sale') {
+      if (!this.saleInvoice.value) {
+        return;
+      }
     }
     const beepSound = new Audio('assets/dummy/beep.mp3');
     beepSound.play();
