@@ -16,6 +16,7 @@ import { PosAddPaymentVoucherComponent } from './pos-add-payment-voucher/pos-add
 import { PosAddExpenseVoucherComponent } from './pos-add-expense-voucher/pos-add-expense-voucher.component';
 import { PosAddReceiptsVoucherComponent } from './pos-add-receipts-voucher/pos-add-receipts-voucher.component';
 import { PosAddCreditNoteComponent } from './pos-add-credit-note/pos-add-credit-note.component';
+import { ConnectionServiceModule } from 'ng-connection-service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PosAddCreditNoteComponent } from './pos-add-credit-note/pos-add-credit-
     MatInputModule,
     NgxPaginationModule,
     SharedModuleModule,
-    MatSelectModule
+    MatSelectModule,
+    ConnectionServiceModule
   ]
 })
 export class PosModule { }
