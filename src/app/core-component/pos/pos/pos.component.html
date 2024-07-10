@@ -866,6 +866,12 @@
     </div>
 </div>
 
+<div *ngIf="isSyncLoading" class="spinner-container">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade posmodal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1969,7 +1975,7 @@
                     <div class="col-sm-7">
                         <div>
                             <button *ngIf="!isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
-                                (click)="this.generateOrder()">Submit11</button>
+                                (click)="this.generateOrder()">Submit</button>
                             <button *ngIf="isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
                                 (click)="this.cashPaymentGenerateOrder('normal')">Submit</button>
                         </div>
@@ -2182,7 +2188,7 @@
             <div class="modal-footer d-flex align-items-center justify-content-end p-3">
                 <button type="button" (click)="closeSyncModal()" class="btn close-btn-wrapper m-0 me-3 p-2"
                     data-bs-dismiss="modal" aria-label="Close">Close</button>
-                <button type="button" class="btn btn-dark p-2 m-0">Sync Orders</button>
+                <button type="button" class="btn btn-dark p-2 m-0" (click)="syncOfflineOrder()">Sync Orders</button>
             </div>
         </div>
     </div>
