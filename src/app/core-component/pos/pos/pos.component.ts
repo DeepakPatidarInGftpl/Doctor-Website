@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, Inject, OnDestroy, NgZone } from '@ang
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction, of } from 'rxjs';
-import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError, mapTo } from 'rxjs/operators';
+import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError, mapTo, concatMap } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -38,6 +38,7 @@ export class PosComponent implements OnInit, OnDestroy {
   isReceiptModalShown = false;
   isCreditNoteModalShown = false;
   isPaymentModalShown = false;
+  isSyncLoading = false;
   accountListData: any;
   selectedCustomerAccountId: any;
   selectedCustomerUserId: any;
@@ -371,7 +372,15 @@ export class PosComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.connectionService.monitor().pipe(
         tap((newState: ConnectionState) => {
-          this.isInternetConnection = newState?.hasInternetAccess;
+          if (newState.hasNetworkConnection && newState.hasInternetAccess) {
+            this.isInternetConnection = true;
+            if (this.showSyncButton()) {
+              document.getElementById("exampleModal7").classList.add('show');
+              this.isModalOpen = true;
+            }
+          } else {
+            this.isInternetConnection = false;
+          }
         })
       ).subscribe()
     );
@@ -590,8 +599,9 @@ export class PosComponent implements OnInit, OnDestroy {
 
     window.addEventListener('online', () => {
       this.isInternetConnection = true;
-      if (this.showSyncButton) {
+      if (this.showSyncButton()) {
         document.getElementById("exampleModal7").classList.add('show');
+        this.isModalOpen = true;
       }
     })
 
@@ -1048,6 +1058,7 @@ export class PosComponent implements OnInit, OnDestroy {
   getCompanyDetails() {
     this.companyService.getCompany().subscribe((res) => {
       this.companyDetails = res[0];
+      localStorage.setItem('companyDetails', JSON.stringify(this.companyDetails));
     })
   }
 
@@ -1620,6 +1631,53 @@ export class PosComponent implements OnInit, OnDestroy {
 
   }
 
+  async syncOfflineOrder() {
+    this.isSyncLoading = true;
+    this.isModalOpen = true;
+    document.getElementById("exampleModal7").classList.remove('show');
+    const orderData = localStorage.getItem('orders');
+    let orderList = JSON.parse(orderData);
+    const syncedOrders = [];
+
+    for (let index = 0; index < orderList.length; index++) {
+      const order = orderList[index];
+      const formData = new FormData();
+      formData.append('customer', order.customer);
+      formData.append('additional_charge', order.additional_charge);
+      formData.append('total_amount', order.total_amount);
+      formData.append('payment_mode', 'Cash');
+      formData.append('total_tax', order.total_tax);
+      formData.append('cart_data', order.cart_data);
+      formData.append('total_qty', order.total_qty);
+      formData.append('total_discount', order.total_discount);
+      formData.append('subtotal', JSON.stringify(order.subtotal));
+      formData.append('Roundoff', order.Roundoff);
+      formData.append('card_detail', '');
+      formData.append('Multipay', '');
+      formData.append('PayLatter', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+
+      try {
+        await this.cartService.generateOrderNew(formData).pipe(
+          tap((res) => {
+            syncedOrders.push(index);
+          })
+        ).toPromise();
+      } catch (error) {
+        console.error('Error syncing order:', error);
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    orderList = orderList.filter((_, index) => !syncedOrders.includes(index));
+    if (orderList.length > 0) {
+      localStorage.setItem('orders', JSON.stringify(orderList));
+    } else {
+      localStorage.removeItem('orders');
+    }
+    this.isSyncLoading = false;
+    this.isModalOpen = false;
+  }
 
   optionSelectedCharge(event) {
     const selectedOption = event.option.value;
@@ -1822,6 +1880,7 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   closeSyncModal() {
+    this.isModalOpen = false;
     return document.getElementById("exampleModal7").classList.remove('show');
   }
 
@@ -1882,20 +1941,12 @@ export class PosComponent implements OnInit, OnDestroy {
       let tendered = this.tenderedAmount;
       let total = this.totalAmount();
       let customer = this.currentCustomer;
-      let order = {
-        ChangeAmt: change,
-        TenderedAmt: tendered,
-        Total: total,
-        CustomerName: customer,
-        Items: cartItems
-      }
-      this.cartService.generateOrder(order);
       this.toastr.success('Created Offline', 'Order', {
         timeOut: 5000
       });
 
       let cartData = this.setItemsArr();
-      const payload = {
+      const orderData = {
         customer: JSON.stringify(this.currentCustomer?.id),
         additional_charge: JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())),
         total_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
@@ -1912,6 +1963,7 @@ export class PosComponent implements OnInit, OnDestroy {
         bank_detail: '',
         upi_detail: ''
       }
+      this.cartService.generateOrder(orderData);
       this.selectedOptions = [];
       this.currentCustomer = '';
       this.customerAutoCompleteControl.setValue('');
@@ -3272,6 +3324,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.textY = 48;
     doc.setFontSize(10);
+    debugger
 
     this.heldBills?.forEach((row) => {
       doc.text(`ORD: ${row?.id?.substring(0, 25) ?? '--'}`, 10, this.textY);
@@ -3348,11 +3401,13 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   getPosCreditLimit() {
-    this.cartService.getPosCreditLimitByUserId(this.selectedCustomerUserId).subscribe((res: any) => {
-      console.log(res);
-      this.creditLimitList = res;
-      this.creditLimit = res?.credit_Limit;
-    })
+    if (this.isInternetConnection) {
+      this.cartService.getPosCreditLimitByUserId(this.selectedCustomerUserId).subscribe((res: any) => {
+        console.log(res);
+        this.creditLimitList = res;
+        this.creditLimit = res?.credit_Limit;
+      })
+    }
   }
 
   generatePdf(orderList, type?) {
@@ -3368,18 +3423,20 @@ export class PosComponent implements OnInit, OnDestroy {
     this.textY = 48;
 
     doc.setFontSize(10);
-    doc.text(`${this.companyDetails?.name ?? ''}`, 10, this.textY);
+    let companyData: any = localStorage.getItem('companyDetails');
+    let companyDetails = JSON.parse(companyData);
+    doc.text(`${companyDetails?.name ?? ''}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`${this.companyDetails?.address ?? ''}`, 10, this.textY);
+    doc.text(`${companyDetails?.address ?? ''}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`${this.companyDetails?.city?.city ?? ''}, ${this.companyDetails?.state?.state ?? ''}, ${this.companyDetails?.country
-      ?.country_name ?? ''}, ${this.companyDetails?.pincode ?? ''}`, 10, this.textY);
+    doc.text(`${companyDetails?.city?.city ?? ''}, ${companyDetails?.state?.state ?? ''}, ${companyDetails?.country
+      ?.country_name ?? ''}, ${companyDetails?.pincode ?? ''}`, 10, this.textY);
     this.textY += 10;
-    doc.text(`Customer Care: ${this.companyDetails?.phone ?? '--'}`, 10, this.textY);
+    doc.text(`Customer Care: ${companyDetails?.phone ?? '--'}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`GSTIN: ${this.companyDetails?.gst ?? '--'}`, 10, this.textY);
+    doc.text(`GSTIN: ${companyDetails?.gst ?? '--'}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`Place of Supply & State code: ${this.companyDetails?.state_code?.gst_code} ${this.companyDetails?.state_code?.state_code}`, 10, this.textY);
+    doc.text(`Place of Supply & State code: ${companyDetails?.state_code?.gst_code ?? ''} ${companyDetails?.state_code?.state_code ?? ''}`, 10, this.textY);
 
     this.textY += 10;
     doc.text('-------------------------------------------------------', 10, this.textY);
@@ -3392,8 +3449,10 @@ export class PosComponent implements OnInit, OnDestroy {
     this.textY += 5;
     doc.text(`Customer Details`, 10, this.textY);
     this.textY += 5;
-    doc.text(`${this.getCustomer(orderList?.customer?.account)}`, 10, this.textY);
-    this.textY += 5;
+    if (orderList?.customer?.account) {
+      doc.text(`${orderList?.customer?.account ? this.getCustomer(orderList?.customer?.account) : ''}`, 10, this.textY);
+      this.textY += 5;
+    }
     const customerAddress = {
       address_line_1: orderList?.customer?.address[0]?.address_line_1 ?? '',
       address_line_2: orderList?.customer?.address[0]?.address_line_2 ?? '',
@@ -3407,15 +3466,17 @@ export class PosComponent implements OnInit, OnDestroy {
     let addressLine2 = customerAddress.address_line_2;
     let fullAddress = `${addressLine1}, ${addressLine2}`;
     doc.setFontSize(10);
-    doc.text(fullAddress, 10, this.textY);
-    this.textY += 10;
-    doc.text(`City: ${customerAddress.city}`, 10, this.textY);
+    if (addressLine1 || addressLine2) {
+      doc.text(addressLine1 || addressLine2 ? fullAddress : '', 10, this.textY);
+      this.textY += 10;
+    }
+    doc.text(`City: ${!!customerAddress.city ? customerAddress.city : '--'}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`State: ${customerAddress.state}`, 10, this.textY);
+    doc.text(`State: ${!!customerAddress.state ? customerAddress.state : '--'}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`Country: ${customerAddress.country}`, 10, this.textY);
+    doc.text(`Country: ${!!customerAddress.country ? customerAddress.country : '--'}`, 10, this.textY);
     this.textY += 5;
-    doc.text(`Pincode: ${customerAddress.pincode}`, 10, this.textY);
+    doc.text(`Pincode: ${!!customerAddress.pincode ? customerAddress.pincode : '--'}`, 10, this.textY);
     this.textY += 10;
     doc.text('-------------------------------------------------------', 10, this.textY);
 
@@ -3425,7 +3486,7 @@ export class PosComponent implements OnInit, OnDestroy {
     if (type === 'posReturn') {
       doc.text(`POS Return No.:  ${orderList?.pos_return_no ?? ''}`, 10, this.textY);
     } else {
-      doc.text(`Bill No.:  ${orderList?.bill_no}`, 10, this.textY);
+      doc.text(`Bill No.:  ${!!orderList?.bill_no ? orderList?.bill_no : '--'}`, 10, this.textY);
     }
     this.textY += 5;
     doc.text(`Date: ${this.formatDate(type === 'posReturn' ? orderList?.pos_bill?.created_date : orderList?.created_date)}   Time:${this.formatHours(type === 'posReturn' ? orderList?.pos_bill?.created_date : orderList?.created_date)}`, 10, this.textY);
@@ -3459,12 +3520,20 @@ export class PosComponent implements OnInit, OnDestroy {
       });
     } else {
       orderList?.cart?.forEach((row) => {
-        doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, this.textY);
-        doc.text(row.net_cost?.toString(), 25, this.textY);
+        if (type === 'Offline') {
+          doc.text(row?.variant ? row?.variant?.toString() : '--', 10, this.textY);
+        } else {
+          doc.text(row?.variant?.product?.hsncode?.hsn_code ? row?.variant?.product?.hsncode?.hsn_code.toString() : '--', 10, this.textY);
+        }
+        doc.text(row?.net_cost?.toString(), 25, this.textY);
         doc.text(row?.qty?.toString(), 45, this.textY);
         doc.text((row?.net_cost * row?.qty)?.toFixed(2)?.toString(), 60, this.textY);
         this.textY += 5;
-        doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, this.textY);
+        if (type === 'Offline') {
+          doc.text(row?.title ? this.truncateWithEllipsis(row?.title, 42) : '--', 10, this.textY);
+        } else {
+          doc.text(row?.variant?.product?.title ? this.truncateWithEllipsis(row?.variant?.product?.title, 42) : '--', 10, this.textY);
+        }
         this.textY += 5;
       });
     }
@@ -3487,7 +3556,11 @@ export class PosComponent implements OnInit, OnDestroy {
     doc.text(`${orderList?.total_discount}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Credit Redeem:`, 10, this.textY);
-    doc.text(`${type === 'posReturn' ? orderList?.pos_bill?.credit_redeem : orderList?.credit_redeem}`, 65, this.textY);
+    if (type === 'Offline') {
+      doc.text(`${orderList?.creditAvailable}`, 65, this.textY);
+    } else {
+      doc.text(`${type === 'posReturn' ? orderList?.pos_bill?.credit_redeem : orderList?.credit_redeem}`, 65, this.textY);
+    }
     this.textY += 5;
     doc.text(`Total Tax Amount:`, 10, this.textY);
     doc.text(`${orderList?.total_tax}`, 65, this.textY);
@@ -3507,7 +3580,7 @@ export class PosComponent implements OnInit, OnDestroy {
       this.textY += 5;
       doc.text(`Amount Pending By Bank:`, 10, this.textY);
       doc.text(`${orderList?.due_amount}`, 65, this.textY);
-    } else if (type === 'cash') {
+    } else if (type === 'cash' || type === 'Offline') {
       doc.text(`Amount Paid By Cash:`, 10, this.textY);
       doc.text(`${orderList?.total_amount - orderList?.due_amount}`, 65, this.textY);
       this.textY += 5;
@@ -3545,62 +3618,64 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.checkPageOverflow(doc);
 
-    this.textY += 5;
-    doc.text(`GST bill details `, 10, this.textY);
-    this.textY += 15;
-
-    this.checkPageOverflow(doc);
-
-    doc.text('-------------------------------------------------------', 10, this.textY);
-    this.textY += 5;
-
-    this.checkPageOverflow(doc);
-
-    doc.text('Tax %', 10, this.textY);
-    doc.text('Taxable', 25, this.textY);
-    doc.text('CGST', 45, this.textY);
-    doc.text('SGST', 60, this.textY);
-    this.textY += 5;
-    doc.text('Amount', 25, this.textY);
-
-    this.textY += 5;
-    doc.setFontSize(10);
-    doc.setTextColor(33, 43, 54);
-    doc.text('-------------------------------------------------------', 10, this.textY);
-
-    this.textY += 5;
-
-    if (type === 'posReturn') {
-      orderList?.pos_bill?.tax_summary?.forEach((row) => {
-        doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
-        doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
-        doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
-        doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
-        this.textY += 10;
-
-        this.totalTaxableAmount += row.taxable_amount;
-        this.totalCGST += row.cgst;
-        this.totalSGST += row.sgst;
-      });
+    if (type === 'Offline') {
     } else {
-      orderList?.tax_summary?.forEach((row) => {
-        doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
-        doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
-        doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
-        doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
-        this.textY += 10;
+      this.textY += 5;
+      doc.text(`GST bill details `, 10, this.textY);
+      this.textY += 15;
 
-        this.totalTaxableAmount += row.taxable_amount;
-        this.totalCGST += row.cgst;
-        this.totalSGST += row.sgst;
-      });
+      this.checkPageOverflow(doc);
+
+      doc.text('-------------------------------------------------------', 10, this.textY);
+      this.textY += 5;
+
+      this.checkPageOverflow(doc);
+
+      doc.text('Tax %', 10, this.textY);
+      doc.text('Taxable', 25, this.textY);
+      doc.text('CGST', 45, this.textY);
+      doc.text('SGST', 60, this.textY);
+      this.textY += 5;
+      doc.text('Amount', 25, this.textY);
+
+      this.textY += 5;
+      doc.setFontSize(10);
+      doc.setTextColor(33, 43, 54);
+      doc.text('-------------------------------------------------------', 10, this.textY);
+
+      this.textY += 5;
+
+      if (type === 'posReturn') {
+        orderList?.pos_bill?.tax_summary?.forEach((row) => {
+          doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
+          doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
+          doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
+          doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
+          this.textY += 10;
+
+          this.totalTaxableAmount += row.taxable_amount;
+          this.totalCGST += row.cgst;
+          this.totalSGST += row.sgst;
+        });
+      } else {
+        orderList?.tax_summary?.forEach((row) => {
+          doc.text(row?.tax_percentage ? row?.tax_percentage.toString() : '0', 10, this.textY);
+          doc.text(row?.taxable_amount?.toFixed(2).toString(), 25, this.textY);
+          doc.text(row?.cgst?.toFixed(2)?.toString(), 45, this.textY);
+          doc.text(row?.sgst?.toFixed(2)?.toString(), 60, this.textY);
+          this.textY += 10;
+
+          this.totalTaxableAmount += row.taxable_amount;
+          this.totalCGST += row.cgst;
+          this.totalSGST += row.sgst;
+        });
+      }
+
+      doc.text('Total', 10, this.textY);
+      doc.text(`${this.totalTaxableAmount.toFixed(2)}`, 25, this.textY);
+      doc.text(`${this.totalCGST.toFixed(2)}`, 45, this.textY);
+      doc.text(`${this.totalSGST.toFixed(2)}`, 60, this.textY);
     }
-
-    doc.text('Total', 10, this.textY);
-    doc.text(`${this.totalTaxableAmount.toFixed(2)}`, 25, this.textY);
-    doc.text(`${this.totalCGST.toFixed(2)}`, 45, this.textY);
-    doc.text(`${this.totalSGST.toFixed(2)}`, 60, this.textY);
-
     this.checkPageOverflow(doc);
 
     this.textY += 10;
@@ -3793,6 +3868,21 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
+
+        const order = {
+          cart: cartData,
+          customer: this.currentCustomer,
+          created_date: new Date().toISOString(),
+          due_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
+          total_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
+          total_discount: '0',
+          total_qty: this.totalCartQuantity(),
+          total_tax: JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())),
+          get_item_count: this.totalCartProductCount(),
+          subtotal: this.calculateSubTotal(),
+          creditAvailable: this.selectedAccountCreditData ? this.selectedAccountCreditData[0]?.pending_amount : 0,
+          bill_no: ''
+        }
         // console.log(cartData, 'cash');
         const formData = new FormData();
         formData.append('customer', JSON.stringify(this.currentCustomer.id));
@@ -3811,50 +3901,62 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('bank_detail', '');
         formData.append('upi_detail', '');
 
-        this.cartService
-          .generateOrderNew(formData)
-          .subscribe({
-            next: (response: any) => {
-              // console.log('response order', response);
-              if (response.isSuccess) {
-                this.customerAutoCompleteControl.setValue('');
-                this.saleInvoice.setValue('');
-                this.discardCurrentBill();
-                this.tenderedAmount = 0;
-                this.toastr.success(response.msg)
-                this.orderDetails = response?.order;
-                if (type == 'print') {
-                  // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-                  // this.generatePdf();
-                  // const newWindow = window.open('', '_blank');
-                  setTimeout(() => {
-                    this.generatePdf(response?.order, 'cash');
-                  }, 1000);
-                  var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
-                  clicking.click();
-                } else {
-                  var clicking = <HTMLElement>document.querySelector('.cashModalClose');
-                  clicking.click();
-                }
-
-                this.cartService.getPOSOrders().subscribe({
-                  next: (response) => {
-                    // console.log(response, 'pos orders')
-                    this.posOrders = response;
-                  },
-                  error: (error) => {
-                    // console.log('pos orders', error);
+        if (this.isInternetConnection) {
+          this.cartService
+            .generateOrderNew(formData)
+            .subscribe({
+              next: (response: any) => {
+                // console.log('response order', response);
+                if (response.isSuccess) {
+                  this.customerAutoCompleteControl.setValue('');
+                  this.saleInvoice.setValue('');
+                  this.discardCurrentBill();
+                  this.tenderedAmount = 0;
+                  this.toastr.success(response.msg)
+                  this.orderDetails = response?.order;
+                  if (type == 'print') {
+                    // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                    // this.generatePdf();
+                    // const newWindow = window.open('', '_blank');
+                    setTimeout(() => {
+                      this.generatePdf(response?.order, 'cash');
+                    }, 1000);
+                    var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+                    clicking.click();
+                  } else {
+                    var clicking = <HTMLElement>document.querySelector('.cashModalClose');
+                    clicking.click();
                   }
-                })
-              } else {
-                this.toastr.error(response.msg);
-              }
-            },
-            error: (error) => {
-              // console.log(error)
-              this.toastr.error(error.message);
-            },
-          });
+
+                  this.cartService.getPOSOrders().subscribe({
+                    next: (response) => {
+                      // console.log(response, 'pos orders')
+                      this.posOrders = response;
+                    },
+                    error: (error) => {
+                      // console.log('pos orders', error);
+                    }
+                  })
+                } else {
+                  this.toastr.error(response.msg);
+                }
+              },
+              error: (error) => {
+                // console.log(error)
+                this.toastr.error(error.message);
+              },
+            });
+        } else {
+          setTimeout(() => {
+            this.customerAutoCompleteControl.setValue('');
+            this.saleInvoice.setValue('');
+            this.discardCurrentBill();
+            this.tenderedAmount = 0;
+            this.generatePdf(order, 'Offline');
+          }, 1000);
+          var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+          clicking.click();
+        }
       }
     } else {
       this.toastr.error('Please Add Items To Cart');
@@ -3886,6 +3988,11 @@ export class PosComponent implements OnInit, OnDestroy {
   totalCartQuantity() {
     const totalQuantity = this.currentItems.reduce((sum, item) => sum + item.quantity, 0);
     return totalQuantity;
+  }
+
+  totalCartProductCount() {
+    const totalCount = this.currentItems.length;
+    return totalCount;
   }
 
   getDateForOrders(timestamp: any) {
