@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Inject, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction, of } from 'rxjs';
@@ -51,6 +51,9 @@ export class PosComponent implements OnInit, OnDestroy {
   productList: any;
   selectedOrderData: any;
   saleReturnData: any;
+  totalRecords: number = 0;
+  pageSize: number = 10;
+  pages: number[] = [];
 
   page: number = 1;
 
@@ -169,6 +172,7 @@ export class PosComponent implements OnInit, OnDestroy {
   salesPaymentForm: FormGroup;
   purchasePaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
+  isCashFormSubmitted = false;
   currentCountry: any;
   currentState: any;
   stateList: any;
@@ -1011,10 +1015,12 @@ export class PosComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.cartService.getPOSOrders().subscribe({
-      next: (response) => {
+    this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+      next: (response: any) => {
         // console.log(response, 'pos orders')
-        this.posOrders = response;
+        this.posOrders = response.data;
+        this.totalRecords = response.total_data;
+        this.updatePageNumbers();
       },
       error: (error) => {
         // console.log('pos orders', error);
@@ -3119,10 +3125,12 @@ export class PosComponent implements OnInit, OnDestroy {
                 var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
                 clicking.click();
                 this.payLaterMethodForm.reset();
-                this.cartService.getPOSOrders().subscribe({
-                  next: (response) => {
+                this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+                  next: (response: any) => {
                     // console.log(response, 'pos orders')
-                    this.posOrders = response;
+                    this.posOrders = response?.data;
+                    this.totalRecords = response.total_data;
+                    this.updatePageNumbers();
                   },
                   error: (error) => {
                     // console.log('pos orders', error);
@@ -3306,7 +3314,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
   checkPageOverflow(doc: jsPDF) {
     const pageHeight = new jsPDF().internal.pageSize.height;
-    if (this.textY > pageHeight - 20) { // 20 is a buffer before creating a new page
+    if (this.textY > pageHeight - 25) {
       doc.addPage();
       this.textY = 10;
     }
@@ -3549,6 +3557,7 @@ export class PosComponent implements OnInit, OnDestroy {
     doc.text(`QTY:`, 10, this.textY);
     doc.text(`${orderList?.total_qty}`, 65, this.textY);
     this.textY += 5;
+    this.checkPageOverflow(doc);
     doc.text(`SubTotal:`, 10, this.textY);
     doc.text(`${type === 'posReturn' ? orderList?.subtotal : orderList?.total_amount}`, 65, this.textY);
     this.textY += 5;
@@ -3556,6 +3565,7 @@ export class PosComponent implements OnInit, OnDestroy {
     doc.text(`${orderList?.total_discount}`, 65, this.textY);
     this.textY += 5;
     doc.text(`Credit Redeem:`, 10, this.textY);
+    this.checkPageOverflow(doc);
     if (type === 'Offline') {
       doc.text(`${orderList?.creditAvailable}`, 65, this.textY);
     } else {
@@ -3613,16 +3623,16 @@ export class PosComponent implements OnInit, OnDestroy {
       doc.text(`${orderList?.due_amount}`, 65, this.textY);
     }
 
-    this.textY += 5;
+    this.textY += 10;
     doc.text('-------------------------------------------------------', 10, this.textY);
 
     this.checkPageOverflow(doc);
 
     if (type === 'Offline') {
     } else {
-      this.textY += 5;
+      this.textY += 10;
       doc.text(`GST bill details `, 10, this.textY);
-      this.textY += 15;
+      this.textY += 5;
 
       this.checkPageOverflow(doc);
 
@@ -3644,6 +3654,12 @@ export class PosComponent implements OnInit, OnDestroy {
       doc.text('-------------------------------------------------------', 10, this.textY);
 
       this.textY += 5;
+
+      this.totalTaxableAmount = 0;
+      this.totalCGST = 0;
+      this.totalSGST = 0;
+
+      this.checkPageOverflow(doc);
 
       if (type === 'posReturn') {
         orderList?.pos_bill?.tax_summary?.forEach((row) => {
@@ -3670,6 +3686,9 @@ export class PosComponent implements OnInit, OnDestroy {
           this.totalSGST += row.sgst;
         });
       }
+
+      doc.text('-------------------------------------------------------', 0, this.textY);
+      this.textY += 5;
 
       doc.text('Total', 10, this.textY);
       doc.text(`${this.totalTaxableAmount.toFixed(2)}`, 25, this.textY);
@@ -3748,10 +3767,12 @@ export class PosComponent implements OnInit, OnDestroy {
                   clicking.click();
                 }
                 this.bankPaymentMethodForm.reset();
-                this.cartService.getPOSOrders().subscribe({
-                  next: (response) => {
+                this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+                  next: (response: any) => {
                     // console.log(response, 'pos orders')
-                    this.posOrders = response;
+                    this.posOrders = response?.data;
+                    this.totalRecords = response.total_data;
+                    this.updatePageNumbers();
                   },
                   error: (error) => {
                     // console.log('pos orders', error);
@@ -3791,8 +3812,9 @@ export class PosComponent implements OnInit, OnDestroy {
       } else {
         let cartData = this.setItemsArr();
         let upi_data = {
-          "upi_no": Number(this.upi_id.value),
-          "payment_account": Number(this.payment_account_upi.value)
+          upi_no: (this.upiPaymentMethodForm.controls['upi_id']?.value),
+          payment_account: Number(this.upiPaymentMethodForm.controls['payment_account']?.value),
+          transaction: this.upiPaymentMethodForm.controls['transaction_id']?.value
         };
 
 
@@ -3833,10 +3855,12 @@ export class PosComponent implements OnInit, OnDestroy {
                   clicking.click();
                 }
                 this.upiPaymentMethodForm.reset();
-                this.cartService.getPOSOrders().subscribe({
-                  next: (response) => {
+                this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+                  next: (response: any) => {
                     // console.log(response, 'pos orders')
-                    this.posOrders = response;
+                    this.posOrders = response?.data;
+                    this.totalRecords = response.total_data;
+                    this.updatePageNumbers();
                   },
                   error: (error) => {
                     // console.log('pos orders', error);
@@ -3863,103 +3887,112 @@ export class PosComponent implements OnInit, OnDestroy {
 
   cashPaymentGenerateOrder(type: any) {
     this.playBeepSound();
-    if (this.currentItems.length > 0) {
-      if (this.currentCustomer === null || this.currentCustomer === undefined) {
-        this.toastr.error('Please Select/Add a Customer!');
-      } else {
-        let cartData = this.setItemsArr();
+    this.isCashFormSubmitted = true;
 
-        const order = {
-          cart: cartData,
-          customer: this.currentCustomer,
-          created_date: new Date().toISOString(),
-          due_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
-          total_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
-          total_discount: '0',
-          total_qty: this.totalCartQuantity(),
-          total_tax: JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())),
-          get_item_count: this.totalCartProductCount(),
-          subtotal: this.calculateSubTotal(),
-          creditAvailable: this.selectedAccountCreditData ? this.selectedAccountCreditData[0]?.pending_amount : 0,
-          bill_no: ''
-        }
-        // console.log(cartData, 'cash');
-        const formData = new FormData();
-        formData.append('customer', JSON.stringify(this.currentCustomer.id));
-        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-        formData.append('payment_mode', 'Cash');
-        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-        formData.append('cart_data', JSON.stringify(cartData));
-        formData.append('total_qty', this.totalCartQuantity());
-        formData.append('total_discount', '0');
-        formData.append('subtotal', this.calculateSubTotal());
-        formData.append('Roundoff', this.getRoundOff());
-        formData.append('card_detail', '');
-        formData.append('Multipay', '');
-        formData.append('PayLatter', '');
-        formData.append('bank_detail', '');
-        formData.append('upi_detail', '');
-
-        if (this.isInternetConnection) {
-          this.cartService
-            .generateOrderNew(formData)
-            .subscribe({
-              next: (response: any) => {
-                // console.log('response order', response);
-                if (response.isSuccess) {
-                  this.customerAutoCompleteControl.setValue('');
-                  this.saleInvoice.setValue('');
-                  this.discardCurrentBill();
-                  this.tenderedAmount = 0;
-                  this.toastr.success(response.msg)
-                  this.orderDetails = response?.order;
-                  if (type == 'print') {
-                    // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-                    // this.generatePdf();
-                    // const newWindow = window.open('', '_blank');
-                    setTimeout(() => {
-                      this.generatePdf(response?.order, 'cash');
-                    }, 1000);
-                    var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
-                    clicking.click();
-                  } else {
-                    var clicking = <HTMLElement>document.querySelector('.cashModalClose');
-                    clicking.click();
-                  }
-
-                  this.cartService.getPOSOrders().subscribe({
-                    next: (response) => {
-                      // console.log(response, 'pos orders')
-                      this.posOrders = response;
-                    },
-                    error: (error) => {
-                      // console.log('pos orders', error);
-                    }
-                  })
-                } else {
-                  this.toastr.error(response.msg);
-                }
-              },
-              error: (error) => {
-                // console.log(error)
-                this.toastr.error(error.message);
-              },
-            });
+    if (this.tenderedAmount >= this.totalAmount()) {
+      if (this.currentItems.length > 0) {
+        if (this.currentCustomer === null || this.currentCustomer === undefined) {
+          this.toastr.error('Please Select/Add a Customer!');
         } else {
-          setTimeout(() => {
-            this.customerAutoCompleteControl.setValue('');
-            this.saleInvoice.setValue('');
-            this.discardCurrentBill();
-            this.tenderedAmount = 0;
-            this.generatePdf(order, 'Offline');
-          }, 1000);
-          var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
-          clicking.click();
+          let cartData = this.setItemsArr();
+
+          const order = {
+            cart: cartData,
+            customer: this.currentCustomer,
+            created_date: new Date().toISOString(),
+            due_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
+            total_amount: JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())),
+            total_discount: '0',
+            total_qty: this.totalCartQuantity(),
+            total_tax: JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())),
+            get_item_count: this.totalCartProductCount(),
+            subtotal: this.calculateSubTotal(),
+            creditAvailable: this.selectedAccountCreditData ? this.selectedAccountCreditData[0]?.pending_amount : 0,
+            bill_no: ''
+          }
+          // console.log(cartData, 'cash');
+          const formData = new FormData();
+          formData.append('customer', JSON.stringify(this.currentCustomer.id));
+          formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+          formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+          formData.append('payment_mode', 'Cash');
+          formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+          formData.append('cart_data', JSON.stringify(cartData));
+          formData.append('total_qty', this.totalCartQuantity());
+          formData.append('total_discount', '0');
+          formData.append('subtotal', this.calculateSubTotal());
+          formData.append('Roundoff', this.getRoundOff());
+          formData.append('card_detail', '');
+          formData.append('Multipay', '');
+          formData.append('PayLatter', '');
+          formData.append('bank_detail', '');
+          formData.append('upi_detail', '');
+
+          if (this.isInternetConnection) {
+            this.cartService
+              .generateOrderNew(formData)
+              .subscribe({
+                next: (response: any) => {
+                  // console.log('response order', response);
+                  if (response.isSuccess) {
+                    this.customerAutoCompleteControl.setValue('');
+                    this.saleInvoice.setValue('');
+                    this.discardCurrentBill();
+                    this.tenderedAmount = 0;
+                    this.isCashFormSubmitted = false;
+                    this.toastr.success(response.msg)
+                    this.orderDetails = response?.order;
+                    if (type == 'print') {
+                      // window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                      // this.generatePdf();
+                      // const newWindow = window.open('', '_blank');
+                      setTimeout(() => {
+                        this.generatePdf(response?.order, 'cash');
+                      }, 1000);
+                      var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+                      clicking.click();
+                    } else {
+                      var clicking = <HTMLElement>document.querySelector('.cashModalClose');
+                      clicking.click();
+                    }
+
+                    this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+                      next: (response: any) => {
+                        // console.log(response, 'pos orders')
+                        this.posOrders = response?.data;
+                        this.totalRecords = response.total_data;
+                        this.updatePageNumbers();
+                      },
+                      error: (error) => {
+                        // console.log('pos orders', error);
+                      }
+                    })
+                  } else {
+                    this.toastr.error(response.msg);
+                  }
+                },
+                error: (error) => {
+                  // console.log(error)
+                  this.toastr.error(error.message);
+                },
+              });
+          } else {
+            setTimeout(() => {
+              this.customerAutoCompleteControl.setValue('');
+              this.saleInvoice.setValue('');
+              this.discardCurrentBill();
+              this.tenderedAmount = 0;
+              this.generatePdf(order, 'Offline');
+            }, 1000);
+            var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+            clicking.click();
+          }
         }
+      } else {
+        this.toastr.error('Please Add Items To Cart');
       }
     } else {
-      this.toastr.error('Please Add Items To Cart');
+      return;
     }
   }
 
@@ -4539,6 +4572,43 @@ export class PosComponent implements OnInit, OnDestroy {
       }
     }
 
+  }
+
+  fetchOrderData(page: number, pageSize: number): void {
+    this.cartService.getPOSOrders(page, pageSize).subscribe((response: any) => {
+      this.posOrders = response.data;
+      this.totalRecords = response.total_data;
+    });
+  }
+
+  pageChange(newPage: number): void {
+    this.page = newPage;
+    this.fetchOrderData(this.page, this.pageSize);
+  }
+
+  updatePageNumbers(): void {
+    const totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    this.pages = Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  getPageNumbers(): (number | string)[] {
+    const totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    const pageNumbers: (number | string)[] = [];
+    const delta = 3;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || (i >= this.page - delta && i <= this.page + delta)) {
+        pageNumbers.push(i);
+      } else if (i === this.page - delta - 1 || i === this.page + delta + 1) {
+        pageNumbers.push('...');
+      }
+    }
+
+    return pageNumbers.filter((value, index, self) => self.indexOf(value) === index);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalRecords / this.pageSize);
   }
 
   flatDiscount: any[] = [];

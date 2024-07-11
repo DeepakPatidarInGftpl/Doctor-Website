@@ -243,8 +243,8 @@ export class PosCartService {
     })
   }
 
-  getPOSOrders() {
-    let url = this.apiUrl + '/pv-api/pos/pos_orders/';
+  getPOSOrders(page, pageSize) {
+    let url = this.apiUrl + `/pv-api/pos/pos_orders/?page=${page}&page_size=${pageSize}`;
     return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`

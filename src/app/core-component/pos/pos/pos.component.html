@@ -178,7 +178,8 @@
                                         <td class="product-title-wrapper">
                                             <div class="product-title-div">
                                                 <p class="product-title-cart">
-                                                    {{cart?.product?.title ? cart.product?.title : cart.product.name}} |
+                                                    {{cart?.product?.title ? cart.product?.title : cart?.product?.name}}
+                                                    |
                                                     {{cart?.variant_name}}
                                                     <button class="cart-btn2 cart-btn1" data-bs-toggle="modal"
                                                         data-bs-target="#productDetailsModal"
@@ -694,50 +695,6 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-12">
-                    <div class="cus-details-wrapper">
-                        <h4>Customer Details</h4>
-                        <ul>
-                            <li>
-                                <p>
-                                    Last Visited:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Last Bill Amount:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Most Purchased Item:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Closing:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Total Purchase:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Loyalty Points:-
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Membership:-
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-12">
                     <div class="cus-details-wrapper">
                         <h4>Customer Details</h4>
@@ -1900,91 +1857,96 @@
           </button>
         </div> -->
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Due Amount</label>
-                            <input type="number" value="{{this.totalAmount()}}" class="form-control"
-                                placeholder="Cash In Hand">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Tendered</label>
-                            <input type="number" [(ngModel)]="tenderedAmount" [ngModelOptions]="{standalone: true}"
-                                class="form-control" placeholder="Tendered">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Change</label>
-                            <input type="number" value="{{this.changeAmt()}}" disabled class="form-control"
-                                placeholder="Change">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="cal-wrapper">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
-                                    </div>
-                                </div>
+                <form (ngSubmit)="cashPaymentGenerateOrder('normal')">
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Due Amount</label>
+                                <input type="number" value="{{this.totalAmount()}}" class="form-control"
+                                    placeholder="Cash In Hand">
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(4)">4</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(2000)">+2000</div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Tendered</label>
+                                <input type="number" [(ngModel)]="tenderedAmount" [ngModelOptions]="{standalone: true}"
+                                    class="form-control" placeholder="Tendered">
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
-                                    </div>
-                                </div>
+                            <span class="text-danger"
+                                *ngIf="isCashFormSubmitted && tenderedAmount < totalAmount()">Tendered amount should
+                                be greater than due amount.</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Change</label>
+                                <input type="number" value="{{this.changeAmt()}}" disabled class="form-control"
+                                    placeholder="Change">
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-7">
-                        <div>
-                            <button *ngIf="!isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
-                                (click)="this.generateOrder()">Submit</button>
-                            <button *ngIf="isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
-                                (click)="this.cashPaymentGenerateOrder('normal')">Submit</button>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="cal-wrapper">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(4)">4</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(2000)">+2000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <button id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose"
-                                data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Cancel</button>
+                        <div class="col-sm-7">
+                            <div>
+                                <button *ngIf="!isInternetConnection" type="button" class="btn btn-dark mb-2 w-100"
+                                    (click)="this.generateOrder()">Submit</button>
+                                <button *ngIf="isInternetConnection" type="submit"
+                                    class="btn btn-dark mb-2 w-100">Submit</button>
+                            </div>
+                            <div>
+                                <button id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose"
+                                    data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Cancel</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <!-- <div class="modal-footer mt-5">
           <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
@@ -2385,7 +2347,26 @@
                 <!-- <div class="col-sm-12">
                 <pagination-controls (pageChange)="page = $event"></pagination-controls>
 
-            </div> -->
+                </div> -->
+                <div class="d-flex w-100 justify-content-end my-4">
+                    <ul class="pagination-list">
+                        <li [class.disabled]="page === 1" (click)="page > 1 && pageChange(page - 1)">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-angle-double-left"></i> Previous
+                            </a>
+                        </li>
+                        <li *ngFor="let p of getPageNumbers()" [ngClass]="{'active-page': p === page}"
+                            (click)="pageChange(p)">
+                            <a href="javascript:void(0)">{{ p }}</a>
+                        </li>
+                        <li [class.disabled]="page === getTotalPages()"
+                            (click)="page < getTotalPages() && pageChange(page + 1)">
+                            <a href="javascript:void(0)">
+                                Next <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                 <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal"
                     (click)="playBeepSound()">Close</button>
@@ -3567,90 +3548,95 @@ Payment Account is required.
           </button>
         </div> -->
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Due Amount</label>
-                            <input type="number" value="{{this.totalAmount()}}" class="form-control"
-                                placeholder="Cash In Hand">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Tendered</label>
-                            <input type="number" [(ngModel)]="tenderedAmount" class="form-control"
-                                [ngModelOptions]="{standalone: true}" placeholder="Tendered">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Change</label>
-                            <input type="number" value="{{this.changeAmt()}}" disabled class="form-control"
-                                placeholder="Change">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="cal-wrapper">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
-                                    </div>
-                                </div>
+                <form (ngSubmit)="this.cashPaymentGenerateOrder('print')">
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Due Amount</label>
+                                <input type="number" value="{{this.totalAmount()}}" class="form-control"
+                                    placeholder="Cash In Hand">
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(4)">4</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(2000)">+2000</div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Tendered</label>
+                                <input type="number" [(ngModel)]="tenderedAmount" class="form-control"
+                                    [ngModelOptions]="{standalone: true}" placeholder="Tendered">
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="cal-div-wrapper">
-                                        <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
-                                        <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
-                                    </div>
-                                </div>
+                            <span class="text-danger"
+                                *ngIf="isCashFormSubmitted && tenderedAmount < totalAmount()">Tendered amount should
+                                be greater than due amount.</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-0">
+                                <label>Change</label>
+                                <input type="number" value="{{this.changeAmt()}}" disabled class="form-control"
+                                    placeholder="Change">
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-7">
-                        <div>
-                            <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
-                            <button type="button" class="btn btn-dark mb-2 w-100"
-                                (click)="this.cashPaymentGenerateOrder('print')">Submit</button>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="cal-wrapper">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(4)">4</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(2000)">+2000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="cal-div-wrapper">
+                                            <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                            <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <button id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashPrintModalClose"
-                                data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Cancel</button>
+                        <div class="col-sm-7">
+                            <div>
+                                <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
+                                <button type="submit" class="btn btn-dark mb-2 w-100">Submit</button>
+                            </div>
+                            <div>
+                                <button id="exampleModal5Close" type="button"
+                                    class="btn btn-dark w-100 cashPrintModalClose" data-bs-dismiss="modal"
+                                    aria-label="Close" (click)="playBeepSound()">Cancel</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <!-- <div class="modal-footer mt-5">
           <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>

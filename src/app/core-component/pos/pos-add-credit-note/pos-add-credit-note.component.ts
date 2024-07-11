@@ -21,6 +21,8 @@ export class PosAddCreditNoteComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   filteredPosBillList: any[] = [];
+  page: number = 1;
+  pageSize: number = 10;
   @Output() modalClose = new EventEmitter<any>();
 
   get f() {
@@ -144,8 +146,8 @@ export class PosAddCreditNoteComponent implements OnInit {
   }
 
   getPosOrder() {
-    this.posCartService.getPOSOrders().subscribe((res: any) => {
-      this.filteredPosBillList = res.filter((val) => val?.bill_no !== null && !!val?.bill_no && val?.bill_no !== undefined);
+    this.posCartService.getPOSOrders(this.page, this.pageSize).subscribe((res: any) => {
+      this.filteredPosBillList = res?.data?.filter((val) => val?.bill_no !== null && !!val?.bill_no && val?.bill_no !== undefined);
     })
   }
 
