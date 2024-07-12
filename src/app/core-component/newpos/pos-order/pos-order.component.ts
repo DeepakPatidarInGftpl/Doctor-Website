@@ -29,6 +29,7 @@ export class PosOrderComponent implements OnInit {
   totalRecords: number = 0;
   pages: number[] = [];
   posOrders: any = [];
+  posOrderData: any = [];
   data: any;
   page: number = 1;
 
@@ -177,6 +178,7 @@ export class PosOrderComponent implements OnInit {
         this.posOrders = response?.data;
         this.selectedRows = new Array(this.posOrders.length).fill(false);
         console.log(this.posOrders);
+        this.posOrderData = response?.data;
         this.loader = false;
         this.totalRecords = response?.total_data;
         this.data = Math.min(this.itemsPerPage * this.page, this.totalRecords);
@@ -232,10 +234,10 @@ export class PosOrderComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
+      const searchTerm = this.titlee?.toLocaleLowerCase();
+      this.posOrders = this.posOrders?.filter(res => {
         const nameLower = res?.customer?.name?.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        return nameLower?.includes(searchTerm);
       });
     }
   }
@@ -346,6 +348,7 @@ export class PosOrderComponent implements OnInit {
   fetchOrderData(page: number, pageSize: number): void {
     this.cartService.getPOSOrders(page, pageSize).subscribe((response: any) => {
       this.posOrders = response.data;
+      this.posOrderData = response?.data;
       this.totalRecords = response.total_data;
       this.data = Math.min(this.itemsPerPage * this.page, this.totalRecords);
     });
@@ -354,6 +357,8 @@ export class PosOrderComponent implements OnInit {
   pageChange(newPage: number): void {
     this.page = newPage;
     this.fetchOrderData(this.page, this.pageSize);
+    this.titlee = "";
+    this.selectedAccountType = "";
   }
 
   updatePageNumbers(): void {
@@ -446,15 +451,16 @@ export class PosOrderComponent implements OnInit {
 
   // filter data
   filterData() {
-    let filteredData = this.tableData.slice();
+    this.posOrders = this.posOrderData;
+    let filteredData = this.posOrders.slice();
     if (this.selectedAccountType) {
+      filteredData = this.posOrderData;
       filteredData = filteredData.filter((item) => item?.payment_mode === this.selectedAccountType);
     }
-
-    this.filteredData = filteredData;
+    this.posOrders = filteredData;
   }
   clearFilter() {
-    this.selectedAccountType = null;
+    this.selectedAccountType = "";
     this.filterData();
   }
 
@@ -512,51 +518,3 @@ export class PosOrderComponent implements OnInit {
   }
   //24-5
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
