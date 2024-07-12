@@ -8,24 +8,30 @@
             <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Dealer
         </a>
     </div> -->
-    <div class="page-btn" >
+    <div class="page-btn">
         <div class="row">
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="form-group w-100" *ngIf="isAdmin">
                     <div class="dropdown">
-                        <button type="button" class="dropdown-toggle button" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
+                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">Select Branch</button>
                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                            <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                            <li> <input type="text" placeholder="search category" class="form-control"
+                                    [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                    [ngModelOptions]="{standalone: true}">
                             </li>
                             <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                    <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                            </a></li>
+                                    <input type="checkbox" [value]="branch.id"
+                                        [checked]="selectData.includes(branch.id)"
+                                        (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                        style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                        (click)="onLabelClick($event)">{{branch.title}}</label>
+                                </a></li>
                         </ul>
                     </div>
                     <div class="d-flex">
-                    <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                        <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                     </div>
                 </div>
             </div>
@@ -57,8 +63,8 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -72,8 +78,8 @@
             </div>
         </div>
 
-          <!-- /Filter -->
-          <div class="card mb-0" id="filter_inputs">
+        <!-- /Filter -->
+        <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
@@ -81,25 +87,26 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Payment Mode</label>
-                                    <select [(ngModel)]="selectedAccountType" (change)="filterData()" class="form-select">
+                                    <select [(ngModel)]="selectedAccountType" (change)="filterData()"
+                                        class="form-select">
                                         <option value="" selected disabled>Select Payment Mode</option>
                                         <option value="Paylater">Paylater</option>
                                         <option value="Multipay">Multipay</option>
-                                        <option value="Cash" >Cash</option>
-                                        <option value="Bank" >Bank</option>
-                                        <option value="Card" >Card</option>
-                                        <option value="UPI" >UPI</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank">Bank</option>
+                                        <option value="Card">Card</option>
+                                        <option value="UPI">UPI</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                         <div class="form-group" (click)="clearFilter()">
-                                    <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
-                                </div>     
+                        <div class="form-group" (click)="clearFilter()">
+                            <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
         <!-- /Filter -->
         <div class="table-responsive">
             <table class="table datanew" id="mytable">
@@ -113,7 +120,7 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">User id<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Invoice No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Customer<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Mode <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Amount <i class="fa fa-sort"></i></th>
@@ -121,16 +128,15 @@
                         <th (click)="sort('id')" class="thone">SCFST<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supply GST<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supply State <i class="fa fa-sort"></i></th>
-                       
+
                         <th (click)="sort('id')" class="thone">Total Tax <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="filteredData?.length>=0">
-                    <tr
-                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                <tbody>
+                    <tr *ngFor="let products of posOrders | orderBy:key:reverse; let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -139,23 +145,24 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//newpos/posOrderDetails/{{products.id}}" style="line-height: 3;">{{products.id}}</a>
+                            <a routerLink="//newpos/posOrderDetails/{{products?.id}}"
+                                style="line-height: 3;">{{products?.id}}</a>
                         </td>
-                        <td>{{products.customer.name}}</td>
-                       <td>{{products.payment_mode}}</td>
-                        <td>{{products.dueAmount}}</td>
-                        <td>{{products.get_gst}}</td>
-                        <td>{{products.get_scgst}}</td>
-                        <td>{{products.place_of_supply_gst_code}}</td>
-                        <td>{{products.place_of_supply_state}}</td>
-                        <td>{{products.total_tax}}</td>
-                        <td>{{products.total_amount}}</td>
-                       
+                        <td>{{products?.customer?.name}}</td>
+                        <td>{{products?.payment_mode}}</td>
+                        <td>{{products?.due_amount}}</td>
+                        <td>{{products?.get_gst}}</td>
+                        <td>{{products?.get_scgst}}</td>
+                        <td>{{products?.place_of_supply_gst_code}}</td>
+                        <td>{{products?.place_of_supply_state}}</td>
+                        <td>{{products?.total_tax}}</td>
+                        <td>{{products?.total_amount}}</td>
+
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td> -->
                         <td>
-                            <a class="me-1" routerLink="//newpos/posOrderDetails/{{products.id}}">
+                            <a class="me-1" routerLink="//newpos/posOrderDetails/{{products?.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
                             <!-- <a class="me-1" routerLink="//contacts/updateDealer/{{products.id}}" *ngIf="isEdit">
@@ -168,7 +175,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="filteredData?.length==0">
+                <tbody *ngIf="posOrders?.length==0">
                     <tr>
                         <td colspan="10">
                             <p class="center-textt">Data not available</p>
@@ -183,7 +190,7 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                            
+
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -194,9 +201,30 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                    <div class="f-right">
-                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                    <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->
+                    <div class="d-flex w-100 justify-content-end mb-3">
+                        <ul class="pagination-list">
+                            <li [class.disabled]="page === 1" (click)="page > 1 && pageChange(page - 1)">
+                                <a href="javascript:void(0)">
+                                    <i class="fa fa-angle-double-left"></i> Previous
+                                </a>
+                            </li>
+                            <li *ngFor="let p of getPageNumbers()" [ngClass]="{'active-page': p === page}"
+                                (click)="pageChange(p)">
+                                <a href="javascript:void(0)">{{ p }}</a>
+                            </li>
+                            <li [class.disabled]="page === getTotalPages()"
+                                (click)="page < getTotalPages() && pageChange(page + 1)">
+                                <a href="javascript:void(0)">
+                                    Next <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="entries f-right">
+                        Showing {{ itemsPerPage * (page - 1) + 1 }} to
+                        {{ data }}
+                        of {{ totalRecords }} entries
                     </div>
                 </div>
             </div>
