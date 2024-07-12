@@ -129,6 +129,7 @@ export class PosComponent implements OnInit, OnDestroy {
   customers: any = [];
   cartItems: any[] = [];
   addMoreDetails: any;
+  cash_payment_account = '';
   customerAutoCompleteControl = new FormControl('');
   chargesAutoCompleteControl = new FormControl('');
   customerAutoCompleteControl2 = new FormControl('');
@@ -244,7 +245,7 @@ export class PosComponent implements OnInit, OnDestroy {
     if (currentAmount < currentTotalAmount) {
       const remainingAmount = currentTotalAmount - currentAmount;
       const pendingAmout = remainingAmount % 1 !== 0 ? remainingAmount.toFixed(2) : remainingAmount;
-      const newPayment = this.addNewPayment(pendingAmout);
+      const newPayment = this.addNewPayment(Number(pendingAmout));
       this.addMorePaymentData.push(newPayment);
       this.subscribeToReceiptTypeChange(newPayment);
 
@@ -409,21 +410,21 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.upiPaymentMethodForm = this.fb.group({
       payment_account: ['', [Validators.required]],
-      upi_id: ['', [Validators.required]],
-      transaction_id: ['']
+      transaction_date: ['', [Validators.required]],
+      transaction_id: ['', [Validators.required]],
     });
 
     this.bankPaymentMethodForm = this.fb.group({
       payment_account: ['', [Validators.required]],
-      account_no: ['', [Validators.required]],
+      transaction_date: ['', [Validators.required]],
+      payment_mode: ['', [Validators.required]],
+      transaction_id: ['', [Validators.required]],
     });
 
     this.cardPaymentMethodForm = this.fb.group({
       payment_account: ['', [Validators.required]],
-      customer_bank_name: ['', [Validators.required]],
-      card_payment_amount: ['', [Validators.required]],
-      card_holder_name: ['', [Validators.required]],
-      cart_transactions_no: ['', [Validators.required]],
+      transaction_date: ['', [Validators.required]],
+      transaction_id: ['', [Validators.required]],
     });
 
     this.payLaterMethodForm = this.fb.group({
@@ -1151,15 +1152,15 @@ export class PosComponent implements OnInit, OnDestroy {
     });
   }
 
-  addNewPayment(amount): FormGroup {
+  addNewPayment(amount: number): FormGroup {
     return this.fb.group({
       mode_type: "AgainstBill",
       user_account_id: new FormControl(this.userAccoutId),
-      payment_account: new FormControl('', Validators.required),
+      payment_account: new FormControl(''),
       receipt_type: new FormControl('', Validators.required),
-      // payment_mode: new FormControl(''),
-      // transaction_date: new FormControl(''),
-      // transaction_id: new FormControl(''),
+      payment_mode: new FormControl(''),
+      transaction_date: new FormControl(''),
+      transaction_id: new FormControl(''),
       note: new FormControl(''),
       amount: new FormControl(amount, Validators.required)
     });
@@ -1169,7 +1170,7 @@ export class PosComponent implements OnInit, OnDestroy {
     const receiptTypeControl = group.get('receipt_type');
     if (receiptTypeControl) {
       const subscription = receiptTypeControl.valueChanges.subscribe(value => {
-        this.toggleAdditionalControls(group, value);
+        // this.toggleAdditionalControls(group, value);
       });
       this.receiptTypeSubscriptions.push(subscription);
     }
@@ -1180,7 +1181,7 @@ export class PosComponent implements OnInit, OnDestroy {
     const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
     const aliesType = event.target.value === 'Cash' ? 'cash-in-hand' : 'bank-accounts';
     this.getAccountByAlies(aliesType, index);
-    this.toggleAdditionalControls(paymentGroup, selectedReceiptType);
+    // this.toggleAdditionalControls(paymentGroup, selectedReceiptType);
   }
 
   toggleAdditionalControls(group: FormGroup, receiptType: string) {
@@ -1192,9 +1193,9 @@ export class PosComponent implements OnInit, OnDestroy {
     });
 
     if (receiptType === 'Bank') {
-      group.addControl('payment_mode', new FormControl('', Validators.required));
-      group.addControl('transaction_date', new FormControl('', Validators.required));
-      group.addControl('transaction_id', new FormControl('', Validators.required));
+      group.get('payment_mode').setValidators([Validators.required]);
+      group.get('transaction_date').setValidators([Validators.required]);
+      group.get('transaction_id').setValidators([Validators.required]);
       group.removeControl('day');
       group.removeControl('date');
       group.removeControl('is_send_reminder');
@@ -1202,14 +1203,7 @@ export class PosComponent implements OnInit, OnDestroy {
       group.addControl('day', new FormControl('', Validators.required));
       group.addControl('date', new FormControl('', Validators.required));
       group.addControl('is_send_reminder', new FormControl(true));
-      group.removeControl('payment_account');
-      group.removeControl('payment_mode');
-      group.removeControl('transaction_date');
-      group.removeControl('transaction_id');
     } else {
-      group.removeControl('payment_mode');
-      group.removeControl('transaction_date');
-      group.removeControl('transaction_id');
       group.removeControl('day');
       group.removeControl('date');
       group.removeControl('is_send_reminder');
@@ -1246,6 +1240,12 @@ export class PosComponent implements OnInit, OnDestroy {
       const paymentGroup = this.addMorePaymentData.at(index) as FormGroup;
       paymentGroup.get('payment_account').setValue('');
       this.accountListAlies[index] = res;
+    });
+  }
+
+  getAccountAlies(value: string) {
+    this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      this.accountListData = res;
     });
   }
 
@@ -2182,7 +2182,10 @@ export class PosComponent implements OnInit, OnDestroy {
     if (this.payment_terms && this.due_date && this.selectedReminder) {
       const formData = new FormData();
       const paymentDataArray = this.addMorePaymentData.value;
-      console.log(JSON.stringify(paymentDataArray));
+      const updatedPaymentDataArray = paymentDataArray.map(payment => ({
+        ...payment,
+        amount: Number(payment.amount)
+      }));
 
       if (this.currentItems.length > 0) {
         if (this.currentCustomer === null || this.currentCustomer === undefined) {
@@ -2192,11 +2195,11 @@ export class PosComponent implements OnInit, OnDestroy {
           formData.append('customer', JSON.stringify(this.currentCustomer.id));
           formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
           formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-          formData.append('payment_mode', 'Multiple Pay');
+          formData.append('payment_mode', 'Multipay');
           formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
           formData.append('cart_data', JSON.stringify(cartData));
           formData.append('PayLatter', JSON.stringify(pay_later_data));
-          formData.append('payment', JSON.stringify(paymentDataArray));
+          formData.append('payment', JSON.stringify(updatedPaymentDataArray));
 
           this.cartService.generateOrderNew(formData).subscribe((res: any) => {
             console.log(res);
@@ -2251,21 +2254,31 @@ export class PosComponent implements OnInit, OnDestroy {
       } else {
         const formData = new FormData();
         const paymentDataArray = this.addMorePaymentData.value;
+        console.log((paymentDataArray));
+        const updatedPaymentDataArray = paymentDataArray.map(payment => ({
+          ...payment,
+          amount: Number(payment.amount)
+        }));
         console.log(JSON.stringify(paymentDataArray));
+        console.log(updatedPaymentDataArray);
+
 
         if (this.currentItems.length > 0) {
           if (this.currentCustomer === null || this.currentCustomer === undefined) {
             this.toastr.error('Please Select/Add a Customer!');
           } else {
             let cartData = this.setItemsArr();
+            let finalAmout: any = this.finalAmount();
             formData.append('customer', JSON.stringify(this.currentCustomer.id));
             formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-            formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+            formData.append('total_amount', finalAmout);
             formData.append('payment_mode', 'Multipay');
             formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
             formData.append('cart_data', JSON.stringify(cartData));
             formData.append('PayLatter', '');
-            formData.append('payment', JSON.stringify(paymentDataArray));
+            formData.append('payment', JSON.stringify(updatedPaymentDataArray));
+            formData.append('total_qty', this.totalCartQuantity());
+            formData.append('total_discount', '0');
 
             this.cartService.generateOrderNew(formData).subscribe((res: any) => {
               console.log(res);
@@ -2295,7 +2308,6 @@ export class PosComponent implements OnInit, OnDestroy {
   // }
 
   // private subscribeToUserAccountIdChange(group: FormGroup, index: number) {
-  //   debugger
   //   const accountControl = group.get('payment_account');
   //   if (accountControl) {
   //     accountControl.valueChanges.subscribe(value => {
@@ -2427,25 +2439,9 @@ export class PosComponent implements OnInit, OnDestroy {
   get city() { return this.registrationForm.get('city'); }
   get pincode() { return this.registrationForm.get('pincode'); }
 
-  get upi_id() { return this.upiPaymentMethodForm.get('upi_id'); }
-  get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
-  get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
-
-  get account_no() { return this.bankPaymentMethodForm.get('account_no') };
-  get payment_account_bank() { return this.bankPaymentMethodForm.get('payment_account') };
-
-
   get upi_id_receipt() { return this.receiptPaymentForm.get('upi_id'); }
   get transaction_id_receipt() { return this.receiptPaymentForm.get('transaction_id'); }
   get payment_account_receipt() { return this.receiptPaymentForm.get('payment_account'); }
-
-
-  get payment_account_card() { return this.cardPaymentMethodForm.get('payment_account'); }
-  get customer_bank_name() { return this.cardPaymentMethodForm.get('customer_bank_name'); }
-  get card_payment_amount() { return this.cardPaymentMethodForm.get('card_payment_amount'); }
-  get card_holder_name() { return this.cardPaymentMethodForm.get('card_holder_name'); }
-  get cart_transactions_no() { return this.cardPaymentMethodForm.get('cart_transactions_no'); }
-
 
   get pay_later_day() { return this.payLaterMethodForm.get('day'); }
   get pay_later_date() { return this.payLaterMethodForm.get('date'); }
@@ -2906,6 +2902,18 @@ export class PosComponent implements OnInit, OnDestroy {
 
   }
 
+  upiModalOpen() {
+    this.getAccountAlies('bank-accounts');
+  }
+
+  cardModalOpen() {
+    this.getAccountAlies('bank-accounts');
+  }
+
+  bankModalOpen() {
+    this.getAccountAlies('bank-accounts');
+  }
+
   formSubmitReceipt() {
     this.playBeepSound();
     if (this.salesPaymentForm.invalid) {
@@ -3091,7 +3099,19 @@ export class PosComponent implements OnInit, OnDestroy {
           "date": this.pay_later_date.value,
           "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
         };
+        let totalAmout = this.totalAmount();
 
+        let paymentData = [{
+          mode_type: "AgainstBill",
+          user_account_id: this.userAccoutId,
+          amount: Number(totalAmout),
+          receipt_type: "",
+          payment_account: "",
+          note: "",
+          transaction_date: "",
+          payment_mode: "",
+          transaction_id: ""
+        }];
 
 
         // console.log(cartData, 'cash', pay_later_data);
@@ -3102,11 +3122,8 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('payment_mode', 'Paylater');
         formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
         formData.append('cart_data', JSON.stringify(cartData));
-        formData.append('card_detail', '');
-        formData.append('Multipay', '');
         formData.append('PayLatter', JSON.stringify(pay_later_data));
-        formData.append('bank_detail', '');
-        formData.append('upi_detail', '');
+        formData.append('payment', JSON.stringify(paymentData));
 
 
         this.cartService
@@ -3173,14 +3190,19 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
+        let cartAmount = this.totalAmount()
 
-        let card_data = {
-          "payment_account": this.payment_account_card.value,
-          "customer_bank_name": this.customer_bank_name.value,
-          "card_payment_amount": this.card_payment_amount.value,
-          "card_holder_name": this.card_holder_name.value,
-          "cart_transactions_no": this.cart_transactions_no.value
-        };
+        let card_data = [{
+          mode_type: "AgainstBill",
+          user_account_id: this.userAccoutId,
+          amount: Number(cartAmount),
+          receipt_type: 'Bank',
+          payment_account: this.cardPaymentMethodForm.controls['payment_account'].value,
+          note: '',
+          transaction_date: this.cardPaymentMethodForm.controls['transaction_date'].value,
+          payment_mode: 1,
+          transaction_id: this.cardPaymentMethodForm.controls['transaction_id'].value
+        }];
         // console.log(cartData, 'card');
         const formData = new FormData();
         formData.append('customer', JSON.stringify(this.currentCustomer.id));
@@ -3189,11 +3211,8 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('payment_mode', 'Card');
         formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
         formData.append('cart_data', JSON.stringify(cartData));
-        formData.append('card_detail', JSON.stringify(card_data));
-        formData.append('Multipay', '');
+        formData.append('payment', JSON.stringify(card_data));
         formData.append('PayLatter', '');
-        formData.append('bank_detail', '');
-        formData.append('upi_detail', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3332,7 +3351,6 @@ export class PosComponent implements OnInit, OnDestroy {
 
     this.textY = 48;
     doc.setFontSize(10);
-    debugger
 
     this.heldBills?.forEach((row) => {
       doc.text(`ORD: ${row?.id?.substring(0, 25) ?? '--'}`, 10, this.textY);
@@ -3727,11 +3745,18 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-        let bank_data = {
-          "account_no": Number(this.account_no.value),
-          "payment_account": Number(this.payment_account_bank.value)
-        };
-        // console.log(cartData, 'cash', bank_data);
+        let cartAmount = this.totalAmount();
+        let bank_data: any = [{
+          mode_type: "AgainstBill",
+          user_account_id: this.userAccoutId,
+          amount: Number(cartAmount),
+          receipt_type: 'Bank',
+          payment_account: this.bankPaymentMethodForm.controls['payment_account'].value,
+          note: '',
+          transaction_date: this.bankPaymentMethodForm.controls['transaction_date'].value,
+          payment_mode: this.bankPaymentMethodForm.controls['payment_mode'].value,
+          transaction_id: this.bankPaymentMethodForm.controls['transaction_id'].value
+        }];
         const formData = new FormData();
         formData.append('customer', JSON.stringify(this.currentCustomer.id));
         formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -3739,11 +3764,8 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('payment_mode', 'Bank');
         formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
         formData.append('cart_data', JSON.stringify(cartData));
-        formData.append('card_detail', '');
-        formData.append('Multipay', '');
+        formData.append('payment', JSON.stringify((bank_data)));
         formData.append('PayLatter', '');
-        formData.append('bank_detail', JSON.stringify(bank_data));
-        formData.append('upi_detail', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3811,15 +3833,18 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-        let upi_data = {
-          upi_no: (this.upiPaymentMethodForm.controls['upi_id']?.value),
-          payment_account: Number(this.upiPaymentMethodForm.controls['payment_account']?.value),
-          transaction: this.upiPaymentMethodForm.controls['transaction_id']?.value
-        };
-
-
-
-        // console.log(cartData, 'upi', upi_data);
+        const cartAmount = this.totalAmount()
+        let upi_data = [{
+          mode_type: "AgainstBill",
+          user_account_id: this.userAccoutId,
+          amount: Number(cartAmount),
+          receipt_type: 'Bank',
+          payment_account: this.upiPaymentMethodForm.controls['payment_account'].value,
+          note: '',
+          transaction_date: this.upiPaymentMethodForm.controls['transaction_date'].value,
+          payment_mode: 2,
+          transaction_id: this.upiPaymentMethodForm.controls['transaction_id'].value
+        }];
         const formData = new FormData();
         formData.append('customer', JSON.stringify(this.currentCustomer.id));
         formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -3827,11 +3852,10 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('payment_mode', 'UPI');
         formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
         formData.append('cart_data', JSON.stringify(cartData));
-        formData.append('card_detail', '');
-        formData.append('Multipay', '');
+        formData.append('payment', JSON.stringify(upi_data));
         formData.append('PayLatter', '');
-        formData.append('bank_detail', '');
-        formData.append('upi_detail', JSON.stringify(upi_data));
+        formData.append('total_qty', this.totalCartQuantity());
+        formData.append('total_discount', '0');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3895,7 +3919,19 @@ export class PosComponent implements OnInit, OnDestroy {
           this.toastr.error('Please Select/Add a Customer!');
         } else {
           let cartData = this.setItemsArr();
-
+          let cartAmount = this.totalAmount();
+          let cash_data = [{
+            mode_type: "AgainstBill",
+            user_account_id: this.userAccoutId,
+            amount: Number(cartAmount),
+            receipt_type: 'Cash',
+            payment_account: this.cash_payment_account,
+            note: "",
+            transaction_date: "",
+            payment_mode: "",
+            transaction_id: "",
+            credit_note: ""
+          }];
           const order = {
             cart: cartData,
             customer: this.currentCustomer,
@@ -3922,11 +3958,8 @@ export class PosComponent implements OnInit, OnDestroy {
           formData.append('total_discount', '0');
           formData.append('subtotal', this.calculateSubTotal());
           formData.append('Roundoff', this.getRoundOff());
-          formData.append('card_detail', '');
-          formData.append('Multipay', '');
           formData.append('PayLatter', '');
-          formData.append('bank_detail', '');
-          formData.append('upi_detail', '');
+          formData.append('payment', JSON.stringify(cash_data));
 
           if (this.isInternetConnection) {
             this.cartService
@@ -3937,6 +3970,7 @@ export class PosComponent implements OnInit, OnDestroy {
                   if (response.isSuccess) {
                     this.customerAutoCompleteControl.setValue('');
                     this.saleInvoice.setValue('');
+                    this.cash_payment_account = '';
                     this.discardCurrentBill();
                     this.tenderedAmount = 0;
                     this.isCashFormSubmitted = false;

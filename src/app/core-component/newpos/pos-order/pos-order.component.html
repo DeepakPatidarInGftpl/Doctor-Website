@@ -145,8 +145,8 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//newpos/posOrderDetails/{{products?.id}}"
-                                style="line-height: 3;">{{products?.id}}</a>
+                            <a routerLink="//newpos/posOrderDetails/{{products?.bill_no}}"
+                                style="line-height: 3;">{{products?.bill_no}}</a>
                         </td>
                         <td>{{products?.customer?.name}}</td>
                         <td>{{products?.payment_mode}}</td>
@@ -205,17 +205,19 @@
                     <div class="d-flex w-100 justify-content-end mb-3">
                         <ul class="pagination-list">
                             <li [class.disabled]="page === 1" (click)="page > 1 && pageChange(page - 1)">
-                                <a href="javascript:void(0)">
+                                <a [class.disabled]="page === 1" href="javascript:void(0)">
                                     <i class="fa fa-angle-double-left"></i> Previous
                                 </a>
                             </li>
                             <li *ngFor="let p of getPageNumbers()" [ngClass]="{'active-page': p === page}"
-                                (click)="pageChange(p)">
-                                <a href="javascript:void(0)">{{ p }}</a>
+                                [class.disabled]="p === '...'">
+                                <a *ngIf="p !== '...'" (click)="pageChange(p)" [class.disabled]="p === '...'">{{ p
+                                    }}</a>
+                                <a *ngIf="p === '...'" class="disabled">{{ p }}</a>
                             </li>
                             <li [class.disabled]="page === getTotalPages()"
                                 (click)="page < getTotalPages() && pageChange(page + 1)">
-                                <a href="javascript:void(0)">
+                                <a [class.disabled]="page === getTotalPages()" href="javascript:void(0)">
                                     Next <i class="fa fa-angle-double-right"></i>
                                 </a>
                             </li>
