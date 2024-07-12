@@ -37,6 +37,10 @@
   color: #ccc;
 }
 
+.pagination-list li a.disabled {
+  color: #737070;
+}
+
 .pagination-list li.active-page a {
   background-color: #FF9F43;
   font-weight: bold;
