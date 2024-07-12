@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 
 @Component({
   selector: 'app-pos-order',
@@ -25,13 +26,18 @@ export class PosOrderComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
+  totalRecords: number = 0;
+  pages: number[] = [];
+  posOrders: any = [];
+  data: any;
+  page: number = 1;
 
   filteredData: any[]; // The filtered data
   selectedAccountType: string = '';
   selectedAccountSubType: string = '';
   selectedAccountId: string = '';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService, private cs: CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private cs: CompanyService, private cartService: PosCartService) {
     this.QueryService.filterToggle()
   }
 
@@ -61,7 +67,7 @@ export class PosOrderComponent implements OnInit {
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-            this.tableData.splice(index, 1);
+            this.posOrders.splice(index, 1);
           } else {
             Swal.fire({
               icon: 'error',
@@ -150,20 +156,37 @@ export class PosOrderComponent implements OnInit {
       this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
       }
     });
-    this.coreService.getPosOrder(this.fyID, this.selectData).subscribe(res => {
-      // console.log(res);
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      this.filterData();
-    });
+    // this.coreService.getPosOrder(this.fyID, this.selectData).subscribe(res => {
+    //   // console.log(res);
+    //   this.tableData = res;
+    //   this.loader = false;
+    //   this.selectedRows = new Array(this.tableData.length).fill(false);
+    //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    //   this.filterData();
+    // });
+
+    this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
+      next: (response: any) => {
+        // console.log(response, 'pos orders')
+        this.posOrders = response?.data;
+        this.selectedRows = new Array(this.posOrders.length).fill(false);
+        console.log(this.posOrders);
+        this.loader = false;
+        this.totalRecords = response?.total_data;
+        this.data = Math.min(this.itemsPerPage * this.page, this.totalRecords);
+        this.updatePageNumbers();
+      },
+      error: (error) => {
+        // console.log('pos orders', error);
+      }
+    })
+
     this.getBranch();
     //24-5
   }
@@ -177,11 +200,11 @@ export class PosOrderComponent implements OnInit {
   select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
-      this.tableData.forEach((f: any) => {
+      this.posOrders.forEach((f: any) => {
         f.isSelected = true
       })
     } else {
-      this.tableData.forEach((f: any) => {
+      this.posOrders.forEach((f: any) => {
         f.isSelected = false
       })
     }
@@ -268,21 +291,21 @@ export class PosOrderComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'User Id', 'Customer', 'Payment Mode', 'Due Amount', 'GST', 'SCFST', 'Supply GST', 'Supply State', 'Total Tax ', 'Total Amount']
+        ['#', 'Invoice No', 'Customer', 'Payment Mode', 'Due Amount', 'GST', 'SCFST', 'Supply GST', 'Supply State', 'Total Tax ', 'Total Amount']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.posOrders?.map((row: any, index: number) => [
 
         index + 1,
-        row.id,
-        row.customer.name,
-        row.payment_mode,
-        row.dueAmount,
-        row.get_gst,
-        row.get_scgst,
-        row.place_of_supply_gst_code,
-        row.place_of_supply_state,
-        row.total_tax,
-        row.total_amount
+        row?.id,
+        row?.customer.name,
+        row?.payment_mode,
+        row?.due_amount,
+        row?.get_gst,
+        row?.get_scgst,
+        row?.place_of_supply_gst_code,
+        row?.place_of_supply_state,
+        row?.total_tax,
+        row?.total_amount
 
       ]),
       theme: 'grid',
@@ -319,6 +342,45 @@ export class PosOrderComponent implements OnInit {
     });
     return visibleData;
   }
+
+  fetchOrderData(page: number, pageSize: number): void {
+    this.cartService.getPOSOrders(page, pageSize).subscribe((response: any) => {
+      this.posOrders = response.data;
+      this.totalRecords = response.total_data;
+      this.data = Math.min(this.itemsPerPage * this.page, this.totalRecords);
+    });
+  }
+
+  pageChange(newPage: number): void {
+    this.page = newPage;
+    this.fetchOrderData(this.page, this.pageSize);
+  }
+
+  updatePageNumbers(): void {
+    const totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    this.pages = Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  getPageNumbers(): (number | string)[] {
+    const totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    const pageNumbers: (number | string)[] = [];
+    const delta = 3;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || (i >= this.page - delta && i <= this.page + delta)) {
+        pageNumbers.push(i);
+      } else if (i === this.page - delta - 1 || i === this.page + delta + 1) {
+        pageNumbers.push('...');
+      }
+    }
+
+    return pageNumbers.filter((value, index, self) => self.indexOf(value) === index);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalRecords / this.pageSize);
+  }
+
   // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
@@ -395,12 +457,18 @@ export class PosOrderComponent implements OnInit {
     this.selectedAccountType = null;
     this.filterData();
   }
-  changePg(val: any) {
-    console.log(val);
-    if (val == -1) {
-      this.itemsPerPage = this.filteredData.length;
+
+  changePg(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    if (itemsPerPage === -1) {
+      this.pageSize = this.totalRecords;
+    } else {
+      this.pageSize = itemsPerPage;
     }
+    this.page = 1;
+    this.fetchOrderData(this.page, this.pageSize);
   }
+
   //24-5
   branchList: any[] = [];
   filteredBranchList: any[] = [];
