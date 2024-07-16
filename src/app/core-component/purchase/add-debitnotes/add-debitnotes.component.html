@@ -422,7 +422,7 @@
                             <option value="" selected disabled>Select Purchase Bill</option>
                             <ng-container *ngFor="let purchase of purchaseList">
                                 <option value="{{purchase?.id}}" *ngIf="purchase?.is_active==true">
-                                    {{purchase?.refrence_bill_no}}
+                                    {{purchase?.id}}
                                 </option>
                             </ng-container>
                         </select>
