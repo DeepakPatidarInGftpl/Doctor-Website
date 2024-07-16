@@ -649,11 +649,9 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"
-                                                        (blur)="purchase4(i)"></td>
-                                                <td><input type="text" formControlName="price" class="input"
-                                                        [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price
-                                                        (blur)="purchase2(price.value,i)">
+                                                <td><input type="number" formControlName="qty" class="input"></td>
+                                                <td><input type="text" formControlName="price" class="input" #price
+                                                        readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -825,8 +823,11 @@
                                                 <td><input type="text" formControlName="additional_discount"
                                                         class="input" (blur)="purchase4(i)">
                                                     <span class="text-danger" style="display: block;"
-                                                        *ngIf="additionaldiscountt(i) && additionaldiscountt(i).invalid && additionaldiscountt(i).touched">Enter
+                                                        *ngIf="!additionaldiscountt(i)?.value && additionaldiscountt(i).invalid && additionaldiscountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="(additionaldiscountt(i)?.value > discountLimit)">Your
+                                                        maximum discount Limit is {{discountLimit}}</span>
                                                 </td>
                                                 <td>
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
@@ -840,9 +841,7 @@
                                                 <td class="text-end"> <input type="number" class="input" readonly
                                                         [value]="TotalWithoutTax[i]"></td>
                                                 <td class="text-end">
-                                                    <input type="text" formControlName="total" class="input" readonly
-                                                        [value]="calculateTotalEveryIndex(i).toFixed(2)"
-                                                        [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                                    <input type="text" formControlName="total" class="input" readonly>
                                                 </td>
                                             </tr>
                                         </ng-container>
@@ -867,7 +866,7 @@
 
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -880,6 +879,13 @@
                     <a class="m-link m--font-boldest" (click)="displayAdditiionalTable()"><i class="ion-ios7-plus"
                             data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
                         Additional Charges</a>
+                </div>
+            </div>
+            <div class="m-demo-icon pt-0 pl-0 my-2" *ngIf="additionalTable">
+                <div class="m-demo-icon__class">
+                    <a class="m-link m--font-boldest" data-bs-toggle="modal" data-bs-target="#couponModal"><i
+                            class="ion-ios7-plus" data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
+                        Apply Coupon</a>
                 </div>
             </div>
             <div class="card my-2" *ngIf="!additionalTable">
@@ -1009,7 +1015,7 @@
                                     </h5>
                                 </li>
                                 <li>
-                                    <h4>Total Discount %</h4>
+                                    <h4>Total Discount</h4>
                                     <h5>
                                         {{calculateTotalAdditionalDiscount() + calculateTotalDiscount() |
                                         currency:'INR'}}
@@ -1039,9 +1045,8 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text"
-                                            formControlName="total" class="input"
-                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
+                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                            formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>
@@ -1079,5 +1084,49 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Apply Coupon Modal -->
+
+<div class="modal fade posmodal" id="couponModal" tabindex="-1" aria-labelledby="exampleModal5Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal5Label">Apply Coupon Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="applyCouponCode()" #couponForm="ngForm">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-group mb-0">
+                                <label>Coupon Code*</label>
+                                <input type="text" [(ngModel)]="coupon_code" name="coupon_code" class="form-control"
+                                    placeholder="Enter Coupon Code" required>
+                                <span class="text-danger" *ngIf="!coupon_code && couponForm.submitted">Coupon Code is
+                                    required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <div class="me-3">
+                            <button type="submit" class="btn btn-submit mb-2 w-100">Submit</button>
+                        </div>
+                        <div>
+                            <button id="exampleModal5Close" type="button" class="btn btn-cancel w-100 cashModalClose"
+                                data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <!-- <div class="modal-footer mt-5">
+          <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
+        </div> -->
+        </div>
     </div>
 </div>

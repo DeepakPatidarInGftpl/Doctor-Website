@@ -401,7 +401,7 @@
                             <!-- <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase?.refrence_bill_no}}</option> -->
                             <ng-container *ngFor="let purchase of purchaseList">
                                 <option value="{{purchase?.id}}" *ngIf="purchase?.is_active==true">
-                                    {{purchase?.refrence_bill_no}}</option>
+                                    {{purchase?.id}}</option>
                             </ng-container>
                         </select>
                         <span class="text-danger" *ngIf="purchase && purchase.invalid && purchase.touched">Select
