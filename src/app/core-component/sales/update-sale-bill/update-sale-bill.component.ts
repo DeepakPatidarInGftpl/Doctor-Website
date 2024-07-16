@@ -1054,6 +1054,7 @@ export class UpdateSaleBillComponent implements OnInit {
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
       formdata.append('total', this.saleBillForm.get('total')?.value);
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
+      formdata.append('coupon_code', '');
       //2-1
       formdata.append('sales_man', this.saleBillForm.get('sales_man')?.value);
       if (type == 'draft') {

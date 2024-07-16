@@ -1658,11 +1658,8 @@ export class PosComponent implements OnInit, OnDestroy {
       formData.append('total_discount', order.total_discount);
       formData.append('subtotal', JSON.stringify(order.subtotal));
       formData.append('Roundoff', order.Roundoff);
-      formData.append('card_detail', '');
-      formData.append('Multipay', '');
       formData.append('PayLatter', '');
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', '');
+      formData.append('coupon_code', '');
 
       try {
         await this.cartService.generateOrderNew(formData).pipe(
@@ -2200,6 +2197,7 @@ export class PosComponent implements OnInit, OnDestroy {
           formData.append('cart_data', JSON.stringify(cartData));
           formData.append('PayLatter', JSON.stringify(pay_later_data));
           formData.append('payment', JSON.stringify(updatedPaymentDataArray));
+          formData.append('coupon_code', '');
 
           this.cartService.generateOrderNew(formData).subscribe((res: any) => {
             console.log(res);
@@ -2279,6 +2277,7 @@ export class PosComponent implements OnInit, OnDestroy {
             formData.append('payment', JSON.stringify(updatedPaymentDataArray));
             formData.append('total_qty', this.totalCartQuantity());
             formData.append('total_discount', '0');
+            formData.append('coupon_code', '');
 
             this.cartService.generateOrderNew(formData).subscribe((res: any) => {
               console.log(res);
@@ -3124,7 +3123,7 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('cart_data', JSON.stringify(cartData));
         formData.append('PayLatter', JSON.stringify(pay_later_data));
         formData.append('payment', JSON.stringify(paymentData));
-
+        formData.append('coupon_code', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3213,6 +3212,7 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('cart_data', JSON.stringify(cartData));
         formData.append('payment', JSON.stringify(card_data));
         formData.append('PayLatter', '');
+        formData.append('coupon_code', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3766,6 +3766,7 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('cart_data', JSON.stringify(cartData));
         formData.append('payment', JSON.stringify((bank_data)));
         formData.append('PayLatter', '');
+        formData.append('coupon_code', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3856,6 +3857,7 @@ export class PosComponent implements OnInit, OnDestroy {
         formData.append('PayLatter', '');
         formData.append('total_qty', this.totalCartQuantity());
         formData.append('total_discount', '0');
+        formData.append('coupon_code', '');
 
         this.cartService
           .generateOrderNew(formData)
@@ -3960,6 +3962,7 @@ export class PosComponent implements OnInit, OnDestroy {
           formData.append('Roundoff', this.getRoundOff());
           formData.append('PayLatter', '');
           formData.append('payment', JSON.stringify(cash_data));
+          formData.append('coupon_code', '');
 
           if (this.isInternetConnection) {
             this.cartService

@@ -1,0 +1,44 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>Back to CouponList</h6>
+                    <h4>Full details of a Coupon</h4>
+                </div>
+            </div>
+            <div class="company-details-card card mt-3" *ngIf="tableData">
+                <div class="sub-card row">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="th">Title</td>
+                                    <td class="td">{{tableData?.title}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="th">Coupon Code</td>
+                                    <td class="td">{{tableData?.coupon_code}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="th">Discount</td>
+                                    <td class="td">{{tableData?.discount}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="th">Upto</td>
+                                    <td class="td">{{tableData?.up_to}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="th">Expiry Date</td>
+                                    <td class="td">{{tableData?.expiry_date}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
