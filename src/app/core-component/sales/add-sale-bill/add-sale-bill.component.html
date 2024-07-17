@@ -884,7 +884,7 @@
             <div class="m-demo-icon pt-0 pl-0 my-2" *ngIf="additionalTable">
                 <div class="m-demo-icon__class">
                     <a class="m-link m--font-boldest" data-bs-toggle="modal" data-bs-target="#couponModal"><i
-                            class="ion-ios7-plus" data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
+                            class="ion-ios7-plus" data-bs-toggle="tooltip" title="ion-ios7-plus"></i>
                         Apply Coupon</a>
                 </div>
             </div>
@@ -1017,8 +1017,7 @@
                                 <li>
                                     <h4>Total Discount</h4>
                                     <h5>
-                                        {{calculateTotalAdditionalDiscount() + calculateTotalDiscount() |
-                                        currency:'INR'}}
+                                        {{ totalDiscountPrice | currency:'INR'}}
                                         <input type="text" formControlName="total_discount" class="input"
                                             [ngModel]="calculateTotalAdditionalDiscount() + calculateTotalDiscount()"
                                             style="display: none;">
@@ -1094,7 +1093,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModal5Label">Apply Coupon Code</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close closeCouponModal" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
             </div>
@@ -1117,16 +1116,13 @@
                             <button type="submit" class="btn btn-submit mb-2 w-100">Submit</button>
                         </div>
                         <div>
-                            <button id="exampleModal5Close" type="button" class="btn btn-cancel w-100 cashModalClose"
+                            <button id="exampleModal5Close" type="button" class="btn btn-cancel w-100"
                                 data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                         </div>
                     </div>
 
                 </form>
             </div>
-            <!-- <div class="modal-footer mt-5">
-          <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
-        </div> -->
         </div>
     </div>
 </div>

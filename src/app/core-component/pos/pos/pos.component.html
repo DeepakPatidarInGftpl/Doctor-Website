@@ -1569,7 +1569,7 @@
                                 </div>
                                 <div class="other-product-detail">
                                     <h5>Total Amounts</h5>
-                                    <h5>{{this.totalAmount()}}</h5>
+                                    <h5>{{this.finalAmount()}}</h5>
                                 </div>
                                 <div class="other-product-detail">
                                     <h5>Round Off</h5>
@@ -1577,7 +1577,7 @@
                                 </div>
                             </div>
                             <div class="payment-details">
-                                <h3>{{this.totalAmount()}}</h3>
+                                <h3>{{this.finalAmount()}}</h3>
                                 <h5>Payable Amount</h5>
                             </div>
                         </div>
@@ -1589,7 +1589,7 @@
                                 <div class="input-group pos-i-grp table-black-grp">
                                     <span class="input-group-text" id="basic-addon1">₹
                                     </span>
-                                    <input type="text" value="{{this.totalAmount()}}" class="form-control"
+                                    <input type="text" value="{{this.finalAmount()}}" class="form-control"
                                         aria-label="Username" aria-describedby="basic-addon1">
                                 </div>
                             </div>
@@ -1864,7 +1864,7 @@
                         <div class="col-sm-4">
                             <div class="form-group mb-0">
                                 <label>Due Amount</label>
-                                <input type="number" value="{{this.totalAmount()}}" class="form-control"
+                                <input type="number" value="{{this.finalAmount()}}" class="form-control"
                                     placeholder="Cash In Hand">
                             </div>
                         </div>
@@ -1875,7 +1875,7 @@
                                     class="form-control" placeholder="Tendered">
                             </div>
                             <span class="text-danger"
-                                *ngIf="isCashFormSubmitted && tenderedAmount < totalAmount()">Tendered amount should
+                                *ngIf="isCashFormSubmitted && tenderedAmount < finalAmount()">Tendered amount should
                                 be greater than due amount.</span>
                         </div>
                         <div class="col-sm-4">
@@ -1977,174 +1977,39 @@
 <div *ngIf="currentItems?.length !== 0 && (currentCustomer !== null && currentCustomer !== undefined)"
     class="modal fade posmodal" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModal6Label"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModal6Label">Current Register (19 Mar 2022 11:10 am - 19 Mar 2022
-                    11:10 am)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModal5Label">Apply Coupon Code</h5>
+                <button type="button" class="btn-close closeCouponModal" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="register-left-wrapper">
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                            <div class="register-left-div">
-                                <h4>Opening Cash</h4>
-                                <h4>500</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="register-table">
-                            <div class="table-responsive">
-                                <table class="table table-striped mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Firstname</th>
-                                            <th>Lastname</th>
-                                            <th>Email</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>John</td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Scan Barcode/Type Number" value="0">
-                                            </div>
-                                            <td>john&#64;example.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Scan Barcode/Type Number" value="0">
-                                            </div>
-                                            <td>john&#64;example.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Scan Barcode/Type Number" value="0">
-                                            </div>
-                                            <td>john&#64;example.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Scan Barcode/Type Number" value="0">
-                                            </div>
-                                            <td>john&#64;example.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control"
-                                                    placeholder="Scan Barcode/Type Number" value="0">
-                                            </div>
-                                            <td>john&#64;example.com</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                <form (ngSubmit)="applyCouponCode()" #couponForm="ngForm">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-group mb-0">
+                                <label>Coupon Code*</label>
+                                <input type="text" [(ngModel)]="coupon_code" name="coupon_code" class="form-control"
+                                    placeholder="Enter Coupon Code" required>
+                                <span class="text-danger" *ngIf="!coupon_code && couponForm.submitted">Coupon Code is
+                                    required</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Bank Account</label>
-                            <select class="form-select">
-                                <option>-- Select --</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
-                            </select>
+                    <div class="d-flex justify-content-end mt-2">
+                        <div class="me-3">
+                            <button type="submit" class="btn btn-submit mb-2 w-100">Submit</button>
                         </div>
-                        <div class="form-group">
-                            <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
-                        </div>
-                        <div class="form-group">
-                            <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
-                        </div>
-                        <div class="form-group">
-                            <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
-                        </div>
-                        <div class="form-group">
-                            <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
-                        </div>
-                        <div class="form-group">
-                            <label>Scan Barcode/Type Number</label>
-                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                        <div>
+                            <button id="exampleModal5Close" type="button" class="btn btn-cancel w-100"
+                                data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-dark modal2BtnPos" data-bs-dismiss="modal" aria-label="Close">Close
-                    Register</button>
+
+                </form>
             </div>
         </div>
     </div>
@@ -3528,7 +3393,7 @@ Payment Account is required.
                         <div class="col-sm-4">
                             <div class="form-group mb-0">
                                 <label>Due Amount</label>
-                                <input type="number" value="{{this.totalAmount()}}" class="form-control"
+                                <input type="number" value="{{this.finalAmount()}}" class="form-control"
                                     placeholder="Cash In Hand">
                             </div>
                         </div>
@@ -3539,7 +3404,7 @@ Payment Account is required.
                                     [ngModelOptions]="{standalone: true}" placeholder="Tendered">
                             </div>
                             <span class="text-danger"
-                                *ngIf="isCashFormSubmitted && tenderedAmount < totalAmount()">Tendered amount should
+                                *ngIf="isCashFormSubmitted && tenderedAmount < finalAmount()">Tendered amount should
                                 be greater than due amount.</span>
                         </div>
                         <div class="col-sm-4">
