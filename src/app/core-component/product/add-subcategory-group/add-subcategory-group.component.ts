@@ -13,7 +13,10 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class AddSubcategoryGroupComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private router: Router, private coreService: CoreService, private toastr: ToastrService) { }
-  subCategoryGroupForm!: FormGroup
+  subCategoryGroupForm!: FormGroup;
+  subCategoryGroup = new FormControl('', [Validators.required]);
+  subCategoryGroupList: any;
+  allsubCategoryGroupData: any;
   get f() {
     return this.subCategoryGroupForm.controls
   }
@@ -26,7 +29,13 @@ export class AddSubcategoryGroupComponent implements OnInit {
       image: new FormControl('')
     })
     this.getCategory()
-    this.getFeatureGroup() 
+    this.getFeatureGroup();
+    this.getSubCategoryGroup();
+
+    this.subCategoryGroup.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
   }
   categories: any;
   getCategory() {
@@ -57,6 +66,11 @@ export class AddSubcategoryGroupComponent implements OnInit {
       });
     }
     this.filteredFeatureGroupData = filteredData;
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.subCategoryGroupList = this.allsubCategoryGroupData.filter(subcategorygroup => subcategorygroup?.title?.toLowerCase().includes(filterValue));
   }
 
   subcatbyCategory: any[] = []
@@ -128,6 +142,15 @@ export class AddSubcategoryGroupComponent implements OnInit {
   arrayFeatutreGroup = [];
   selectedFeatureGrp = 0;
   selectedFeatureIds: any[] = []
+
+
+  getSubCategoryGroup() {
+    this.coreService.getSubcategoryGroup().subscribe(res => {
+      this.subCategoryGroupList = res;
+      this.allsubCategoryGroupData = res;
+    })
+  }
+
   onCheckFeature(event: any) {
     const formArray: any = this.subCategoryGroupForm.get('feature_group') as FormArray;
     /* Selected */
@@ -168,32 +191,32 @@ export class AddSubcategoryGroupComponent implements OnInit {
       this.coreService.postCategoriesGroup(formdata).subscribe((res: any) => {
         if (res.success) {
           this.toastr.success(res.msg)
-          this.loaders=false
+          this.loaders = false
           this.router.navigate(['/product/subCategoryGroup'])
         }
       },
         err => {
-          this.loaders=false
+          this.loaders = false
           // console.log(err.error.msg);
           if (err.error.msg == 'Your Selected subcategories is Not Avaliable') {
             this.errormessFSubC = 'This Field Is Required'
             setTimeout(() => {
-              this.errormessFSubC='';
+              this.errormessFSubC = '';
             }, 3000);
           }
           if (err.error.msg == 'Your Selected FeatureGroup is Not Avaliable') {
             this.errormessFFG = 'This Field Is Required'
             setTimeout(() => {
-              this.errormessFFG=''
+              this.errormessFFG = ''
             }, 3000);
           }
         }
       )
     } else {
-      this.loaders=false
+      this.loaders = false
       this.subCategoryGroupForm.markAllAsTouched()
       this.toastr.error('Please Fill All The Required Fields')
-      
+
     }
 
   }

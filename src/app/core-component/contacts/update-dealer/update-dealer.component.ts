@@ -14,6 +14,7 @@ export class UpdateDealerComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService, private Arout: ActivatedRoute) { }
   dealerForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.dealerForm.controls;
@@ -51,7 +52,7 @@ export class UpdateDealerComponent implements OnInit {
     this.contactService.getDealerById(this.id).subscribe(res => {
       this.getRes = res;
 
-      const filteredRes = Object.keys(res).reduce((acc, key) => {
+      const filteredRes: any = Object.keys(res).reduce((acc, key) => {
         if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
           acc[key] = res[key];
         }
@@ -59,6 +60,7 @@ export class UpdateDealerComponent implements OnInit {
       }, {});
 
       this.dealerForm.patchValue(filteredRes);
+      this.selectedGstType = filteredRes?.gst_type;
       this.dealerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.dealerForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
       this.dealerForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
@@ -104,6 +106,10 @@ export class UpdateDealerComponent implements OnInit {
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   bankAdd(): FormGroup {
@@ -281,7 +287,7 @@ export class UpdateDealerComponent implements OnInit {
     formdata.append('date_of_birth', this.dealerForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.dealerForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.dealerForm.get('gst_type')?.value);
-    formdata.append('gstin', this.dealerForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.dealerForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.dealerForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.dealerForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.dealerForm.get('credit_limit')?.value);

@@ -54,6 +54,8 @@ export class PosComponent implements OnInit, OnDestroy {
   totalRecords: number = 0;
   pageSize: number = 10;
   pages: number[] = [];
+  couponUpTo = 0;
+  couponDiscount = 0;
 
   page: number = 1;
 
@@ -174,6 +176,7 @@ export class PosComponent implements OnInit, OnDestroy {
   purchasePaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   isCashFormSubmitted = false;
+  coupon_code: any;
   currentCountry: any;
   currentState: any;
   stateList: any;
@@ -212,7 +215,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
 
   constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService,
-    private offerService: OfferService, private coreService: CoreService, private companyService: CompanyService, private connectionService: ConnectionService, private contactService: ContactService) {
+    private offerService: OfferService, private coreService: CoreService, private companyService: CompanyService, private connectionService: ConnectionService, private contactService: ContactService, private toastrService: ToastrService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -240,7 +243,7 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   addMorePaymentDetails() {
-    const currentTotalAmount = this.totalAmount();
+    const currentTotalAmount = this.finalAmount();
     const currentAmount = this.calculateCurrentAmount();
     if (currentAmount < currentTotalAmount) {
       const remainingAmount = currentTotalAmount - currentAmount;
@@ -1148,7 +1151,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
   initializePaymentForm() {
     this.paymentForm = this.fb.group({
-      addMorePayment: this.fb.array([this.addNewPayment(this.totalAmount())])
+      addMorePayment: this.fb.array([this.addNewPayment(this.finalAmount())])
     });
   }
 
@@ -1431,11 +1434,13 @@ export class PosComponent implements OnInit, OnDestroy {
     return (priceAfterTaxes * qty);
   }
 
-  finalAmount() {
+  finalAmount(): any {
+    let totalAmout: any = 0;
     const numbere = this.totalAmount();
     const integerPart = Math.ceil(numbere);
     // return integerPart;
-    return integerPart - this.totalDiscountRupees(); //20-04-1am
+    totalAmout = integerPart - this.totalDiscountRupees(); //20-04-1am
+    return Number(totalAmout).toFixed(2);
   }
 
   totalAmount() {
@@ -1454,7 +1459,7 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   multiplePay() {
-    const latestAmount = this.totalAmount();
+    const latestAmount = this.finalAmount();
     this.initializePaymentForm();
     this.patchLatestAmount(latestAmount);
   }
@@ -1828,7 +1833,7 @@ export class PosComponent implements OnInit, OnDestroy {
 
 
   getRoundOff() {
-    const number = this.totalAmount();
+    const number = this.finalAmount();
     const decimalPart = number % 1;
     if (decimalPart !== 0) {
       const remainingPart = 1 - decimalPart;
@@ -1874,7 +1879,7 @@ export class PosComponent implements OnInit, OnDestroy {
   }
 
   changeAmt() {
-    let amt = +this.tenderedAmount - this.totalAmount();
+    let amt = +this.tenderedAmount - this.finalAmount();
     return amt.toFixed(2);
   }
 
@@ -1942,7 +1947,7 @@ export class PosComponent implements OnInit, OnDestroy {
       let cartItems = this.selectedOptions;
       let change = this.changeAmt();
       let tendered = this.tenderedAmount;
-      let total = this.totalAmount();
+      let total = this.finalAmount();
       let customer = this.currentCustomer;
       this.toastr.success('Created Offline', 'Order', {
         timeOut: 5000
@@ -2148,7 +2153,7 @@ export class PosComponent implements OnInit, OnDestroy {
     if (this.creditLimit === 0) {
       this.toastr.error("You don't have credit Limit to done pay Later.");
       return;
-    } else if (this.totalAmount() > this.creditLimit) {
+    } else if (this.finalAmount() > this.creditLimit) {
       this.toastr.error("Your total amount exceeds your credit limit, so Pay Later is not available.");
       this.isPayLaterModalShown = false;
       return;
@@ -2229,7 +2234,7 @@ export class PosComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let totalCartValue = this.totalAmount();
+    let totalCartValue = this.finalAmount();
     let totalAmountTotal = this.calculateAmountTotal();
     let totalPendingAmount = totalCartValue - totalAmountTotal;
 
@@ -2628,7 +2633,7 @@ export class PosComponent implements OnInit, OnDestroy {
         if (value === 'print') {
           this.holdBillActive = true;
         }
-        activeBill.totalAmt = this.totalAmount();
+        activeBill.totalAmt = this.finalAmount();
         activeBill.currentCustomer = this.currentCustomer;
         this.billHoldService.addToHold(activeBill);
         // this.cartService.clearCurrent();
@@ -3098,7 +3103,7 @@ export class PosComponent implements OnInit, OnDestroy {
           "date": this.pay_later_date.value,
           "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
         };
-        let totalAmout = this.totalAmount();
+        let totalAmout = this.finalAmount();
 
         let paymentData = [{
           mode_type: "AgainstBill",
@@ -3189,7 +3194,7 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-        let cartAmount = this.totalAmount()
+        let cartAmount = this.finalAmount()
 
         let card_data = [{
           mode_type: "AgainstBill",
@@ -3433,6 +3438,28 @@ export class PosComponent implements OnInit, OnDestroy {
         this.creditLimitList = res;
         this.creditLimit = res?.credit_Limit;
       })
+    }
+  }
+
+  applyCouponCode() {
+    if (this.coupon_code) {
+      this.offerService.offerValidation(this.coupon_code).subscribe((res) => {
+        console.log(res?.data);
+        if (res.success) {
+          this.couponDiscount = res?.data?.discount;
+          this.couponUpTo = res?.data?.up_to;
+          this.finalAmount();
+          this.toastrService.success(res?.msg);
+          var clicking = <HTMLElement>document.querySelector('.closeCouponModal');
+          clicking.click();
+        } else {
+          this.toastrService.error(res?.msg);
+          var clicking = <HTMLElement>document.querySelector('.closeCouponModal');
+          clicking.click();
+        }
+      })
+    } else {
+      return;
     }
   }
 
@@ -3745,7 +3772,7 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-        let cartAmount = this.totalAmount();
+        let cartAmount = this.finalAmount();
         let bank_data: any = [{
           mode_type: "AgainstBill",
           user_account_id: this.userAccoutId,
@@ -3834,7 +3861,7 @@ export class PosComponent implements OnInit, OnDestroy {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-        const cartAmount = this.totalAmount()
+        const cartAmount = this.finalAmount()
         let upi_data = [{
           mode_type: "AgainstBill",
           user_account_id: this.userAccoutId,
@@ -3915,13 +3942,13 @@ export class PosComponent implements OnInit, OnDestroy {
     this.playBeepSound();
     this.isCashFormSubmitted = true;
 
-    if (this.tenderedAmount >= this.totalAmount()) {
+    if (this.tenderedAmount >= this.finalAmount()) {
       if (this.currentItems.length > 0) {
         if (this.currentCustomer === null || this.currentCustomer === undefined) {
           this.toastr.error('Please Select/Add a Customer!');
         } else {
           let cartData = this.setItemsArr();
-          let cartAmount = this.totalAmount();
+          let cartAmount = this.finalAmount();
           let cash_data = [{
             mode_type: "AgainstBill",
             user_account_id: this.userAccoutId,
@@ -5229,7 +5256,7 @@ export class PosComponent implements OnInit, OnDestroy {
     }
   }
 
-  totalDiscountRupees() {
+  totalDiscountRupees(): any {
     let cartItems = this.cartService.getCurrentItems();
     let totalDiscount = 0;
     cartItems.forEach(item => {
@@ -5238,7 +5265,11 @@ export class PosComponent implements OnInit, OnDestroy {
     if (this.discountInvoice) {
       totalDiscount += this.discountInvoice;
     }
-    return totalDiscount;
+    if (this.couponDiscount && this.couponUpTo) {
+      const totalAmount = this.totalAmount();
+      totalDiscount = Math.min((totalAmount * this.couponDiscount) / 100, this.couponUpTo);
+    }
+    return Number(totalDiscount).toFixed(2);
   }
 
 

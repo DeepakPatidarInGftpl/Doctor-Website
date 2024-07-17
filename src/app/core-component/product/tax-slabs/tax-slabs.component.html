@@ -8,7 +8,7 @@
 
 <!-- /add -->
 <form [formGroup]="taxSlabForm" (ngSubmit)="submit()">
-    <div class="row"> 
+    <div class="row">
         <div class="card ">
             <div class="card-body">
                 <div class="row form-card">
@@ -65,19 +65,44 @@
 					</span>
 
                         </div>
-                    </div> --> 
+                    </div> -->
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Title*</label>
-                            <input type="text" placeholder="Slab Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
-                            <span class="text-danger" *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab Title </span>
+                            <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                <input type="text" placeholder="Search Brand" aria-label="brand" matInput
+                                    [formControl]="taxSlabCtrl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                    [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <ng-container *ngIf="taxSlabCtrl.value?.length > 2">
+                                        <mat-option *ngFor="let taxSlab of taxSlabList" [value]="taxSlab?.title"
+                                            [disabled]="true" style="color:#FF9F43">{{
+                                            taxSlab?.title
+                                            }}</mat-option>
+                                    </ng-container>
+
+                                    <ng-container>
+                                        <mat-option *ngIf="taxSlabCtrl.value?.length < 3" class="is-loading">Please
+                                            Enter 3 or more characters</mat-option>
+                                    </ng-container>
+                                </mat-autocomplete>
+                                <mat-error class="mt-3 error-msg"
+                                    *ngIf="taxSlabCtrl.touched && taxSlabCtrl.invalid">SubCategory
+                                    name is
+                                    required</mat-error>
+                            </mat-form-field>
+                            <!-- <input type="text" placeholder="Slab Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
+                            <span class="text-danger" *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab Title </span> -->
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <div class="d-flex" style="margin-top: 2rem">
-                                <input type="checkbox" formControlName="variable_tax" [id]="'checkboxMeasure-'" [ngModel]="isTax" (click)="toggle()">
+                                <input type="checkbox" formControlName="variable_tax" [id]="'checkboxMeasure-'"
+                                    [ngModel]="isTax" (click)="toggle()">
                                 <label [for]="'checkboxMeasure-'" class="d_flex"
                                     style="margin-bottom: 0; margin-left: 5px;">Variable Tax</label>
                             </div>
@@ -93,7 +118,7 @@
                                     <th>Tax</th>
                                     <th>&nbsp;</th>
                                 </tr>
-                                
+
                             </thead>
                             <tbody>
                                 <ng-container formArrayName="amount_tax_slabs">
@@ -110,7 +135,8 @@
                                             <td>
                                                 <select formControlName="tax" class="inp">
                                                     <option value="" selected disabled>Select tax</option>
-                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">{{tax.tax_percentage + '%'}} </option>
+                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">
+                                                        {{tax.tax_percentage + '%'}} </option>
                                                 </select>
                                             </td>
                                             <td>
@@ -125,35 +151,37 @@
                         <div class="w-100 text-right">
                             <span (click)="addAmount()" class="addMore">+ Add more</span>
                         </div>
-                    </div> 
+                    </div>
                     <div class="col-lg-8 col-sm-8 col-12" *ngIf="!isAddmoreTax">
                         <table class="table amt-table">
-                             <thead>
-                                 <tr class="text-center">
-                                     <th>Tax</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                                 <ng-container formArrayName="amount_tax_slabs">
-                                     <ng-container *ngFor="let d of getAmount().controls; let i=index">
-                                         <tr [formGroupName]="i">
-                                             <td class="text-center">
-                                                 <select formControlName="tax" class="inp" style="width: 30%;">
-                                                     <option value="" selected disabled>Select Tax</option>
-                                                     <option value="{{tax.id}}" *ngFor="let tax of taxList">{{tax.tax_percentage + '%'}}</option>
-                                                 </select> 
-                                             </td>
-                                         </tr>
-                                     </ng-container>
-                                 </ng-container>
-                             </tbody>
-                         </table> 
-                     </div>
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Tax</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="amount_tax_slabs">
+                                    <ng-container *ngFor="let d of getAmount().controls; let i=index">
+                                        <tr [formGroupName]="i">
+                                            <td class="text-center">
+                                                <select formControlName="tax" class="inp" style="width: 30%;">
+                                                    <option value="" selected disabled>Select Tax</option>
+                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">
+                                                        {{tax.tax_percentage + '%'}}</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="col-lg-8 text-end mt-5">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Submit</button>
                         <a routerLink="//product/taxSlabList" class="btn btn-cancel">Cancel</a>
                     </div>
                 </div>
