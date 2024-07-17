@@ -214,12 +214,15 @@ export class DealerListComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.company_name.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
+      this.filteredData = this.tableData.filter(res => {
+        const nameLower = res.name?.toLocaleLowerCase();
+        const companyNameLower = res.company_name?.toLocaleLowerCase();
+        const mobileNo = res.mobile_no?.toLocaleLowerCase();
+        if (nameLower && nameLower.match(searchTerm)) {
           return true;
-        } else if (companyNameLower.match(searchTerm)) {
+        } else if (companyNameLower && companyNameLower.match(searchTerm)) {
+          return true;
+        } else if (mobileNo && mobileNo.match(searchTerm)) {
           return true;
         }
         return false;

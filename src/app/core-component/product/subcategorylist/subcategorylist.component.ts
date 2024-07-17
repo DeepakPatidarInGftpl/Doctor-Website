@@ -23,6 +23,10 @@ export class SubcategorylistComponent implements OnInit {
   public tableData: any
 
   subcategoryForm!: FormGroup;
+  subCategoryCtrl = new FormControl('', [Validators.required]);
+  subCategoryList: any;
+  allSubCategoryData: any;
+
   get f() {
     return this.subcategoryForm.controls;
   }
@@ -188,6 +192,15 @@ export class SubcategorylistComponent implements OnInit {
     this.productCategory();
     this.getbrand();
     this.getFeatureGroup();
+    this.getSubCategory();
+
+    // this.getAllCategory();
+
+    this.subCategoryCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
+
     // localstorege used permission
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -223,6 +236,12 @@ export class SubcategorylistComponent implements OnInit {
       });
     });
   }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.subCategoryList = this.allSubCategoryData.filter(subcategory => subcategory?.title?.toLowerCase().includes(filterValue));
+  }
+
   // selected table roww
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -260,6 +279,13 @@ export class SubcategorylistComponent implements OnInit {
       if (this.delRes.msg == "Product Subcategory Deleted successfully") {
         // this.getcompanyList()
       }
+    })
+  }
+
+  getSubCategory() {
+    this.coreService.getSubcategory().subscribe(res => {
+      this.subCategoryList = res
+      this.allSubCategoryData = res;
     })
   }
 

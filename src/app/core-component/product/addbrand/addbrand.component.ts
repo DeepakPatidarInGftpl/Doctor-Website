@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { map, startWith } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 @Component({
@@ -12,6 +13,10 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class AddbrandComponent implements OnInit {
 
   brandForm!: FormGroup;
+  brandCtrl = new FormControl('', [Validators.required]);
+  brandList: any;
+  allBrandData: any;
+
   get f() {
     return this.brandForm.controls;
   }
@@ -27,7 +32,7 @@ export class AddbrandComponent implements OnInit {
 
   ngOnInit(): void {
     this.brandForm = new FormGroup({
-      title: new FormControl('', [Validators.required]),
+      title: new FormControl(''),
       code: new FormControl(''),
       image: new FormControl('', [Validators.required]),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -35,14 +40,19 @@ export class AddbrandComponent implements OnInit {
       subcategory_group: new FormArray<any>([]),
       subcategory: new FormArray([]),
       // 3-1
-      markup_percentage_customer: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      markup_percentage_wholesale: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      markup_percentage_online: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      markup_percentage_employee: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_customer: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_wholesale: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_online: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_employee: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
     })
     this.getSubcatGroup();
     this.getCategory();
+    this.getAllBrand();
 
+    this.brandCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
   }
 
   url: any;
@@ -69,6 +79,11 @@ export class AddbrandComponent implements OnInit {
     })
   }
 
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.brandList = this.allBrandData.filter(brand => brand?.title?.toLowerCase().includes(filterValue));
+  }
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
@@ -86,6 +101,14 @@ export class AddbrandComponent implements OnInit {
         feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
       );
     }
+  }
+
+  getAllBrand() {
+    this.coreService.getBrand().subscribe(res => {
+      this.brandList = res;
+      this.allBrandData = res;
+      // this.filteredData = this.tableData.slice(); 
+    })
   }
 
   //check Category
@@ -256,7 +279,7 @@ export class AddbrandComponent implements OnInit {
   submit() {
     // console.log(this.brandForm.value);
     var formData: any = new FormData();
-    formData.append("title", this.brandForm.get('title')?.value);
+    formData.append("title", this.brandCtrl.value);
     formData.append("image", this.brandForm.get('image')?.value);
     formData.append("code", this.brandForm.get('code')?.value);
     formData.append("discount", this.brandForm.get('discount')?.value);
@@ -269,7 +292,7 @@ export class AddbrandComponent implements OnInit {
     formData.append("markup_percentage_online", this.brandForm.get('markup_percentage_online')?.value);
     formData.append("markup_percentage_employee", this.brandForm.get('markup_percentage_employee')?.value);
 
-    if (this.brandForm.valid) {
+    if (this.brandForm.valid && !!this.brandCtrl.value) {
       this.loaders = true;
       this.coreService.addbrand(formData).subscribe(res => {
         // console.log(res);

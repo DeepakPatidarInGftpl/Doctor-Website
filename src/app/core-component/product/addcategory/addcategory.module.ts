@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { AddcategoryRoutingModule } from './addcategory-routing.module';
 import { AddcategoryComponent } from './addcategory.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -13,7 +16,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     AddcategoryRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [
     AddcategoryComponent

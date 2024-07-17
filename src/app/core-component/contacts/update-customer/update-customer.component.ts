@@ -16,6 +16,7 @@ export class UpdateCustomerComponent implements OnInit {
     private Arout: ActivatedRoute,
     private coreService: CoreService) { }
   customerForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.customerForm.controls;
@@ -52,7 +53,7 @@ export class UpdateCustomerComponent implements OnInit {
       this.getRes = res;
 
       if (this.id == res.id) {
-        const filteredRes = Object.keys(res).reduce((acc, key) => {
+        const filteredRes: any = Object.keys(res).reduce((acc, key) => {
           if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
             acc[key] = res[key];
           }
@@ -60,6 +61,7 @@ export class UpdateCustomerComponent implements OnInit {
         }, {});
 
         this.customerForm.patchValue(filteredRes);
+        this.selectedGstType = filteredRes?.gst_type;
         this.customerForm.get('name')?.patchValue(res.name == null ? '' : res.name)
         this.customerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
         this.customerForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
@@ -122,6 +124,10 @@ export class UpdateCustomerComponent implements OnInit {
       this.selectedCity(stateId, index);
     });
     return formArr;
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   gstType: any;
@@ -244,7 +250,7 @@ export class UpdateCustomerComponent implements OnInit {
     formdata.append('date_of_birth', this.customerForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.customerForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.customerForm.get('gst_type')?.value);
-    formdata.append('gstin', this.customerForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.customerForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.customerForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.customerForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.customerForm.get('credit_limit')?.value);

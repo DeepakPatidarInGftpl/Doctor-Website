@@ -37,7 +37,9 @@ export class AddSaleBillComponent implements OnInit {
   currentEmployee: any;
   discountLimit: any;
   coupon_code: any;
-  isFromSubmitted = false;
+  totalDiscountPrice: any = 0;
+  couponDiscount = 0;
+  couponUpTo = 0;
   private qtySubscriptions: Subscription[] = [];
   private discountSubscriptions: Subscription[] = [];
 
@@ -938,6 +940,7 @@ export class AddSaleBillComponent implements OnInit {
       };
 
       this.calculateTotal(index);
+      this.updateTotalDiscount();
       console.log(event.batch);
     } else {
       this.tax[index] = 18
@@ -1057,7 +1060,6 @@ export class AddSaleBillComponent implements OnInit {
     return 0
   }
   purchase4(index) {
-    // debugger
     // const result = this.calculationDiscountCostPrice(index);
     // this.coastprice[index] = result.toFixed(2);
     // console.log(this.coastprice[index], 'this.coastprice[index]');
@@ -1205,15 +1207,25 @@ export class AddSaleBillComponent implements OnInit {
     return total;
   }
 
+  updateTotalDiscount() {
+    this.totalDiscountPrice = this.calculateTotalAdditionalDiscount() + this.calculateTotalDiscount();
+  }
+
   applyCouponCode() {
-    this.isFromSubmitted = true;
     if (this.coupon_code) {
       this.offerService.offerValidation(this.coupon_code).subscribe((res) => {
-        console.log(res);
+        console.log(res?.data);
         if (res.success) {
-
+          this.couponDiscount = res?.data?.discount;
+          this.couponUpTo = res?.data?.up_to;
+          this.updateTotalDiscount();
+          this.toastrService.success(res?.msg);
+          var clicking = <HTMLElement>document.querySelector('.closeCouponModal');
+          clicking.click();
         } else {
           this.toastrService.error(res?.msg);
+          var clicking = <HTMLElement>document.querySelector('.closeCouponModal');
+          clicking.click();
         }
       })
     } else {
@@ -2162,6 +2174,15 @@ export class AddSaleBillComponent implements OnInit {
     }
     return totalMrp;
   }
+
+  getTotalWithTax(): number {
+    let totalWithTax = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      totalWithTax += this.calculateTotalEveryIndex(i);
+    }
+    return totalWithTax;
+  }
+
   calculateTotalDiscount(): number {
     let totalDiscount = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -2171,6 +2192,11 @@ export class AddSaleBillComponent implements OnInit {
       // if (discountControl) {
       totalDiscount += +discount || 0;
       // }
+    }
+    if (this.couponDiscount && this.couponUpTo) {
+      const totalWithTax = this.getTotalWithTax();
+      const couponDiscountAmount = Math.min((totalWithTax * this.couponDiscount) / 100, this.couponUpTo);
+      totalDiscount += couponDiscountAmount;
     }
     return totalDiscount;
   }
@@ -2288,8 +2314,10 @@ export class AddSaleBillComponent implements OnInit {
         total += Number(value);
       });
     }
-    this.totalAmount = total;
-    return total;
+
+    const totalDiscount = this.calculateTotalDiscount();
+    this.totalAmount = total - totalDiscount;
+    return this.totalAmount;
   }
 
   calculateRoundoffValue(): number {

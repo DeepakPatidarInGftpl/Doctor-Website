@@ -15,6 +15,7 @@ export class AddCustomerComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   customerForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.customerForm.controls;
@@ -94,6 +95,10 @@ export class AddCustomerComponent implements OnInit {
     this.getAddresss().removeAt(i)
   }
 
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
+  }
+
   dateError = null
   addRes: any;
   country: any[] = [];
@@ -158,7 +163,7 @@ export class AddCustomerComponent implements OnInit {
     formdata.append('date_of_birth', this.customerForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.customerForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.customerForm.get('gst_type')?.value);
-    formdata.append('gstin', this.customerForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.customerForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.customerForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.customerForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.customerForm.get('credit_limit')?.value);

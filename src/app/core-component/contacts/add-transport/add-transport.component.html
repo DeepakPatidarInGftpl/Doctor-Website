@@ -106,8 +106,9 @@
                         <div class="col-lg-12">
                             <label>GSTIN*</label>
                             <div class="input-group">
-                                <div>
+                                <div [ngClass]="selectedGstType === 'UnRegistered' ? 'w-100' : ''">
                                     <select formControlName="gst_type" class=" border hov" id="gst_type"
+                                        (change)="onGstTypeChange($event)"
                                         [ngClass]="{'is-invalid': f['gst_type'].touched && f['gst_type'].invalid}">
                                         <option class="unhov" value="" selected disabled>GST type</option>
                                         <option class="unhov" value="{{gst.title}}" *ngFor="let gst of gstType">
@@ -116,7 +117,7 @@
                                     <span class="text-danger d-block"
                                         *ngIf="gst_type && gst_type.invalid && gst_type.touched">Select GST Type</span>
                                 </div>
-                                <div>
+                                <div *ngIf="selectedGstType !== 'UnRegistered'">
                                     <input type="text" formControlName="gstin" id="gstin" placeholder="Enter GSTIN"
                                         [ngClass]="{'is-invalid': f['gstin'].touched && f['gstin'].invalid}">
                                     <span class="text-danger ml-5 pl-5" *ngIf="gstin && gstin.invalid && gstin.touched">

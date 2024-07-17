@@ -13,6 +13,7 @@ export class AddDealerComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   dealerForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.dealerForm.controls;
@@ -88,6 +89,10 @@ export class AddDealerComponent implements OnInit {
     // } else {
     //   remove.reset()
     // }
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   bankAdd(): FormGroup {
@@ -181,7 +186,7 @@ export class AddDealerComponent implements OnInit {
     formdata.append('date_of_birth', this.dealerForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.dealerForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.dealerForm.get('gst_type')?.value);
-    formdata.append('gstin', this.dealerForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.dealerForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.dealerForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.dealerForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.dealerForm.get('credit_limit')?.value);

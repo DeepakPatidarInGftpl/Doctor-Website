@@ -17,6 +17,7 @@ export class UpdateVendorComponent implements OnInit {
     private Arout: ActivatedRoute
   ) { }
   vendorForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.vendorForm.controls;
@@ -58,7 +59,7 @@ export class UpdateVendorComponent implements OnInit {
     this.contactService.getVendorById(this.id).subscribe(res => {
       this.getRes = res;
 
-      const filteredRes = Object.keys(res).reduce((acc, key) => {
+      const filteredRes: any = Object.keys(res).reduce((acc, key) => {
         if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
           acc[key] = res[key];
         }
@@ -66,6 +67,7 @@ export class UpdateVendorComponent implements OnInit {
       }, {});
 
       this.vendorForm.patchValue(filteredRes);
+      this.selectedGstType = filteredRes?.gst_type;
       // this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id);
       this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.vendorForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
@@ -83,6 +85,10 @@ export class UpdateVendorComponent implements OnInit {
     this.contactService.getPaymentTerms().subscribe(res => {
       this.paymentTerms = res;
     })
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   // updated data
@@ -286,7 +292,7 @@ export class UpdateVendorComponent implements OnInit {
     formdata.append('date_of_birth', this.vendorForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.vendorForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.vendorForm.get('gst_type')?.value);
-    formdata.append('gstin', this.vendorForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.vendorForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.vendorForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.vendorForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.vendorForm.get('credit_limit')?.value);

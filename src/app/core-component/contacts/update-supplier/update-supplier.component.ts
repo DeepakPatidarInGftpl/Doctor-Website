@@ -16,6 +16,7 @@ export class UpdateSupplierComponent implements OnInit {
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router,
     private coreService: CoreService, private Aroute: ActivatedRoute) { }
   supplierForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.supplierForm.controls;
@@ -55,7 +56,7 @@ export class UpdateSupplierComponent implements OnInit {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       this.getRes = res;
 
-      const filteredRes = Object.keys(res).reduce((acc, key) => {
+      const filteredRes: any = Object.keys(res).reduce((acc, key) => {
         if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
           acc[key] = res[key];
         }
@@ -63,6 +64,7 @@ export class UpdateSupplierComponent implements OnInit {
       }, {});
 
       this.supplierForm.patchValue(filteredRes);
+      this.selectedGstType = filteredRes?.gst_type;
       // this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
       this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.supplierForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
@@ -158,6 +160,11 @@ export class UpdateSupplierComponent implements OnInit {
       this.gstType = res;
     })
   }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
+  }
+
   addressAdd(): FormGroup {
     return this.fb.group({
       address_line_1: (''),
@@ -291,7 +298,7 @@ export class UpdateSupplierComponent implements OnInit {
     formdata.append('date_of_birth', this.supplierForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.supplierForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.supplierForm.get('gst_type')?.value);
-    formdata.append('gstin', this.supplierForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.supplierForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.supplierForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.supplierForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.supplierForm.get('credit_limit')?.value);

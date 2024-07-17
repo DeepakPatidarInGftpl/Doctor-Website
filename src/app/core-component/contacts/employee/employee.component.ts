@@ -238,9 +238,16 @@ export class EmployeeComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
+      this.filteredData = this.tableData.filter(res => {
         const nameLower = res.name.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const mobileNo = res?.mobile_no.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (mobileNo.match(searchTerm)) {
+          return true;
+        } else {
+          return false;
+        }
       });
     }
   }
