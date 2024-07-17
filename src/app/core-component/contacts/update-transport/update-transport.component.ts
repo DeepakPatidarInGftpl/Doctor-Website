@@ -15,6 +15,7 @@ export class UpdateTransportComponent implements OnInit {
     private Arout: ActivatedRoute,
     private coreService: CoreService) { }
   transportForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.transportForm.controls;
@@ -59,7 +60,7 @@ export class UpdateTransportComponent implements OnInit {
       this.getRes = res;
       // console.log(this.getRes);
 
-      const filteredRes = Object.keys(res).reduce((acc, key) => {
+      const filteredRes: any = Object.keys(res).reduce((acc, key) => {
         if (res[key] !== null && res[key] !== '' && res[key] !== 'null') {
           acc[key] = res[key];
         }
@@ -67,6 +68,7 @@ export class UpdateTransportComponent implements OnInit {
       }, {});
 
       this.transportForm.patchValue(filteredRes);
+      this.selectedGstType = filteredRes?.gst_type;
       // this.transportForm.get('payment_terms')?.patchValue(this.getRes.payment_terms.id)
       this.transportForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
       this.transportForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
@@ -201,6 +203,10 @@ export class UpdateTransportComponent implements OnInit {
     this.getBanks().removeAt(i)
   }
 
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
+  }
+
   dateError = null
   addRes: any;
   country: any[] = [];
@@ -287,7 +293,7 @@ export class UpdateTransportComponent implements OnInit {
     formdata.append('date_of_birth', this.transportForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.transportForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.transportForm.get('gst_type')?.value);
-    formdata.append('gstin', this.transportForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.transportForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.transportForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.transportForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);

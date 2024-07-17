@@ -14,30 +14,46 @@ export class AddcategoryComponent implements OnInit {
 
   constructor(private CoreServ: CoreService, private toastr: ToastrService, private route: Router) { }
 
-  formaddCateg: FormGroup
+  formaddCateg: FormGroup;
+  categoryCtrl = new FormControl('', [Validators.required]);
+  categoryList: any;
+  allCategoryData: any;
+
+  get f() {
+    return this.formaddCateg.controls;
+  }
 
   token = localStorage.getItem('token')
   imgUrl = 'https://pv.greatfuturetechno.com';
   editRoute: any;
   updateData: any;
-  isAdd:any;
-  isEdit:any;
+  isAdd: any;
+  isEdit: any;
   ngOnInit() {
     let ftitle = ''
     let fimage = null
     let fdiscount = ''
+
+    this.getAllCategory();
+
+    this.categoryCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
+
     this.CoreServ.editThings.subscribe((data: any) => {
 
       this.editRoute = data
-      // console.log(data);
+      console.log(data);
 
       if (this.editRoute) {
         ftitle = data.title,
-          // fdiscount = data.discount
+          this.categoryCtrl.setValue(data.title);
+        // fdiscount = data.discount
         this.updateData = data
       }
       this.formaddCateg = new FormGroup({
-        title: new FormControl(ftitle, [Validators.required]),
+        title: new FormControl(ftitle),
         // discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
         image: new FormControl('',)
       })
@@ -47,15 +63,20 @@ export class AddcategoryComponent implements OnInit {
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'add_productcategory') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'change_productcategory') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
         }
       });
     }
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.categoryList = this.allCategoryData.filter(category => category?.title?.toLowerCase().includes(filterValue));
   }
 
   url: any;
@@ -76,8 +97,15 @@ export class AddcategoryComponent implements OnInit {
     this.formaddCateg.get('image')?.updateValueAndValidity()
   }
 
+  getAllCategory() {
+    this.CoreServ.getProductCategor().subscribe(res => {
+      this.categoryList = res;
+      this.allCategoryData = res;
+    })
+  }
+
   submitForm() {
-    if (this.formaddCateg.invalid) {
+    if (this.formaddCateg.invalid && !this.categoryCtrl.value) {
       this.formaddCateg.markAllAsTouched()
     } else {
       if (this.editRoute) {

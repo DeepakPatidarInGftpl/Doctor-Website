@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 export class TaxSlabsComponent implements OnInit {
 
   taxSlabForm!: FormGroup;
+  taxSlabCtrl = new FormControl('', [Validators.required]);
+  taxSlabList: any;
+  allTaxSlabData: any;
   get f() {
     return this.taxSlabForm.controls;
   }
@@ -27,11 +30,12 @@ export class TaxSlabsComponent implements OnInit {
     this.taxSlabForm = this.fb.group({
       // subcategory_group: new FormControl('', [Validators.required]),
       // subcategory: new FormArray([], [Validators.required]),
-      slab_title: new FormControl('', [Validators.required]),
+      slab_title: new FormControl(''),
       variable_tax: new FormControl('', [Validators.required]),
       amount_tax_slabs: this.fb.array([])
     })
-    this.addAmount()
+    this.addAmount();
+    this.getTaxSlabList();
     // this.getSubcateGroup()
     this.getTax();
     if (this.isTax == true) {
@@ -39,6 +43,23 @@ export class TaxSlabsComponent implements OnInit {
     } else {
       this.isAddmoreTax = false
     }
+
+    this.taxSlabCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
+  }
+
+  getTaxSlabList() {
+    this.coreService.gettaxd().subscribe(res => {
+      this.taxSlabList = res;
+      this.allTaxSlabData = res;
+    })
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.taxSlabList = this.allTaxSlabData.filter(taxSlab => taxSlab?.title?.toLowerCase().includes(filterValue));
   }
 
   toggle() {
@@ -47,17 +68,17 @@ export class TaxSlabsComponent implements OnInit {
       this.isAddmoreTax = true
     } else {
       this.isAddmoreTax = false
-      console.log('false'); 
+      console.log('false');
     }
   }
   amount_tax_slabs(): FormGroup {
-    if(this.isTax == true){
+    if (this.isTax == true) {
       return this.fb.group({
         from_amount: (''),
         to_amount: (''),
         tax: ('')
       });
-    }else{
+    } else {
       return this.fb.group({
         tax: ('')
       });
@@ -179,7 +200,8 @@ export class TaxSlabsComponent implements OnInit {
   loaders = false;
   submit() {
     // console.log(this.taxSlabForm.value);
-    if (this.taxSlabForm.valid) {
+    if (this.taxSlabForm.valid && !!this.taxSlabCtrl.value) {
+      this.taxSlabForm.get('slab_title').setValue(this.taxSlabCtrl.value);
       this.loaders = true;
       this.coreService.addTaxSlab(this.taxSlabForm.value).subscribe(res => {
         // console.log(res);

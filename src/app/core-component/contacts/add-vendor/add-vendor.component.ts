@@ -13,6 +13,7 @@ export class AddVendorComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   vendorForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.vendorForm.controls;
@@ -99,6 +100,11 @@ export class AddVendorComponent implements OnInit {
     //   remove.reset()
     // }
   }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
+  }
+
   bankAdd(): FormGroup {
     return this.fb.group({
       bank_ifsc_code: new FormControl('', [Validators.required]),
@@ -184,7 +190,7 @@ export class AddVendorComponent implements OnInit {
     formdata.append('date_of_birth', this.vendorForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.vendorForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.vendorForm.get('gst_type')?.value);
-    formdata.append('gstin', this.vendorForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.vendorForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.vendorForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.vendorForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.vendorForm.get('credit_limit')?.value);

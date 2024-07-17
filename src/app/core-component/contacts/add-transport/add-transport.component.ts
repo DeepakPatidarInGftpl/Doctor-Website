@@ -14,6 +14,7 @@ export class AddTransportComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   transportForm!: FormGroup;
+  selectedGstType: string;
 
   get f() {
     return this.transportForm.controls;
@@ -90,6 +91,10 @@ export class AddTransportComponent implements OnInit {
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   bankAdd(): FormGroup {
@@ -175,7 +180,7 @@ export class AddTransportComponent implements OnInit {
     formdata.append('date_of_birth', this.transportForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.transportForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.transportForm.get('gst_type')?.value);
-    formdata.append('gstin', this.transportForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.transportForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.transportForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.transportForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);

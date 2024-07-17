@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { AddbrandRoutingModule } from './addbrand-routing.module';
 import { AddbrandComponent } from './addbrand.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -11,7 +14,11 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   ],
   imports: [
     CommonModule,
-    AddbrandRoutingModule,SharedModuleModule,
+    AddbrandRoutingModule,
+    SharedModuleModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class AddbrandModule { }

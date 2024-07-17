@@ -13,6 +13,7 @@ export class AddSupplierComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService) { }
   supplierForm!: FormGroup;
+  selectedGstType: string;
   get f() {
     return this.supplierForm.controls;
   }
@@ -88,6 +89,10 @@ export class AddSupplierComponent implements OnInit {
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  onGstTypeChange(event: any): void {
+    this.selectedGstType = event.target.value;
   }
 
   paymentTerms: any;
@@ -223,7 +228,7 @@ export class AddSupplierComponent implements OnInit {
     formdata.append('date_of_birth', this.supplierForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.supplierForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.supplierForm.get('gst_type')?.value);
-    formdata.append('gstin', this.supplierForm.get('gstin')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.supplierForm.get('gstin')?.value : '');
     formdata.append('pan_no', this.supplierForm.get('pan_no')?.value);
     formdata.append('apply_tds', this.supplierForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.supplierForm.get('credit_limit')?.value);

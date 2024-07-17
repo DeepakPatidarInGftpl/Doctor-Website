@@ -213,12 +213,15 @@ export class VendorComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
+      this.filteredData = this.tableData.filter(res => {
         const nameLower = res.name.toLocaleLowerCase();
         const companyNameLower = res.company_name.toLocaleLowerCase();
+        const mobileNo = res?.mobile_no.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        } else if (mobileNo.match(searchTerm)) {
           return true;
         }
         return false;
