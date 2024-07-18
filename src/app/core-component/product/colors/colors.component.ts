@@ -24,6 +24,9 @@ export class ColorsComponent implements OnInit {
   selectActive: any;
   filteredData: any[];
   colorForm!: FormGroup;
+  colorCtrl = new FormControl('', [Validators.required]);
+  colorList: any;
+  allColorData: any;
   get f() {
     return this.colorForm.controls;
   }
@@ -156,8 +159,8 @@ export class ColorsComponent implements OnInit {
       img: new FormControl('')
     })
     this.colorForm = this.fb.group({
-      title: new FormControl('',),
-      color_code: new FormControl('',),
+      title: new FormControl('', [Validators.required]),
+      color_code: new FormControl('', [Validators.required]),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -185,11 +188,18 @@ export class ColorsComponent implements OnInit {
     // })
     this.coreService.getColor().subscribe(res => {
       this.tableData = res;
+      this.colorList = res;
+      this.allColorData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
+
+    this.colorCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -232,6 +242,11 @@ export class ColorsComponent implements OnInit {
 
     // console.log(this.form.value);
 
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.colorList = this.allColorData.filter(brand => brand?.title?.toLowerCase().includes(filterValue));
   }
 
   filterData() {
@@ -437,6 +452,8 @@ export class ColorsComponent implements OnInit {
     // console.log(this.colorForm.value);
     // console.log(this.id);
 
+    this.colorForm.get('title').setValue(this.colorCtrl.value);
+
     if (this.colorForm.valid) {
       this.loaders = true;
       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
@@ -444,8 +461,10 @@ export class ColorsComponent implements OnInit {
         this.addRes = res
         if (this.addRes.success) {
           this.loaders = false;
-          this.toastr.success(this.addRes.msg)
-          this.colorForm.reset()
+          this.toastr.success(this.addRes.msg);
+          this.colorForm.reset();
+          this.colorCtrl.reset();
+          this.colorCtrl.markAsPristine();
           // window.location.reload();
           this.ngOnInit()
         }
@@ -453,7 +472,8 @@ export class ColorsComponent implements OnInit {
         // console.log(err.error.gst);
       })
     } else {
-      this.colorForm.markAllAsTouched()
+      this.colorForm.markAllAsTouched();
+      this.loaders = false;
       this.toastr.error('Please Fill All The Required Fields')
     }
   }

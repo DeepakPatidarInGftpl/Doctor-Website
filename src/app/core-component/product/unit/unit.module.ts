@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { UnitRoutingModule } from './unit-routing.module';
 import { UnitComponent } from './unit.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,10 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   imports: [
     CommonModule,
     UnitRoutingModule,
-   SharedModuleModule
+    SharedModuleModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class UnitModule { }

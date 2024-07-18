@@ -209,11 +209,14 @@ export class TaxSlabsComponent implements OnInit {
         if (this.addRes.success) {
           this.loaders = false;
           this.toastrService.success(this.addRes.msg);
+          this.taxSlabCtrl.reset();
+          this.taxSlabCtrl.markAsPristine();
           this.router.navigate(['product/taxSlabList']);
         }
       })
     } else {
       this.taxSlabForm.markAllAsTouched()
+      this.loaders = false;
       this.toastrService.error('Please Fill All The Required Fields')
     }
   }

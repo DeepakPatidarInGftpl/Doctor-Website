@@ -23,6 +23,9 @@ export class SizeComponent implements OnInit {
   selectActive: any;
   filteredData: any[];
   sizeForm!: FormGroup;
+  sizeCtrl = new FormControl('', [Validators.required]);
+  sizeList: any;
+  allsizeData: any;
   get f() {
     return this.sizeForm.controls;
   }
@@ -179,11 +182,18 @@ export class SizeComponent implements OnInit {
 
     this.coreService.getSize().subscribe(res => {
       this.tableData = res;
+      this.sizeList = res;
+      this.allsizeData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
+
+    this.sizeCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
     //permission from localdtarge
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -206,18 +216,20 @@ export class SizeComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'add_size') {
-          this.isAdd = res.codename;
-          // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'change_size') {
-          this.isEdit = res.codename;
-          // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'delete_size') {
-          this.isDelete = res.codename;
-          // console.log(this.isDelete);
-        }
-      });
+      if (permission?.length > 0) {
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'add_size') {
+            this.isAdd = res.codename;
+            // console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'change_size') {
+            this.isEdit = res.codename;
+            // console.log(this.isEdit);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'delete_size') {
+            this.isDelete = res.codename;
+            // console.log(this.isDelete);
+          }
+        });
+      }
     });
   }
 
@@ -232,6 +244,11 @@ export class SizeComponent implements OnInit {
     if (fileInput) {
       fileInput.click();
     }
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.sizeList = this.allsizeData.filter(size => size?.title?.toLowerCase().includes(filterValue));
   }
 
   filterData() {
@@ -388,6 +405,7 @@ export class SizeComponent implements OnInit {
     // console.log(this.sizeForm.value);
     // console.log(this.id);
 
+    this.sizeForm.get('title').setValue(this.sizeCtrl.value);
     if (this.sizeForm.valid) {
       this.loaders = true;
       this.coreService.addsize(this.sizeForm.value).subscribe(res => {
@@ -396,7 +414,9 @@ export class SizeComponent implements OnInit {
         if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
-          this.sizeForm.reset()
+          this.sizeForm.reset();
+          this.sizeCtrl.reset();
+          this.sizeCtrl.markAsPristine();
           // window.location.reload();
           this.ngOnInit()
         }
