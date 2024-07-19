@@ -22,6 +22,9 @@ export class FeatureGroupComponent implements OnInit {
   selectActive: any;
   filteredData: any[];
   featureForm!: FormGroup;
+  featureGroupCtrl = new FormControl('', [Validators.required]);
+  featureGroupList: any;
+  allfeatureGroupData: any;
   get f() {
     return this.featureForm.controls;
   }
@@ -173,12 +176,19 @@ export class FeatureGroupComponent implements OnInit {
     // })
     this.coreService.getFuature_groupD().subscribe(res => {
       this.tableData = res;
+      this.featureGroupList = res;
+      this.allfeatureGroupData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
     this.getFeature();
+
+    this.featureGroupCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstorage data
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -202,18 +212,20 @@ export class FeatureGroupComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission?.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'add_featuregroup') {
-          this.isAdd = res.codename;
-          // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'change_featuregroup') {
-          this.isEdit = res.codename;
-          // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'delete_featuregroup') {
-          this.isDelete = res.codename;
-          // console.log(this.isDelete);
-        }
-      });
+      if (permission?.length > 0) {
+        permission?.map((res: any) => {
+          if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'add_featuregroup') {
+            this.isAdd = res.codename;
+            // console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'change_featuregroup') {
+            this.isEdit = res.codename;
+            // console.log(this.isEdit);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'delete_featuregroup') {
+            this.isDelete = res.codename;
+            // console.log(this.isDelete);
+          }
+        });
+      }
     });
   }
 
@@ -234,6 +246,11 @@ export class FeatureGroupComponent implements OnInit {
         f.isSelected = false
       })
     }
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.featureGroupList = this.allfeatureGroupData.filter(featureGroup => featureGroup?.title?.toLowerCase().includes(filterValue));
   }
 
   filterData() {
@@ -363,8 +380,9 @@ export class FeatureGroupComponent implements OnInit {
     // console.log(this.featureForm.value);
     // console.log(this.id);
 
+    this.featureForm.get('title').setValue(this.featureGroupCtrl.value);
     var formData: any = new FormData();
-    formData.append("title", this.featureForm.get('title')?.value);
+    formData.append("title", this.featureGroupCtrl.value);
     formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
 
     if (this.featureForm.valid) {
@@ -376,15 +394,19 @@ export class FeatureGroupComponent implements OnInit {
           this.selectedFeature = 0
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
-          this.featureForm.reset()
+          this.featureForm.reset();
+          this.featureGroupCtrl.reset();
+          this.featureGroupCtrl.markAsPristine();
           // window.location.reload();
           this.ngOnInit()
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loaders = false;
       })
     } else {
-      this.featureForm.markAllAsTouched()
+      this.featureForm.markAllAsTouched();
+      this.loaders = false;
       this.toastr.error('Please Fill All The Required Fields')
     }
   }

@@ -179,10 +179,11 @@ export class AddSubcategoryGroupComponent implements OnInit {
   errormessFSubC: any
   submit() {
     // console.log(this.subCategoryGroupForm.value);
+    this.subCategoryGroupForm.get('title').setValue(this.subCategoryGroup.value);
     if (this.subCategoryGroupForm.valid) {
       this.loaders = true;
       let formdata: any = new FormData();
-      formdata.append("title", this.subCategoryGroupForm.controls['title'].value);
+      formdata.append("title", this.subCategoryGroup.value);
       formdata.append("category", this.subCategoryGroupForm.controls['category'].value);
       formdata.append("image", this.subCategoryGroupForm.controls['image'].value);
       formdata.append('subcategories', JSON.stringify(this.subCategoryGroupForm.get('subcategories')?.value));

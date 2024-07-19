@@ -29,6 +29,9 @@ export class UnitComponent implements OnInit {
   unitsForm!: FormGroup;
   selectActive: any;
   filteredData: any[];
+  unitCtrl = new FormControl('', [Validators.required]);
+  unitList: any;
+  allunitData: any;
   get f() {
     return this.unitsForm.controls;
   }
@@ -181,11 +184,18 @@ export class UnitComponent implements OnInit {
 
     this.coreService.getUnit().subscribe(res => {
       this.tableData = res;
+      this.unitList = res;
+      this.allunitData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
+
+    this.unitCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstoarge data
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -235,6 +245,11 @@ export class UnitComponent implements OnInit {
   clearFilter() {
     this.selectActive = undefined;
     this.filterData();
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.unitList = this.allunitData.filter(unit => unit?.title?.toLowerCase().includes(filterValue));
   }
 
   openModal() {
@@ -431,6 +446,8 @@ export class UnitComponent implements OnInit {
     // console.log(this.unitsForm.value);
     // console.log(this.id);
 
+    this.unitsForm.get('title').setValue(this.unitCtrl.value);
+
     if (this.unitsForm.valid) {
       this.loaders = true;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
@@ -439,15 +456,19 @@ export class UnitComponent implements OnInit {
         if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
-          this.unitsForm.reset()
+          this.unitsForm.reset();
+          this.unitCtrl.reset();
+          this.unitCtrl.markAsPristine();
           // window.location.reload()
           this.ngOnInit()
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loaders = false;
       })
     } else {
-      this.unitsForm.markAllAsTouched()
+      this.unitsForm.markAllAsTouched();
+      this.loaders = false;
       this.toastr.error('Please Fill All The Required Fields')
     }
   }

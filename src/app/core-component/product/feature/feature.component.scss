@@ -15,6 +15,20 @@ input[type="number"] {
   border-radius: 5px;
 }
 
+::ng-deep {
+  .mat-form-field-required-marker {
+    color: #637381 !important;
+  }
+
+  .mat-form-field-label {
+    color: #637381 !important;
+  }
+}
+
+.error-msg {
+  font-size: 14px;
+}
+
 
 .table>:not(:first-child) {
   border-top: none !important;

@@ -16,9 +16,9 @@
               <mat-form-field class="w-100" style="padding: 0;
                     width: 100%;
                     min-width: 100%;border-top: none;">
-                <input type="text" placeholder="Search Brand" aria-label="brand" matInput
+                <input type="text" placeholder="Search subCategoryGroup" aria-label="subCategoryGroup" matInput
                   [formControl]="subCategoryGroup" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                  [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                  [ngClass]="{'is-invalid': subCategoryGroup.touched && subCategoryGroup.invalid}">
                 <mat-autocomplete #auto="matAutocomplete">
                   <ng-container *ngIf="subCategoryGroup.value?.length > 2">
                     <mat-option *ngFor="let subCategoryGroup of subCategoryGroupList" [value]="subCategoryGroup?.title"

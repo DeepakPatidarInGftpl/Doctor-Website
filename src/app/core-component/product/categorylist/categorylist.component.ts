@@ -142,13 +142,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   isDelete: any;
   userDetails: any
   ngOnInit() {
-    this.coreServ.getProductCategor().subscribe(res => {
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice();
-      this.filterData();
-    })
+    this.getCategory();
     // this.coreServ.ProdCategBehaveSub.subscribe(() => {
     //   if (localStorage.getItem("prodCategories")) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
@@ -206,7 +200,15 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  getCategory() {
+    this.coreServ.getProductCategor().subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice();
+      this.filterData();
+    })
+  }
 
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -219,6 +221,13 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     this.coreServ.editThisData(prod)
     this.editMode = true
     // this.router.navigate(['product/categorylist/'+`${prod.id}`])
+  }
+
+  onDataUpdate(event) {
+    if (event) {
+      this.getCategory();
+      this.editMode = false;
+    }
   }
 
   filterData() {

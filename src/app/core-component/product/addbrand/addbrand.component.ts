@@ -278,6 +278,7 @@ export class AddbrandComponent implements OnInit {
 
   submit() {
     // console.log(this.brandForm.value);
+    this.brandForm.get('title').setValue(this.brandCtrl.value);
     var formData: any = new FormData();
     formData.append("title", this.brandCtrl.value);
     formData.append("image", this.brandForm.get('image')?.value);

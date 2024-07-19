@@ -18,7 +18,7 @@
                                     min-width: 100%;border-top: none;">
                                 <input type="text" placeholder="Search Brand" aria-label="brand" matInput
                                     [formControl]="brandCtrl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                                    [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                                    [ngClass]="{'is-invalid': brandCtrl.touched && brandCtrl.invalid}">
                                 <mat-autocomplete #auto="matAutocomplete">
                                     <ng-container *ngIf="brandCtrl.value?.length > 2">
                                         <mat-option *ngFor="let brand of brandList" [value]="brand?.title"

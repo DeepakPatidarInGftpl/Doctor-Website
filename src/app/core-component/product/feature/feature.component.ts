@@ -30,6 +30,9 @@ export class FeatureComponent implements OnInit {
   missingFieldsError = false;
   fieldfilteredData: any[] = [];
   featureForm!: FormGroup;
+  featureCtrl = new FormControl('', [Validators.required]);
+  featureList: any;
+  allFeatureData: any;
   get f() {
     return this.featureForm.controls;
   }
@@ -182,12 +185,19 @@ export class FeatureComponent implements OnInit {
     // })
     this.coreService.getfeature().subscribe(res => {
       this.tableData = res;
+      this.featureList = res;
+      this.allFeatureData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
     this.getFeatureGroup();
+
+    this.featureCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstorage data
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -224,6 +234,11 @@ export class FeatureComponent implements OnInit {
         }
       });
     });
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.featureList = this.allFeatureData.filter(feature => feature?.title?.toLowerCase().includes(filterValue));
   }
 
   filterData() {
@@ -432,6 +447,7 @@ export class FeatureComponent implements OnInit {
     // console.log(this.featureForm.value);
     // console.log(this.id);
 
+    this.featureForm.get('title').setValue(this.featureCtrl.value);
     if (this.featureForm.valid) {
       this.loaders = true;
       this.coreService.addFeature(this.featureForm.value).subscribe(res => {
@@ -440,15 +456,19 @@ export class FeatureComponent implements OnInit {
         if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
-          this.featureForm.reset()
+          this.featureForm.reset();
+          this.featureCtrl.reset();
+          this.featureCtrl.markAsPristine();
           // window.location.reload();
           this.ngOnInit()
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loaders = false;
       })
     } else {
       this.featureForm.markAllAsTouched()
+      this.loaders = false;
       // console.log('forms invalid');
       this.toastr.error('Please Fill All The Required Fields')
     }

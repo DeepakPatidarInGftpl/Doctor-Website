@@ -24,6 +24,9 @@ export class TaxComponent implements OnInit {
   selectActive: any;
   filteredData: any[];
   taxForm!: FormGroup;
+  taxCtrl = new FormControl('', [Validators.required]);
+  taxList: any;
+  allTaxData: any;
   get f() {
     return this.taxForm.controls;
   }
@@ -178,11 +181,18 @@ export class TaxComponent implements OnInit {
     // })
     this.coreService.gettaxd().subscribe(res => {
       this.tableData = res;
+      this.taxList = res;
+      this.allTaxData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
+
+    this.taxCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -232,6 +242,11 @@ export class TaxComponent implements OnInit {
   clearFilter() {
     this.selectActive = undefined;
     this.filterData();
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.taxList = this.allTaxData.filter(tax => tax?.title?.toLowerCase().includes(filterValue));
   }
 
   openModal() {
@@ -422,6 +437,7 @@ export class TaxComponent implements OnInit {
   submit() {
     // console.log(this.taxForm.value);
     // console.log(this.id);
+    this.taxForm.get('title').setValue(this.taxCtrl.value);
 
     if (this.taxForm.valid) {
       this.loaders = true;
@@ -431,14 +447,18 @@ export class TaxComponent implements OnInit {
         if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
-          this.taxForm.reset()
+          this.taxForm.reset();
+          this.taxCtrl.reset();
+          this.taxCtrl.markAsPristine();
           // window.location.reload();
           this.ngOnInit()
         } else {
-          this.toastr.error(this.addRes.tax_percentage)
+          this.toastr.error(this.addRes.tax_percentage);
+          this.loaders = false;
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loaders = false;
       })
 
     } else {
