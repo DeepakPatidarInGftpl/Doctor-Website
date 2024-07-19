@@ -20,13 +20,13 @@
                           [ngClass]="{'is-invalid': f['user'].touched && f['user'].invalid}">
                       <mat-autocomplete #auto="matAutocomplete">
                           <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                              <mat-option *ngIf="supplier.is_active==true"
+                              <mat-option *ngIf="supplier.is_active==true && supplier?.detail?.company_name"
                               [value]="supplier.username+' '+supplier?.username" (onSelectionChange)="oncheck(supplier.id)"
-                              style="color:#FF9F43">{{supplier?.username}}</mat-option>
+                              style="color:#FF9F43">{{supplier?.detail?.company_name}}</mat-option>
                           </ng-container>
                           <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                               <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
-                                  <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
+                                  <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add User</a>
                               </mat-option>
                               <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
                                   Enter 1 or more characters</mat-option>

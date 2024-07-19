@@ -116,8 +116,12 @@ export class UpdateJournalVoucherComponent implements OnInit {
   getFilter(data: any) {
     this.filterAccount = this.accountList.filter(account => {
       if (account && account.account_id) {
-        const aliasLower = account.account_id.toLowerCase();
-        return aliasLower.includes(data);
+        const accountIdIncludes = account?.account_id?.toLowerCase().includes(data);
+      const titleIncludes = account?.title?.toLowerCase().includes(data);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(data);
+      if(accountIdIncludes || companyNameIncludes || titleIncludes) {
+        return true;
+      }
       }
       return false;
     });

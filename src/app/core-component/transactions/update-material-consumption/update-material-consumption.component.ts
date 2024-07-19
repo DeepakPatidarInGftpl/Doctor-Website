@@ -71,7 +71,7 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
         this.userList = [];
         this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
           startWith(''),
-          map(value => this._filter(value, true))
+          map(value => this._filter(this.supplierControl?.value, true))
         );
       }
     })
@@ -113,7 +113,7 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       this.userList = res?.data;
       this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value, true))
+        map(value => this._filter(this.supplierControl?.value, true))
       );
     })
   }
@@ -122,8 +122,8 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.userList.filter(supplier => supplier.username.toLowerCase().includes(filterValue))
-      : this.userList.filter(supplier => !supplier.username.toLowerCase().includes(filterValue));
+      ? this.userList.filter(supplier => supplier?.detail?.company_name?.toLowerCase().includes(filterValue))
+      : this.userList.filter(supplier => !supplier?.detail?.company_name?.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
       filteredSuppliers.push({ username: "No data found" });
     }

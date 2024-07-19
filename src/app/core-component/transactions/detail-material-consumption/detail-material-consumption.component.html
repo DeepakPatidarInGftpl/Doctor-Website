@@ -24,7 +24,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="th">User</td>
-                                            <td class="td">{{consuptionDetail?.user?.username}}</td>
+                                            <td class="td">{{consuptionDetail?.company_name ? consuptionDetail?.company_name : consuptionDetail?.user?.username}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th"> Date</td>
@@ -48,7 +48,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Tax </td>
-                                            <td class="td">{{consuptionDetail?.tax +'%'}}</td>
+                                            <td class="td">{{consuptionDetail?.tax ? (consuptionDetail?.tax +'%') : ''}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Qty</td>

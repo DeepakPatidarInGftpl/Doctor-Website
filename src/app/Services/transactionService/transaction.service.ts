@@ -332,6 +332,11 @@ export class TransactionService {
     return this.http.get(url)
   }
 
+  getAccountByAlies() {
+    let url = this.apiUrl + '/pv-api/cash_or_bank_account/';
+    return this.http.get(url)
+  }
+
   getAccoutAlies(value) {
     let url = this.apiUrl + '/pv-api/account/?alias=' + value;
     return this.http.get(url)

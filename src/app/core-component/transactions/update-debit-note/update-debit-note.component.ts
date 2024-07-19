@@ -70,7 +70,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
 
         this.supplierControl.setValue(res.company_name);
-        this.billControl.setValue(this.getRes?.purchase_bill?.refrence_bill_no);
+        this.billControl.setValue(this.getRes?.purchase_bill?.supplier_bill_no);
 
 
         //patch local-date
@@ -146,7 +146,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.suppliers = res;
       this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value, true))
+        map(value => this._filter(this.supplierControl?.value, true))
       );
     })
   }
@@ -162,8 +162,8 @@ export class UpdateDebitNoteComponent implements OnInit {
 
   getFilterBill(data: any) {
     this.filterPurchaseBill = this.purchaseList.filter(salebill => {
-      if (salebill && salebill?.refrence_bill_no) {
-        const aliasLower = salebill?.refrence_bill_no.toLowerCase();
+      if (salebill && salebill?.supplier_bill_no) {
+        const aliasLower = salebill?.supplier_bill_no.toLowerCase();
         return aliasLower.includes(data);
       }
       return false;
@@ -176,8 +176,8 @@ export class UpdateDebitNoteComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier?.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier?.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
       filteredSuppliers.push({ company_name: "No data found" });
     }
