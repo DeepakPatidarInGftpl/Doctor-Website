@@ -20,9 +20,8 @@
                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
               <mat-autocomplete #auto="matAutocomplete">
                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                  <mat-option *ngIf="supplier.is_active==true" [value]="supplier.name+' '+supplier?.company_name"
-                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{supplier.name+'
-                    '+supplier?.company_name}}</mat-option>
+                  <mat-option *ngIf="supplier.is_active==true && !!supplier?.company_name" [value]="supplier.name+' '+supplier?.company_name"
+                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{supplier?.company_name}}</mat-option>
                 </ng-container>
                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                   <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
@@ -76,9 +75,9 @@
                 style="box-sizing: border-box;" />
               <mat-autocomplete #autos="matAutocomplete">
                 <ng-container *ngFor="let option of filterPurchaseBill">
-                  <mat-option *ngIf="option?.is_active==true" [value]="option?.refrence_bill_no"
+                  <mat-option *ngIf="option?.is_active==true && !!option?.supplier_bill_no" [value]="option?.supplier_bill_no"
                     (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
-                    {{ option?.refrence_bill_no}}
+                    {{ option?.supplier_bill_no}}
                   </mat-option>
                 </ng-container>
                 <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">

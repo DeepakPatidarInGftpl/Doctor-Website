@@ -48,11 +48,11 @@ export class UpdateCountraVoucherComponent implements OnInit {
 
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value, true))
+      map(value => this._filter(this.fromAccountControl?.value, true))
     );
     this.filteredToAccount = this.toAccountControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterr(value, true)),
+      map(value => this._filterr(this.toAccountControl?.value, true)),
     );
 
     const financialYear = localStorage.getItem('financialYear');
@@ -107,9 +107,14 @@ export class UpdateCountraVoucherComponent implements OnInit {
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredFromAccount = include
-      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
-      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
+    const filteredFromAccount = this.accountList.filter(account => {
+      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      return include
+        ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+        : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+    });
     if (!include && filteredFromAccount.length === 0) {
       // console.log("No results found");
       filteredFromAccount.push({ account: "No data found" });
@@ -119,9 +124,14 @@ export class UpdateCountraVoucherComponent implements OnInit {
 
   private _filterr(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredToAccount = include
-      ? this.toAccountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
-      : this.toAccountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
+      const filteredToAccount = this.toAccountList.filter(account => {
+        const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+        const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+        const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+        return include
+          ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+          : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+      });
     if (!include && filteredToAccount.length === 0) {
       filteredToAccount.push({ account: "No data found" });
     }

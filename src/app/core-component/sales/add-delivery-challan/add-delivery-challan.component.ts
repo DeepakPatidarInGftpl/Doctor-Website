@@ -600,9 +600,14 @@ export class AddDeliveryChallanComponent implements OnInit {
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredUsers = include
-      ? this.users.filter(users => users?.title?.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.title?.toLowerCase().includes(filterValue));
+    const filteredUsers = this.users.filter(account => {
+      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      return include
+        ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+        : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+    });
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ title: "No data found" }); // Add a dummy entry for displaying "No data found"

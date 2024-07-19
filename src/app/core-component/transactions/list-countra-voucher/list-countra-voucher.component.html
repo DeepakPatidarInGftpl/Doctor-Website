@@ -130,8 +130,8 @@
                         </td>
                         <td>{{i+1+'.'}}</td>
                         <td class="productimgname"><a routerLink="//transaction/detailscountravoucher/{{products.id}}" style="line-height: 3;">{{products?.countra_voucher_no}}</a></td>
-                        <td class="text-center">{{products?.from_account?.account_id}}</td>
-                        <td class="text-center">{{products?.to_account?.account_id}}</td>
+                        <td class="text-center">{{products?.from_account?.company_name ? products?.from_account?.company_name : products?.from_account?.account_id}}</td>
+                        <td class="text-center">{{products?.to_account?.company_name ? products?.to_account?.company_name :products?.to_account?.account_id}}</td>
                         <td class="text-center">{{products?.amount}}</td>
                         <td class="text-center">{{products?.date}}</td>
                         <td>{{products?.note}}</td>
