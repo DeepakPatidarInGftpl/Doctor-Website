@@ -497,9 +497,10 @@ export class SubcategorylistComponent implements OnInit {
     // console.log(this.check);
     // console.log(this.subcategoryForm.get('brand_id')?.value);
     this.data = this.subcategoryForm.get('brand_id')?.value
+    this.subcategoryForm.get('title').setValue(this.subCategoryCtrl.value);
     var formdata: any = new FormData()
 
-    formdata.append('title', this.subcategoryForm.get('title')?.value);
+    formdata.append('title', this.subCategoryCtrl.value);
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
     // formdata.append('discount', this.subcategoryForm.get('discount')?.value);
@@ -513,14 +514,22 @@ export class SubcategorylistComponent implements OnInit {
         this.loader = false;
         this.addRes = res
         if (this.addRes.success) {
-          this.toastr.success(this.addRes.msg)
-          this.subcategoryForm.reset()
+          this.toastr.success(this.addRes.msg);
+          this.subCategoryCtrl.reset();
+          this.subCategoryCtrl.markAsPristine();
+          this.subcategoryForm.reset();
+          console.log(this.subcategoryForm);
+          this.searchFeatureGroup = '';
+          this.selectedFeatureGrp = 0;
+          this.selectedFeatureIds = [];
+          this.url = '';
           // window.location.reload()
           this.loader = false
           this.ngOnInit()
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loader = false
       })
 
     } else {
@@ -553,6 +562,8 @@ export class SubcategorylistComponent implements OnInit {
             this.toastr.success(this.addRes.msg);
             this.updateData = '';
             this.subcategoryForm.reset();
+            this.selectedFeatureGrp = 0;
+            this.selectedFeatureIds = [];
             this.addForm = true
             this.loader = false
             // window.location.reload()
@@ -562,6 +573,7 @@ export class SubcategorylistComponent implements OnInit {
           // console.log(err.error.gst);
           if (err.error.image) {
             this.imgError = true
+            this.loader = false
             // setTimeout(() => {
             //   this.imgError=false;
             // }, 3000);
@@ -575,6 +587,8 @@ export class SubcategorylistComponent implements OnInit {
           if (this.addRes.success) {
             this.toastr.success(this.addRes.msg);
             this.subcategoryForm.reset();
+            this.selectedFeatureGrp = 0;
+            this.selectedFeatureIds = [];
             this.updateData = ''
             this.addForm = true
             this.loader = false
@@ -585,6 +599,7 @@ export class SubcategorylistComponent implements OnInit {
           // console.log(err.error.gst);
           if (err.error.image) {
             this.imgError = true
+            this.loader = false
             // setTimeout(() => {
             //   this.imgError=false;
             // }, 3000);
@@ -644,6 +659,7 @@ export class SubcategorylistComponent implements OnInit {
           // image: res.image,
         });
         this.selectedFeature = res?.feature_group?.map(res => res.id);
+        this.selectedFeatureGrp = res?.feature_group?.length
       }
     })
 

@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +18,7 @@ export class AddcategoryComponent implements OnInit {
   categoryCtrl = new FormControl('', [Validators.required]);
   categoryList: any;
   allCategoryData: any;
+  editImgUrl: any;
 
   get f() {
     return this.formaddCateg.controls;
@@ -26,6 +27,7 @@ export class AddcategoryComponent implements OnInit {
   token = localStorage.getItem('token')
   imgUrl = 'https://pv.greatfuturetechno.com';
   editRoute: any;
+  @Output() onDataUpdate = new EventEmitter<Date>();
   updateData: any;
   isAdd: any;
   isEdit: any;
@@ -46,18 +48,20 @@ export class AddcategoryComponent implements OnInit {
       this.editRoute = data
       console.log(data);
 
-      if (this.editRoute) {
-        ftitle = data.title,
-          this.categoryCtrl.setValue(data.title);
-        // fdiscount = data.discount
-        this.updateData = data
-      }
       this.formaddCateg = new FormGroup({
-        title: new FormControl(ftitle),
+        title: new FormControl('', [Validators.required]),
         // discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-        image: new FormControl('',)
+        image: new FormControl('', [Validators.required])
       })
       // console.log(this.formaddCateg);
+
+      if (this.editRoute) {
+        ftitle = data?.title,
+          this.formaddCateg.get('title').setValue(data?.title);
+        this.editImgUrl = data?.image;
+        // fdiscount = data.discount
+        this.updateData = data;
+      }
     })
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
@@ -105,6 +109,10 @@ export class AddcategoryComponent implements OnInit {
   }
 
   submitForm() {
+    const imageFile = this.formaddCateg.get('image')?.value;
+    if (this.editRoute && !imageFile) {
+      this.formaddCateg.controls['image'].setValue(this.editImgUrl);
+    }
     if (this.formaddCateg.invalid && !this.categoryCtrl.value) {
       this.formaddCateg.markAllAsTouched()
     } else {
@@ -121,10 +129,11 @@ export class AddcategoryComponent implements OnInit {
             this.toastr.success(res.msg)
             if (res.success) {
               this.formaddCateg.reset();
+              this.CoreServ.editThisData('');
+              this.onDataUpdate.next(new Date());
               this.updateData = '';
               this.url = '';
-              // this.ngOnInit();
-              window.location.reload()
+              this.ngOnInit();
             }
             // console.log(res);
           })
@@ -132,26 +141,33 @@ export class AddcategoryComponent implements OnInit {
           this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
             this.toastr.success(res.msg)
             if (res.success) {
-              this.formaddCateg.reset()
+              this.formaddCateg.reset();
+              this.CoreServ.editThisData('');
+              this.onDataUpdate.next(new Date());
               this.updateData = '';
               this.url = '';
-              // this.ngOnInit();
-              window.location.reload()
+              this.ngOnInit();
             }
             // console.log(res);
           })
         }
       } else {
+        this.formaddCateg.get('title').setValue(this.categoryCtrl.value);
         var formData: any = new FormData();
-        formData.append("title", this.formaddCateg.get('title')?.value);
+        formData.append("title", this.categoryCtrl.value);
         // formData.append("discount", this.formaddCateg.get('discount')?.value);
         formData.append("image", this.formaddCateg.get('image')?.value);
         this.CoreServ.addCategory(formData).subscribe((res: any) => {
           // console.log(res);
           this.toastr.success(res.msg)
           if (res.success) {
-            this.formaddCateg.reset()
-            window.location.reload()
+            this.formaddCateg.reset();
+            this.updateData = '';
+            this.url = '';
+            this.onDataUpdate.next(new Date());
+            this.categoryCtrl.reset();
+            this.categoryCtrl.markAsPristine();
+            this.ngOnInit();
           }
         })
       }

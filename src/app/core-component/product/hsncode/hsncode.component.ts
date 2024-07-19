@@ -29,6 +29,9 @@ export class HsncodeComponent implements OnInit {
   hsncodeForm!: FormGroup;
   selectActive: any;
   filteredData: any[];
+  hsnCodeCtrl = new FormControl('', [Validators.required]);
+  hsnCodeList: any;
+  allHsnCodeData: any;
 
   get f() {
     return this.hsncodeForm.controls;
@@ -182,12 +185,19 @@ export class HsncodeComponent implements OnInit {
     this.coreService.getHSNCode().subscribe(res => {
       this.loader = false;
       this.tableData = res;
+      this.hsnCodeList = res;
+      this.allHsnCodeData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
       this.filterData();
     })
     this.getSubcategory();
     this.getTax();
+
+    this.hsnCodeCtrl.valueChanges.subscribe((res) => {
+      console.log(res);
+      this._filterBrands(res);
+    });
 
     //permission from localstorage data
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -252,6 +262,11 @@ export class HsncodeComponent implements OnInit {
       filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
     }
     this.filteredData = filteredData;
+  }
+
+  private _filterBrands(value: string): any {
+    const filterValue = value?.toLowerCase();
+    this.hsnCodeList = this.allHsnCodeData.filter(hsnCode => hsnCode?.hsn_code?.toString()?.toLowerCase().includes(filterValue));
   }
 
   clearFilter() {
@@ -500,9 +515,10 @@ export class HsncodeComponent implements OnInit {
   loaders = false;
   submit() {
     // console.log(this.hsncodeForm.value);
+    this.hsncodeForm.get('hsn_code').setValue(this.hsnCodeCtrl.value);
     var formdata: any = new FormData()
 
-    formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
+    formdata.append('hsn_code', this.hsnCodeCtrl.value);
     // formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
     const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
 
@@ -522,16 +538,20 @@ export class HsncodeComponent implements OnInit {
           this.loaders = false;
           this.selectedSubcat = 0
           this.toastr.success(this.addRes.msg)
-          this.hsncodeForm.reset()
+          this.hsncodeForm.reset();
+          this.hsnCodeCtrl.reset();
+          this.hsnCodeCtrl.markAsPristine();
           this.addForm = true
           // window.location.reload()
           this.ngOnInit()
         }
       }, err => {
+        this.loaders = false;
         // console.log(err.error.gst);
       })
     } else {
-      this.hsncodeForm.markAllAsTouched()
+      this.hsncodeForm.markAllAsTouched();
+      this.loaders = false;
       this.toastr.error('Please Fill All The Required Fields')
     }
   }

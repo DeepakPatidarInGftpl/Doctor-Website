@@ -54,6 +54,20 @@
   }
 }
 
+::ng-deep {
+  .mat-form-field-required-marker {
+    color: #637381 !important;
+  }
+
+  .mat-form-field-label {
+    color: #637381 !important;
+  }
+}
+
+.error-msg {
+  font-size: 14px;
+}
+
 .fa-sort:before {
   content: "\f0dc";
   right: 0.5em;

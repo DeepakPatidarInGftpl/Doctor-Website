@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { HsncodeRoutingModule } from './hsncode-routing.module';
 import { HsncodeComponent } from './hsncode.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -12,7 +15,10 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   imports: [
     CommonModule,
     HsncodeRoutingModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class HsncodeModule { }
