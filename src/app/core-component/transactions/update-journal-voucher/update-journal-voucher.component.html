@@ -103,7 +103,7 @@
                                                                         [value]="option?.account_id"
                                                                         (onSelectionChange)="oncheck(option,i)"
                                                                         style="color:#FF9F43">
-                                                                        {{ option?.account_id}}
+                                                                        {{account?.company_name ? account?.company_name : account?.title }}
                                                                     </mat-option>
                                                                 </ng-container>
                                                                 <mat-option *ngIf="filterAccount?.length === 0"

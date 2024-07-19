@@ -22,11 +22,11 @@
                                 <ng-container *ngFor="let user of filteredusers | async">
                                     <mat-option *ngIf="user.is_active==true"
                                     [value]="user?.title+ ' '+ user?.account_id" (onSelectionChange)="oncheck(user)"
-                                    style="color:#FF9F43"> {{user?.title + ' (' + user?.account_id + ')'}}</mat-option>
+                                    style="color:#FF9F43"> {{user?.company_name ? user?.company_name : user?.title}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredusers | async) as users">
                                     <mat-option *ngIf="users.length === 0" [value]="'No data found'">
-                                        <a routerLink="//settings/addUser" style="color:#FF9F43">+ Add User</a>
+                                        <a routerLink="//settings/addUser" style="color:#FF9F43">+ Add Customer</a>
                                     </mat-option>
                                     <mat-option *ngIf="userControl.value?.length < 3" class="is-loading">Please
                                         Enter 1 or more characters</mat-option>

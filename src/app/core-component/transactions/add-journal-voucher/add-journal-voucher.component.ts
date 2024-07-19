@@ -44,7 +44,7 @@ export class AddJournalVoucherComponent implements OnInit {
 
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value, true))
+      map(value => this._filter(this.fromAccountControl?.value, true))
     );
 
     const financialYear = localStorage.getItem('financialYear');
@@ -80,10 +80,16 @@ export class AddJournalVoucherComponent implements OnInit {
     })
   }
   private _filter(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredFromAccount = include
-      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
-      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
+    const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
+    const filteredFromAccount = this.accountList.filter(account => {
+      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      
+      return include
+        ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+        : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+    });
     if (!include && filteredFromAccount.length === 0) {
       filteredFromAccount.push({ account: "No data found" });
     }

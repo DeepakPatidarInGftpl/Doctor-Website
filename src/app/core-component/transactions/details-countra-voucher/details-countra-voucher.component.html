@@ -27,11 +27,11 @@
                                     <tbody>
                                         <tr>
                                             <td class="th">To Account</td>
-                                            <td class="td">{{countraVooucherDetails?.to_account?.account_id}}</td>
+                                            <td class="td">{{countraVooucherDetails?.to_account?.company_name ? countraVooucherDetails?.to_account?.company_name : countraVooucherDetails?.to_account?.account_id}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">From Account</td>
-                                            <td class="td">{{countraVooucherDetails?.to_account?.account_id}}</td>
+                                            <td class="td">{{countraVooucherDetails?.from_account?.company_name ? countraVooucherDetails?.from_account?.company_name : countraVooucherDetails?.from_account?.account_id}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Countra Voucher No.</td>

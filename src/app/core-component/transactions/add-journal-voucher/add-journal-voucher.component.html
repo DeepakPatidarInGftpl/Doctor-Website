@@ -103,7 +103,7 @@
                                                                     <mat-option *ngIf="account.is_active==true"
                                                                         [value]="account?.account_id"
                                                                         (onSelectionChange)="oncheck(account,i)"
-                                                                        style="color:#FF9F43">{{account?.account_id
+                                                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name : (account?.title + ' (' + account?.account_id + ')')
                                                                         }}</mat-option>
                                                                 </ng-container>
                                                                 <ng-container
