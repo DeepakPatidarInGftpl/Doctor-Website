@@ -92,7 +92,6 @@ export class AddCountraVoucherComponent implements OnInit {
   }
 
   private _filter(value: string | number, include: boolean): any[] {
-    debugger
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value?.toString()?.toLowerCase();
       const filteredFromAccount = this.accountList.filter(account => {
         const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);

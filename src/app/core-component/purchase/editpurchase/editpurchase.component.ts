@@ -1021,7 +1021,7 @@ export class EditpurchaseComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery', '');
+    // this.searchProduct('someQuery', '');
     this.getVariant('', '', '')
   };
 
