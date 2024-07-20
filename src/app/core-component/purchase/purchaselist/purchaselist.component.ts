@@ -145,7 +145,7 @@ export class PurchaselistComponent implements OnInit {
       this.getPurchase(fyId);
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -253,7 +253,7 @@ getPurchase(fy:any){
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
-      this.filteredData = this.filteredData.filter(res => {
+      this.filteredData = this.tableData.filter(res => {
         const nameLower = res?.party?.name.toLocaleLowerCase(); 
         return nameLower.includes(searchTerm); 
       });
