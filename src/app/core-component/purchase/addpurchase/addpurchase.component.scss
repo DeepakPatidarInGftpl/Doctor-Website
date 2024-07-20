@@ -93,6 +93,10 @@ a{
   text-decoration: none;
   color:#FF9F43;
 }
+
+.error-border {
+  border: 1px solid red;
+}
 @media (max-width: 1023px){
 h5 {
     font-size: 13px;

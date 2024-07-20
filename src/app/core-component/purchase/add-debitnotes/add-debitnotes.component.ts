@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { Observable, Subscription, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -24,6 +24,9 @@ export class AddDebitnotesComponent implements OnInit {
   discount: any;
   totalTax: any;
   roundOff: any;
+  myControls: FormControl[] = [];
+  isFormCartInvalid = false;
+  subscriptions: Subscription[] = [];
 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
@@ -175,6 +178,8 @@ export class AddDebitnotesComponent implements OnInit {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
     }
+    this.setupValueChanges();
+    this.myControls.push(new FormControl());
     this.isCart = false
   }
 
@@ -251,6 +256,19 @@ export class AddDebitnotesComponent implements OnInit {
       party: selectedItemId
     });
 
+  }
+
+  setupValueChanges() {
+    const cartArray = this.getCart();
+    cartArray.controls.forEach((cartItem, index) => {
+      this.subscriptions.push(
+        cartItem.valueChanges.subscribe((value) => {
+          this.isFormCartInvalid = false;
+          this.updateLandingCost(index);
+          this.updateTotal(index);
+        })
+      );
+    });
   }
 
   // address 
@@ -464,6 +482,8 @@ export class AddDebitnotesComponent implements OnInit {
         tax: 18,
       });
     }
+    this.updateTotal(index);
+    this.updateLandingCost(index);
     this.purchase4(index)
   }
   coastprice: any[] = []
@@ -732,8 +752,8 @@ export class AddDebitnotesComponent implements OnInit {
         const qty = +qtyControlControl.value || 0;
         if (this.isPercentage[index] == true) {
           // cost price 
-          let getDiscountPrice = (this.costPrice[index] * deductionPercentage) / 100
-          let getCoastPrice = this.costPrice[index] - getDiscountPrice;
+          let getDiscountPrice = (Number(purchaseRateControl?.value) * deductionPercentage) / 100
+          let getCoastPrice = Number(purchaseRateControl?.value) - getDiscountPrice;
           this.originalCoastPrice = getCoastPrice
           // without tax price 
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0;
@@ -797,7 +817,33 @@ export class AddDebitnotesComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
 
+  updateTotal(index: number) {
+    const totalForItem = this.calculateTotalEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('total').setValue(totalForItem.toFixed(2), { emitEvent: false });
+  }
 
+  updateLandingCost(index: number) {
+    const landingCost = this.calculateTotalLandingCostEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('landing_cost').setValue(landingCost.toFixed(2), { emitEvent: false });
+  }
+
+  checkCartValidation() {
+    const cartTotal = this.calculateTotal();
+    console.log(cartTotal);
+    if(cartTotal === 0){
+      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 2000 });
+      this.isFormCartInvalid = true;
+      return
+    } else {
+      this.isFormCartInvalid = false;
+    }
+  }
+
+  submitForm() {
+    this.checkCartValidation();
+  }
 
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
@@ -996,7 +1042,7 @@ export class AddDebitnotesComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery', '');
+    // this.searchProduct('someQuery', '');
     this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
@@ -1246,7 +1292,6 @@ export class AddDebitnotesComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControl = new FormControl('');
   variantList: any[] = [];
 
   getVariant(search: any, index: any, barcode: any) {
@@ -1271,7 +1316,7 @@ export class AddDebitnotesComponent implements OnInit {
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0].product_title)
+          this.myControls[index].setValue(res[0].product_title);
         }
         if (search) {
           //barcode patch
@@ -1296,7 +1341,7 @@ export class AddDebitnotesComponent implements OnInit {
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index)
-          this.myControl.setValue(res[0].product_title)
+          this.myControls[index].setValue(res[0].product_title);
         }
         if (search) {
           //barcode patch
@@ -1384,5 +1429,8 @@ export class AddDebitnotesComponent implements OnInit {
     event.stopPropagation();
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 }
 

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { Observable, Subscription, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -17,7 +17,8 @@ export class AddpurchaseComponent implements OnInit {
 
   searchControl = new FormControl();
   searchResults: any[] = [];
-
+  subscriptions: Subscription[] = [];
+  isFormCartInvalid = false;
   totalQty: any;
   subTotal: any;
   discount: any;
@@ -29,7 +30,8 @@ export class AddpurchaseComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private commonService: CommonServiceService) {
+    private commonService: CommonServiceService,
+    private cdr: ChangeDetectorRef) {
   }
 
   supplierControlName = 'party';
@@ -175,7 +177,7 @@ export class AddpurchaseComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControl = new FormControl('');
+  myControls: FormControl[] = [];
   variantList: any[] = [];
 
   getVariant(search: any, index: any, barcode: any) {
@@ -200,7 +202,7 @@ export class AddpurchaseComponent implements OnInit {
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index)
-          this.myControl.setValue(res[0].product_title)
+          this.myControls[index].setValue(res[0].product_title);
         }
         if (search) {
           //barcode patch
@@ -212,7 +214,7 @@ export class AddpurchaseComponent implements OnInit {
           this.check = true;
           const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
-            barcode: this.searchs[0].id
+            barcode: this.searchs[0]?.id
           });
         }
       });
@@ -225,7 +227,7 @@ export class AddpurchaseComponent implements OnInit {
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index)
-          this.myControl.setValue(res[0].product_title)
+          this.myControls[index].setValue(res[0].product_title);
         }
         if (search) {
           //barcode patch
@@ -283,7 +285,9 @@ export class AddpurchaseComponent implements OnInit {
   addCart() {
     this.getCart().push(this.purchase_cart());
     this.taxIntoRupees = new Array(this.getCart().controls.length).fill(0);
+    this.setupValueChanges();
     this.isCart = false
+    this.myControls.push(new FormControl());
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -332,6 +336,7 @@ export class AddpurchaseComponent implements OnInit {
     const variants = this.purchaseForm.get('purchase_cart') as FormArray;
     variants.clear();
     this.addCart();
+    this.setupValueChanges();
     this.purchaseForm.patchValue({
       party: selectedItemId
     });
@@ -509,6 +514,8 @@ export class AddpurchaseComponent implements OnInit {
         tax: 18,
       });
     }
+    this.updateTotal(index);
+    this.updateLandingCost(index);
   }
   coastprice: any[] = []
   landingPrice: any[] = []
@@ -586,6 +593,26 @@ export class AddpurchaseComponent implements OnInit {
     }
     return 0
   }
+
+  setupValueChanges() {
+    const cartArray = this.getCart();
+    cartArray.controls.forEach((cartItem, index) => {
+      this.subscriptions.push(
+        cartItem.valueChanges.subscribe((value) => {
+          this.isFormCartInvalid = false;
+          this.updateLandingCost(index);
+          this.updateTotal(index);
+        })
+      );
+    });
+  }
+
+  updateTotal(index: number) {
+    const totalForItem = this.calculateTotalEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('total').setValue(totalForItem.toFixed(2), { emitEvent: false });
+  }
+
   TotalWithTax: any[] = [];
   TotalWithoutTax: any[] = [];
   calculateTotalLandingCostEveryIndex(index: number): number {
@@ -618,8 +645,11 @@ export class AddpurchaseComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const qty = +qtyControlControl.value || 0;
         // cost price 
-        let getDiscountPrice = (this.batchCostPrice[index] * discountPercentage) / 100
-        let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
+        let getDiscountPrice = 0;
+        if(discountPercentage > 0){
+           getDiscountPrice = (Number(purchaseRateControl?.value) * discountPercentage) / 100
+        }
+        let getCoastPrice = Number(purchaseRateControl?.value) - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice
         // without tax price 
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0;
@@ -633,6 +663,13 @@ export class AddpurchaseComponent implements OnInit {
     }
     return 0;
   }
+
+  updateLandingCost(index: number) {
+    const landingCost = this.calculateTotalLandingCostEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('landing_cost').setValue(landingCost.toFixed(2), { emitEvent: false });
+  }
+
   calculateTotalWithTax(): number {
     let total = 0;
     this?.TotalWithTax?.forEach((number: any) => {
@@ -654,6 +691,23 @@ export class AddpurchaseComponent implements OnInit {
   formId: any;
   loaderPrint = false;
   loaderDraft = false
+
+  checkCartValidation() {
+    const cartTotal = this.calculateTotal();
+    console.log(cartTotal);
+    if(cartTotal === 0){
+      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 2000 });
+      this.isFormCartInvalid = true;
+      return
+    } else {
+      this.isFormCartInvalid = false;
+    }
+  }
+
+  submitForm() {
+    this.checkCartValidation();
+  }
+
   submit(type: any) {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
@@ -704,10 +758,14 @@ export class AddpurchaseComponent implements OnInit {
         const cartGroup = address as FormGroup;
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
-          const control = cartGroup.controls[key];
+          const control:any = cartGroup.controls[key];
           // Convert the value to an integer if it's a number
           if (!isNaN(control.value)) {
             cartObject[key] = parseFloat(control.value);
+          } else if(control === 'discount') {
+            if(control.value === null) {
+            cartObject[key] = 0;
+            }
           } else {
             cartObject[key] = control.value;
           }
@@ -881,7 +939,7 @@ export class AddpurchaseComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery', '');
+    // this.searchProduct('someQuery', '');
     this.getVariant('', '', '')
   };
 
@@ -1110,6 +1168,7 @@ export class AddpurchaseComponent implements OnInit {
     const totalForItem = landingCost * qty;
     return totalForItem;
   }
+
   calculateTotalTaxIntoRupees(): any {
     let total = 0;
     this.taxIntoRupees?.forEach((number: any) => {
@@ -1207,5 +1266,9 @@ export class AddpurchaseComponent implements OnInit {
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

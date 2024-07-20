@@ -678,7 +678,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery', '');
+    // this.searchProduct('someQuery', '');
     this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
