@@ -7,7 +7,7 @@
 
 <div class="card" id="purchaseForm">
     <div class="card-body">
-        <form [formGroup]="purchaseForm" (ngSubmit)="submitForm()">
+        <form [formGroup]="purchaseForm" (ngSubmit)="submit('save')">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -802,7 +802,7 @@
                                 aria-hidden="true"></span>&nbsp; Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>&nbsp; Save</button>

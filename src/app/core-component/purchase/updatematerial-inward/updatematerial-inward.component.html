@@ -6,7 +6,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <form [formGroup]="materialForm">
+        <form [formGroup]="materialForm" (ngSubmit)="submit('save')">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -660,6 +660,7 @@
                                                 <td>
                                                     <input class="input" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                         (keyup)="getVariant(id.value,i,'barcode')"
                                                         (blur)="hideSearch()">
@@ -671,12 +672,13 @@
                                                             style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
                                                             <input type="text" placeholder="Search Product"
                                                                 aria-label="Search Products" matInput
-                                                                [formControl]="myControls.at(i)"
+                                                                [formControl]="myControls[i]"
+                                                                [ngClass]="{'error-border': isFormCartInvalid}"
                                                                 (input)="getVariant($event.target.value,i,'')"
                                                                 [matAutocomplete]="autos"
                                                                 style="box-sizing: border-box;" />
                                                             <mat-autocomplete #autos="matAutocomplete">
-                                                                <!-- <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0"> -->
+                                                                <!-- <ng-container *ngIf="myControls[i].value?.length > 1 && myControls[i].value?.length > 0"> -->
                                                                 <ng-container *ngFor="let option of variantList">
                                                                     <mat-option *ngIf="option.is_active==true"
                                                                         [value]="option?.product_title + ' ' + option?.variant_name"
@@ -696,7 +698,7 @@
                                                                     <a routerLink="//product/addproduct"
                                                                         style="color:#FF9F43">+add Product</a>
                                                                 </mat-option>
-                                                                <mat-option *ngIf="myControl?.at(i)?.value?.length < 3"
+                                                                <mat-option *ngIf="myControls[i]?.value?.length < 3"
                                                                     class="is-loading">
                                                                     Please Enter 3 or more characters
                                                                 </mat-option>
@@ -704,10 +706,10 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="qty" class="input"></td>
-                                                <td><input type="text" formControlName="po_qty" class="input"></td>
+                                                <td><input type="text" formControlName="qty" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
+                                                <td><input type="text" formControlName="po_qty" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
                                                 <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
-                                                <td><input type="text" formControlName="mrp" class="input">
+                                                <td><input type="text" formControlName="mrp" [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -953,7 +955,7 @@
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" type="submit">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>&nbsp; Save</button>

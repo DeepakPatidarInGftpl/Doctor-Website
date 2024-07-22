@@ -41,6 +41,10 @@
     background-color: #fff;
     cursor: pointer;
   }
+
+  .error-border {
+    border: 1px solid red;
+  }
   
   .custom-dropdown .dropdown-list .dropdown-list-container {
     position: absolute;

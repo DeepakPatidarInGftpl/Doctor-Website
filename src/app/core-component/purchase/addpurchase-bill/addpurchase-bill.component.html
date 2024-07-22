@@ -6,7 +6,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <form [formGroup]="purchaseBillForm" (ngSubmit)="submitForm()">
+        <form [formGroup]="purchaseBillForm" (ngSubmit)="submit('save')">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -638,8 +638,7 @@
                                                         class="input"></td>
                                                 <td><input type="text" formControlName="unit_cost" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         placeholder="Unit Cost" class="input"
-                                                        [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price
-                                                        (blur)="purchase2(price.value,i)"></td>
+                                                         #price></td>
                                                 <td><input type="text" formControlName="mrp" class="input" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         placeholder="MRP">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
@@ -771,7 +770,7 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="text" formControlName="discount" [ngClass]="{'error-border': isFormCartInvalid}" placeholder="Discount"
-                                                        class="input" (blur)="purchase4(i)">
+                                                        class="input">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
                                                         Enter Discount ex: 1-100
@@ -779,7 +778,7 @@
                                                 </td>
                                                 <td><input type="text" formControlName="additional_discount" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         placeholder="Additional Discount" class="input"
-                                                        (blur)="purchase3(i)">
+                                                        >
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
                                                         Enter Discount ex: 1-100
@@ -1077,8 +1076,7 @@
                                 </li>
                                 <li>
                                     <h4>Total Discount %</h4>
-                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() |
-                                        currency:'INR'}}</h5>
+                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount()}}</h5>
                                 </li>
                                 <li>
                                     <h4>Tax Amount</h4>
@@ -1132,7 +1130,7 @@
                                 aria-hidden="true"></span>&nbsp; Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>&nbsp; Save</button>

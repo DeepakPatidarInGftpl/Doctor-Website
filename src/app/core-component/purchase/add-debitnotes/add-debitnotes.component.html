@@ -6,7 +6,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <form [formGroup]="debitNotesForm" (ngSubmit)="submitForm()">
+        <form [formGroup]="debitNotesForm" (ngSubmit)="submit('save')">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -628,8 +628,7 @@
                                                 <td><input type="text" formControlName="qty" [ngClass]="{'error-border': isFormCartInvalid}" placeholder="0"
                                                         class="input"></td>
                                                 <td><input type="text" formControlName="unit_cost" class="input"
-                                                        [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price
-                                                        (blur)="purchase2(price.value,i)">
+                                                         #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -713,7 +712,7 @@
                                         <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                         </td> -->
                                                 <td><input type="number" formControlName="deduction" [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        placeholder="Deduction" class="input" (blur)="purchase4(i)">
+                                                        placeholder="Deduction" class="input">
                                                     <span class="symbol" (click)="percentage(i)"
                                                         *ngIf="isPercentage[i]">%</span>
                                                     <span class=symbol (click)="amount(i)"
@@ -840,7 +839,7 @@
                                 aria-hidden="true"></span>&nbsp; Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>&nbsp; Save</button>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { Observable, Subscription, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -22,6 +22,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   discount: any;
   totalTax: any;
   roundOff: any;
+  subscriptions: Subscription[] = [];
+  isFormCartInvalid = false;
 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
@@ -65,7 +67,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
-    this.myControls = new FormArray([]);
+    // this.myControls = new FormArray([]);
     this.puchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl('', [Validators.required]),
@@ -276,7 +278,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
   udateCart(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    const formarr = this.puchaseBillForm.get('purchase_bill') as FormArray;
+    // let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       const purchaseRate = j.unit_cost || 0;
       const taxPercentage = j.tax || 0;
@@ -284,12 +287,12 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // tax including & excluding
       if (j.tax == 18) {
         this.TotalWithoutTax[i] = j.unit_cost * j.qty;
-        const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
+        const calculatedTax = ((purchaseRate * taxPercentage) / 100);
         this.taxIntoRupees[i] = calculatedTax;
         console.log(this.taxIntoRupees[i]);
       } else {
         this.TotalWithoutTax[i] = j.landing_cost * j.qty;
-        let taxPrice = landingCost - (landingCost * (100 / (100 + taxPercentage)))
+        let taxPrice = (landingCost * taxPercentage) / 100
         this.taxIntoRupees[i] = taxPrice;
       }
       formarr.push(this.fb.group({
@@ -371,6 +374,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   addCart() {
     this.getCart().push(this.cart());
     this.isCart = false;
+    this.setupValueChanges();
+    this.myControls.push(new FormControl());
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -381,6 +386,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
   additional_charges(): FormGroup {
     return this.fb.group({
+      additional: (0),
       additional_charge: (0),
       value: (0),
       tax: (0),
@@ -428,6 +434,31 @@ export class UpdatepurchaseBillComponent implements OnInit {
         map(value => this._filter(value, true))
       );
     })
+  }
+
+  setupValueChanges() {
+    const cartArray = this.getCart();
+    cartArray.controls.forEach((cartItem, index) => {
+      this.subscriptions.push(
+        cartItem.valueChanges.subscribe((value) => {
+          this.isFormCartInvalid = false;
+          this.updateLandingCost(index);
+          this.updateTotal(index);
+        })
+      );
+    });
+  }
+
+  updateTotal(index: number) {
+    const totalForItem = this.calculateTotalEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('total').setValue(totalForItem.toFixed(2), { emitEvent: false });
+  }
+
+  updateLandingCost(index: number) {
+    const landingCost = this.calculateTotalLandingCostEveryIndex(index);
+    const cartItem = this.getCart().controls[index];
+    cartItem.get('landing_cost').setValue(landingCost.toFixed(2), { emitEvent: false });
   }
 
   getVariants() {
@@ -485,9 +516,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
       variants.clear();
       this.addCart();
     }
+    this.setupValueChanges();
     this.puchaseBillForm.patchValue({
       party: selectedItemId
-    });
+    }, { emitEvent: false });
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
@@ -683,7 +715,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       console.log(getCoastPrice, 'getCoastPrice');
       this.landingCost = getCoastPrice;
       // cost price
-      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      let taxPrice = ((getCoastPrice * this.apiPurchaseTax) / 100)
       console.log(taxPrice, 'taxprice');
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice - taxPrice;
@@ -696,7 +728,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       let getCoastPrice = costprice - getDiscountPrice;
       this.originalCoastPrice = getCoastPrice
       // landing cost
-      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+      let taxPrice = ((getCoastPrice * purchaseTax) / 100)
       this.taxIntoRupees[index] = taxPrice || 0;
       let landingcost = getCoastPrice + taxPrice;
       this.landingCost = landingcost;
@@ -715,9 +747,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
           mrp: event.batch[0]?.mrp,
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: this.originalCoastPrice.toFixed(2),
-          // landing_cost: landingCost,
+          landing_cost: this.landingCost,
           dealer_price: event.batch[0]?.selling_price_dealer,
           employee_price: event.batch[0]?.selling_price_employee,
           selling_price_offline: event.batch[0]?.selling_price_offline,
@@ -731,9 +763,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
           mrp: event.batch[0]?.mrp,
           qty: event.batch[0]?.stock,
           tax: 18,
-          discount: event.batch[0]?.discount || 0,
+          discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: event.batch[0]?.cost_price,
-          // landing_cost: landingCost,
+          landing_cost: this.landingCost,
           dealer_price: event.batch[0]?.selling_price_dealer,
           employee_price: event.batch[0]?.selling_price_employee,
           selling_price_offline: event.batch[0]?.selling_price_offline,
@@ -748,11 +780,24 @@ export class UpdatepurchaseBillComponent implements OnInit {
       barcode.patchValue({
         barcode: selectedItemId,
         tax: 18,
+        mrp: event.batch[0]?.mrp || 0,
+        qty: event.batch[0]?.stock || 0,
+        discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
+        purchase_rate: event.batch[0]?.cost_price || 0,
+        unit_cost: event.batch[0]?.cost_price || 0,
+        landing_cost: this.landingCost || 0,
+        dealer_price: event.batch[0]?.selling_price_dealer || 0,
+        employee_price: event.batch[0]?.selling_price_employee || 0,
+        selling_price_offline: event.batch[0]?.selling_price_offline || 0,
+        selling_price_online: event.batch[0]?.selling_price_online || 0,
+        additional_discount: event.batch[0]?.additional_discount || 0
       });
     }
-    this.calculateTotalLandingCostEveryIndex(index);
-    this.calculateTotal();
-    this.calculateTotalEveryIndex(index);
+    this.updateTotal(index);
+    this.updateLandingCost(index);
+    // this.calculateTotalLandingCostEveryIndex(index);
+    // this.calculateTotal();
+    // this.calculateTotalEveryIndex(index);
     this.getgst(index)
   }
 
@@ -773,7 +818,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       console.log(getCoastPrice, 'getCoastPrice');
       this.landingCost = getCoastPrice;
       // cost price 
-      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      let taxprice = ((getCoastPrice * this.apiPurchaseTax) / 100)
       this.taxIntoRupees[index] = taxprice || 0;
       let purchasePrice = getCoastPrice - taxprice;
       this.originalCoastPrice = purchasePrice;
@@ -794,17 +839,17 @@ export class UpdatepurchaseBillComponent implements OnInit {
     }
   }
   userInputEntered: boolean[] = [];
-  purchase(index) {
-    this.userInputEntered[index] = true;
-    const result = this.calculatePurchaseEveryIndex(index);
-    this.coastprice[index] = result.toFixed(2);
-    this.calculateTotalLandingCostEveryIndex(index)
-    this.calculateTotalEveryIndex(index)
-    this.getgstCostPrice(index)
-    setTimeout(() => {
-      this.calculateRoundoffValue()
-    }, 2000);
-  }
+  // purchase(index) {
+  //   this.userInputEntered[index] = true;
+  //   const result = this.calculatePurchaseEveryIndex(index);
+  //   this.coastprice[index] = result.toFixed(2);
+  //   this.calculateTotalLandingCostEveryIndex(index)
+  //   this.calculateTotalEveryIndex(index)
+  //   this.getgstCostPrice(index)
+  //   setTimeout(() => {
+  //     this.calculateRoundoffValue()
+  //   }, 2000);
+  // }
   calculatePurchaseEveryIndex(index: number): number {
     console.log('gfg');
     const cartItem = this.getCart().controls[index];
@@ -824,7 +869,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         let getDiscountPrice = (purchaseRate * totalDiscount) / 100
         let getCoastPrice = purchaseRate - getDiscountPrice;
         // cost price 
-        let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+        let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
         this.taxIntoRupees[index] = taxprice || 0;
         let purchasePrice = getCoastPrice - taxprice;
         return purchasePrice;
@@ -866,19 +911,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
           const landingCost = afterDiscountAmount || 0;
           barcode.patchValue({
             landing_cost: landingCost.toFixed(2),
-          });
+          }, { emitEvent: false });
           this.landingCostEveryIndex[index] = landingCost
           // without tax price 
           return landingCost;
         } else {
-          const discountAmount = (this.costPrice * totalDiscount) / 100;
-          const afterDiscountAmount = this.costPrice - discountAmount;
+          const discountAmount = (Number(purchaseRateControl.value) * totalDiscount) / 100;
+          const afterDiscountAmount = Number(purchaseRateControl.value) - discountAmount;
           this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
           const landingCost = afterDiscountAmount || 0;
           this.landingCostEveryIndex[index] = landingCost
           barcode.patchValue({
             landing_cost: landingCost.toFixed(2),
-          });
+          }, { emitEvent: false });
           return landingCost;
         }
       } else {
@@ -888,18 +933,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
         const totalDiscount = discountPercentage + additionalDiscountPercentage;
         const qty = +qtyControlControl.value || 0;
         // cost price 
-        let getDiscountPrice = (this.costPrice * totalDiscount) / 100
-        let getCoastPrice = this.costPrice - getDiscountPrice;
+        let getDiscountPrice = (Number(purchaseRateControl.value) * totalDiscount) / 100
+        let getCoastPrice = Number(purchaseRateControl.value) - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice
         // without tax price 
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0;
         // landing cost
-        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+        let taxPrice = ((getCoastPrice * purchaseTax) / 100) || 0
         this.taxIntoRupees[index] = taxPrice || 0;
         let landingCost = getCoastPrice + taxPrice || 0;
         barcode.patchValue({
           landing_cost: landingCost.toFixed(2),
-        });
+        }, { emitEvent: false });
         this.landingCostEveryIndex[index] = landingCost
         return landingCost;
       }
@@ -912,15 +957,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.costPrice = costPrice;
     console.log(this.costPrice);
   }
-  purchase3(index) {
-    const result = this.calculationAdditionalDiscountCostPrice(index);
-    this.coastprice[index] = result.toFixed(2)
-    this.calculateTotalLandingCostEveryIndex(index)
-    this.getgstCostPrice(index)
-    setTimeout(() => {
-      this.calculateRoundoffValue()
-    }, 2000);
-  }
+  // purchase3(index) {
+  //   const result = this.calculationAdditionalDiscountCostPrice(index);
+  //   this.coastprice[index] = result.toFixed(2)
+  //   this.calculateTotalLandingCostEveryIndex(index)
+  //   this.getgstCostPrice(index)
+  //   setTimeout(() => {
+  //     this.calculateRoundoffValue()
+  //   }, 2000);
+  // }
   calculationAdditionalDiscountCostPrice(index) {
     console.log(this.costPrice, 'calculationAdditionalDiscountCostPrice');
     const cartItem = this.getCart().controls[index];
@@ -940,7 +985,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // let getDiscountPrice = (this.costPrice * totalDiscount) / 100
         // let getCoastPrice = this.costPrice - getDiscountPrice;
         // // cost price 
-        // let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+        // let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
         // this.taxIntoRupees[index] = taxprice || 0;
         // let purchasePrice = getCoastPrice - taxprice;
         // return purchasePrice;
@@ -950,7 +995,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           let getDiscountPrice = (this.costPrice * totalDiscount) / 100
           let getCoastPrice = this.costPrice - getDiscountPrice;
           // cost price 
-          let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+          let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
@@ -958,7 +1003,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           let getDiscountPrice = (this.batchCostPrice[index] * totalDiscount) / 100
           let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
           // cost price 
-          let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+          let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
@@ -977,15 +1022,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
     }
     return 0
   }
-  purchase4(index) {
-    const result = this.calculationAdditionalDiscountCostPrice(index);
-    this.coastprice[index] = result.toFixed(2)
-    this.calculateTotalLandingCostEveryIndex(index)
-    this.getgstCostPrice(index)
-    setTimeout(() => {
-      this.calculateRoundoffValue()
-    }, 2000);
-  }
+  // purchase4(index) {
+  //   const result = this.calculationAdditionalDiscountCostPrice(index);
+  //   this.coastprice[index] = result.toFixed(2)
+  //   this.calculateTotalLandingCostEveryIndex(index)
+  //   this.getgstCostPrice(index)
+  //   setTimeout(() => {
+  //     this.calculateRoundoffValue()
+  //   }, 2000);
+  // }
   calculationDiscountCostPrice(index) {
     console.log(this.costPrice, 'calculationAdditionalDiscountCostPrice');
     const cartItem = this.getCart().controls[index];
@@ -1005,7 +1050,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // let getDiscountPrice = (this.costPrice * totalDiscount) / 100
         // let getCoastPrice = this.costPrice - getDiscountPrice;
         // // cost price 
-        // let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+        // let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
         // this.taxIntoRupees[index] = taxprice || 0;
         // let purchasePrice = getCoastPrice - taxprice;
         // return purchasePrice;
@@ -1014,7 +1059,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           let getDiscountPrice = (this.costPrice * totalDiscount) / 100
           let getCoastPrice = this.costPrice - getDiscountPrice;
           // cost price 
-          let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+          let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
@@ -1022,7 +1067,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           let getDiscountPrice = (this.batchCostPrice[index] * totalDiscount) / 100
           let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
           // cost price 
-          let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+          let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
@@ -1063,7 +1108,28 @@ export class UpdatepurchaseBillComponent implements OnInit {
   loaderDraft = false;
   loaderPrint = false;
   formId: any;
+
+  checkCartValidation() {
+    const cartTotal = this.calculateTotal();
+    console.log(cartTotal);
+    if(cartTotal === 0){
+      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 1000 });
+      this.isFormCartInvalid = true;
+      return
+    } else {
+      this.isFormCartInvalid = false;
+    }
+  }
+
+  checkCartValidationSync(): boolean {
+    const cartTotal = this.calculateTotal();
+    const isValid = cartTotal > 0;
+    return isValid;
+}
+
   submit(type: any) {
+    this.checkCartValidation();
+    if(this.checkCartValidationSync()) {
     console.log(this.puchaseBillForm.value);
     if (this.puchaseBillForm.valid) {
       if (type == 'new') {
@@ -1217,8 +1283,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
       })
     } else {
       this.puchaseBillForm.markAllAsTouched();
-      this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields', '', { timeOut: 1000 })
     }
+  }
   }
 
   // private _filter(value: string | number, include: boolean): any[] {
@@ -1313,7 +1380,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
-    });
+    }, { emitEvent: false });
     // this.searchProduct('someQuery', '');
     this.getVariant('', '', '')
   };
@@ -1339,7 +1406,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
         barcode.patchValue({
           barcode: this.searchs[0].id
-        });
+        }, { emitEvent: false });
       });
     } else {
       this.searchs = [];
@@ -1486,7 +1553,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       total: totalForItem.toFixed(2)
-    });
+    }, { emitEvent: false });
     return totalForItem;
   }
   totalAmount: any
@@ -1708,7 +1775,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControls: FormArray;
+  // myControls: FormArray;
+  myControls: FormControl[] = [];
   variantList: any[] = [];
   getVariant(search: any, index: any, barcode: any) {
     this.isSearch = true;
@@ -1745,7 +1813,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
             barcode: this.searchs[0].id
-          });
+          }, { emitEvent: false });
         }
       });
     }
@@ -1770,7 +1838,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
             barcode: this.searchs[0]?.id
-          });
+          }, { emitEvent: false });
         }
       });
     }
@@ -1784,19 +1852,20 @@ export class UpdatepurchaseBillComponent implements OnInit {
   additionalValue: any[] = []
   getgst(index) {
     const variants = this.puchaseBillForm.get('tax_rate') as FormArray;
-    variants.clear();
+    // variants.clear();
     this.addTaxRate();
     const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     // patch value
-    const taxRate = (this.puchaseBillForm.get('tax_rate') as FormArray).at(index) as FormGroup;
+    // const taxRate = (this.puchaseBillForm.get('tax_rate') as FormArray).at(index) as FormGroup;
     this.gstTaxRate[index] = barcode.get('tax').value || 0;
-    taxRate.patchValue({
-      tax_rate: this.gstTaxRate[index],
-      taxable_amount: this.coastprice[index]
-    });
     this.costAmount[index] = barcode.get('unit_cost').value || 0;
+    let unitCostPrice = barcode.get('unit_cost').value || 0;
     this.discountValue[index] = barcode.get('discount').value || 0;
     this.additionalValue[index] = barcode.get('additional_discount').value || 0;
+    variants.controls[index].patchValue({
+      tax_rate: this.gstTaxRate[index],
+      taxable_amount: unitCostPrice
+    });
     let totaldiscount = parseFloat(this.discountValue[index]) + parseFloat(this.additionalValue[index]);
     console.log(totaldiscount);
     // calculate cgstamt
@@ -1804,32 +1873,32 @@ export class UpdatepurchaseBillComponent implements OnInit {
       let getDiscountPrice = (this.batchCostPrice[index] * totaldiscount) / 100
       let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
       // cost price
-      this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])));
+      this.getcgst[index] = ((getCoastPrice * this.gstTaxRate[index]) / 100);
       if (this.supplierAddress?.check_sgst_cgst) {
-        taxRate.patchValue({
+        variants.controls[index].patchValue({
           cgst_amount: (this.getcgst[index].toFixed(2) / 2),
           sgst_amount: (this.getcgst[index].toFixed(2) / 2),
           total_tax: this.getcgst[index].toFixed(2)
         });
       } else {
-        taxRate.patchValue({
+        variants.controls[index].patchValue({
           igst_amount: this.gstTaxRate[index],
           total_tax: this.getcgst[index].toFixed(2)
         });
       }
     } else {
-      let getDiscountPrice = (this.costPrice * totaldiscount) / 100
-      let getCoastPrice = this.costPrice - getDiscountPrice;
+      let getDiscountPrice = (Number(unitCostPrice) * totaldiscount) / 100
+      let getCoastPrice = Number(unitCostPrice) - getDiscountPrice;
       // cost price
-      this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
+      this.getcgst[index] = ((getCoastPrice * this.gstTaxRate[index]) / 100)
       if (this.supplierAddress?.check_sgst_cgst) {
-        taxRate.patchValue({
+        variants.controls[index].patchValue({
           cgst_amount: (this.getcgst[index].toFixed(2) / 2),
           sgst_amount: (this.getcgst[index].toFixed(2) / 2),
           total_tax: this.getcgst[index].toFixed(2)
         });
       } else {
-        taxRate.patchValue({
+        variants.controls[index].patchValue({
           igst_amount: this.getcgst[index].toFixed(2),
           total_tax: this.getcgst[index].toFixed(2)
         });
@@ -1848,17 +1917,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
       taxable_amount: this.coastprice[index]
     });
     this.costAmount[index] = barcode.get('unit_cost').value || 0;
+    let unitCostPrice = barcode.get('unit_cost').value || 0;
     this.discountValue[index] = barcode.get('discount').value || 0;
     this.additionalValue[index] = barcode.get('additional_discount').value || 0;
     let totaldiscount = parseFloat(this.discountValue[index]) + parseFloat(this.additionalValue[index]);
     // calculate cgstamt
     if (this.isTaxAvailable[index] == true) {
       if (this.costPrice > 0) {
-        let getDiscountPrice = (this.costPrice * totaldiscount) / 100
-        let getCoastPrice = this.costPrice - getDiscountPrice;
+        let getDiscountPrice = (Number(unitCostPrice) * totaldiscount) / 100
+        let getCoastPrice = Number(unitCostPrice) - getDiscountPrice;
         // this.costAmount[index]=getCoastPrice
         // cost price
-        this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
+        this.getcgst[index] = ((getCoastPrice * this.gstTaxRate[index]) / 100) 
         if (this.supplierAddress?.check_sgst_cgst) {
           taxRate.patchValue({
             cgst_amount: (this.getcgst[index].toFixed(2) / 2),
@@ -1876,7 +1946,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
         // this.costAmount[index]=getCoastPrice
         // cost price
-        this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
+        this.getcgst[index] = ((getCoastPrice * this.gstTaxRate[index])/ 100) 
         if (this.supplierAddress?.check_sgst_cgst) {
           taxRate.patchValue({
             cgst_amount: (this.getcgst[index].toFixed(2) / 2),
@@ -1896,7 +1966,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       let getCoastPrice = this.costPrice - getDiscountPrice;
       // this.costAmount[index]=getCoastPrice
       // cost price
-      this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
+      this.getcgst[index] = ((getCoastPrice * this.gstTaxRate[index]) / 100) 
 
       if (this.supplierAddress?.check_sgst_cgst) {
         taxRate.patchValue({
@@ -1981,6 +2051,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
 
