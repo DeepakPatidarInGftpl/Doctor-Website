@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { PurchaseRoutingModule } from './purchase-routing.module';
 import { PurchaseComponent } from './purchase.component';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -13,7 +14,12 @@ import { PurchaseComponent } from './purchase.component';
   ],
   imports: [
     CommonModule,
-    PurchaseRoutingModule
+    PurchaseRoutingModule,
+    ToastrModule.forRoot({
+      timeOut: 1000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    })
   ]
 })
 export class PurchaseModule { }
