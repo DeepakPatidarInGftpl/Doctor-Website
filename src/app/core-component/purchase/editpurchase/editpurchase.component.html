@@ -8,7 +8,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form [formGroup]="purchaseForm">
+        <form [formGroup]="purchaseForm" (ngSubmit)="submit('save')">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -502,6 +502,7 @@
                                         <td>
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
+                                                [ngClass]="{'error-border': isFormCartInvalid}"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                 (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
                                         </td>
@@ -511,11 +512,12 @@
                                                     style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
                                                     <input type="text" placeholder="Search Product"
                                                         aria-label="Search Products" matInput
-                                                        [formControl]="myControls.at(i)"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}"
+                                                        [formControl]="myControls[i]"
                                                         (input)="getVariant($event.target.value,i,'')"
                                                         [matAutocomplete]="autos" style="box-sizing: border-box;" />
                                                     <mat-autocomplete #autos="matAutocomplete">
-                                                        <!-- <ng-container *ngIf="myControls.at(i)?.value?.length >= 1 && myControls.at(i)?.value?.length > 0"> -->
+                                                        <!-- <ng-container *ngIf="myControls[i]?.value?.length >= 1 && myControls[i]?.value?.length > 0"> -->
                                                         <ng-container *ngFor="let option of variantList">
                                                             <mat-option *ngIf="option?.is_active==true"
                                                                 [value]="option?.product_title + ' ' + option?.variant_name"
@@ -533,7 +535,7 @@
                                                             <a routerLink="//product/addproduct"
                                                                 style="color:#FF9F43">+add Product</a>
                                                         </mat-option>
-                                                        <mat-option *ngIf="myControls.at(i)?.value?.length < 3"
+                                                        <mat-option *ngIf="myControls[i]?.value?.length < 3"
                                                             class="is-loading">
                                                             Please Enter 3 or more characters
                                                         </mat-option>
@@ -541,9 +543,9 @@
                                                 </mat-form-field>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="purchase_rate" class="input"
-                                                [(ngModel)]="coastprice[i]" (blur)="purchase(i)">
+                                        <td><input type="text" formControlName="qty" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
+                                        <td><input type="text" formControlName="purchase_rate" [ngClass]="{'error-border': isFormCartInvalid}" class="input"
+                                               >
                                             <i class="ion-information circle" data-bs-toggle="tooltip"
                                                 title="ion-information" (click)="openModalBatch(i)"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -612,8 +614,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="mrp" class="input"></td>
-                                        <td><input type="text" formControlName="discount" class="input"
+                                        <td><input type="text" formControlName="mrp" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
+                                        <td><input type="text" formControlName="discount" [ngClass]="{'error-border': isFormCartInvalid}" class="input"
                                                 (blur)="purchase(i)">
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
@@ -625,14 +627,14 @@
                                             <br>
                                             <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                         </td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" readonly
+                                        <td class="text-end"><input type="text" formControlName="landing_cost" [ngClass]="{'error-border': isFormCartInvalid}" readonly
                                                 (change)="priceValidation()" class="input"></td>
                                         <td class="text-end">
-                                            <input type="text" class="input" readonly
+                                            <input type="text" class="input" readonly [ngClass]="{'error-border': isFormCartInvalid}"
                                                 [value]="TotalWithoutTax[i] | number:'1.2-2'">
                                         </td>
                                         <td class="text-end">
-                                            <input type="text" formControlName="total" class="input" readonly>
+                                            <input type="text" formControlName="total" [ngClass]="{'error-border': isFormCartInvalid}" class="input" readonly>
                                         </td>
                                     </tr>
                                 </ng-container>
@@ -653,7 +655,7 @@
                                         [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
                                 </td>
                                 <td class="text-start">{{ calculateTotalTax() + '%' + ' (' +
-                                    (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}
+                                    (calculateTotalTaxIntoRupees() | currency:'INR') + ')' }}
                                     <input type="text" formControlName="total_tax" class="input"
                                         [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
                                 </td>
@@ -785,7 +787,7 @@
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>&nbsp; Save</button>

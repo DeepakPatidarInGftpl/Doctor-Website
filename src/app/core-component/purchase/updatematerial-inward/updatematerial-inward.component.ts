@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { debounceTime, tap } from 'rxjs/operators';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
@@ -55,6 +55,8 @@ export class UpdatematerialInwardComponent implements OnInit {
   maxDate: string = '';
   materialMinDate: string = '';
   materialMaxDate: string = '';
+  isFormCartInvalid = false;
+  subscriptions: Subscription[] = [];
   get f() {
     return this.materialForm.controls;
   }
@@ -67,7 +69,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
-    this.myControls = new FormArray([]);
+    // this.myControls = new FormArray([]);
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       purchase_order: new FormControl(''),
@@ -181,6 +183,17 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
+  setupValueChanges() {
+    const cartArray = this.getCart();
+    cartArray.controls.forEach((cartItem, index) => {
+      this.subscriptions.push(
+        cartItem.valueChanges.subscribe((value) => {
+          this.isFormCartInvalid = false;
+        })
+      );
+    });
+  }
+
   prefixNo: any;
   getprefix() {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
@@ -226,7 +239,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     })
   }
   udateCart(add: any): FormArray {
-    let formarr = new FormArray([]);
+    // let formarr = new FormArray([]);
+    const formarr = this.materialForm.get('material_inward_cart') as FormArray;
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
@@ -254,6 +268,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   addCart() {
     this.getCart().push(this.material_inward_cart());
     this.isCart = false;
+    this.setupValueChanges();
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -313,6 +328,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       variants.clear();
       this.addCart();
     }
+    this.setupValueChanges();
     this.materialForm.patchValue({
       party: selectedItemId
     });
@@ -359,6 +375,15 @@ export class UpdatematerialInwardComponent implements OnInit {
       });
 
       console.log(event.batch);
+      this.isFormCartInvalid = false;
+    } else {
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        mrp: event.batch[0]?.mrp || 0,
+        qty: event.batch[0]?.stock || 0,
+        po_qty: 0,
+        // unit_cost: event.batch[0]?.cost_price || 0,
+      });
     }
   }
 
@@ -457,8 +482,28 @@ export class UpdatematerialInwardComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   formId: any;
-  submit(type: any) {
 
+  checkCartValidation() {
+    const cartTotal = this.calculateTotal();
+    console.log(cartTotal);
+    if(cartTotal === 0){
+      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 1000 });
+      this.isFormCartInvalid = true;
+      return
+    } else {
+      this.isFormCartInvalid = false;
+    }
+  }
+
+  checkCartValidationSync(): boolean {
+    const cartTotal = this.calculateTotal();
+    const isValid = cartTotal > 0;
+    return isValid;
+}
+
+  submit(type: any) {
+    this.checkCartValidation();
+    if(this.checkCartValidationSync()){
     if (this.materialForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -577,8 +622,9 @@ export class UpdatematerialInwardComponent implements OnInit {
       })
     } else {
       this.materialForm.markAllAsTouched();
-      this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields', '', { timeOut: 1000 })
     }
+  }
   }
 
   openDialog() {
@@ -846,7 +892,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControls: FormArray;
+  myControls: FormControl[] = [];
   variantList: any[] = [];
   getVariant(search: any, index: any, barcode: any) {
     this.isSearch = true;
@@ -981,5 +1027,9 @@ export class UpdatematerialInwardComponent implements OnInit {
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

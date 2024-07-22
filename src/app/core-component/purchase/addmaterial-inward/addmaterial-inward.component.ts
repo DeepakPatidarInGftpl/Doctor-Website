@@ -371,7 +371,16 @@ export class AddmaterialInwardComponent implements OnInit {
         po_qty: 1,
         // unit_cost:event.batch[0]?.cost_price
       });
+      this.isFormCartInvalid = false;
       console.log(event.batch);
+    } else {
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        mrp: event.batch[0]?.mrp || 0,
+        qty: event.batch[0]?.stock || 0,
+        po_qty: 0,
+        // unit_cost: event.batch[0]?.cost_price || 0,
+      });
     }
   }
 
@@ -384,11 +393,17 @@ export class AddmaterialInwardComponent implements OnInit {
   formDetails: any;
   formId: any;
 
+  checkCartValidationSync(): boolean {
+    const cartTotal = this.calculateTotal();
+    const isValid = cartTotal > 0;
+    return isValid;
+}
+
   checkCartValidation() {
     const cartTotal = this.calculateTotal();
     console.log(cartTotal);
     if(cartTotal === 0){
-      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 2000 });
+      this.toastrService.error('Please add the Product in the cart', '', { timeOut: 1000 });
       this.isFormCartInvalid = true;
       return
     } else {
@@ -396,11 +411,9 @@ export class AddmaterialInwardComponent implements OnInit {
     }
   }
 
-  submitForm() {
-    this.checkCartValidation();
-  }
-
   submit(type: any) {
+    this.checkCartValidation();
+    if(this.checkCartValidationSync()){
     this.formDetails = this.materialForm.value;
     console.log(this.formDetails);
     if (this.materialForm.valid) {
@@ -511,8 +524,9 @@ export class AddmaterialInwardComponent implements OnInit {
       })
     } else {
       this.materialForm.markAllAsTouched()
-      this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields', '', { timeOut: 1000 })
     }
+  }
   }
 
   openDialog() {
