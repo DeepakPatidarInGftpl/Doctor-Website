@@ -965,7 +965,7 @@
                         Additional Charges</a>
                 </div>
             </div>
-            <div class="card my-2" *ngIf="!additionalTable">
+            <div class="card my-2" *ngIf="false">
                 <div class="card-body">
                     <div class="row my-2">
                         <div class="table-responsive">
@@ -1228,6 +1228,13 @@
                                             style="width: 34%;">
                                     </h5>
                                 </li>
+                                <li>
+                                    <h4>Additional Charge</h4>
+                                    <h5>
+                                        {{additionalCharges}}
+                                    </h5>
+                                </li>
+
                                 <li class="total">
                                     <h4>Total</h4>
                                     <h5>{{ calculateTotal() }}

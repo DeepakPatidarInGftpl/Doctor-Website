@@ -2282,7 +2282,7 @@ export class AddSaleBillComponent implements OnInit {
     if (this.priceQtyData[index]?.coastPrice && !value) {
       const data = this.priceQtyData[index];
       const qty = this.priceQtyData[index]?.qty;
-      const total = (Number(data?.coastPrice) * qty) + Number(data?.taxPrice);
+      const total = (Number(data?.coastPrice) * qty);
       finalTotal = total;
     } else {
       if (this.priceQtyData[index]?.price) {
