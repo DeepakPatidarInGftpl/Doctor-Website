@@ -163,10 +163,10 @@ export class AddDeliveryChallanComponent implements OnInit {
             console.log(this.searchs[0]?.variant_name);
 
             const barcode = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
-            barcode.patchValue({
+            // barcode.patchValue({
               // barcode: this.searchs[0].id,
               // item_name: this.searchs[0]?.variant_name
-            });
+            // });
           }
           console.log(this.deliveryChallanForm.value);
         });
@@ -192,10 +192,10 @@ export class AddDeliveryChallanComponent implements OnInit {
             // console.log(this.productName);
             this.check = true;
             const barcode = (this.deliveryChallanForm.get('cart') as FormArray)?.at(index) as FormGroup;
-            barcode.patchValue({
+            // barcode.patchValue({
               // barcode: this.searchs[0]?.id,
               // item_name: this.searchs[0]?.variant_name
-            });
+            // });
           }
           console.log(this.deliveryChallanForm.value);
 

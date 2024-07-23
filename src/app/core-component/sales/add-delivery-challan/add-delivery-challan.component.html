@@ -505,7 +505,7 @@
                                                 <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
                                             <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
                                                 <input type="text" placeholder="Search Product"
-                                                aria-label="Search Products" matInput [formControl]="myControl.at(i)"
+                                                aria-label="Search Products" matInput [formControl]="d.get('item_name')"
                                                 (input)="getVariant($event.target.value,i,'')"
                                                 [matAutocomplete]="autos" style="box-sizing: border-box;" />
                                             <mat-autocomplete #autos="matAutocomplete">
@@ -576,8 +576,8 @@
                                                 </div>
                                                 </div>
                                             </td>
-                                            <td><input type="number" formControlName="qty" class="input" (blur)="purchase4(i)"></td>
-                                            <td><input type="number" formControlName="mrp" class="input" (blur)="purchase4(i)"></td>   
+                                            <td><input type="number" formControlName="qty" class="input"></td>
+                                            <td><input type="number" formControlName="mrp" class="input" readonly></td>   
                                         </tr>
                                     </ng-container>
                                 </ng-container>
