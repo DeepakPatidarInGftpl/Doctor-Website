@@ -1004,7 +1004,7 @@ export class AddAdvanceBookingComponent implements OnInit {
     // console.log(this.barcode[index]);
     // console.log(this.barcode);
     this.v_id = value.id;
-    const barcode = (this.saleEstimateForm.get('  advance_booking_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });

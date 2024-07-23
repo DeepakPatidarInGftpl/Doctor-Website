@@ -24,6 +24,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
   roundOff: any;
   subscriptions: Subscription[] = [];
   isFormCartInvalid = false;
+  additionalCharges: any;
 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
@@ -104,6 +105,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.getresbyId = res;
       this.companyName = res.party?.company_name;
       this.puchaseBillForm.patchValue(res);
+      this.additionalCharges = res?.additional_charge;
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);

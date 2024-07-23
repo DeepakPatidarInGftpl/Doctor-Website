@@ -620,11 +620,9 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"
-                                                        (blur)="purchase4(i)"></td>
+                                                <td><input type="number" formControlName="qty" class="input"></td>
                                                 <td><input type="number" formControlName="price" class="input"
-                                                        [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price
-                                                        (blur)="purchase2(price.value,i)">
+                                                         #price readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -703,7 +701,7 @@
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
                                                 <td>
                                                     <input type="number" formControlName="discount" class="input"
-                                                        (blur)="purchase4(i)">
+                                                        >
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalDiscount(i)"></i>
                                                     <div class="modal fade" id="discountModal-{{i}}" tabindex="-1"
@@ -808,9 +806,7 @@
                                                 <td class="text-end"> <input type="number" class="input" readonly
                                                         [value]="TotalWithoutTax[i]"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total" class="input" readonly
-                                                        [value]="calculateTotalEveryIndex(i).toFixed(2)"
-                                                        [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                                    <input type="number" formControlName="total" class="input" readonly>
                                                 </td>
                                             </tr>
                                         </ng-container>
@@ -836,7 +832,7 @@
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -862,9 +858,9 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
+                                        {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="subtotal" class="input"
-                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                            [ngModel]="calculateTotalWithoutTax()" style="display: none;">
                                     </h5>
                                 </li>
                                 <li>
@@ -882,9 +878,8 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text"
-                                            formControlName="total" class="input"
-                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
+                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                            formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>
