@@ -484,11 +484,11 @@
                                                         <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
                                                         <input type="text" placeholder="Search Product"
                                                             aria-label="Search Products" matInput
-                                                            [formControl]="myControl.at(i)"
+                                                            [formControl]="d.get('item_name')"
                                                             (input)="getVariant($event.target.value,i,'')"
                                                             [matAutocomplete]="autos" style="box-sizing: border-box;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
-                                                            <!-- <ng-container *ngIf="myControls.at(i)?.value?.length >= 1 && myControls.at(i)?.value?.length > 0"> -->
+                                                            <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
                                                             <ng-container *ngFor="let option of variantList[i]">
                                                                 <mat-option *ngIf="option?.is_active==true"
                                                                     [value]="option?.product_title + ' ' + option?.variant_name"

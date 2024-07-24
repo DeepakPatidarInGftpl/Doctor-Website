@@ -487,11 +487,11 @@
                                                         <!-- <mat-form-field  class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
                                                         <input type="text" placeholder="Search Product"
                                                             aria-label="Search Products" matInput
-                                                            [formControl]="myControl.at(i)"
+                                                            [formControl]="d.get('item_name')"
                                                             (input)="getVariant($event.target.value,i,'')"
                                                             [matAutocomplete]="autos" style="box-sizing: border-box;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
-                                                            <!-- <ng-container *ngIf="myControls.at(i)?.value?.length >= 1 && myControls.at(i)?.value?.length > 0"> -->
+                                                            <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
                                                             <ng-container *ngFor="let option of variantList[i]">
                                                                 <mat-option *ngIf="option?.is_active==true"
                                                                     [value]="option?.product_title + ' ' + option?.variant_name"
@@ -511,7 +511,7 @@
                                                                 <a routerLink="//product/addproduct"
                                                                     style="color:#FF9F43">+add Product</a>
                                                             </mat-option>
-                                                            <mat-option *ngIf="myControl.at(i)?.value?.length < 3"
+                                                            <mat-option *ngIf="d.get('item_name')?.value?.length < 3"
                                                                 class="is-loading">
                                                                 Please Enter 3 or more characters
                                                             </mat-option>
@@ -603,8 +603,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"
-                                                        (blur)="purchase4(i)">
+                                                <td><input type="number" formControlName="qty" class="input">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -692,7 +691,7 @@
                                         <td class="text-start"><strong>Total</strong></td>
                                         <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
                                             <input type="text" formControlName="total_qty" class="input"
-                                                [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                                 style="display: none;">
                                         </td>
                                     </tr>
                                 </tbody>

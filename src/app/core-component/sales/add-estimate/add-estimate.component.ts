@@ -802,17 +802,17 @@ export class AddEstimateComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
 
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
-          tax: 18,
+          tax: this.apiPurchaseTax,
           discount: 0,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
-        taxValue = 18;
+        taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
         price: this.originalCoastPrice.toFixed(2),
@@ -826,7 +826,7 @@ export class AddEstimateComponent implements OnInit {
       this.calculateTotalDiscount();
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = 0
       const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
@@ -1090,8 +1090,11 @@ export class AddEstimateComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
+          let value = control?.value;
           // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
+          if(value?.length === 0){
+            cartObject[key] = 0;
+          } else if (key !== 'item_name' && !isNaN(control.value)) {
             cartObject[key] = parseFloat(control.value);
           } else {
             cartObject[key] = control.value;
