@@ -114,7 +114,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.isCart = true;
       }
       this.saleBillForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
+      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.username);
       this.totalAdditionalCharges = this.editRes.additional_charges;
       console.log(this.totalAdditionalCharges);
 

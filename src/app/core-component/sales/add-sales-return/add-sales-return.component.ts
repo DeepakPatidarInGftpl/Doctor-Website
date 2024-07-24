@@ -734,17 +734,17 @@ export class AddSalesReturnComponent implements OnInit {
         });
         taxValue = this.apiPurchaseTax;
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           mrp: event.batch[0]?.mrp,
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
-          tax: 18,
+          tax: this.apiPurchaseTax,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
-        taxValue = 18;
+        taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
         price: this.originalCoastPrice.toFixed(2),
@@ -758,7 +758,7 @@ export class AddSalesReturnComponent implements OnInit {
       // this.calculateTotalDiscount();
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = 0
       const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         mrp: 0,

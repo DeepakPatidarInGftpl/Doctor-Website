@@ -40,6 +40,8 @@ export class AddSaleBillComponent implements OnInit {
   totalDiscountPrice: any = 0;
   couponDiscount = 0;
   couponUpTo = 0;
+  discountErrorShown = false;
+  isLimitErrorShown = false;
   private qtySubscriptions: Subscription[] = [];
   private discountSubscriptions: Subscription[] = [];
 
@@ -433,8 +435,16 @@ export class AddSaleBillComponent implements OnInit {
 
   onDisCountChange(value: number, index: number) {
     if (value > this.discountLimit) {
-      this.toastrService.error(`Your maximum discount Limit is ${this.discountLimit}`);
+      this.isLimitErrorShown = true;
+      if (!this.discountErrorShown) {
+        this.toastrService.error(`Your maximum discount limit is ${this.discountLimit}`);
+        this.discountErrorShown = true;
+      }
+    } else {
+      this.isLimitErrorShown = false;
+      this.discountErrorShown = false;
     }
+
     if (this.priceQtyData[index]) {
       this.priceQtyData[index].additional_discount = value;
     }
@@ -548,11 +558,9 @@ export class AddSaleBillComponent implements OnInit {
 
   oncheck(data: any) {
     console.log(data);
-    const userName = data?.name;
+    const userName = data?.username;
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const user = this.employeeList.filter((val) => val?.name === userName);
-    this.discountLimit = user[0]?.discount_limit;
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);
@@ -602,6 +610,8 @@ export class AddSaleBillComponent implements OnInit {
     this.coreService.getProfile().subscribe((res: any) => {
       console.log(res);
       this.currentEmployee = res?.username;
+      const user = this.employeeList.filter((val) => val?.name === this.currentEmployee);
+      this.discountLimit = user[0]?.discount_limit;
     })
   }
 
@@ -917,18 +927,18 @@ export class AddSaleBillComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
 
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
-          tax: 18,
+          tax: this.apiPurchaseTax,
           // discount: event.batch[0]?.discount || 0,
           additional_discount: event.batch[0]?.additional_discount || 0,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
-        taxValue = 18;
+        taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
         price: this.originalCoastPrice.toFixed(2),
@@ -943,13 +953,24 @@ export class AddSaleBillComponent implements OnInit {
       this.updateTotalDiscount();
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = 0
       const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
         item_name: event?.product_title,
-        tax: 18,
+        tax: 0,
+        qty: 0,
+        additional_discount: 0,
+        price: 0,
       });
+      this.priceQtyData[index] = {
+        price: 0,
+        qty: 0,
+        additional_discount:  0,
+        tax: 0,
+        coastPrice: 0,
+        taxPrice: 0
+      };
     }
   }
 
@@ -1240,7 +1261,7 @@ export class AddSaleBillComponent implements OnInit {
   loaderDraft = false;
   submit(type: any) {
     console.log(this.saleBillForm.value);
-    if (this.saleBillForm.valid) {
+    if (this.saleBillForm.valid && !this.isLimitErrorShown) {
       if (type == 'new') {
         this.loaderCreate = true;
       } else if (type == 'save') {
@@ -1366,8 +1387,11 @@ export class AddSaleBillComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
+          let value = control?.value;
           // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
+          if(value?.length === 0){
+            cartObject[key] = 0;
+          } else if (key !== 'item_name' && !isNaN(control.value)) {
             cartObject[key] = parseFloat(control.value);
             console.warn(cartObject[key]);
 

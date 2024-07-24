@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -104,7 +104,7 @@ isStatusDraft=false; //21-5
           this.isCart=true;
         }
       
-        this.userControl.setValue(this.editRes?.account?.title);
+      this.userControl.setValue(this.editRes?.account?.company_name + ' ' + this.editRes?.account?.title);
         this.billControl.setValue(this.editRes?.sale_bill?.customer_bill_no);
         this.accountControl.setValue(this.editRes?.transporter_account?.title);
       })
@@ -129,6 +129,19 @@ isStatusDraft=false; //21-5
       startWith(''),
       map(value => this._filtr(value, true))
     )
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.getAccount();
     this.getCategory();
     this.getSaleBill();
@@ -149,6 +162,17 @@ isStatusDraft=false; //21-5
       this.toastrService.error(err.error.msg)
     })
   }
+
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
+      this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
+    })
+  }
+
   category: any;
   subcategory: any;
   searc: any;
@@ -306,7 +330,7 @@ isStatusDraft=false; //21-5
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
-        barcode: j.barcode.id,
+        barcode: j.barcode,
         item_name: j.item_name,
         qty: j.qty,
         mrp: j.mrp,
