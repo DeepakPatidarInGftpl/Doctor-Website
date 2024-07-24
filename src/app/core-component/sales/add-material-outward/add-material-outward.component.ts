@@ -323,7 +323,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
       this.paymentTermsList = res;
-      this.saleMaterialOutwardForm.get('payment_terms').patchValue(this.paymentTermsList[0]?.id)
+      // this.saleMaterialOutwardForm.get('payment_terms').patchValue(this.paymentTermsList[0]?.id)
     })
   }
 
@@ -551,7 +551,7 @@ export class AddMaterialOutwardComponent implements OnInit {
           mrp: this.originalCoastPrice.toFixed(2),
         });
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
@@ -561,12 +561,14 @@ export class AddMaterialOutwardComponent implements OnInit {
       }
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = 0
       const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
         item_name: event?.product_title,
-        tax: 18,
+        tax: 0,
+        qty: 0,
+        mrp: 0,
       });
     }
   }

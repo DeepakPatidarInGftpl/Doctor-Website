@@ -17,7 +17,7 @@
                         min-width: 100%;border-top: none;">
                             <input type="text" placeholder=" Search Account" aria-label="account" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
+                                [ngClass]="{'is-invalid': userControl.touched && userControl.invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let user of filteredusers | async">
                                     <mat-option *ngIf="user.is_active === true"
@@ -36,7 +36,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Select
+                        <span class="text-danger" *ngIf="userControl && userControl.invalid && userControl.touched">Select
                             User
                         </span>
                     </div>
@@ -638,9 +638,7 @@
                                                 <td class="text-end"> <input type="number" class="input" readonly
                                                         [value]="TotalWithoutTax[i]"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total" class="input" readonly
-                                                        [value]="calculateTotalEveryIndex(i).toFixed(2)"
-                                                        [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                                    <input type="number" formControlName="total" class="input" readonly>
                                                 </td>
                                             </tr>
                                         </ng-container>
@@ -666,7 +664,7 @@
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -692,9 +690,9 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
+                                        {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="subtotal" class="input"
-                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                            [ngModel]="calculateTotalWithoutTax()" style="display: none;">
                                     </h5>
                                 </li>
                                 <li>
@@ -712,9 +710,8 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text"
-                                            formControlName="total" class="input"
-                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
+                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                            formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>

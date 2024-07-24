@@ -101,7 +101,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       // this.saleMaterialOutwardForm.get('voucher_number')?.patchValue(this.editRes); // 20-5
       this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
 
-      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
+      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.username);
     })
 
     this.filteredusers = this.userControl.valueChanges.pipe(

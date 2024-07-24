@@ -104,7 +104,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         this.isCart = true;
       }
       this.saleEstimateForm.get('account')?.patchValue(this.editRes?.account?.id);
-      this.userControl.setValue(this.editRes?.account?.name + ' ' + this.editRes?.account?.user_type);
+      this.userControl.setValue(this.editRes?.account?.company_name + ' ' + this.editRes?.account?.title);
     })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
