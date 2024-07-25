@@ -161,11 +161,6 @@ export class EditSalesComponent implements OnInit {
     this.getCategory();
     this.getProfile();
     this.getEmployee();
-
-    this.getCart().controls.forEach((control, index) => {
-      this.subscribeToQtyChanges(control as FormGroup, index);
-      this.subscribeToDiscountChanges(control as FormGroup, index);
-    });
   }
 
   prefixNo: any;
@@ -358,7 +353,8 @@ export class EditSalesComponent implements OnInit {
 
   udateCart(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    this.addCart();
+    const formArr = this.saleForm.get('sale_order_cart') as FormArray;
     add.forEach((j: any, i) => {
       const price = j.price || 0;
       const taxPercentage = j.tax || 0;
@@ -376,23 +372,34 @@ export class EditSalesComponent implements OnInit {
         let TotalWithoutTax = (j.price * j.qty) - taxPrice;
         this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
       }
-      formarr.push(this.fb.group({
-        barcode: j.barcode.id,
-        item_name: j.item_name,
-        qty: j.qty,
-        price: j.price,
-        tax: j.tax || 0,
-        discount: j.discount,
-        total: j.total
-      }))
+      let taxPrice = (price * taxPercentage) / 100;
+      if (formArr.at(i)) {
+        formArr.at(i).patchValue({
+          barcode: j?.barcode.id,
+          item_name: j?.item_name,
+          qty: j?.qty,
+          price: j.price,
+          tax: j?.tax || 0,
+          discount: j?.discount,
+          total: j?.total
+        });
+      this.calculateTotalForAll();
+      }
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
       this.coastprice[i] = j.price;
       this.tax[i] = j.tax || 0;
       this.myControl.push(new FormControl(j?.barcode?.product_title));
-      this.calculateTotalForAll();
+      this.priceQtyData[i] = {
+        price: Number(j?.price)?.toFixed(2),
+        qty: j?.qty,
+        additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+        tax: j?.tax || 0,
+        coastPrice: j?.price,
+        taxPrice: taxPrice 
+      };
     })
-    return formarr
+    return formArr
   }
 
   cart(): FormGroup {
@@ -1141,18 +1148,9 @@ export class EditSalesComponent implements OnInit {
   calculateTotalForAll(controlValue?, index?): any {
     let total = 0;
     let cartArray = this.getCart();
-    if (this.finalTotalAmount.length > 0) {
-      if (controlValue) {
-        this.finalTotalAmount[index] = controlValue;
-      }
-      Object.values(this.finalTotalAmount).forEach((value, index) => {
-        total += Number(value);
-      });
-    } else {
       cartArray.controls.forEach((val)=> {
         total += Number(val.get('total').value)
       })
-    }
     // const totalDiscount = this.calculateTotalDiscount();
     this.totalAmount = total;
     return this.totalAmount;

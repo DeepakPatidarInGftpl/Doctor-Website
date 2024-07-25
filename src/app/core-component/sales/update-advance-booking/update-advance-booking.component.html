@@ -652,21 +652,21 @@
                                         <td class="text-start"><strong>Total</strong></td>
                                         <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
                                             <input type="text" formControlName="total_qty" class="input"
-                                                [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                                style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
                                             <input type="text" formControlName="total_discount" class="input"
-                                                [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                                style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalTax()?.toFixed(2)}}
                                             <input type="text" formControlName="total_tax" class="input"
-                                                [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
+                                                 style="display: none;">
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -692,9 +692,9 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
+                                        {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="subtotal" class="input"
-                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                             style="display: none;">
                                     </h5>
                                 </li>
                                 <li>
@@ -712,9 +712,8 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotal().toFixed(2) | currency:'INR'}} <input type="text"
-                                            formControlName="total" class="input"
-                                            [ngModel]="calculateTotal().toFixed(2)" style="display: none;"></h5>
+                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                            formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>
