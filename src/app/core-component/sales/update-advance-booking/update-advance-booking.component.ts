@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { Observable, Subscription, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
@@ -27,7 +28,9 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private commonService: CommonServiceService
+    private commonService: CommonServiceService,
+    private cdr: ChangeDetectorRef,
+    private coreService: CoreService
   ) {
   }
 
@@ -48,6 +51,19 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   maxDate: string = '';
   dueMinDate: string = '';
   dueMaxDate: string = '';
+  priceQtyData = {};
+  getCoastPrice: any;
+  totalCartAmount: any;
+  calculatingTotal: boolean = false;
+  totalDiscountPrice: any = 0;
+  taxPrice: any;
+  productItemPrice: any[] = [];
+  finalTotalAmount: any[] = [];
+  currentEmployee: any;
+  isFromSubmitted = false;
+  employeeList: any;
+  private qtySubscriptions: Subscription[] = [];
+  private discountSubscriptions: Subscription[] = [];
 
   get f() {
     return this.saleEstimateForm.controls;
@@ -99,7 +115,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       }
       //end 21-5
       if (this.editRes?.cart.length > 0) {
-        this.saleEstimateForm.setControl('cart', this.udateCart(this.editRes?.cart));
+        this.saleEstimateForm.setControl('advance_booking_cart', this.udateCart(this.editRes?.cart));
       } else {
         this.isCart = true;
       }
@@ -138,6 +154,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     })
     this.getCategory();
     this.getPaymentTerms();
+    this.getProfile();
+    this.getEmployee();
   }
 
   updateDueDateMin(selectedDate: string, financialYear) {
@@ -304,39 +322,54 @@ export class UpdateAdvanceBookingComponent implements OnInit {
 
   udateCart(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    this.addCart();
+    const formArr = this.saleEstimateForm.get('advance_booking_cart') as FormArray;
     add.forEach((j: any, i) => {
       const price = j.price || 0;
       const taxPercentage = j.tax || 0;
-      const calculatedTax = price - (price * (100 / (100 + taxPercentage)))
+      const calculatedTax = price - (price * taxPercentage) / 100;
       this.taxIntoRupees[i] = calculatedTax;
       // tax including & excluding
       if (j.tax == 18) {
-        this.TotalWithoutTax[i] = j.price * j.qty;
-        const calculatedTax = price - (price * (100 / (100 + taxPercentage)))
+        const calculatedTax = (price * taxPercentage) / 100;
         this.taxIntoRupees[i] = calculatedTax;
+        let TotalWithoutTax = (j.price * j.qty) - calculatedTax;
+        this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
       } else {
-        this.TotalWithoutTax[i] = j.price * j.qty;
-        console.log(this.TotalWithoutTax[i]);
-        let taxPrice = price - (price * (100 / (100 + taxPercentage)))
+        let taxPrice = (price * taxPercentage) / 100;
         this.taxIntoRupees[i] = taxPrice;
+        let TotalWithoutTax = (j.price * j.qty) - taxPrice;
+        this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
       }
-      formarr.push(this.fb.group({
-        barcode: j.barcode.id,
-        item_name: j.item_name,
-        qty: j.qty,
-        price: j.price,
-        tax: j.tax || 0,
-        discount: j.discount,
-        total: j.total
-      }))
+      let taxPrice = (price * taxPercentage) / 100;
+      if (formArr.at(i)) {
+        formArr.at(i).patchValue({
+          barcode: j?.barcode.id,
+          item_name: j?.item_name,
+          qty: j?.qty,
+          price: j.price,
+          tax: j?.tax || 0,
+          discount: j?.discount,
+          total: j?.total
+        });
+      this.calculateTotalForAll();
+      }
+
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
       this.coastprice[i] = j.price;
       this.tax[i] = j.tax || 0;
       this.myControl.push(new FormControl(j?.barcode?.product_title));
+      this.priceQtyData[i] = {
+        price: Number(j?.price)?.toFixed(2),
+        qty: j?.qty,
+        additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+        tax: j?.tax || 0,
+        coastPrice: j?.price,
+        taxPrice: taxPrice 
+      };
     })
-    return formarr
+    return formArr
   }
 
   cart(): FormGroup {
@@ -358,12 +391,61 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   addCart() {
     this.getCart().push(this.cart());
     this.isCart = false;
+    const cartControl = this.cart();
+    this.getCart().controls.forEach((control, index) => {
+      this.subscribeToQtyChanges(control as FormGroup, index);
+      this.subscribeToDiscountChanges(control as FormGroup, index);
+    });
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
     if (this.saleEstimateForm?.value?.advance_booking_cart?.length == 0) {
       this.isCart = true;
     }
+  }
+
+  onQtyChange(value: number, index: number) {
+    const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
+    if (this.priceQtyData[index]) {
+      this.priceQtyData[index].qty = value;
+    }
+
+    if (this.priceQtyData[index]?.price) {
+      const totalProductPrice = Number(this.priceQtyData[index]?.price);
+      const totalProductQty = Number(this.priceQtyData[index]?.qty);
+      const taxPercentage = Number(this.priceQtyData[index]?.tax);
+      const getCoastPrice = Number(this.priceQtyData[index]?.coastPrice)
+      const getTaxPrice = Number(this.priceQtyData[index]?.taxPrice)
+      if (totalProductPrice && taxPercentage) {
+        this.taxIntoRupees[index] = (totalProductPrice * taxPercentage) / 100;
+      }
+      this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
+      barcode.patchValue({
+        qty: value,
+        tax: taxPercentage,
+        additional_discount: this.priceQtyData[0]?.additional_discount
+      });
+    }
+  }
+
+  onDisCountChange(value: number, index: number) {
+    if (this.priceQtyData[index]) {
+      this.priceQtyData[index].additional_discount = value;
+    }
+    if (this.priceQtyData[index]?.price) {
+      const productAmout = this.productItemPrice[index];
+      const discAmount = (productAmout * value) / 100;
+      const getCoastPrice = Number(productAmout - discAmount);
+      const getQuantity = Number(this.priceQtyData[index]?.qty);
+      this.TotalWithoutTax[index] = (getCoastPrice * getQuantity).toFixed(2);
+    }
+  }
+
+  unsubscribeAllQty() {
+    this.qtySubscriptions.forEach(sub => sub.unsubscribe());
+    this.qtySubscriptions = [];
+    this.discountSubscriptions.forEach(sub => sub.unsubscribe());
+    this.discountSubscriptions = [];
   }
 
   getUser(query) {
@@ -422,13 +504,69 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     })
     const variants = this.saleEstimateForm.get('advance_booking_cart') as FormArray;
     variants.clear();
+    this.unsubscribeAllQty();
     this.addCart();
     this.saleEstimateForm.patchValue({
       account: selectedItemId,
-
     });
+      this.getCart().controls.forEach((control, index) => {
+        this.subscribeToQtyChanges(control as FormGroup, index);
+        this.subscribeToDiscountChanges(control as FormGroup, index);
+      });
   }
 
+  getProfile() {
+    this.coreService.getProfile().subscribe((res: any) => {
+      console.log(res);
+      this.currentEmployee = res?.username;
+    })
+  }
+
+  subscribeToQtyChanges(cartControl: FormGroup, index: number) {
+    const qtyControl = cartControl.get('qty') as FormControl;
+    if (qtyControl) {
+      const subscription = qtyControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe((value) => {
+          this.onQtyChange(value, index);
+          this.totalCartAmount = this.calculateTotal(index);
+          (this.getCart().at(index) as FormGroup).patchValue({ total: this.totalCartAmount?.toFixed(2) }, { emitEvent: false });
+          console.log(this.totalCartAmount);
+          this.finalTotalAmount[index] = this.totalCartAmount;
+          console.log(this.totalCartAmount);
+          // setTimeout(() => {
+          this.calculateTotalForAll();
+          this.cdr.detectChanges();
+          // }, 1000);
+        });
+      this.qtySubscriptions.push(subscription);
+    }
+  }
+
+  subscribeToDiscountChanges(cartControl: FormGroup, index: number) {
+    const discountControl = cartControl.get('discount') as FormControl;
+    if (discountControl) {
+      const subscription = discountControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe((value) => {
+          this.onDisCountChange(value, index);
+          this.totalCartAmount = this.calculateTotal(index, value);
+          (this.getCart().at(index) as FormGroup).patchValue({ total: this.totalCartAmount.toFixed(2) }, { emitEvent: false });
+          this.finalTotalAmount[index] = this.totalCartAmount;
+          console.log(this.totalCartAmount);
+          this.calculateTotalForAll(this.totalCartAmount, index);
+          this.cdr.detectChanges();
+        });
+      this.discountSubscriptions.push(subscription);
+    }
+  }
+
+  getEmployee() {
+    this.contactService.getEmployee().subscribe((res: any) => {
+      this.employeeList = res;
+    })
+  }
+  
   // address 
   openModal() {
     // Trigger Bootstrap modal using JavaScript
@@ -554,71 +692,84 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     console.log(event);
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
     this.batchDiscount = event.batch[0]?.discount || 0;
-    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-    if (event?.product?.purchase_tax_including) {
+    if (event?.product?.sale_tax_including) {
       if (this.userType == 'Employee') {
         let Employeeprice = event?.batch[0]?.selling_price_employee || 0;
+        this.productItemPrice[index] = Employeeprice;
         this.originalPrice[index] = event?.batch[0]?.selling_price_employee || 0;
         // landing cost
         let getDiscountPrice = (Employeeprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = Employeeprice - getDiscountPrice;
-        this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
-        // cost price
-        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+        this.getCoastPrice = Employeeprice - getDiscountPrice;
+        let taxPrice;
+        taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
         this.taxIntoRupees[index] = taxPrice || 0;
-        this.originalCoastPrice = getCoastPrice + taxPrice;
+        this.originalCoastPrice = getCoastPrice;
       } else if (this.userType == 'Dealer') {
         let dealerprice = event?.batch[0]?.selling_price_dealer || 0;
+        this.productItemPrice[index] = dealerprice;
         this.originalPrice[index] = event?.batch[0]?.selling_price_dealer || 0;
         // landing cost
         let getDiscountPrice = (dealerprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = dealerprice - getDiscountPrice;
-        this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
-        // cost price
-        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+        this.getCoastPrice = dealerprice - getDiscountPrice;
+        let taxPrice;
+        taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
-        this.originalCoastPrice = getCoastPrice + taxPrice;
+        this.originalCoastPrice = getCoastPrice;
       } else {
         let offlineprice = event?.batch[0]?.selling_price_offline || 0;
+        this.productItemPrice[index] = offlineprice;
         this.originalPrice[index] = event?.batch[0]?.selling_price_offline || 0;
         // landing cost
         let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = offlineprice - getDiscountPrice;
+        this.getCoastPrice = offlineprice - getDiscountPrice;
         console.log(getCoastPrice, 'getCoastPrice');
-        this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
+        let taxPrice;
+        taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
         console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
-        // cost price
-        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
-        this.originalCoastPrice = getCoastPrice + taxPrice;
+        this.originalCoastPrice = getCoastPrice;
       }
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
+      this.productItemPrice[index] = offlineprice;
       let purchaseTax = 18
       // cost price 
       let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
       console.log(getDiscountPrice);
       let getCoastPrice = offlineprice - getDiscountPrice;
-      this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 0;
-      // here adding tax into getcostprice
-      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+      this.getCoastPrice = offlineprice - getDiscountPrice;
+      let taxPrice;
+      taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+      this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
+      this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 0;
       // this.originalCoastPrice = getCoastPrice
     }
     if (event.batch.length > 0) {
       const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
-      if (event?.product?.purchase_tax_including == true) {
+      let taxValue = 0;
+      if (event?.product?.sale_tax_including == true) {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
@@ -626,32 +777,55 @@ export class UpdateAdvanceBookingComponent implements OnInit {
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
-          price: this.originalCoastPrice.toFixed(2),
+          price: Number(this.originalCoastPrice).toFixed(2),
         });
+        taxValue = this.apiPurchaseTax;
 
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
-          tax: 18,
+          tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
-          price: this.originalCoastPrice,
+          price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
+        taxValue = this.apiPurchaseTax;
       }
+      this.priceQtyData[index] = {
+        price: this.originalCoastPrice.toFixed(2),
+        qty: event.batch[0]?.stock,
+        additional_discount: event.batch[0]?.additional_discount || 0,
+        tax: taxValue,
+        coastPrice: this.getCoastPrice,
+        taxPrice: this.taxPrice
+      };
+      this.calculateTotal(index);
+      this.calculateTotalDiscount();
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = 0
       const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
         item_name: event?.product_title,
-        tax: 18,
+        qty: 0,
+        tax: 0,
+        discount: 0,
+        price: 0,
       });
+
+      this.priceQtyData[index] = {
+        price: 0,
+        qty: 0,
+        additional_discount: 0,
+        tax: 0,
+        coastPrice: 0,
+        taxPrice: 0
+      };
     }
-    this.calculateTotalEveryIndex(index)
   }
   coastprice: any[] = []
   landingPrice: any[] = []
@@ -726,7 +900,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         console.log(getCoastPrice);
         console.log(qty);
 
-        this.TotalWithoutTax[index] = getCoastPrice * qty || 0
+        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
         console.log(this.TotalWithoutTax[index]);
 
         // cost price 
@@ -745,7 +919,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         let getDiscountPrice = (this.coastprice[index] * discountPercentage) / 100
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
         console.log(getCoastPrice);
-        this.TotalWithoutTax[index] = getCoastPrice * qty || 0
+        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
         // tax price 
         let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
         this.taxIntoRupees[index] = taxprice || 0;
@@ -784,7 +958,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
           let getDiscountPrice = (this.costPrice * discountPercentage) / 100;
           console.log(getDiscountPrice);
           let getCoastPrice = this.costPrice - getDiscountPrice;
-          this.TotalWithoutTax[index] = getCoastPrice * qty || 0
+          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
           // cost price 
           console.log(getCoastPrice, 'cost price this');
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
@@ -796,7 +970,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
           console.log(this.originalPrice[index], 'this.originalPrice[index]');
           let getDiscountPrice = (this.originalPrice[index] * discountPercentage) / 100
           let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
-          this.TotalWithoutTax[index] = getCoastPrice * qty || 0
+          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
           console.log(this.TotalWithoutTax[index]);
           console.log(getCoastPrice, 'getCoastPrice');
           // cost price 
@@ -823,7 +997,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
         let getCoastPrice = this.costPrice - getDiscountPrice;
-        this.TotalWithoutTax[index] = getCoastPrice * qty || 0
+        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
         console.log(this.TotalWithoutTax[index]);
         let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
         this.taxIntoRupees[index] = taxprice || 0;
@@ -846,7 +1020,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   calculateTotalWithoutTax(): number {
     let total = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
-      total += number;
+      total += Number(number);
     })
     return total;
   }
@@ -1171,25 +1345,63 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   // }
 
 
-  calculateTotal(): number {
-    let total = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const taxControl = this.getCart().controls[i].get('total');
-      if (taxControl) {
-        total += +taxControl.value || 0;
+  // calculateTotal(): number {
+  //   let total = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const taxControl = this.getCart().controls[i].get('total');
+  //     if (taxControl) {
+  //       total += +taxControl.value || 0;
+  //     }
+  //   }
+  //   this.totalAmount = total
+  //   // Round the total based on decimal value and add 1 if necessary
+  //   const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
+  //   const decimalPart = roundedTotal - Math.floor(roundedTotal);
+
+  //   if (decimalPart >= 0.5) {
+  //     return Math.floor(roundedTotal) + 1;
+  //   } else {
+  //     return Math.floor(roundedTotal);
+  //   }
+  //   return total;
+  // }
+
+  calculateTotal(index: number, value?): number {
+    let finalTotal = 0;
+    if (this.priceQtyData[index]?.coastPrice && !value) {
+      const data = this.priceQtyData[index];
+      const qty = this.priceQtyData[index]?.qty;
+      const total = (Number(data?.coastPrice) * qty);
+      finalTotal = total;
+    } else {
+      if (this.priceQtyData[index]?.price) {
+        const data = this.priceQtyData[index];
+        const productAmout = this.productItemPrice[index];
+        const discAmount = (productAmout * value) / 100;
+        const getCoastPrice = Number(productAmout - discAmount);
+        const qty = this.priceQtyData[index]?.qty;
+        const total = (Number(getCoastPrice) * qty) + Number(data?.taxPrice * qty);
+        finalTotal = total;
       }
     }
-    this.totalAmount = total
-    // Round the total based on decimal value and add 1 if necessary
-    const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
-    const decimalPart = roundedTotal - Math.floor(roundedTotal);
+    console.log(finalTotal);
 
-    if (decimalPart >= 0.5) {
-      return Math.floor(roundedTotal) + 1;
-    } else {
-      return Math.floor(roundedTotal);
-    }
-    return total;
+    (this.getCart().at(index) as FormGroup).patchValue({ total: finalTotal.toFixed(2) }, { emitEvent: false });
+
+    this.finalTotalAmount[index] = Number(finalTotal.toFixed(2));
+    console.log(this.finalTotalAmount[index]);
+    return Number(finalTotal.toFixed(2));
+  }
+
+  calculateTotalForAll(controlValue?, index?): any {
+    let total = 0;
+    let cartArray = this.getCart();
+      cartArray.controls.forEach((val)=> {
+        total += Number(val.get('total').value)
+      })
+    // const totalDiscount = this.calculateTotalDiscount();
+    this.totalAmount = total;
+    return this.totalAmount;
   }
 
   calculateRoundoffValue(): number {
@@ -1228,6 +1440,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       const purchaseRateControl = this.getCart().controls[i].get('price');
       const taxControl = this.getCart().controls[i].get('tax');
       const discountControl = this.getCart().controls[i].get('discount');
+      const discountQty = this.getCart().controls[i].get('qty');
       if (purchaseRateControl && discountControl) {
         const purchaseRate = +purchaseRateControl.value || 0;
         const tax = +taxControl.value || 0;
@@ -1237,7 +1450,9 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         const afterDiscuntAmount = purchaseRate - discountAmount
         const taxAmountPercentage = +tax;
         const taxAmount = (afterDiscuntAmount * taxAmountPercentage) / 100;
-        total += taxAmount;
+        // total += taxAmount;
+        const totalTaxAmount = taxAmount * discountQty.value;
+        total += totalTaxAmount;
       }
     }
     return total;
@@ -1267,6 +1482,10 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   }
   onLabelClick(event: Event) {
     event.stopPropagation();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAllQty();
   }
 }
 

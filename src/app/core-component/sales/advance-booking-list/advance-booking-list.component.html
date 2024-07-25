@@ -171,7 +171,10 @@
                         <td>{{products?.due_date}}</td>
                         <td>{{products?.subtotal}}</td>
                         <ng-container *ngFor="let item of products?.cart">
-                            <td>{{item?.total}}</td>
+                            <td>{{item?.total ?? ''}}</td>
+                        </ng-container>
+                        <ng-container *ngIf="!products?.cart?.length">
+                            <td>{{products?.total ?? ''}}</td>
                         </ng-container>
                         <td><span [ngClass]="{'bg-lightgreen': products?.status === 'Converted to order', 'bg-lightred' : products?.status === 'Expired','bg-lightyellow' : products?.status === 'Draft'}" class="badges">{{products?.status}}</span></td>
                         <td>

@@ -411,6 +411,7 @@ export class AddSaleBillComponent implements OnInit {
 
   onQtyChange(value: number, index: number) {
     const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+    const discount =  barcode.controls['additional_discount'].value;
     if (this.priceQtyData[index]) {
       this.priceQtyData[index].qty = value;
     }
@@ -428,7 +429,7 @@ export class AddSaleBillComponent implements OnInit {
       barcode.patchValue({
         qty: value,
         tax: taxPercentage,
-        additional_discount: this.priceQtyData[0]?.additional_discount
+        additional_discount: discount
       });
     }
   }
@@ -1824,7 +1825,7 @@ export class AddSaleBillComponent implements OnInit {
 
   }
   selectDiscount(val, i) {
-    let product = this.selectedProduct[i];
+    let product = this.selectedProduct[i];  
     console.log(product);
     this.closeModalDiscount(i);
     console.warn(val, 'selected discount' + i);
