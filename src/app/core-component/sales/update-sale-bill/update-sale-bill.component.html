@@ -747,7 +747,7 @@
                                                     </div>
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                                <td><input type="number" formControlName="discount" class="input">
+                                                <td><input type="number" formControlName="discount" class="input" (blur)="purchase4(i)" readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
@@ -768,7 +768,7 @@
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                                 <td class="text-end"> <input type="number" class="input" readonly
-                                                        [value]="TotalWithoutTax[i]"></td>
+                                                        [value]="TotalWithoutTax[i] || 0"></td>
                                                 <td class="text-end">
                                                     <input type="number" formControlName="total" class="input" readonly>
                                                 </td>

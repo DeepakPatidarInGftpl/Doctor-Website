@@ -1044,20 +1044,13 @@ export class UpdateSaleBillComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     }
   }
+
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+  }
+
   userInputEntered: boolean[] = [];
-  purchase(index) {
-    this.userInputEntered[index] = true;
-    const result = this.calculatePurchaseEveryIndex(index);
-    this.coastprice[index] = result.toFixed(2)
-    setTimeout(() => {
-      this.calculateRoundoffValue()
-    }, 2000);
-  }
   costPrice: any
-  purchase2(costPrice: any) {
-    this.costPrice = costPrice;
-    console.log(this.costPrice);
-  }
   calculatePurchaseEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('price');
@@ -1115,9 +1108,7 @@ export class UpdateSaleBillComponent implements OnInit {
     this.coastprice[index] = result.toFixed(2);
     console.log(this.coastprice[index], 'this.coastprice[index]');
 
-    setTimeout(() => {
       this.calculateRoundoffValue()
-    }, 2000);
   }
   calculationDiscountCostPrice(index) {
     console.log(this.costPrice);
@@ -1620,7 +1611,6 @@ export class UpdateSaleBillComponent implements OnInit {
   }
 
   calculateTotal(index: number, value?): number {
-    
     let finalTotal = 0;
     if (this.priceQtyData[index]?.coastPrice && !value) {
       const data = this.priceQtyData[index];
