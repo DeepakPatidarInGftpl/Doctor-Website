@@ -701,7 +701,7 @@
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
                                                 <td>
                                                     <input type="number" formControlName="discount" class="input"
-                                                        >
+                                                    (blur)="purchase4(i)" readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalDiscount(i)"></i>
                                                     <div class="modal fade" id="discountModal-{{i}}" tabindex="-1"
@@ -773,11 +773,14 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td><button type="button"
-                                                                                                    class="btn btn-primary btn-sm"
-                                                                                                    style="float: right;"
-                                                                                                    (click)="selectDiscount(discount,i)">Select</button>
-                                                                                            </td>
+                                                                                            <td *ngIf="!discount?.is_compulsory"><button type="button"
+                                                                                                class="btn btn-primary btn-md"
+                                                                                                (click)="selectDiscount(discount,i)">Select</button>
+                                                                                        </td>
+                                                                                        <td *ngIf="discount?.is_compulsory"><button type="button"
+                                                                                            class="btn btn-primary btn-md"
+                                                                                            (click)="selectDiscount(discount,i)">Selected</button>
+                                                                                    </td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                     <tbody
@@ -804,7 +807,7 @@
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                                 <td class="text-end"> <input type="number" class="input" readonly
-                                                        [value]="TotalWithoutTax[i]"></td>
+                                                        [value]="TotalWithoutTax[i] || 0"></td>
                                                 <td class="text-end">
                                                     <input type="number" formControlName="total" class="input" readonly>
                                                 </td>
@@ -822,7 +825,7 @@
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                        <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
+                                        <td class="text-start">{{totalDiscountAmount?.toFixed(2)}}
                                             <input type="text" formControlName="total_discount" class="input"
                                                 [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
                                         </td>
