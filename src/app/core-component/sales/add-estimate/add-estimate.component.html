@@ -773,14 +773,16 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td *ngIf="!discount?.is_compulsory"><button type="button"
-                                                                                                class="btn btn-primary btn-md"
-                                                                                                (click)="selectDiscount(discount,i)">Select</button>
-                                                                                        </td>
-                                                                                        <td *ngIf="discount?.is_compulsory"><button type="button"
-                                                                                            class="btn btn-primary btn-md"
-                                                                                            (click)="selectDiscount(discount,i)">Selected</button>
-                                                                                    </td>
+                                                                                            <td *ngIf="!selectedStates[ind]">
+                                                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                                                    (click)="selectDiscount(discount,i,ind)">
+                                                                                                 Select
+                                                                                                </button>
+                                                                                                </td>
+                                                                                                <td *ngIf="selectedStates[ind]"><button type="button"
+                                                                                                    class="btn btn-primary btn-md"
+                                                                                                    (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
+                                                                                                </td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                     <tbody
@@ -835,7 +837,7 @@
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
+                                        <td> {{ calculatedFinalTotal?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
