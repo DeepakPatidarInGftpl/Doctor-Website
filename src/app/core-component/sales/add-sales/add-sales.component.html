@@ -634,7 +634,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"
+                                                <td><input type="number" formControlName="qty" class="input" min="0"
                                                        ></td>
                                                 <td><input type="number" formControlName="price" class="input"
                                                          #price readonly>
@@ -790,13 +790,13 @@
                                                                                             discount?.flat_discount?discount?.flat_discount:''}}
                                                                                             {{discount?.discount_type?discount.discount_type:''}}
                                                                                         </td>
-                                                                                        <td *ngIf="!selectedStates[ind]">
+                                                                                        <td *ngIf="!selectedStates[discountCartIndex][ind]">
                                                                                         <button type="button" class="btn btn-primary btn-md"
                                                                                             (click)="selectDiscount(discount,i,ind)">
                                                                                          Select
                                                                                         </button>
                                                                                         </td>
-                                                                                        <td *ngIf="selectedStates[ind]"><button type="button"
+                                                                                        <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
                                                                                             class="btn btn-primary btn-md"
                                                                                             (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
                                                                                         </td>
@@ -843,9 +843,9 @@
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                        <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
+                                        <td class="text-start">{{totalDiscountAmount?.toFixed(2)}}
                                             <input type="text" formControlName="total_discount" class="input"
-                                                [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                                [ngModel]="totalDiscountAmount?.toFixed(2)" style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalTax()?.toFixed(2)}}
                                             <input type="text" formControlName="total_tax" class="input"

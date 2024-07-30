@@ -22,7 +22,8 @@ import { NgxEditorModule } from 'ngx-editor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 
 
 const icons = {
@@ -54,6 +55,8 @@ const icons = {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     NgMultiSelectDropDownModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireMessagingModule
   ],
   exports: [
     FeatherModule

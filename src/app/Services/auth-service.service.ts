@@ -56,6 +56,13 @@ export class AuthServiceService {
     return this.roleAs;
   }
 
+  updateUserDeviceToken(token) {
+    let url = this.apiurl + '/pv-api/user_device_token_update/';
+    return this.httpService.post(url, token, new HttpHeaders({
+      'Authorization': 'token ' + `${localStorage.getItem('token')}`
+    }))
+  }
+
 
   Errorhandling(err: HttpErrorResponse) {
     if (err.error instanceof ErrorEvent) {

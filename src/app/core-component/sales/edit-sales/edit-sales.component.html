@@ -719,10 +719,105 @@
                                                     </div>
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                                <td><input type="number" formControlName="discount" class="input">
-                                                    <span class="text-danger" style="display: block;"
-                                                        *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
-                                                        Discount ex: 1-100 % </span>
+                                                <td>
+                                                    <input type="text" formControlName="discount" class="input"
+                                                        (blur)="purchase4(i)" readonly>
+                                                    <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        title="ion-information" (click)="openModalDiscount(i)"></i>
+                                                    <div class="modal fade" id="discountModal-{{i}}" tabindex="-1"
+                                                        role="dialog" aria-labelledby="addressModalLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                            role="document" style="max-width: 57%;">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel">Select Discount</h1>
+                                                                    <button type="button" class="close"
+                                                                        (click)="closeModalDiscount(i)"
+                                                                        aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="table-responsive">
+                                                                                <table class="table datanew">
+                                                                                    <thead
+                                                                                        *ngIf="discountTyp[discountCartIndex]">
+                                                                                        <tr>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sr.No.</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Offer Type</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Free Items</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Price Range</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Invoice Amount</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Flat Discount</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Action</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            *ngFor="let discount of discountTyp[discountCartIndex]; let ind=index;">
+                                                                                            <td class="boder">{{
+                                                                                                ind+1+'.'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                discount?.discount_offer_type
+                                                                                                }}</td>
+                                                                                            <td class="boder">{{
+                                                                                                discount?.free_items?.name
+                                                                                                }}</td>
+                                                                                            <td class="boder">{{
+                                                                                                discount?.start_price?discount?.start_price:''}}
+                                                                                                -
+                                                                                                {{discount?.end_price?discount?.end_price:''}}
+                                                                                            </td>
+                                                                                            <td class="boder">
+                                                                                                {{discount?.invoice_amount?discount?.invoice_amount:'-'}}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                discount?.flat_discount?discount?.flat_discount:''}}
+                                                                                                {{discount?.discount_type?discount.discount_type:''}}
+                                                                                            </td>
+                                                                                            <td *ngIf="!selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                                                    (click)="selectDiscount(discount,i,ind)">
+                                                                                                 Select
+                                                                                                </button>
+                                                                                                </td>
+                                                                                                <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
+                                                                                                    class="btn btn-primary btn-md"
+                                                                                                    (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
+                                                                                                </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                    <tbody
+                                                                                        *ngIf="!discountTyp[discountCartIndex]">
+                                                                                        <p>Discount Not Available</p>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span> -->
                                                 </td>
                                                 <td>
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
@@ -752,9 +847,9 @@
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                        <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
+                                        <td class="text-start">{{totalDiscountAmount?.toFixed(2)}}
                                             <input type="text" formControlName="total_discount" class="input"
-                                                [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                                [ngModel]="totalDiscountAmount?.toFixed(2)" style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalTax()?.toFixed(2)}}
                                             <input type="text" formControlName="total_tax" class="input"
@@ -762,7 +857,7 @@
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
+                                        <td> {{ calculatedFinalTotal?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
