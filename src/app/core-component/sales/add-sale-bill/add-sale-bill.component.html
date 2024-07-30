@@ -649,7 +649,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"></td>
+                                                <td><input type="number" formControlName="qty" min="0" class="input"></td>
                                                 <td><input type="text" formControlName="price" class="input" #price
                                                         readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
@@ -800,13 +800,13 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td *ngIf="!selectedStates[ind]">
+                                                                                            <td *ngIf="!selectedStates[discountCartIndex][ind]">
                                                                                             <button type="button" class="btn btn-primary btn-md"
                                                                                                 (click)="selectDiscount(discount,i,ind)">
                                                                                              Select
                                                                                             </button>
                                                                                             </td>
-                                                                                            <td *ngIf="selectedStates[ind]"><button type="button"
+                                                                                            <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
                                                                                                 class="btn btn-primary btn-md"
                                                                                                 (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
                                                                                             </td>

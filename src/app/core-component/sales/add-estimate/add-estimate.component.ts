@@ -38,7 +38,6 @@ export class AddEstimateComponent implements OnInit {
   skipQtyChange = false;
   employeeList: any;
   private qtySubscriptions: Subscription[] = [];
-  private discountSubscriptions: Subscription[] = [];
 
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
@@ -377,7 +376,6 @@ export class AddEstimateComponent implements OnInit {
     const cartControl = this.cart();
     this.getCart().controls.forEach((control, index) => {
       this.subscribeToQtyChanges(control as FormGroup, index);
-      // this.subscribeToDiscountChanges(control as FormGroup, index);
     });
   }
   removeCart(i: any) {
@@ -385,6 +383,15 @@ export class AddEstimateComponent implements OnInit {
     if (this.saleEstimateForm?.value?.estimate_cart?.length == 0) {
       this.isCart = true;
     }
+    this.TotalWithoutTax[i] = 0;
+    this.calculateTotalWithoutTax();
+    let total = 0;
+    let cartArray = this.getCart();
+   
+    cartArray.controls.forEach((val)=> {
+      total += Number(val.get('total').value)
+    })
+    this.calculatedFinalTotal = total;
     this.discountTyp.splice(i, 1);
   }
   getUser(query) {
@@ -424,27 +431,9 @@ export class AddEstimateComponent implements OnInit {
     }
   }
 
-  // onDisCountChange(value: number, index: number) {
-  //   if (value > this.discountLimit) {
-  //     this.toastrService.error(`Your maximum discount Limit is ${this.discountLimit}`);
-  //   }
-  //   if (this.priceQtyData[index]) {
-  //     this.priceQtyData[index].additional_discount = value;
-  //   }
-  //   if (this.priceQtyData[index]?.price) {
-  //     const productAmout = this.productItemPrice[index];
-  //     const discAmount = (productAmout * value) / 100;
-  //     const getCoastPrice = Number(productAmout - discAmount);
-  //     const getQuantity = Number(this.priceQtyData[index]?.qty);
-  //     this.TotalWithoutTax[index] = (getCoastPrice * getQuantity).toFixed(2);
-  //   }
-  // }
-
   unsubscribeAllQty() {
     this.qtySubscriptions.forEach(sub => sub.unsubscribe());
     this.qtySubscriptions = [];
-    this.discountSubscriptions.forEach(sub => sub.unsubscribe());
-    this.discountSubscriptions = [];
   }
 
   paymentTermsList: any
@@ -509,7 +498,6 @@ export class AddEstimateComponent implements OnInit {
     this.getCart().controls.forEach((cartControl: any, index) => {
       this.getCart().controls.forEach((control, index) => {
         this.subscribeToQtyChanges(control as FormGroup, index);
-        // this.subscribeToDiscountChanges(control as FormGroup, index);
       });
     });
   }
@@ -541,24 +529,6 @@ export class AddEstimateComponent implements OnInit {
       this.qtySubscriptions.push(subscription);
     }
   }
-
-  // subscribeToDiscountChanges(cartControl: FormGroup, index: number) {
-  //   const discountControl = cartControl.get('discount') as FormControl;
-  //   if (discountControl) {
-  //     const subscription = discountControl.valueChanges
-  //       .pipe(distinctUntilChanged())
-  //       .subscribe((value) => {
-  //         this.onDisCountChange(value, index);
-  //         this.totalCartAmount = this.calculateTotal(index, value);
-  //         (this.getCart().at(index) as FormGroup).patchValue({ total: this.totalCartAmount.toFixed(2) }, { emitEvent: false });
-  //         this.finalTotalAmount[index] = this.totalCartAmount;
-  //         console.log(this.totalCartAmount);
-  //         this.calculateTotalForAll(this.totalCartAmount, index);
-  //         this.cdr.detectChanges();
-  //       });
-  //     this.discountSubscriptions.push(subscription);
-  //   }
-  // }
 
   // address 
   openModal() {
@@ -1102,7 +1072,7 @@ export class AddEstimateComponent implements OnInit {
       formdata.append('total_discount', this.saleEstimateForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleEstimateForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleEstimateForm.get('subtotal')?.value);
-      formdata.append('total', this.saleEstimateForm.get('total')?.value);
+      formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1364,20 +1334,19 @@ export class AddEstimateComponent implements OnInit {
         this.discountTyp.forEach((discountList, index) => {
           discountStatus.set(index, new Set<string>());
         });
-
+        const saleEstimateCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup
+        saleEstimateCart?.controls['discount'].setValue('');
         this.compulsoryDiscounts.forEach(value => {
           const discountType = value?.discount_offer_type;
           const statusMap = discountStatus.get(index) || new Set<string>();
           if (this.discountTypesApplied[discountType]) return;
           if(!!value?.is_compulsory) {
+            this.totalFlatDiscountPercentage = 0;
+            this.totalFlatDiscountAmount = 0;
             switch (discountType) {
               case 'Price-range-free-item':
                 if (product?.batch[0]?.selling_price_online >= parseInt(value?.start_price) && product?.batch[0]?.selling_price_online <= parseInt(value?.end_price)) {
                   this.addCart(index);
-                  const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
-                  if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({ discount: 'Free Item' });
-                  }
                   const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index + 1) as FormGroup;
                   barcode.patchValue({
                     barcode: value?.free_items?.sku,
@@ -1388,6 +1357,7 @@ export class AddEstimateComponent implements OnInit {
                     additional_discount: 0,
                     price: value?.free_items?.mrp,
                   });
+                  barcode.disable();
                   this.barcode[index + 1] = value?.free_items?.sku;
                   this.discountTypesApplied['Price-range-free-item'] = true;
                   statusMap.add('Price-range-free-item');
@@ -1399,26 +1369,14 @@ export class AddEstimateComponent implements OnInit {
                 if (product?.batch[0]?.selling_price_online >= parseInt(value?.start_price) && product?.batch[0]?.selling_price_online <= parseInt(value?.end_price)) {
                   const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
                   if (value?.discount_type === '%') {
-                  if (!previousCart?.controls['discount']?.value) {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: '%'
-                      });
-                      this.totalFlatDiscountPercentage += Number(value?.flat_discount);
-                    } else {
-                  if (!previousCart?.controls['discount']?.value) {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: 'Rs'
-                      });
-                    }
+                    this.totalFlatDiscountPercentage += Number(value?.flat_discount);
+                   } else {
                       this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                     }
                     this.purchase4(index);
                     this.discountTypesApplied['Price-range-discount'] = true;
                     statusMap.add('Price-range-discount');
                     this.isPriceRangeDiscountSelected = true;
-                  }
                 }
                 break;
         
@@ -1426,9 +1384,6 @@ export class AddEstimateComponent implements OnInit {
                 if (this.calculateTotal(index) >= parseInt(value?.invoice_amount)) {
                   this.addCart(index);
                   const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
-                  if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({ discount: 'Free Item Invoice' });
-                  }
                   const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index + 1) as FormGroup;
                   barcode.patchValue({
                     barcode: value?.free_items?.sku,
@@ -1439,6 +1394,7 @@ export class AddEstimateComponent implements OnInit {
                     additional_discount: 0,
                     price: value?.free_items?.mrp,
                   });
+                  barcode.disable();
                   this.barcode[index + 1] = value?.free_items?.sku;
                   this.discountTypesApplied['Free-item-on-invoice'] = true;
                   statusMap.add('Free-item-on-invoice');
@@ -1449,24 +1405,14 @@ export class AddEstimateComponent implements OnInit {
               case 'Discount-on-Invoice':
                 const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
                 if (value?.discount_type === '%') {
-                if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({
-                      discount: 'Discount Invoice',
-                      discount_type: '%'
-                    });
-                    this.totalFlatDiscountPercentage += Number(value?.flat_discount);
-                  } else {
-                    previousCart.patchValue({
-                      discount: 'Discount Invoice',
-                      discount_type: 'Rs'
-                    });
+                  this.totalFlatDiscountPercentage += Number(value?.flat_discount);
+                 } else {
                     this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                   }
                   this.invoiceFlatDiscount = parseInt(value?.flat_discount);
                   this.discountTypesApplied['Discount-on-Invoice'] = true;
                   statusMap.add('Discount-on-Invoice');
                   this.isDiscountOnInvoiceSelected = true;
-                }
                 break;
         
               case 'Quantity-per-percentage':
@@ -1474,16 +1420,8 @@ export class AddEstimateComponent implements OnInit {
                   const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
                   if (value?.discount_type === '%') {
                   if (previousCart.get('qty').value >= parseInt(value?.purchase_qty)) {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: '%'
-                      });
                       this.totalFlatDiscountPercentage += Number(value?.flat_discount);
                     } else {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: 'Rs'
-                      });
                       this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                     }
                     this.purchase4(index);
@@ -1514,10 +1452,22 @@ export class AddEstimateComponent implements OnInit {
             discountStatus.set(index, statusMap);
           }
         });
-        this.selectedStates = this.discountTyp.map((discountList, index) => {
-          const statusMap = discountStatus.get(index) || new Set<string>();
-          return discountList.map(discount => statusMap.has(discount?.discount_offer_type) || false);
+        this.selectedStates = this.discountTyp.map(discountList => {
+          let foundFirstCompulsory = false;
+          return discountList.map(discount => {
+            if (!!discount?.is_compulsory && !foundFirstCompulsory) {
+              foundFirstCompulsory = true;
+              return true; 
+            } else {
+              return false; 
+            }
+          });
         });
+        if(this.totalFlatDiscountPercentage > 0) {
+          saleEstimateCart?.controls['discount'].setValue(this.totalFlatDiscountPercentage);
+        } else {
+          saleEstimateCart?.controls['discount'].setValue(this.totalFlatDiscountAmount);
+        }
       }
     }
     // });
@@ -1529,7 +1479,7 @@ export class AddEstimateComponent implements OnInit {
   }
 
   selectDiscount(val, i, index) {
-    console.log(this.selectedStates[index]);
+    console.log(this.selectedStates[i][index]);
     switch (val?.discount_offer_type) {
       case 'Price-range-free-item':
         if(!!this.isPriceRangeFreeItemSelected){
@@ -1573,7 +1523,7 @@ export class AddEstimateComponent implements OnInit {
       break;
     }
 
-    this.selectedStates[index] = !this.selectedStates[index];
+    this.selectedStates[i][index] = !this.selectedStates[i][index];
     let product = this.selectedProduct[i];
     console.log(product);
     this.closeModalDiscount(i);
@@ -1581,12 +1531,6 @@ export class AddEstimateComponent implements OnInit {
     if (val?.discount_offer_type == 'Price-range-free-item') {
       //  if (product?.batch[0]?.selling_price_online >= parseInt(lastCompulsoryDiscount.start_price) && product?.batch[0]?.selling_price_online <= parseInt(lastCompulsoryDiscount.end_price)) {
       this.addCart(index);
-      const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-      if(!previousCart?.controls['discount']?.value){
-      previousCart.patchValue({
-        discount: 'Free Item',
-      })
-    }
       const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i + 1) as FormGroup;
       barcode.patchValue({
         barcode: val?.free_items?.sku,
@@ -1597,6 +1541,7 @@ export class AddEstimateComponent implements OnInit {
         additional_discount: 0,
         price: val?.free_items?.mrp,
       });
+      barcode.disable();
       this.barcode[i + 1] = val?.free_items?.sku;
       console.log(this.barcode);
       // this.myControl.push(new FormControl(val?.free_items?.product_name));
@@ -1605,23 +1550,9 @@ export class AddEstimateComponent implements OnInit {
     } else if (val?.discount_offer_type == 'Price-range-discount') {
       if (product?.batch[0]?.selling_price_online >= parseInt(val.start_price) && product?.batch[0]?.selling_price_online <= parseInt(val.end_price)) {
         if (val?.discount_type == '%') {
-          const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: '%'
-          });
-        }
           this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
           this.purchase4(i)
         } else {
-          const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: 'Rs'
-          });
-        }
           this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
           this.purchase4(i)
         }
@@ -1632,11 +1563,11 @@ export class AddEstimateComponent implements OnInit {
       console.warn(val);
       this.addCart(index);
       const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-      if(!previousCart?.controls['discount']?.value){
-      previousCart.patchValue({
-        discount: 'Free Item Invoice',
-      })
-    }
+    //   if(!previousCart?.controls['discount']?.value){
+    //   previousCart.patchValue({
+    //     discount: 'Free Item Invoice',
+    //   })
+    // }
       const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i + 1) as FormGroup;
       barcode.patchValue({
         barcode: val?.free_items?.sku,
@@ -1647,6 +1578,7 @@ export class AddEstimateComponent implements OnInit {
         additional_discount: 0,
         price: val?.free_items?.mrp,
       });
+      barcode.disable();
       this.barcode[i + 1] = val?.free_items?.sku;
       console.log(this.barcode);
       // this.myControl.push(new FormControl(val?.free_items?.product_name));
@@ -1655,22 +1587,8 @@ export class AddEstimateComponent implements OnInit {
     } else if (val?.discount_offer_type == 'Discount-on-Invoice') {
       if (val?.discount_type == '%') {
         this.invoiceFlatDiscount = parseInt(val?.flat_discount);
-        const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-        if(!previousCart?.controls['discount']?.value){
-        previousCart.patchValue({
-          discount: 'Discount Invoice',
-          discount_type: '%'
-        });
-      }
         this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
       } else {
-        const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-        if(!previousCart?.controls['discount']?.value){
-        previousCart.patchValue({
-          discount: 'Discount Invoice',
-          discount_type: 'Rs'
-        });
-      }
         this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
         this.invoiceFlatDiscount = parseInt(val?.flat_discount);
       }
@@ -1683,22 +1601,10 @@ export class AddEstimateComponent implements OnInit {
       const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
       if (previousCart.get('qty').value >= parseInt(val?.purchase_qty)) {
         if (val?.discount_type == '%') {
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: '%'
-          });
-        }
           this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
           this.purchase4(i)
         } else {
           const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: 'Rs'
-          });
-        }
           this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
           this.purchase4(i)
         }
@@ -1731,7 +1637,7 @@ export class AddEstimateComponent implements OnInit {
   }
 
   selectedDiscountChange(val, i, index) {
-    this.selectedStates[index] = !this.selectedStates[index];
+    this.selectedStates[i][index] = !this.selectedStates[i][index];
     console.log(val + i + index);
     console.log(JSON.stringify(val));
     if(val?.discount_offer_type === 'Price-range-free-item' || val?.discount_offer_type === 'Free-item-on-invoice'){
@@ -2043,12 +1949,12 @@ export class AddEstimateComponent implements OnInit {
       if (purchaseRateControl && discountControl) {
         const purchaseRate = +purchaseRateControl.value || 0;
         const tax = +taxControl.value || 0;
-        const discount = +discountControl.value || 0
-        const discountAmountPercentage = +discount
-        const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
-        const afterDiscuntAmount = purchaseRate - discountAmount
+        // const discount = +discountControl.value || 0
+        // const discountAmountPercentage = +discount
+        // const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
+        // const afterDiscuntAmount = purchaseRate - discountAmount
         const taxAmountPercentage = +tax;
-        const taxAmount = (afterDiscuntAmount * taxAmountPercentage) / 100;
+        const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
         // total += taxAmount;
         const totalTaxAmount = taxAmount * discountQty.value;
         total += totalTaxAmount;
