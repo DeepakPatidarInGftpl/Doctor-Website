@@ -47,7 +47,6 @@ export class AddSalesComponent implements OnInit {
   selectedDiscount: any[] = [];
   discountTypeSelect: any[] = [];
   private qtySubscriptions: Subscription[] = [];
-  private discountSubscriptions: Subscription[] = [];
   changeFlatDiscount: any[] = [];
   changeFlatDiscountAmount: any[] = [];
   isPriceRangeFreeItemSelected = false;
@@ -380,6 +379,15 @@ export class AddSalesComponent implements OnInit {
     if (this.saleForm?.value?.sale_order_cart?.length == 0) {
       this.isCart = true
     }
+    this.TotalWithoutTax[i] = 0;
+    this.calculateTotalWithoutTax();
+    let total = 0;
+    let cartArray = this.getCart();
+   
+    cartArray.controls.forEach((val)=> {
+      total += Number(val.get('total').value)
+    })
+    this.calculatedFinalTotal = total;
     this.discountTyp.splice(i, 1);
   }
   getUser(query) {
@@ -443,8 +451,6 @@ export class AddSalesComponent implements OnInit {
   unsubscribeAllQty() {
     this.qtySubscriptions.forEach(sub => sub.unsubscribe());
     this.qtySubscriptions = [];
-    this.discountSubscriptions.forEach(sub => sub.unsubscribe());
-    this.discountSubscriptions = [];
   }
 
   estimateList: any
@@ -717,7 +723,7 @@ export class AddSalesComponent implements OnInit {
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
-    this.batchDiscount = event.batch[0]?.discount || 0;
+    this.batchDiscount = 0;
     this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.sale_tax_including) {
@@ -917,6 +923,8 @@ export class AddSalesComponent implements OnInit {
           discountStatus.set(index, new Set<string>());
         });
 
+        const saleOrderCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup
+        saleOrderCart?.controls['discount'].setValue('');
         this.compulsoryDiscounts.forEach(value => {
           const discountType = value?.discount_offer_type;
           const statusMap = discountStatus.get(index) || new Set<string>();
@@ -927,9 +935,9 @@ export class AddSalesComponent implements OnInit {
                 if (product?.batch[0]?.selling_price_online >= parseInt(value?.start_price) && product?.batch[0]?.selling_price_online <= parseInt(value?.end_price)) {
                   this.addCart();
                   const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
-                  if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({ discount: 'Free Item' });
-                  }
+                  // if (!previousCart?.controls['discount']?.value) {
+                  //   previousCart.patchValue({ discount: 'Free Item' });
+                  // }
                   const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index + 1) as FormGroup;
                   barcode.patchValue({
                     barcode: value?.free_items?.sku,
@@ -940,6 +948,7 @@ export class AddSalesComponent implements OnInit {
                     additional_discount: 0,
                     price: value?.free_items?.mrp,
                   });
+                  barcode.disable();
                   this.barcode[index + 1] = value?.free_items?.sku;
                   this.discountTypesApplied['Price-range-free-item'] = true;
                   statusMap.add('Price-range-free-item');
@@ -951,24 +960,26 @@ export class AddSalesComponent implements OnInit {
                 if (product?.batch[0]?.selling_price_online >= parseInt(value?.start_price) && product?.batch[0]?.selling_price_online <= parseInt(value?.end_price)) {
                   const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
                   if (value?.discount_type === '%') {
-                  if (!previousCart?.controls['discount']?.value) {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: '%'
-                      });
-                      this.totalFlatDiscountPercentage += Number(value?.flat_discount);
-                    } else {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: 'Rs'
-                      });
+                  // if (!previousCart?.controls['discount']?.value) {
+                  //     previousCart.patchValue({
+                  //       discount: value?.flat_discount,
+                  //       discount_type: '%'
+                  //     });
+                  //   }
+                    this.totalFlatDiscountPercentage += Number(value?.flat_discount);
+                   } else {
+                  // if (!previousCart?.controls['discount']?.value) {
+                  //     previousCart.patchValue({
+                  //       discount: value?.flat_discount,
+                  //       discount_type: 'Rs'
+                  //     });
+                  //   }
                       this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                     }
                     this.purchase4(index);
                     this.discountTypesApplied['Price-range-discount'] = true;
                     statusMap.add('Price-range-discount');
                     this.isPriceRangeDiscountSelected = true;
-                  }
                 }
                 break;
         
@@ -976,9 +987,9 @@ export class AddSalesComponent implements OnInit {
                 if (this.calculateTotal(index) >= parseInt(value?.invoice_amount)) {
                   this.addCart();
                   const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
-                  if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({ discount: 'Free Item Invoice' });
-                  }
+                  // if (!previousCart?.controls['discount']?.value) {
+                  //   previousCart.patchValue({ discount: 'Free Item Invoice' });
+                  // }
                   const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index + 1) as FormGroup;
                   barcode.patchValue({
                     barcode: value?.free_items?.sku,
@@ -989,6 +1000,7 @@ export class AddSalesComponent implements OnInit {
                     additional_discount: 0,
                     price: value?.free_items?.mrp,
                   });
+                  barcode.disable();
                   this.barcode[index + 1] = value?.free_items?.sku;
                   this.discountTypesApplied['Free-item-on-invoice'] = true;
                   statusMap.add('Free-item-on-invoice');
@@ -999,24 +1011,26 @@ export class AddSalesComponent implements OnInit {
               case 'Discount-on-Invoice':
                 const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
                 if (value?.discount_type === '%') {
-                if (!previousCart?.controls['discount']?.value) {
-                    previousCart.patchValue({
-                      discount: 'Discount Invoice',
-                      discount_type: '%'
-                    });
-                    this.totalFlatDiscountPercentage += Number(value?.flat_discount);
-                  } else {
-                    previousCart.patchValue({
-                      discount: 'Discount Invoice',
-                      discount_type: 'Rs'
-                    });
+                // if (!previousCart?.controls['discount']?.value) {
+                //     previousCart.patchValue({
+                //       discount: 'Discount Invoice',
+                //       discount_type: '%'
+                //     });
+                //   }
+                  this.totalFlatDiscountPercentage += Number(value?.flat_discount);
+                 } else {
+                // if (!previousCart?.controls['discount']?.value) {
+                //     previousCart.patchValue({
+                //       discount: 'Discount Invoice',
+                //       discount_type: 'Rs'
+                //     });
+                //   }
                     this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                   }
                   this.invoiceFlatDiscount = parseInt(value?.flat_discount);
                   this.discountTypesApplied['Discount-on-Invoice'] = true;
                   statusMap.add('Discount-on-Invoice');
                   this.isDiscountOnInvoiceSelected = true;
-                }
                 break;
         
               case 'Quantity-per-percentage':
@@ -1024,16 +1038,20 @@ export class AddSalesComponent implements OnInit {
                   const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
                   if (value?.discount_type === '%') {
                   if (previousCart.get('qty').value >= parseInt(value?.purchase_qty)) {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: '%'
-                      });
+                // if (!previousCart?.controls['discount']?.value) {
+                //       previousCart.patchValue({
+                //         discount: value?.flat_discount,
+                //         discount_type: '%'
+                //       });
+                //     }
                       this.totalFlatDiscountPercentage += Number(value?.flat_discount);
                     } else {
-                      previousCart.patchValue({
-                        discount: value?.flat_discount,
-                        discount_type: 'Rs'
-                      });
+                // if (!previousCart?.controls['discount']?.value) {
+                //       previousCart.patchValue({
+                //         discount: value?.flat_discount,
+                //         discount_type: 'Rs'
+                //       });
+                //     }
                       this.totalFlatDiscountAmount += parseInt(value?.flat_discount);
                     }
                     this.purchase4(index);
@@ -1064,10 +1082,23 @@ export class AddSalesComponent implements OnInit {
             discountStatus.set(index, statusMap);
           }
         });
-        this.selectedStates = this.discountTyp.map((discountList, index) => {
-          const statusMap = discountStatus.get(index) || new Set<string>();
-          return discountList.map(discount => statusMap.has(discount?.discount_offer_type) || false);
+        this.selectedStates = this.discountTyp.map(discountList => {
+          let foundFirstCompulsory = false;
+          return discountList.map(discount => {
+            if (!!discount?.is_compulsory && !foundFirstCompulsory) {
+              foundFirstCompulsory = true;
+              return true; 
+            } else {
+              return false; 
+            }
+          });
         });
+
+        if(this.totalFlatDiscountPercentage > 0) {
+          saleOrderCart?.controls['discount'].setValue(this.totalFlatDiscountPercentage);
+        } else {
+          saleOrderCart?.controls['discount'].setValue(this.totalFlatDiscountAmount);
+        }
       }
     }
     // });
@@ -1118,19 +1149,7 @@ export class AddSalesComponent implements OnInit {
     }
   }
   userInputEntered: boolean[] = [];
-  purchase(index) {
-    this.userInputEntered[index] = true;
-    const result = this.calculatePurchaseEveryIndex(index);
-    this.coastprice[index] = result.toFixed(2)
-    setTimeout(() => {
-      this.calculateRoundoffValue()
-    }, 2000);
-  }
   costPrice: any
-  purchase2(costPrice: any) {
-    this.costPrice = costPrice;
-    console.log(this.costPrice);
-  }
   calculatePurchaseEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('price');
@@ -1185,9 +1204,9 @@ export class AddSalesComponent implements OnInit {
     this.coastprice[index] = result.toFixed(2);
     console.log(this.coastprice[index], 'this.coastprice[index]');
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.calculateRoundoffValue()
-    }, 2000);
+    // }, 2000);
   }
 
   discountCartIndex: any;
@@ -1211,7 +1230,7 @@ export class AddSalesComponent implements OnInit {
   }
 
   selectDiscount(val, i, index) {
-    console.log(this.selectedStates[index]);
+    console.log(this.selectedStates[i][index]);
     switch (val?.discount_offer_type) {
       case 'Price-range-free-item':
         if(!!this.isPriceRangeFreeItemSelected){
@@ -1255,7 +1274,7 @@ export class AddSalesComponent implements OnInit {
       break;
     }
 
-    this.selectedStates[index] = !this.selectedStates[index];
+    this.selectedStates[i][index] = !this.selectedStates[i][index];
     let product = this.selectedProduct[i];
     console.log(product);
     this.closeModalDiscount(i);
@@ -1264,11 +1283,11 @@ export class AddSalesComponent implements OnInit {
       //  if (product?.batch[0]?.selling_price_online >= parseInt(lastCompulsoryDiscount.start_price) && product?.batch[0]?.selling_price_online <= parseInt(lastCompulsoryDiscount.end_price)) {
       this.addCart();
       const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-      if(!previousCart?.controls['discount']?.value){
-      previousCart.patchValue({
-        discount: 'Free Item',
-      })
-    }
+    //   if(!previousCart?.controls['discount']?.value){
+    //   previousCart.patchValue({
+    //     discount: 'Free Item'
+    //   })
+    // }
       const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(i + 1) as FormGroup;
       barcode.patchValue({
         barcode: val?.free_items?.sku,
@@ -1279,6 +1298,7 @@ export class AddSalesComponent implements OnInit {
         additional_discount: 0,
         price: val?.free_items?.mrp,
       });
+      barcode.disable();
       this.barcode[i + 1] = val?.free_items?.sku;
       console.log(this.barcode);
       // this.myControl.push(new FormControl(val?.free_items?.product_name));
@@ -1288,22 +1308,22 @@ export class AddSalesComponent implements OnInit {
       if (product?.batch[0]?.selling_price_online >= parseInt(val.start_price) && product?.batch[0]?.selling_price_online <= parseInt(val.end_price)) {
         if (val?.discount_type == '%') {
           const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: '%'
-          });
-        }
+        //   if(!previousCart?.controls['discount']?.value){
+        //   previousCart.patchValue({
+        //     discount: val?.flat_discount,
+        //     discount_type: '%'
+        //   });
+        // }
           this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
           this.purchase4(i)
         } else {
           const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: 'Rs'
-          });
-        }
+        //   if(!previousCart?.controls['discount']?.value){
+        //   previousCart.patchValue({
+        //     discount: val?.flat_discount,
+        //     discount_type: 'Rs'
+        //   });
+        // }
           this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
           this.purchase4(i)
         }
@@ -1314,11 +1334,11 @@ export class AddSalesComponent implements OnInit {
       console.warn(val);
       this.addCart();
       const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-      if(!previousCart?.controls['discount']?.value){
-      previousCart.patchValue({
-        discount: 'Free Item Invoice',
-      })
-    }
+    //   if(!previousCart?.controls['discount']?.value){
+    //   previousCart.patchValue({
+    //     discount: 'Free Item Invoice',
+    //   })
+    // }
       const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(i + 1) as FormGroup;
       barcode.patchValue({
         barcode: val?.free_items?.sku,
@@ -1329,6 +1349,7 @@ export class AddSalesComponent implements OnInit {
         additional_discount: 0,
         price: val?.free_items?.mrp,
       });
+      barcode.disable();
       this.barcode[i + 1] = val?.free_items?.sku;
       console.log(this.barcode);
       // this.myControl.push(new FormControl(val?.free_items?.product_name));
@@ -1338,21 +1359,21 @@ export class AddSalesComponent implements OnInit {
       if (val?.discount_type == '%') {
         this.invoiceFlatDiscount = parseInt(val?.flat_discount);
         const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-        if(!previousCart?.controls['discount']?.value){
-        previousCart.patchValue({
-          discount: 'Discount Invoice',
-          discount_type: '%'
-        });
-      }
+      //   if(!previousCart?.controls['discount']?.value){
+      //   previousCart.patchValue({
+      //     discount: 'Discount Invoice',
+      //     discount_type: '%'
+      //   });
+      // }
         this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
       } else {
         const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-        if(!previousCart?.controls['discount']?.value){
-        previousCart.patchValue({
-          discount: 'Discount Invoice',
-          discount_type: 'Rs'
-        });
-      }
+      //   if(!previousCart?.controls['discount']?.value){
+      //   previousCart.patchValue({
+      //     discount: 'Discount Invoice',
+      //     discount_type: 'Rs'
+      //   });
+      // }
         this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
         this.invoiceFlatDiscount = parseInt(val?.flat_discount);
       }
@@ -1365,22 +1386,22 @@ export class AddSalesComponent implements OnInit {
       const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
       if (previousCart.get('qty').value >= parseInt(val?.purchase_qty)) {
         if (val?.discount_type == '%') {
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: '%'
-          });
-        }
+        //   if(!previousCart?.controls['discount']?.value){
+        //   previousCart.patchValue({
+        //     discount: val?.flat_discount,
+        //     discount_type: '%'
+        //   });
+        // }
           this.addFlatDiscountPercentage[i] = Number(val?.flat_discount);
           this.purchase4(i)
         } else {
           const previousCart = (this.saleForm.get('sale_order_cart') as FormArray).at(i) as FormGroup;
-          if(!previousCart?.controls['discount']?.value){
-          previousCart.patchValue({
-            discount: val?.flat_discount,
-            discount_type: 'Rs'
-          });
-        }
+        //   if(!previousCart?.controls['discount']?.value){
+        //   previousCart.patchValue({
+        //     discount: val?.flat_discount,
+        //     discount_type: 'Rs'
+        //   });
+        // }
           this.addFlatDiscountAmount[i] = parseInt(val?.flat_discount);
           this.purchase4(i)
         }
@@ -1413,7 +1434,7 @@ export class AddSalesComponent implements OnInit {
   }
 
   selectedDiscountChange(val, i, index) {
-    this.selectedStates[index] = !this.selectedStates[index];
+    this.selectedStates[i][index] = !this.selectedStates[i][index];
     console.log(val + i + index);
     console.log(JSON.stringify(val));
     if(val?.discount_offer_type === 'Price-range-free-item' || val?.discount_offer_type === 'Free-item-on-invoice'){
@@ -1549,7 +1570,7 @@ export class AddSalesComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   submit(type: any) {
-    console.log(this.saleForm.value);
+    console.log(this.saleForm);
     if (this.saleForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -1573,7 +1594,7 @@ export class AddSalesComponent implements OnInit {
       formdata.append('total_discount', this.saleForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleForm.get('subtotal')?.value);
-      formdata.append('total', this.saleForm.get('total')?.value);
+      formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1952,7 +1973,9 @@ export class AddSalesComponent implements OnInit {
         discountAmount = (this.changeFlatDiscount[i]);
       }
 
-      this.totalDiscountAmount = this.totalDiscountAmount - discountAmount + addDiscountAmount;;
+      this.totalDiscountAmount = this.totalDiscountAmount - discountAmount + addDiscountAmount;
+      console.log(this.totalDiscountAmount);
+      
       // total = totalAmount- discountAmount;
       total = (total + discountAmount - addDiscountAmount);
     })
@@ -1964,17 +1987,20 @@ export class AddSalesComponent implements OnInit {
 
   calculateRoundoffValue(): number {
     const total = this.totalAmount;
-    const roundedTotal = Math.round(total * 100) / 100;
-    const integerPart = Math.floor(roundedTotal);
-    const decimalPart = (roundedTotal - integerPart) * 100;
-    if (decimalPart === 0 && integerPart === 0) {
-      return 0;
+    if(total){
+      const roundedTotal = Math.round(total * 100) / 100;
+      const integerPart = Math.floor(roundedTotal);
+      const decimalPart = (roundedTotal - integerPart) * 100;
+      if (decimalPart === 0 && integerPart === 0) {
+        return 0;
+      }
+      const subtractedValue = (100 - decimalPart) / 100;
+      if (subtractedValue === 1) {
+        return 0;
+      }
+      return subtractedValue;
     }
-    const subtractedValue = (100 - decimalPart) / 100;
-    if (subtractedValue === 1) {
-      return 0;
-    }
-    return subtractedValue;
+    return 0;
   }
   calculateTotalEveryIndex(index: any) {
     const cartItem = this.getCart().controls[index];

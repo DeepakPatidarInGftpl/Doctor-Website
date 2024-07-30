@@ -7,6 +7,7 @@ import { Auth } from 'src/app/interfaces/auth';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebstorgeService } from 'src/app/shared/webstorge.service';
+import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 
 @Component({
   selector: 'app-signin',
@@ -17,6 +18,7 @@ export class SigninComponent implements OnInit {
   password: any;
   show = false;
   public CustomControler: any;
+  deviceToken: any;
   public subscription: Subscription;
 
 
@@ -28,7 +30,7 @@ export class SigninComponent implements OnInit {
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
   constructor(private storage: WebstorgeService, private authService: AuthServiceService, private coreService:CoreService,
-    private toastr: ToastrService, private router: Router) {
+    private toastr: ToastrService, private router: Router, private afMessaging: AngularFireMessaging) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
         this.CustomControler = data;
@@ -48,6 +50,29 @@ export class SigninComponent implements OnInit {
     if (localStorage.getItem('token')) {
       this.router.navigate(['/dashboard']);
     }
+
+    this.requestPermission();
+    this.listen();
+  }
+
+  requestPermission() {
+    this.afMessaging.requestToken
+      .subscribe(
+        (token:any) => {
+          console.log(token);
+          this.deviceToken = token;
+        },
+        (error:any) => {
+          console.error(error);
+        }
+      );
+  }
+
+  listen() {
+    this.afMessaging.messages
+      .subscribe((message:any) => {
+        console.log(message);
+      });
   }
 
 
@@ -71,12 +96,19 @@ export class SigninComponent implements OnInit {
           //   window.location.reload();
           // })
           // window.location.reload();
-          localStorage.setItem('token', this.loginRes.token)
+          localStorage.setItem('token', this.loginRes?.token)
           localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
             //16-5
+          let payload = {
+            device_token: this.deviceToken
+          }
+          this.authService.updateUserDeviceToken(payload).subscribe((res)=> {
+            console.log(res);
+          })
+
             this.coreService.getFinancialYearHeader().subscribe((res:any)=>{
               console.warn(res);
-              localStorage.setItem('financialYear',JSON.stringify(res.id)); 
+              localStorage.setItem('financialYear',JSON.stringify(res?.id)); 
               window.location.reload();
             });
             //end 16-5
