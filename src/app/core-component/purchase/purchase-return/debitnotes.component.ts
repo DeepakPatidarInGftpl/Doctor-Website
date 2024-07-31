@@ -10,6 +10,8 @@ import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-debitnotes',
@@ -28,9 +30,13 @@ export class DebitnotesComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[];
   selectedpaymentTerms: string = '';
-  date: any
+  minDate: string = '';
+  maxDate: string = '';
+  returnDate = new FormControl('');
 
-  constructor(private purchaseService: PurchaseServiceService,private dashboardService:DashboardService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe) { }
+  constructor(private purchaseService: PurchaseServiceService,private dashboardService:DashboardService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -176,6 +182,9 @@ export class DebitnotesComponent implements OnInit {
       }
     });
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.purchaseReturnDateValidation(financialYear);
   //18-5
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -260,6 +269,13 @@ export class DebitnotesComponent implements OnInit {
         // this.getcompanyList()
       }
     })
+  }
+
+  purchaseReturnDateValidation(financialYear) {
+    const dateControl = this.returnDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   // search() {
@@ -468,8 +484,8 @@ export class DebitnotesComponent implements OnInit {
   statusFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.returnDate.value) {
+      const selectedDate = new Date(this.returnDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.debit_note_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -489,7 +505,7 @@ export class DebitnotesComponent implements OnInit {
   clearFilters() {
     this.selectedpaymentTerms = null;
     this.filterReverseCharge = null;
-    this.date = null;
+    this.returnDate.setValue('');
     this.statusFilter = null;
     this.filterData();
   }

@@ -8,6 +8,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-list-journal-voucher',
@@ -26,9 +28,14 @@ export class ListJournalVoucherComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any
+  // date: any
+  minDate: string = '';
+  maxDate: string = '';
+  JournalVoucherDate = new FormControl('');
 
-  constructor(private transactionService: TransactionService, private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService) { }
+  constructor(private transactionService: TransactionService, private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -196,6 +203,9 @@ export class ListJournalVoucherComponent implements OnInit {
     });
     this.getPaymentTerms();
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.JournalVoucherDateValidation(financialYear);
   }
 
   paymentList: any;
@@ -224,6 +234,13 @@ export class ListJournalVoucherComponent implements OnInit {
         f.isSelected = false
       })
     }
+  }
+
+  JournalVoucherDateValidation(financialYear) {
+    const dateControl = this.JournalVoucherDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   search() {
@@ -383,8 +400,8 @@ export class ListJournalVoucherComponent implements OnInit {
 
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.JournalVoucherDate.value) {
+      const selectedDate = new Date(this.JournalVoucherDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -402,7 +419,8 @@ export class ListJournalVoucherComponent implements OnInit {
   clearFilters() {
     this.selectedDebit = null;
     this.selectedcredit = null;
-    this.date = null;
+    // this.date = null;
+    this.JournalVoucherDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {

@@ -9,6 +9,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-material-inward',
@@ -27,10 +29,17 @@ export class MaterialInwardComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
-  date:any
+  // date:any
+  minDate: string = '';
+  maxDate: string = '';
+  dueMinDate: string = '';
+  dueMaxDate: string = '';
+  materialDate = new FormControl('');
+  poDate = new FormControl('');
 
 
-  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,private datepipe:DatePipe,  private dashboardservice : DashboardService
+  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,private datepipe:DatePipe,  private dashboardservice : DashboardService,
+     private commonService: CommonServiceService
   ) { } 
 
   delRes: any
@@ -205,6 +214,10 @@ export class MaterialInwardComponent implements OnInit {
       });
     });
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.purchasematerialDateValidation(financialYear);
+    this.poDateValidation(financialYear);
   }
   getPurchaseMaterial(fy:any){
     console.log(fy);
@@ -271,6 +284,21 @@ export class MaterialInwardComponent implements OnInit {
       });
     }
   }
+
+  purchasematerialDateValidation(financialYear) {
+    const dateControl = this.materialDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  poDateValidation(financialYear) {
+    const dateControl = this.poDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.dueMinDate = formattedMinDate;
+    this.dueMaxDate = formattedMaxDate;
+  }
+
   key = 'id'
   reverse: boolean = true;
   sort(key) {
@@ -449,18 +477,18 @@ export class MaterialInwardComponent implements OnInit {
   }
        //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
        statusFilter:any;
-       poDate:any;
+      //  poDate:any;
        filterData() {
         let filteredData = this.tableData.slice(); 
-        if (this.date) {
-          const selectedDate = new Date(this.date).toISOString().split('T')[0];
+        if (this.materialDate.value) {
+          const selectedDate = new Date(this.materialDate.value).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.material_inward_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
           });
         }
-        if (this.poDate) {
-          const selectedDate = new Date(this.poDate).toISOString().split('T')[0];
+        if (this.poDate.value) {
+          const selectedDate = new Date(this.poDate.value).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.po_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
@@ -481,9 +509,9 @@ export class MaterialInwardComponent implements OnInit {
       }
       clearFilters() {
         this.selectedPurchaseNo = null;
-        this.date=null;
+        this.materialDate.setValue('');
         this.statusFilter=null;
-        this.poDate=null;
+        this.poDate.setValue('');
         this.filterData();
       }
       changePg(val: any) {

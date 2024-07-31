@@ -8,6 +8,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-list-reciept-voucher',
@@ -26,9 +28,14 @@ export class ListRecieptVoucherComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any
+  // date: any
+  minDate: string = '';
+  maxDate: string = '';
+  receiptVoucherDate = new FormControl('');
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService,private dashboardservice : DashboardService, private contactservice : ContactService) { }
+  constructor( private transactionService: TransactionService,private cs: CompanyService,private dashboardservice : DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -193,6 +200,9 @@ export class ListRecieptVoucherComponent implements OnInit {
     });
     this.getPaymentTerms();
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.receiptVoucherDateValidation(financialYear);
   }
 
   paymentList: any;
@@ -391,10 +401,18 @@ row.amount
   selectedModeType:any
   selectedAmount:any
   selectedRecieptType:any
+
+  receiptVoucherDateValidation(financialYear) {
+    const dateControl = this.receiptVoucherDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.receiptVoucherDate.value) {
+      const selectedDate = new Date(this.receiptVoucherDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -415,7 +433,7 @@ row.amount
     this.selectedAmount=null;
     this.selectedModeType=null
     this.selectedRecieptType = null;
-    this.date = null;
+    this.receiptVoucherDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {
