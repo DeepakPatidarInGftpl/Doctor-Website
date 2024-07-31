@@ -78,7 +78,7 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Reciept Voucher Date</label>
-                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                    <input type="date" [formControl]="paymentVoucherDate" [attr.min]="minDate" [attr.max]="maxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -110,8 +110,8 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="form-group" (click)="clearFilters()">
-                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                         <div class="form-group d-flex justify-content-end">
+                            <a class="btn btn-filters p-4" style="width: 20%;" (click)="clearFilters()">Clear Filter</a>
                           </div>     
                     </div>
                 </div>

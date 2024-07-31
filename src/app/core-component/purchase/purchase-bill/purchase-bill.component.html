@@ -80,13 +80,13 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Supplier Bill Date</label>
-                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                    <input type="date" [formControl]="supplierDate" [attr.min]="minDate" [attr.max]="maxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Due Date</label>
-                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                    <input type="date" [formControl]="dueDate" [attr.min]="dueMinDate" [attr.max]="dueMaxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -136,8 +136,8 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="form-group" (click)="clearFilters()">
-                                    <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
+                         <div class="form-group d-flex justify-content-end">
+                                    <a class="btn btn-filters p-4" style="width: 10%;" (click)="clearFilters()">Clear Filter</a>
                                 </div>     
                     </div>
                 </div>
