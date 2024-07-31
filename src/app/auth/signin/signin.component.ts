@@ -106,11 +106,13 @@ export class SigninComponent implements OnInit {
             console.log(res);
           })
 
+          setTimeout(() => {
             this.coreService.getFinancialYearHeader().subscribe((res:any)=>{
               console.warn(res);
               localStorage.setItem('financialYear',JSON.stringify(res?.id)); 
               window.location.reload();
             });
+          }, 2000);
             //end 16-5
           // console.log(this.loginRes.token);
         }else{
