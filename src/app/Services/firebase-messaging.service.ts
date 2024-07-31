@@ -14,7 +14,7 @@ export class FirebaseMessagingService {
   }
 
   requestPermission() {
-      return getToken(this.messaging, { vapidKey: 'BAZEGnuwfIh8Is9acondJ6nD20ATb5UWfTxrxDgH29rfatXEhD1MDFGObyc1Op9_r6hxHoKChbAg4osJboVCBJ0' })
+      return getToken(this.messaging, { vapidKey: 'BFBQl2298pUNj_ULlguzK1tb-TERf3qvk-LrqY_Riuzm1se6GRgAQ3bkQR6Rt4-tZeZ7CYCGyRB8NL8z7VWavfQ' })
         .then((currentToken) => {
           if (currentToken) {
             console.log('Got FCM token:', currentToken);
