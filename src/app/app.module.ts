@@ -24,6 +24,7 @@ import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
+import { FirebaseMessagingService } from './Services/firebase-messaging.service';
 
 
 const icons = {
@@ -63,7 +64,7 @@ const icons = {
   ],
   providers:[
     {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true},
-    
+    FirebaseMessagingService
   ],
   bootstrap: [AppComponent],
 })
