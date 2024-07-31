@@ -8,6 +8,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-list-expenses',
@@ -26,9 +28,14 @@ export class ListExpensesComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any;
+  // date: any;
+  minDate: string = '';
+  maxDate: string = '';
+  journalVoucherDate = new FormControl('');
 
-  constructor(private transactionService: TransactionService, private cs: CompanyService, private dashboardService : DashboardService, private contactservice : ContactService) { }
+  constructor(private transactionService: TransactionService, private cs: CompanyService, private dashboardService : DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -196,6 +203,8 @@ export class ListExpensesComponent implements OnInit {
     });
     this.getPaymentTerms();
     this.getBranch();
+    const financialYear = localStorage.getItem('financialYear');
+    this.journalVoucherDateValidation(financialYear);
   }
 
   paymentList: any;
@@ -381,10 +390,17 @@ export class ListExpensesComponent implements OnInit {
   selectedDebit:any
   selectedcredit:any;
 
+  journalVoucherDateValidation(financialYear) {
+    const dateControl = this.journalVoucherDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.journalVoucherDate.value) {
+      const selectedDate = new Date(this.journalVoucherDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -402,7 +418,7 @@ export class ListExpensesComponent implements OnInit {
   clearFilters() {
     this.selectedDebit = null;
     this.selectedcredit = null;
-    this.date = null;
+    this.journalVoucherDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {

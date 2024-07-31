@@ -145,14 +145,14 @@ export class AddpurchaseComponent implements OnInit {
 
   shippingDateValidation(financialYear) {
     const dateControl = this.purchaseForm.get('shipping_date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
     this.shippingMinDate = formattedMinDate;
     this.shippingMaxDate = formattedMaxDate;
   }
 
   orderDateValidation(financialYear) {
     const dateControl = this.purchaseForm.get('order_date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
   }

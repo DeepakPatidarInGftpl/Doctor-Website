@@ -9,6 +9,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-purchaselist',
@@ -27,10 +29,16 @@ export class PurchaselistComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
-  date:any
+  // date:any
+  minDate: string = '';
+  maxDate: string = '';
+  dueMinDate: string = '';
+  dueMaxDate: string = '';
+  shippingDate = new FormControl('');
+  purchaseOrderDate = new FormControl('');
 
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
-    private datePipe:DatePipe , private dashboardservice : DashboardService) { }
+    private datePipe:DatePipe , private dashboardservice : DashboardService, private commonService: CommonServiceService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -190,6 +198,9 @@ export class PurchaselistComponent implements OnInit {
     });
     this.getBranch();
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.purchaseShippingDateValidation(financialYear);
+    this.purchaseOrderDateValidation(financialYear);
   }
   loader=true;
 getPurchase(fy:any){
@@ -233,6 +244,20 @@ getPurchase(fy:any){
         // this.getcompanyList()
       }
     })
+  }
+
+  purchaseShippingDateValidation(financialYear) {
+    const dateControl = this.shippingDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  purchaseOrderDateValidation(financialYear) {
+    const dateControl = this.purchaseOrderDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.dueMinDate = formattedMinDate;
+    this.dueMaxDate = formattedMaxDate;
   }
 
   // search() {
@@ -435,18 +460,17 @@ getPurchase(fy:any){
   }
        //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
        statusFilter:any;
-       purchaseDateFilter:any;
        filterData() {
         let filteredData = this.tableData.slice(); 
-        if (this.date) {
-          const selectedDate = new Date(this.date).toISOString().split('T')[0];
+        if (this.shippingDate.value) {
+          const selectedDate = new Date(this.shippingDate.value).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.shipping_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
           });
         }
-        if (this.purchaseDateFilter) {
-          const selectedDate = new Date(this.purchaseDateFilter).toISOString().split('T')[0];
+        if (this.purchaseOrderDate.value) {
+          const selectedDate = new Date(this.purchaseOrderDate.value).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.order_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
@@ -467,9 +491,9 @@ getPurchase(fy:any){
       }
       clearFilters() {
         this.selectedPurchaseNo = null;
-        this.date=null;
+        this.shippingDate.setValue('');
         this.statusFilter=null;
-        this.purchaseDateFilter=null
+        this.purchaseOrderDate.setValue('');
         this.filterData();
       }
       changePg(val: any) {

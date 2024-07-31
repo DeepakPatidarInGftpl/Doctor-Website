@@ -8,6 +8,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-list-countra-voucher',
@@ -26,9 +28,14 @@ export class ListCountraVoucherComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; 
   selectedpaymentTerms: string = '';
-  date: any
+  // date: any
+  minDate: string = '';
+  maxDate: string = '';
+  countraVoucherDate = new FormControl('');
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService) { }
+  constructor( private transactionService: TransactionService,private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -193,6 +200,9 @@ export class ListCountraVoucherComponent implements OnInit {
     });
     this.getPaymentTerms();
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.countraVoucherDateValidation(financialYear);
   }
 
   paymentList: any;
@@ -394,10 +404,18 @@ export class ListCountraVoucherComponent implements OnInit {
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   selectedAmount:any
+
+  countraVoucherDateValidation(financialYear) {
+    const dateControl = this.countraVoucherDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.countraVoucherDate.value) {
+      const selectedDate = new Date(this.countraVoucherDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -411,7 +429,7 @@ export class ListCountraVoucherComponent implements OnInit {
   clearFilters() {
     this.selectedAmount=null;
     this.selectedpaymentTerms = null;
-    this.date = null;
+    this.countraVoucherDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {

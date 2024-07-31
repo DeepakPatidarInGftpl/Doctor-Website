@@ -73,7 +73,9 @@ export class UpdateSaleBillComponent implements OnInit {
   discountTypesApplied:any;
   skipQtyChange = false;
   invoiceFlatDiscount: any;
+  totalDefaultDiscount = 0;
   discountTyp: any[] = [];
+  excludeDiscountIndexes = [];
 
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
@@ -446,6 +448,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
       }
       let taxPrice = (price * taxPercentage) / 100;
+      this.totalDefaultDiscount += j?.discount;
       if (formArr.at(i)) {
         formArr.at(i).patchValue({
           barcode: j?.barcode.id,
@@ -478,6 +481,7 @@ export class UpdateSaleBillComponent implements OnInit {
             }
           });
         });
+      this.excludeDiscountIndexes.push(i);
       this.calculateTotalForAll();
       }
       this.barcode[i] = j.barcode.sku;
@@ -830,6 +834,9 @@ export class UpdateSaleBillComponent implements OnInit {
   }
 
   allDiscount(product, index) {
+    if (this.excludeDiscountIndexes.includes(index)) {
+      this.excludeDiscountIndexes.filter((val) => val !== index);
+    }
     console.log(this.selectedBatchDiscount, 'selectedBatchDiscount');
     // this.selectedBatchDiscount.forEach((batch: any, i: number) => {
     // if (batch.discount.length > 0) {
@@ -2224,13 +2231,16 @@ export class UpdateSaleBillComponent implements OnInit {
       const totalAmount = Number(val.get('total').value);
       console.log(totalAmount);
       const discount = val.get('discount').value;
-      if(!!discount){
+      if (this.excludeDiscountIndexes.includes(index)) {
+        total = total - this.totalDefaultDiscount;
+        this.totalDiscountAmount = totalDiscountAmount;
+      } else if(!!discount){
         discountAmount = (totalAmount * discount) / 100;
         totalDiscountAmount += discountAmount;
         if(!!discountAmount){
           total = total - discountAmount;
         }
-        this.totalDiscountAmount = totalDiscountAmount;
+        this.totalDiscountAmount += totalDiscountAmount;
       }
     })
     if(Number(this.totalFlatDiscountAmount) > 0){

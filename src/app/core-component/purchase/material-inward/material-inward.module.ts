@@ -14,6 +14,7 @@ import { OrderModule } from 'ngx-order-pipe';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DatepickerModule } from 'ng2-datepicker';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 @NgModule({
   declarations: [
     MaterialInwardComponent
@@ -29,7 +30,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     NgxPaginationModule,
     OrderModule,
     MatSlideToggleModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    SharedModuleModule
   ],
   providers:[
     DatePipe
