@@ -8,6 +8,8 @@ import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-stock-transfer-request-list',
@@ -27,8 +29,11 @@ export class StockTransferRequestListComponent implements OnInit {
   filteredData: any[]; 
   supplierType: string = '';
   selectedCompany: string = '';
+  minDate: string = '';
+  maxDate: string = '';
+  transferDate = new FormControl('');
 
-  constructor(private stockService: StockService, private cs:CompanyService,private toastr:ToastrService) {}
+  constructor(private stockService: StockService, private cs:CompanyService,private toastr:ToastrService,private commonService: CommonServiceService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -156,6 +161,9 @@ userDetails:any;
     });
   })
   this.getBranch();
+
+  const financialYear = localStorage.getItem('financialYear');
+    this.transferDateValidation(financialYear);
   }
 
   allSelected: boolean = false;
@@ -342,16 +350,22 @@ select=false
     document.body.innerHTML = originalContents;
   }
 
+  transferDateValidation(financialYear) {
+    const dateControl = this.transferDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
 
-  date: any
+  // date: any
   espireDate: any;
   FromBranch: any;
   toBranchFilter: any;
   statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.transferDate.value) {
+      const selectedDate = new Date(this.transferDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.request_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -370,7 +384,7 @@ select=false
   }
 
   clearFilter() {
-    this.date = null;
+    this.transferDate.setValue('');
     this.FromBranch = null;
     this.toBranchFilter = null;
     this.statusFilter=null;

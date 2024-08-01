@@ -14,6 +14,7 @@ import { DashboardService } from 'src/app/Services/DashboardService/dashboard.se
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { Router } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-order-return',
@@ -30,6 +31,9 @@ export class OrderReturnComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
   dateRangeOptions = [
     { label: 'Today', value: 'today' },
@@ -47,7 +51,7 @@ export class OrderReturnComponent implements OnInit {
 
   constructor(private websiteService: WebsiteService, private QueryService: QueryService, private companyService: CompanyService,
     private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService,
-    private router: Router) {
+    private router: Router, private commonService: CommonServiceService) {
     this.QueryService.filterToggle()
   }
 
@@ -85,6 +89,10 @@ export class OrderReturnComponent implements OnInit {
       this.userDetail = res;
     })
 
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
     //date range
     // const today = new Date();
     // const month = today.getMonth();
@@ -96,9 +104,11 @@ export class OrderReturnComponent implements OnInit {
     // const formattedToday = this.formatDate(today);
     // campaignOne
     this.campaignOne = new FormGroup({
-      start: new FormControl(''),
-      end: new FormControl(''),
+      start: new FormControl('', this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl('', this.commonService.dateRangeValidator(this.financialYear)),
     });
+
+    this.commonService.validateAndClearDates(this.campaignOne, this.minDate, this.maxDate);
 
     this.orderInitiateForm = new FormGroup({  //31-5
       return_order_id: new FormControl(''),

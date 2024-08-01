@@ -42,7 +42,7 @@
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Debit Note Date*</label>
-            <input type="date" formControlName="consumption_date" id="consumption_date" [ngClass]="{'is-invalid': f['consumption_date'].touched && f['consumption_date'].invalid}">
+            <input type="date" formControlName="consumption_date" [attr.min]="minDate" [attr.max]="maxDate" id="consumption_date" [ngClass]="{'is-invalid': f['consumption_date'].touched && f['consumption_date'].invalid}">
             <span class="text-danger" *ngIf="consumption_date && consumption_date.invalid && consumption_date.touched">Select Consumption Date </span>
           </div>
         </div>

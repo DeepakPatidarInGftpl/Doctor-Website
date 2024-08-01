@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
@@ -15,7 +16,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateMaterialConsumptionComponent implements OnInit {
   constructor(private fb: FormBuilder, private inventoryService: StockService,
-    private transactionService: TransactionService, private Arout: ActivatedRoute, private toastr: ToastrService, private router: Router) { }
+    private transactionService: TransactionService, private Arout: ActivatedRoute, private toastr: ToastrService, private router: Router,
+    private commonService: CommonServiceService) { }
   materialConsumptionForm!: FormGroup;
 
   get f() {
@@ -24,6 +26,8 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
 
   supplierControl = new FormControl();
   filteredSuppliers: Observable<any[]>;
+  minDate: string = '';
+  maxDate: string = '';
   //
   id: any;
   ngOnInit(): void {
@@ -75,6 +79,9 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
         );
       }
     })
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.materialDateValidation(financialYear);
   }
 
   prefixNo: any;
@@ -91,6 +98,14 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       this.toastr.error(err.error.msg)
     })
   }
+
+  materialDateValidation(financialYear) {
+    const dateControl = this.materialConsumptionForm.get('consumption_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   amounts: any = 0;
   taxs: any = 0;
   totals: any = 0;

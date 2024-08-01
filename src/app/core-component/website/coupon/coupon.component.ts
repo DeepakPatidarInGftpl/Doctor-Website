@@ -10,6 +10,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
  // vaidation for future date
  function futureDateValidator(): ValidatorFn {
@@ -45,7 +46,9 @@ export class CouponComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage = 10;
   navigateData:any;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService,private router:Router) {
+  minDate: string = '';
+  maxDate: string = '';
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService,private router:Router, private commonService: CommonServiceService) {
     this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData){
       this.editForm(this.navigateData)
@@ -168,6 +171,8 @@ export class CouponComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.couponDateValidation(financialYear);
     //permission from ocalstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -230,6 +235,13 @@ export class CouponComponent implements OnInit {
         window.location.reload()
       }
     })
+  }
+
+  couponDateValidation(financialYear) {
+    const dateControl = this.couponForm.get('expiry_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   selectImg(event: Event) {
