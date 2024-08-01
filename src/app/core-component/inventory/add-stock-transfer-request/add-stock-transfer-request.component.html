@@ -67,7 +67,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Request Date*</label>
-                        <input type="date" formControlName="request_date" [ngClass]="{'is-invalid': f['request_date'].touched && f['request_date'].invalid}">
+                        <input type="date" formControlName="request_date" [attr.min]="minDate" [attr.max]="maxDate" [ngClass]="{'is-invalid': f['request_date'].touched && f['request_date'].invalid}">
                         <span class="text-danger" *ngIf="request_date && request_date.invalid && request_date.touched">Select Request Date </span>
                     </div>
                 </div>

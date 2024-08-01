@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { StockService } from 'src/app/Services/stockService/stock.service';
 })
 export class AddstockVerificationComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private toastrService: ToastrService, private inventoryService: StockService, private router: Router) { }
+  constructor(private fb: FormBuilder, private toastrService: ToastrService, private inventoryService: StockService, private router: Router, private commonService: CommonServiceService) { }
   stokeVerificationForm!: FormGroup;
   get f() {
     return this.stokeVerificationForm.controls;
@@ -24,6 +25,8 @@ export class AddstockVerificationComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
+  minDate: string = '';
+  maxDate: string = '';
 
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
@@ -35,7 +38,9 @@ export class AddstockVerificationComponent implements OnInit {
     });
   
     this.getPrefix();
-   
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.voucherDateValidation(financialYear);
   }
 
   prefixNo: any;
@@ -52,6 +57,12 @@ export class AddstockVerificationComponent implements OnInit {
     })
   }
 
+  voucherDateValidation(financialYear) {
+    const dateControl = this.stokeVerificationForm.get('voucher_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
 
   cart(): FormGroup {
     return this.fb.group({

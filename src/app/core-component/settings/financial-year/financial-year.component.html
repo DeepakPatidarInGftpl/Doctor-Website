@@ -59,14 +59,14 @@
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Start Date </label>
-                                            <input type="date" [(ngModel)]="startDate" (change)="filterData()">
+                                            <input type="date" [formControl]="startDate" [attr.min]="startMinDate" [attr.max]="startMaxDate" (change)="filterData()">
 
                                         </div>
                                     </div>
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>End Date </label>
-                                            <input type="date" [(ngModel)]="endDate" (change)="filterData()">
+                                            <input type="date" [formControl]="endDate" [attr.min]="startEndMinDate" [attr.max]="startEndMaxDate" (change)="filterData()">
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Start Year*</label>
-                                    <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                                    <input type="date" formControlName="start_year" [attr.min]="minDate" [attr.max]="maxDate" id="start_year" [ngClass]="{
                                     'is-invalid': f['start_year'].touched && f['start_year'].invalid
                                   }">
                                     <span class="text-danger"
@@ -210,7 +210,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Close Year*</label>
-                                    <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                                    <input type="date" formControlName="close_year" [attr.min]="endcouponDateValidation" [attr.min]="endMinDate" [attr.max]="endMaxDate" [attr.max]="endMaxDate" id="close_year" [ngClass]="{
                                     'is-invalid': f['close_year'].touched && f['close_year'].invalid
                                   }">
                                     <span class="text-danger"
@@ -238,7 +238,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Start Year*</label>
-                                    <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                                    <input type="date" formControlName="start_year" [attr.min]="minDate" [attr.max]="maxDate" id="start_year" [ngClass]="{
                                     'is-invalid': f['start_year'].touched && f['start_year'].invalid
                                   }">
                                     <span class="text-danger"
@@ -250,7 +250,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Close Year*</label>
-                                    <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                                    <input type="date" formControlName="close_year" [attr.min]="endMinDate" [attr.max]="endMaxDate" id="close_year" [ngClass]="{
                                     'is-invalid': f['close_year'].touched && f['close_year'].invalid
                                   }">
                                     <span class="text-danger"

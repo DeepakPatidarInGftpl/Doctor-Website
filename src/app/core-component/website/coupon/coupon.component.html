@@ -168,7 +168,7 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Expiry Date*</label>
-                                <input type="date" formControlName="expiry_date" id="expiry_date" [ngClass]="{'is-invalid': f['expiry_date'].touched && f['expiry_date'].invalid}">
+                                <input type="date" formControlName="expiry_date" [attr.min]="minDate" [attr.max]="maxDate" id="expiry_date" [ngClass]="{'is-invalid': f['expiry_date'].touched && f['expiry_date'].invalid}">
                                <div *ngIf="f['expiry_date'].touched && f['expiry_date'].errors?.['pastDate']" class="invalid-feedback">
                                 Please select a future date.
                             </div>

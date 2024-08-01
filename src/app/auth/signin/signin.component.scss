@@ -4,3 +4,21 @@
 .ng-pristine.ng-invalid.is-invalid.ng-touched{
     border: 1px solid red;
 }
+
+.spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+}
+
+.spinner-border {
+    width: 150px;
+    height: 150px;
+    color: #FF9F43 !important;
+}
+
+.blur-background-wrapper{
+    filter: blur(3px);
+}

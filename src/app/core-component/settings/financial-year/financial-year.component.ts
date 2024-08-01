@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-financial-year',
@@ -24,6 +25,15 @@ export class FinancialYearComponent implements OnInit {
   public tableData: any
 
   FinancialYearForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  endMinDate: string = '';
+  endMaxDate: string = '';
+  startMinDate: string = '';
+  startMaxDate: string = '';
+  startEndMinDate: string = '';
+  startEndMaxDate: string = '';
+
   get f() {
     return this.FinancialYearForm.controls;
   }
@@ -33,11 +43,11 @@ export class FinancialYearComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
-  startDate: string = '';
-  endDate: string = '';
+  startDate = new FormControl('');
+  endDate = new FormControl('');
   selectedBranch: string = ''
   navigateData: any
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private profileService: CompanyService) {
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private profileService: CompanyService, private commonService: CommonServiceService) {
     this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData) {
       this.editForm(this.navigateData)
@@ -162,6 +172,20 @@ export class FinancialYearComponent implements OnInit {
       this.filterData();
     })
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.startDateValidation(financialYear);
+    this.endDateValidation(financialYear);
+    this.startYearValidation(financialYear);
+    this.closeYearValidation(financialYear);
+
+    this.FinancialYearForm.get('start_year').valueChanges.subscribe((date) => {
+      this.updateEndDateMin(date, financialYear);
+    });
+
+    this.startDate.valueChanges.subscribe((date) => {
+      this.updateEndMinDate(date, financialYear);
+    });
+
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
     //   const permission = localStorageData.permission;
@@ -220,6 +244,54 @@ export class FinancialYearComponent implements OnInit {
         window.location.reload()
       }
     })
+  }
+
+  updateEndMinDate(selectedDate: string, financialYear) {
+    const dateControl = this.endDate;
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.startEndMinDate = formattedMinDate;
+      this.startEndMaxDate = formattedMaxDate;
+    }
+  }
+
+  updateEndDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.FinancialYearForm.get('close_year');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.endMinDate = formattedMinDate;
+      this.endMaxDate = formattedMaxDate;
+    }
+  }
+
+  startYearValidation(financialYear) {
+    const dateControl = this.FinancialYearForm.get('start_year');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.endMinDate = formattedMinDate;
+    this.endMaxDate = formattedMaxDate;
+  }
+
+  closeYearValidation(financialYear) {
+    const dateControl = this.FinancialYearForm.get('close_year');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
+  startDateValidation(financialYear) {
+    const dateControl = this.startDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.startEndMinDate = formattedMinDate;
+    this.startEndMaxDate = formattedMaxDate;
+  }
+
+  endDateValidation(financialYear) {
+    const dateControl = this.endDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.startMinDate = formattedMinDate;
+    this.startMaxDate = formattedMaxDate;
   }
 
   selectImg(event: Event) {
@@ -349,9 +421,9 @@ export class FinancialYearComponent implements OnInit {
   // filter data
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.startDate && this.endDate) {
-      const startDate = new Date(this.startDate).getTime();
-      const endDate = new Date(this.endDate).getTime();
+    if (this.startDate.value && this.endDate.value) {
+      const startDate = new Date(this.startDate.value).getTime();
+      const endDate = new Date(this.endDate.value).getTime();
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item.start_year).getTime();
         return receiptDate >= startDate && receiptDate <= endDate;
@@ -360,8 +432,8 @@ export class FinancialYearComponent implements OnInit {
     this.filteredData = filteredData;
   }
   clearFilter() {
-    this.startDate = null;
-    this.endDate = null
+    this.startDate.setValue('');
+    this.endDate.setValue('');
     this.filterData();
   }
   // convert to pdf

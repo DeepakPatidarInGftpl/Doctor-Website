@@ -27,23 +27,21 @@
                             </div>
                         </div>
                     
-                        <mat-form-field class="example-form-field" style="width: 30%; height: 100px;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
-                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
-                                    (dateChange)="getSelectedDates()">
+                        <mat-form-field class="example-form-field" style="width: 100%; display: flex; flex-direction: column; align-items: start;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker" [min]="minDate" [max]="maxDate">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date" (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
                                     <span class="mat-input-placeholder">to</span>
                                 </span>
                                 <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
                             </mat-date-range-input>
-        
-                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker" style="font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)" style="margin-top: 8px; width: 100%;">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
-                                style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
-                        </mat-form-field>
+                        </mat-form-field>     
                     </div>
                     <div class="wordset">
                         <ul>

@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { Router } from '@angular/router';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-product-order',
   templateUrl: './product-order.component.html',
@@ -28,6 +29,9 @@ export class ProductOrderComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
+  financialYear!: string;
+  minDate: Date;
+  maxDate: Date;
 
   dateRangeOptions = [
     { label: 'Today', value: 'today' },
@@ -45,7 +49,7 @@ export class ProductOrderComponent implements OnInit {
 
   constructor(private websiteService: WebsiteService, private QueryService: QueryService, private companyService: CompanyService,
     private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService,
-    private router: Router) {
+    private router: Router, private commonService: CommonServiceService) {
     this.QueryService.filterToggle()
   }
 
@@ -79,20 +83,27 @@ export class ProductOrderComponent implements OnInit {
       this.userDetail = res;
     })
 
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
     //date range
+
     // const today = new Date();
     // const month = today.getMonth();
     // const year = today.getFullYear();
     // const startDate = new Date(today);
-    // startDate.setDate(today.getDate() - 29);
+    // startDate.setDate(today.getDate() - 14);
 
     // const formattedStartDate = this.formatDate(startDate);
     // const formattedToday = this.formatDate(today);
     // campaignOne
     this.campaignOne = new FormGroup({
-      start: new FormControl(''),
-      end: new FormControl(''),
+      start: new FormControl('', this.commonService.dateRangeValidator(this.financialYear)),
+      end: new FormControl('', this.commonService.dateRangeValidator(this.financialYear)),
     });
+
+    this.commonService.validateAndClearDates(this.campaignOne, this.minDate, this.maxDate);
     //end
     this.getBranch();
     this.acceptForm = this.fb.group({
