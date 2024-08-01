@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
+import { NotificationService } from 'src/app/Services/notification/notification.service';
 import { SettingsService } from 'src/app/shared/settings/settings.service';
 
 @Component({
@@ -19,9 +20,12 @@ export class HeaderComponent implements OnInit {
   public darkTheme: boolean = false;
   public logoPath: string = '';
   financialYearForm: FormGroup;
+  notificationList: any;
+  totalNotificationCount: any;
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
-    private coreService: CoreService, private profileService: CompanyService, private companyService: CompanyService, private fb: FormBuilder
+    private coreService: CoreService, private profileService: CompanyService, private companyService: CompanyService, private fb: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
@@ -70,6 +74,7 @@ export class HeaderComponent implements OnInit {
     });
     this.checkDayClose();
     this.getDayClose();
+    this.getNotificationList();
 
     // blur bg when modal open
     if (this.companyService.CheckBlur$) {
@@ -101,6 +106,14 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  calculateMinutesAgo(scheduleTime: string): number {
+    const scheduleDate = new Date(scheduleTime);
+    const currentDate = new Date();
+    const diffMs = currentDate.getTime() - scheduleDate.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    return diffMins;
+  }
+
 
   logOut() {
     // console.log(localStorage.getItem('token'));
@@ -127,7 +140,20 @@ export class HeaderComponent implements OnInit {
       this.Router.navigate(['/auth/signin'])
     }
 
+    this.updateUserDeviceToken();
   }
+
+  updateUserDeviceToken() {
+      let payload = {
+        device_token: ''
+      }
+      this.authServ.updateUserDeviceToken(payload).subscribe((res) => {
+        console.log(res);
+      }, (error) => {
+        console.error('Error updating device token:', error);
+      });
+    }
+
   userDetails: any
   profile() {
     this.coreService.getProfile().subscribe((res: any) => {
@@ -351,4 +377,42 @@ export class HeaderComponent implements OnInit {
       }
     })
   }
+
+  getNotificationList() {
+    this.notificationService.getNotificationPanel(1).subscribe((res) => {
+      const notificationsPerPage = res?.notifications.length;
+      const totalNotifications = res?.notifications_count;
+      this.totalNotificationCount = res?.notifications_count;
+      const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
+  
+      this.notificationService.getNotificationPanel(lastPage).subscribe((lastPageRes) => {
+        this.notificationList = lastPageRes.notifications.slice(-5).map(notification => {
+          return {
+            ...notification,
+            minutesAgo: this.calculateMinutesAgo(notification.schedule_time)
+          };
+        });
+        console.log(this.notificationList);
+        
+      });
+    });
+  }
 }
+
+// getNotificationList() {
+//   this.notificationService.getNotificationPanel(1).subscribe((res) => {
+//     const notificationsPerPage = res.notifications.length;
+//     const totalNotifications = res.notifications_count;
+//     const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
+
+//     // Fetch the last page
+//     this.notificationService.getNotificationPanel(lastPage).subscribe((lastPageRes) => {
+//       this.notificationList = lastPageRes.notifications.slice(-5).map(notification => {
+//         return {
+//           ...notification,
+//           minutesAgo: this.calculateMinutesAgo(notification.schedule_time)
+//         };
+//       });
+//     });
+//   });
+// }

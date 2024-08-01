@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 
@@ -16,7 +17,8 @@ export class AddStockTransferRequestComponent implements OnInit {
   constructor(private stockService: StockService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
-    private contactService: ContactService) {
+    private contactService: ContactService,
+    private commonService: CommonServiceService) {
   }
 
   productOption: any[] = [];
@@ -35,6 +37,8 @@ export class AddStockTransferRequestComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   stockTransferRequestForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.stockTransferRequestForm.controls;
@@ -78,6 +82,9 @@ export class AddStockTransferRequestComponent implements OnInit {
     this.getprefix();
     // add cart
     this.addCart();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.stockTransferDateValidation(financialYear);
   }
 
   prefixNo: any;
@@ -171,7 +178,13 @@ export class AddStockTransferRequestComponent implements OnInit {
     }
   }
 
- 
+  stockTransferDateValidation(financialYear) {
+    const dateControl = this.stockTransferRequestForm.get('request_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';

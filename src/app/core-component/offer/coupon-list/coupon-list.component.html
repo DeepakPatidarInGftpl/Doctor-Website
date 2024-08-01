@@ -207,7 +207,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>Expiry Date*</label>
-                                    <input type="date" formControlName="expiry_date" class="form-control"
+                                    <input type="date" formControlName="expiry_date" [attr.min]="minDate" [attr.max]="maxDate" class="form-control"
                                         placeholder="Select Date" id="expiry_date" [ngClass]="{
                                     'is-invalid': f['expiry_date'].touched && f['expiry_date'].invalid
                                   }">
@@ -289,7 +289,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>Expiry Date*</label>
-                                    <input type="date" formControlName="expiry_date" class="form-control"
+                                    <input type="date" formControlName="expiry_date" [attr.min]="minDate" [attr.max]="maxDate" class="form-control"
                                         placeholder="Select Date" id="expiry_date" [ngClass]="{
                                     'is-invalid': f['expiry_date'].touched && f['expiry_date'].invalid
                                   }">

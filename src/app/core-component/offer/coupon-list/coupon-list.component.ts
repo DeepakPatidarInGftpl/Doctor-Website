@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
 import { OfferService } from 'src/app/Services/offer/offer.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-coupon-list',
@@ -23,6 +24,8 @@ export class CouponListComponent implements OnInit {
   selectActive: any;
   filteredData: any[];
   couponForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.couponForm.controls;
   }
@@ -39,7 +42,7 @@ export class CouponListComponent implements OnInit {
   fileFormatError = false;
   missingFieldsError = false;
   fieldfilteredData: any[] = [];
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private offerService: OfferService) {
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private offerService: OfferService, private commonService: CommonServiceService) {
     this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData) {
       this.editForm(this.navigateData)
@@ -95,6 +98,8 @@ export class CouponListComponent implements OnInit {
       up_to: new FormControl('', [Validators.required])
     })
     this.getAllCoupons();
+    const financialYear = localStorage.getItem('financialYear');
+    this.couponDateValidation(financialYear);
   }
 
   getAllCoupons() {
@@ -118,6 +123,13 @@ export class CouponListComponent implements OnInit {
   clearFilter() {
     this.selectActive = undefined;
     this.filterData();
+  }
+
+  couponDateValidation(financialYear) {
+    const dateControl = this.couponForm.get('expiry_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   openModal() {

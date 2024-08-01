@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 // vaidation for future date
 function futureDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -51,7 +52,9 @@ export class DealOfTheDayComponent implements OnInit {
   pageSize: number = 10;
   navigateData:any
   itemsPerPage = 10;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router,private datePipe:DatePipe) {
+  minDate: string = '';
+  maxDate: string = '';
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router,private datePipe:DatePipe, private commonService: CommonServiceService) {
     this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData){
       this.editForm(this.navigateData)
@@ -187,6 +190,9 @@ export class DealOfTheDayComponent implements OnInit {
     })
     this.getVariant();
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.endDateValidation(financialYear);
+
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -278,6 +284,13 @@ export class DealOfTheDayComponent implements OnInit {
         f.isSelected = false
       })
     }
+  }
+
+  endDateValidation(financialYear) {
+    const dateControl = this.dealOfTheDayForm.get('datetime');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   addRes: any;

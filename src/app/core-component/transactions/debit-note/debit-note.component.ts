@@ -9,6 +9,8 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-debit-note',
@@ -27,8 +29,13 @@ export class DebitNoteComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
- date:any
-  constructor( private transactionService: TransactionService,private cs: CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService, private contactservice : ContactService) { }
+//  date:any
+  minDate: string = '';
+  maxDate: string = '';
+  debitNoteDate = new FormControl('');
+  constructor( private transactionService: TransactionService,private cs: CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -164,7 +171,7 @@ export class DebitNoteComponent implements OnInit {
 
     //20-5
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -197,6 +204,9 @@ export class DebitNoteComponent implements OnInit {
     });
     this.getPaymentTerms();
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.debitNoteDateValidation(financialYear);
   }
   paymentList: any;
   getPaymentTerms() {
@@ -414,10 +424,18 @@ export class DebitNoteComponent implements OnInit {
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   selectedAmount:any;
+
+  debitNoteDateValidation(financialYear) {
+    const dateControl = this.debitNoteDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.debitNoteDate.value) {
+      const selectedDate = new Date(this.debitNoteDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -430,7 +448,7 @@ export class DebitNoteComponent implements OnInit {
   }
   clearFilters() {
     this.selectedAmount = null;
-    this.date = null;
+    this.debitNoteDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {

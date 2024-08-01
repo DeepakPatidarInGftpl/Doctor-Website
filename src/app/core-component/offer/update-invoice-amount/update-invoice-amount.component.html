@@ -22,14 +22,14 @@
                     <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Start Date*</label>
-                            <input type="date" placeholder="date" formControlName="start_date" [ngClass]="{'is-invalid': f['start_date'].touched && f['start_date'].invalid}">
+                            <input type="date" placeholder="date" formControlName="start_date" [attr.min]="minDate" [attr.max]="maxDate" [ngClass]="{'is-invalid': f['start_date'].touched && f['start_date'].invalid}">
                             <span class="text-danger" *ngIf="start_date && start_date.invalid && start_date.touched">Select Date </span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>End Date*</label>
-                            <input type="date" placeholder="end date" formControlName="end_date" [ngClass]="{'is-invalid': f['end_date'].touched && f['end_date'].invalid}">
+                            <input type="date" placeholder="end date" formControlName="end_date" [attr.min]="endMinDate" [attr.max]="endMaxDate" [ngClass]="{'is-invalid': f['end_date'].touched && f['end_date'].invalid}">
                             <span class="text-danger" *ngIf="end_date && end_date.invalid && end_date.touched">Select Date </span>
                         </div>
                     </div>

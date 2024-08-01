@@ -8,6 +8,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormControl } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-credit-note',
   templateUrl: './credit-note.component.html',
@@ -27,9 +29,14 @@ export class CreditNoteComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any
+  // date: any
+  minDate: string = '';
+  maxDate: string = '';
+  creditNoteDate = new FormControl('');
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService,private dashboardservice :DashboardService, private contactservice : ContactService) { }
+  constructor( private transactionService: TransactionService,private cs: CompanyService,private dashboardservice :DashboardService, private contactservice : ContactService,
+    private commonService: CommonServiceService
+  ) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -195,6 +202,9 @@ if (localStorage.getItem('financialYear')) {
     });
     this.getPaymentTerms();
     this.getBranch();
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.creditNoteDateValidation(financialYear);
   }
 
   paymentList: any;
@@ -408,10 +418,18 @@ if (localStorage.getItem('financialYear')) {
     document.body.innerHTML = originalContents;
   }
   selectedAmount:any;
+
+  creditNoteDateValidation(financialYear) {
+    const dateControl = this.creditNoteDate;
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.creditNoteDate.value) {
+      const selectedDate = new Date(this.creditNoteDate.value).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
         const receiptDate = new Date(item?.date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
@@ -424,7 +442,7 @@ if (localStorage.getItem('financialYear')) {
   }
   clearFilters() {
     this.selectedAmount = null;
-    this.date = null;
+    this.creditNoteDate.setValue('');
     this.filterData();
   }
   changePg(val: any) {

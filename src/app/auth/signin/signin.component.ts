@@ -8,6 +8,7 @@ import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebstorgeService } from 'src/app/shared/webstorge.service';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
+import { FirebaseMessagingService } from 'src/app/Services/firebase-messaging.service';
 
 @Component({
   selector: 'app-signin',
@@ -20,8 +21,8 @@ export class SigninComponent implements OnInit {
   public CustomControler: any;
   deviceToken: any;
   public subscription: Subscription;
-
-
+  notificationLoading = false;
+  isSyncLoading = false;
   form!: FormGroup
   get f() {
     return this.form.controls;
@@ -30,7 +31,7 @@ export class SigninComponent implements OnInit {
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
   constructor(private storage: WebstorgeService, private authService: AuthServiceService, private coreService:CoreService,
-    private toastr: ToastrService, private router: Router, private afMessaging: AngularFireMessaging) {
+    private toastr: ToastrService, private router: Router, private afMessaging: AngularFireMessaging, private messagingService: FirebaseMessagingService) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
         this.CustomControler = data;
@@ -51,30 +52,59 @@ export class SigninComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     }
 
-    this.requestPermission();
-    this.listen();
+    this.messagingService.receiveMessage();
+    this.messagingService.currentMessage.subscribe(message => {
+      if (message) {
+        this.showNotification(message);
+      }
+    });
   }
 
   requestPermission() {
-    this.afMessaging.requestToken
-      .subscribe(
-        (token:any) => {
-          console.log(token);
-          this.deviceToken = token;
-        },
-        (error:any) => {
-          console.error(error);
-        }
-      );
+    this.messagingService.requestPermission().then(token => {
+      if (token) {
+        this.deviceToken = token;
+        this.updateUserDeviceToken();
+        console.log(token);
+      } else {
+        alert('You have not given notification access, so you will not be notified.');
+      }
+      this.isSyncLoading = false;
+      window.location.reload();
+    }).catch(error => {
+      console.error('Error retrieving token:', error);
+      alert('You have not given notification access, so you will not be notified.');
+      window.location.reload();
+      this.isSyncLoading = false;
+    });
   }
 
-  listen() {
-    this.afMessaging.messages
-      .subscribe((message:any) => {
-        console.log(message);
+  showNotification(payload: any) {
+    const notificationTitle = payload.notification?.title || 'No title';
+    const notificationOptions = {
+      body: payload.notification?.body || 'No body',
+      icon: payload.notification?.icon || 'assets/logo/logo.png'
+    };
+
+    if (Notification.permission === 'granted') {
+      new Notification(notificationTitle, notificationOptions);
+    } else {
+      console.error('Notification permission not granted');
+    }
+  }
+
+  updateUserDeviceToken() {
+    if (this.deviceToken) {
+      let payload = {
+        device_token: this.deviceToken
+      };
+      this.authService.updateUserDeviceToken(payload).subscribe((res) => {
+        console.log(res);
+      }, (error) => {
+        console.error('Error updating device token:', error);
       });
+    }
   }
-
 
   loginRes: undefined | Auth
   loginStatus: string = ''
@@ -91,7 +121,7 @@ export class SigninComponent implements OnInit {
         if (this.loginRes.token) {
           this.loaders=false;
           this.toastr.success('Login Successfull');
-
+          this.isSyncLoading = true;
           // this.router.navigate(['//dashboard']).then(() => {
           //   window.location.reload();
           // })
@@ -99,20 +129,13 @@ export class SigninComponent implements OnInit {
           localStorage.setItem('token', this.loginRes?.token)
           localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
             //16-5
-          let payload = {
-            device_token: this.deviceToken
-          }
-          this.authService.updateUserDeviceToken(payload).subscribe((res)=> {
-            console.log(res);
-          })
-
-          setTimeout(() => {
             this.coreService.getFinancialYearHeader().subscribe((res:any)=>{
               console.warn(res);
               localStorage.setItem('financialYear',JSON.stringify(res?.id)); 
-              window.location.reload();
+              this.requestPermission();
+            }, (err) => {
+              this.isSyncLoading = false;
             });
-          }, 2000);
             //end 16-5
           // console.log(this.loginRes.token);
         }else{

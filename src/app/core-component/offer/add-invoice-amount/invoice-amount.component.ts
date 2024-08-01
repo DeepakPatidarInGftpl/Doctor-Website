@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 import { OfferService } from 'src/app/Services/offer/offer.service';
@@ -23,12 +24,18 @@ export class InvoiceAmountComponent implements OnInit {
     private toastrService: ToastrService,
     private hrmService: HrmServiceService,
     private offerService: OfferService,
-    private saleService: SalesService) { }
+    private saleService: SalesService,
+    private commonService: CommonServiceService) { }
 
   isMultiUse = true;
   isCompulsory = true;
   isCoupon = true;
   isAutoUpdatePrice = true;
+  minDate: string = '';
+  maxDate: string = '';
+  endMinDate: string = '';
+  endMaxDate: string = '';
+
   myControls: FormArray;
   ngOnInit(): void {
     this.invoiceAmountForm = this.fb.group({
@@ -57,6 +64,14 @@ export class InvoiceAmountComponent implements OnInit {
     this.getBrand();
     this.getBranch();
     this.getMembership();
+    
+    const financialYear = localStorage.getItem('financialYear');
+    this.startDateValidation(financialYear);
+    this.endDateValidation(financialYear);
+
+    this.invoiceAmountForm.get('start_date').valueChanges.subscribe((date) => {
+      this.updateEndDateMin(date, financialYear);
+    });
   }
 
 
@@ -160,6 +175,30 @@ export class InvoiceAmountComponent implements OnInit {
         feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
       );
     }
+  }
+
+  updateEndDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.invoiceAmountForm.get('end_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.endMinDate = formattedMinDate;
+      this.endMaxDate = formattedMaxDate;
+    }
+  }
+
+  startDateValidation(financialYear) {
+    const dateControl = this.invoiceAmountForm.get('start_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.endMinDate = formattedMinDate;
+    this.endMaxDate = formattedMaxDate;
+  }
+
+  endDateValidation(financialYear) {
+    const dateControl = this.invoiceAmountForm.get('end_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   selectedSubCat = 0;
