@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, catchError, debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
@@ -22,6 +23,9 @@ export class HeaderComponent implements OnInit {
   financialYearForm: FormGroup;
   notificationList: any;
   totalNotificationCount: any;
+  notificationIds: any = [];
+  private notificationIdsSubject = new BehaviorSubject<number[]>([]);
+  private destroy$ = new Subject<void>();
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
     private coreService: CoreService, private profileService: CompanyService, private companyService: CompanyService, private fb: FormBuilder,
@@ -47,6 +51,32 @@ export class HeaderComponent implements OnInit {
         // this.logoPath = 'assets/logo/favicon_icon.png'
         this.logoPath = 'assets/dummy/pos.png'
 
+      }
+    });
+
+    this.notificationIdsSubject.pipe(
+      debounceTime(3000),
+      switchMap((ids:any) => {
+        if (ids?.length > 0) {
+          let formData = new FormData();
+          formData.append('notification_id', JSON.stringify(ids));
+          return this.notificationService.updateNotificationPanelByIds(formData).pipe(
+            catchError(error => {
+              console.error('API call failed', error);
+              this.notificationIds = [];
+              return of(null);
+            })
+          );
+        } else {
+          return of(null);
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(res => {
+      if (res) {
+        console.log('API response', res);
+        this.getNotificationList();
+        this.notificationIds = [];
       }
     });
   }
@@ -221,6 +251,13 @@ export class HeaderComponent implements OnInit {
     return this.dayCloseForm.get('closing_amount');
   }
   // condition for day close or not
+
+  notificationRead(id: number) {
+    if (!this.notificationIds.includes(id)) {
+      this.notificationIds.push(id);
+      this.notificationIdsSubject.next(this.notificationIds);
+    }
+  }
 
   isCloseDay = false;
   checkDayClose() {
@@ -397,22 +434,10 @@ export class HeaderComponent implements OnInit {
       });
     });
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
-// getNotificationList() {
-//   this.notificationService.getNotificationPanel(1).subscribe((res) => {
-//     const notificationsPerPage = res.notifications.length;
-//     const totalNotifications = res.notifications_count;
-//     const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
-
-//     // Fetch the last page
-//     this.notificationService.getNotificationPanel(lastPage).subscribe((lastPageRes) => {
-//       this.notificationList = lastPageRes.notifications.slice(-5).map(notification => {
-//         return {
-//           ...notification,
-//           minutesAgo: this.calculateMinutesAgo(notification.schedule_time)
-//         };
-//       });
-//     });
-//   });
-// }

@@ -117,19 +117,20 @@
           <img src="assets/img/icons/notification-bing.svg" alt="img" />
           <span class="badge rounded-pill badge-wrapper">{{totalNotificationCount}}</span>
         </a>
-        <div class="dropdown-menu notifications">
+        <div class="dropdown-menu notifications" (click)="$event.stopPropagation()">
           <div class="topnav-dropdown-header">
             <span class="notification-title">Notifications</span>
             <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
           </div>
           <div class="noti-content">
             <ul class="notification-list" *ngFor="let item of notificationList">
-              <li class="notification-message">
-                <a routerLink="/activities">
+              <li class="notification-message" [ngClass]="!item?.is_view ? 'unread-card-wrapper' : ''" (click)="notificationRead(item?.id)">
+                <a>
                   <div class="media d-flex">
                     <span class="avatar flex-shrink-0">
                       <img alt="logo-img" src="assets/logo/logo.png" />
                     </span>
+                    <div class="d-flex align-items-center justify-content-end">
                     <div class="media-body flex-grow-1">
                       <div class="noti-details">
                         <p class="noti-title mb-1">{{item?.title}}</p> 
@@ -139,12 +140,14 @@
                         <h5 class="notification-time">{{item?.minutesAgo}} mins ago</h5>
                       </div>
                     </div>
+                    <div *ngIf="!item?.is_view" class="unread-notification-wrapper mx-3"></div>
+                    </div>
                   </div>
                 </a>
             </ul>
           </div>
           <div class="topnav-dropdown-footer">
-            <a routerLink="/activities">View all Notifications</a>
+            <a routerLink="/notification-list">View all Notifications</a>
           </div>
         </div>
       </li>
