@@ -19,4 +19,14 @@ export class NotificationService {
         }),
       })
   }
+
+  updateNotificationPanelByIds(formData: FormData): Observable<any> {
+    let url = this.apiUrl + `/pv-api/notification_panel/`;
+    return this.http.put<any>(`${url}`, formData, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+    })
+}
+  
 }

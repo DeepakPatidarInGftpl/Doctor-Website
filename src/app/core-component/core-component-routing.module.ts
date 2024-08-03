@@ -49,6 +49,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./purchase/purchase.module').then((m) => m.PurchaseModule),
       },
+      {
+        path: 'notification-list',
+        loadChildren: () =>
+          import('./notifications/notifications.module').then((m) => m.NotificationsModule),
+      },
       // {
       //   path: 'expense',
       //   loadChildren: () =>
