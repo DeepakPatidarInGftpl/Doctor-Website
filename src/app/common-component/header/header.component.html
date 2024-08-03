@@ -124,7 +124,7 @@
           </div>
           <div class="noti-content">
             <ul class="notification-list" *ngFor="let item of notificationList">
-              <li class="notification-message" [ngClass]="!item?.is_view ? 'unread-card-wrapper' : ''" (click)="notificationRead(item?.id)">
+              <li class="notification-message" [ngClass]="!item?.is_view ? 'unread-card-wrapper' : ''" (click)="notificationRead(item?.id, item?.is_view)">
                 <a>
                   <div class="media d-flex">
                     <span class="avatar flex-shrink-0">
@@ -137,7 +137,7 @@
                         <p class="mb-1">{{item?.body}} </p>
                       </div>
                       <div class="noti-time">
-                        <h5 class="notification-time">{{item?.minutesAgo}} mins ago</h5>
+                        <h5 class="notification-time">{{item?.minutesAgo}}</h5>
                       </div>
                     </div>
                     <div *ngIf="!item?.is_view" class="unread-notification-wrapper mx-3"></div>

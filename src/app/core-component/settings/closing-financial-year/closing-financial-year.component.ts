@@ -3,15 +3,20 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-closing-financial-year',
   templateUrl: './closing-financial-year.component.html',
-  styleUrls: ['./closing-financial-year.component.scss']
+  styleUrls: ['./closing-financial-year.component.scss'],
 })
 export class ClosingFinancialYearComponent implements OnInit {
-
-  constructor(private commonService: CommonServiceService, private coreService: CoreService,
-    private companyService: CompanyService, private router: Router) { }
+  constructor(
+    private commonService: CommonServiceService,
+    private coreService: CoreService,
+    private companyService: CompanyService,
+    private router: Router,
+    private toasterService: ToastrService
+  ) {}
 
   current_financial_year: string;
   next_financial_year: string;
@@ -20,21 +25,25 @@ export class ClosingFinancialYearComponent implements OnInit {
   financialYearMap: { [key: number]: number } = {
     6: 12,
     12: 14,
-    14: null
+    14: null,
   };
-
 
   ngOnInit(): void {
     this.financialYear = localStorage.getItem('financialYear');
-    this.nextFinancialYear = this.getNextFinancialYearId(Number(this.financialYear))?.toString();
+    this.nextFinancialYear = this.getNextFinancialYearId(
+      Number(this.financialYear)
+    )?.toString();
 
-    let { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    let { minDate, maxDate } = this.commonService.determineMinMaxDates(
+      this.financialYear
+    );
     console.log(minDate.getFullYear());
     console.log(maxDate.getFullYear());
 
-
-    const currentFinancialYear = minDate.getFullYear() + '-' + maxDate.getFullYear();
-    const nextFinancialYear = (minDate.getFullYear() + 1) + '-' + (maxDate.getFullYear() + 1);
+    const currentFinancialYear =
+      minDate.getFullYear() + '-' + maxDate.getFullYear();
+    const nextFinancialYear =
+      minDate.getFullYear() + 1 + '-' + (maxDate.getFullYear() + 1);
 
     console.log(currentFinancialYear);
     this.current_financial_year = currentFinancialYear;
@@ -48,31 +57,45 @@ export class ClosingFinancialYearComponent implements OnInit {
   submit() {
     const payload = {
       from_financial_year: this.financialYear,
-      to_financial_year: this.nextFinancialYear
-    }
-    this.coreService.closingStockFinancialYear(payload).subscribe((res) => {
-      console.log(res);
-      let closeModal = <HTMLElement>document.querySelector('.closeModal');
-      closeModal.click();
-    })
+      to_financial_year: this.nextFinancialYear,
+    };
+    this.coreService.closingStockFinancialYear(payload).subscribe(
+      (res) => {
+        console.log(res);
+        this.toasterService.success(res?.msg);
+        let closeModal = <HTMLElement>document.querySelector('.closeModal');
+        closeModal.click();
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   closingAccountFinancialYear() {
     const payload = {
       from_financial_year: this.financialYear,
-      to_financial_year: this.nextFinancialYear
-    }
-    this.coreService.closingAccountFinancialYear(payload).subscribe((res) => {
-      console.log(res);
-      let closeModal = <HTMLElement>document.querySelector('.accountModal');
-      closeModal.click();
-    })
+      to_financial_year: this.nextFinancialYear,
+    };
+    this.coreService.closingAccountFinancialYear(payload).subscribe(
+      (res) => {
+        console.log(res);
+        this.toasterService.success(res?.msg);
+        let closeModal = <HTMLElement>document.querySelector('.accountModal');
+        closeModal.click();
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   ClosingAccountPreview() {
     let closeModal = <HTMLElement>document.querySelector('.accountModal');
     closeModal.click();
-    this.router.navigate(['/settings/closingFinancialYear/account-ledger-preview']);
+    this.router.navigate([
+      '/settings/closingFinancialYear/account-ledger-preview',
+    ]);
   }
 
   preview() {
@@ -80,5 +103,4 @@ export class ClosingFinancialYearComponent implements OnInit {
     closeModal.click();
     this.router.navigate(['/settings/closingFinancialYear/stock-preview']);
   }
-
 }

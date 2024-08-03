@@ -137,7 +137,7 @@
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payer<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
@@ -156,12 +156,12 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}" style="line-height: 3;">{{products?.payment_account?.account_id}}</a></td>
+                        <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}" style="line-height: 3;">{{ products?.payment_account }}</a></td>
                         <td class="text-center">{{products?.receipt_type}}</td>
                         <td>{{products.mode_type}}</td>
                         <td>{{products.receipt_voucher_no}}</td>
-                        <td>{{products?.payer?.account_id}}</td>
-                        <td>{{products?.bank_payment}}</td>
+                        {{ products?.payer?.title && products?.payer?.company_name ? products?.payer?.title + ' (' + products?.payer?.company_name + ')' : products?.payer?.title }}
+                        <td>{{products?.receipt_type}}</td>
                         <td>{{products?.date}}</td>
                         <td>{{products?.transaction_date}}</td>
                         <td class="text-center">{{products?.transaction_id}}</td>
