@@ -141,6 +141,10 @@ export class AddCountraVoucherComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
+    const amount = this.countraVoucherForm.get('amount').value;
+    if(amount < 0) {
+      this.toastr.error('Countra voucher amount must be greater than 0.');
+    }
     if (this.countraVoucherForm.valid) {
       this.loaders = true;
       this.transactionService.addCountraVoucher(this.countraVoucherForm.value).subscribe(res => {

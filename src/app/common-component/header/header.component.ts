@@ -1,8 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, catchError, debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  debounceTime,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
@@ -24,11 +37,18 @@ export class HeaderComponent implements OnInit {
   notificationList: any;
   totalNotificationCount: any;
   notificationIds: any = [];
-  private notificationIdsSubject = new BehaviorSubject<number[]>([]);
-  private destroy$ = new Subject<void>();
+  // private notificationIdsSubject = new BehaviorSubject<number[]>([]);
+  // private destroy$ = new Subject<void>();
 
-  constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
-    private coreService: CoreService, private profileService: CompanyService, private companyService: CompanyService, private fb: FormBuilder,
+  constructor(
+    private Router: Router,
+    private settings: SettingsService,
+    private authServ: AuthServiceService,
+    private toastr: ToastrService,
+    private coreService: CoreService,
+    private profileService: CompanyService,
+    private companyService: CompanyService,
+    private fb: FormBuilder,
     private notificationService: NotificationService
   ) {
     this.activePath = this.Router.url.split('/')[2];
@@ -45,40 +65,39 @@ export class HeaderComponent implements OnInit {
         this.darkTheme = true;
         // this.logoPath = 'assets/img/logo-white.png'
         //new icon
-        this.logoPath = 'assets/dummy/pos.png'
+        this.logoPath = 'assets/dummy/pos.png';
       } else {
         this.darkTheme = false;
         // this.logoPath = 'assets/logo/favicon_icon.png'
-        this.logoPath = 'assets/dummy/pos.png'
-
+        this.logoPath = 'assets/dummy/pos.png';
       }
     });
 
-    this.notificationIdsSubject.pipe(
-      debounceTime(3000),
-      switchMap((ids:any) => {
-        if (ids?.length > 0) {
-          let formData = new FormData();
-          formData.append('notification_id', JSON.stringify(ids));
-          return this.notificationService.updateNotificationPanelByIds(formData).pipe(
-            catchError(error => {
-              console.error('API call failed', error);
-              this.notificationIds = [];
-              return of(null);
-            })
-          );
-        } else {
-          return of(null);
-        }
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe(res => {
-      if (res) {
-        console.log('API response', res);
-        this.getNotificationList();
-        this.notificationIds = [];
-      }
-    });
+    // this.notificationIdsSubject.pipe(
+    //   debounceTime(3000),
+    //   switchMap((ids:any) => {
+    //     if (ids?.length > 0) {
+    //       let formData = new FormData();
+    //       formData.append('notification_id', JSON.stringify(ids));
+    //       return this.notificationService.updateNotificationPanelByIds(formData).pipe(
+    //         catchError(error => {
+    //           console.error('API call failed', error);
+    //           this.notificationIds = [];
+    //           return of(null);
+    //         })
+    //       );
+    //     } else {
+    //       return of(null);
+    //     }
+    //   }),
+    //   takeUntil(this.destroy$)
+    // ).subscribe(res => {
+    //   if (res) {
+    //     console.log('API response', res);
+    //     this.getNotificationList();
+    //     this.notificationIds = [];
+    //   }
+    // });
   }
 
   dayCloseForm!: FormGroup;
@@ -95,12 +114,12 @@ export class HeaderComponent implements OnInit {
     this.profile();
     //open day
     this.dayOpenForm = this.fb.group({
-      opening_amount: new FormControl(0, [Validators.required,])
+      opening_amount: new FormControl(0, [Validators.required]),
     });
     //close day
     this.dayCloseForm = this.fb.group({
-      closing_amount: new FormControl(0, [Validators.required,]),
-      remarks: new FormControl('')
+      closing_amount: new FormControl(0, [Validators.required]),
+      remarks: new FormControl(''),
     });
     this.checkDayClose();
     this.getDayClose();
@@ -119,90 +138,112 @@ export class HeaderComponent implements OnInit {
             console.log(this.isModalOpen);
           }
         }
-
-      })
+      });
     }
     this.getFinancialYear();
     // this.getActiveFinancialYear();
     this.financialYearForm = this.fb.group({
-      financial_year: new FormControl('')
+      financial_year: new FormControl(''),
     });
     //17-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       this.financialYearForm.patchValue({
-        financial_year: JSON.parse(fy)
+        financial_year: JSON.parse(fy),
       });
     }
   }
 
-  calculateMinutesAgo(scheduleTime: string): number {
+  calculateMinutesAgo(scheduleTime: string): string {
     const scheduleDate = new Date(scheduleTime);
     const currentDate = new Date();
     const diffMs = currentDate.getTime() - scheduleDate.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    return diffMins;
-  }
 
+    if (diffMins < 60) {
+      return `${diffMins} minutes ago`;
+    } else {
+      const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      };
+      return scheduleDate.toLocaleDateString('en-US', options);
+    }
+  }
 
   logOut() {
     // console.log(localStorage.getItem('token'));
     if (localStorage.getItem('token')) {
-      this.authServ.logout().subscribe(res => {
-        // console.log(res);
-        this.toastr.success(res.status);
-        localStorage.clear()
-        this.Router.navigate(['/auth/signin'])
-        this.authServ.doLogout()
-      }, (err: any) => {
-        // console.log(err.error.detail);
-        if (err.error.detail) {
-          localStorage.removeItem('token');
-          localStorage.clear()
-          this.toastr.success('Logout Successfully');
-          this.Router.navigate(['/auth/signin'])
+      this.authServ.logout().subscribe(
+        (res) => {
+          // console.log(res);
+          this.toastr.success(res.status);
+          localStorage.clear();
+          this.Router.navigate(['/auth/signin']);
+          this.authServ.doLogout();
+        },
+        (err: any) => {
+          // console.log(err.error.detail);
+          if (err.error.detail) {
+            localStorage.removeItem('token');
+            localStorage.clear();
+            this.toastr.success('Logout Successfully');
+            this.Router.navigate(['/auth/signin']);
+          }
         }
-      })
+      );
     } else {
       localStorage.removeItem('token');
-      localStorage.clear()
+      localStorage.clear();
       this.toastr.success('Logout Successfully');
-      this.Router.navigate(['/auth/signin'])
+      this.Router.navigate(['/auth/signin']);
     }
 
     this.updateUserDeviceToken();
   }
 
   updateUserDeviceToken() {
-      let payload = {
-        device_token: ''
-      }
-      this.authServ.updateUserDeviceToken(payload).subscribe((res) => {
+    let payload = {
+      device_token: '',
+    };
+    this.authServ.updateUserDeviceToken(payload).subscribe(
+      (res) => {
         console.log(res);
-      }, (error) => {
+      },
+      (error) => {
         console.error('Error updating device token:', error);
-      });
-    }
+      }
+    );
+  }
 
-  userDetails: any
+  userDetails: any;
   profile() {
-    this.coreService.getProfile().subscribe((res: any) => {
-      this.userDetails = res;
-      this.coreService.profileDetails.next(res);
-      this.profileService.setUserDetails(this.userDetails);
-      const userDetails = res?.permission;
-      const storedUserDetails = this.profileService.getUserDetails();
-      if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
-        this.profileService.setUserPermission(userDetails);
-        window.location.reload();
+    this.coreService.getProfile().subscribe(
+      (res: any) => {
+        this.userDetails = res;
+        this.coreService.profileDetails.next(res);
+        this.profileService.setUserDetails(this.userDetails);
+        const userDetails = res?.permission;
+        const storedUserDetails = this.profileService.getUserDetails();
+        if (
+          !storedUserDetails ||
+          storedUserDetails.length !== userDetails.length
+        ) {
+          this.profileService.setUserPermission(userDetails);
+          window.location.reload();
+        }
+      },
+      (err) => {
+        // console.log(err.error.detail=='Invalid token.');
+        if (err.error.detail == 'Invalid token.') {
+          localStorage.clear();
+          window.location.reload();
+        }
       }
-    }, err => {
-      // console.log(err.error.detail=='Invalid token.');
-      if (err.error.detail == 'Invalid token.') {
-        localStorage.clear();
-        window.location.reload();
-      }
-    })
+    );
   }
   LoadScript(js: string) {
     var script = document.createElement('script');
@@ -211,7 +252,7 @@ export class HeaderComponent implements OnInit {
     document.body.appendChild(script);
   }
 
-  // day open day close 
+  // day open day close
 
   // day close or day open
   closeModalDayClose() {
@@ -242,7 +283,7 @@ export class HeaderComponent implements OnInit {
       this.dayList = res;
       console.log(res);
       console.warn(this.dayList?.sale_bill_payment[0]?.total_amount);
-    })
+    });
   }
   get remarks() {
     return this.dayCloseForm.get('remarks');
@@ -252,62 +293,88 @@ export class HeaderComponent implements OnInit {
   }
   // condition for day close or not
 
-  notificationRead(id: number) {
-    if (!this.notificationIds.includes(id)) {
-      this.notificationIds.push(id);
-      this.notificationIdsSubject.next(this.notificationIds);
+  notificationRead(id: number, isView: boolean) {
+    if (!isView) {
+      if (!this.notificationIds.includes(id)) {
+        this.notificationIds.push(id);
+        let formData = new FormData();
+        formData.append(
+          'notification_id',
+          JSON.stringify(this.notificationIds)
+        );
+        this.notificationService
+          .updateNotificationPanelByIds(formData)
+          .subscribe(
+            (res) => {
+              this.getNotificationList();
+              this.notificationIds = [];
+            },
+            (err) => {
+              this.notificationIds = [];
+            }
+          );
+      }
     }
   }
 
   isCloseDay = false;
   checkDayClose() {
-    this.companyService.getDayCheck().subscribe((res: any) => {
-      console.log(res);
-      this.companyService.setCheckDay(res);  // send data to service
-      if (res.isSuccess) {
-        if (res?.close_day && res?.old_day) {
-          this.isCloseDay = true;
-          this.toastr.info(res?.msg);
-          this.openModalDayClose();
-        } else if (res?.open_day && res?.today) {
-          this.isCloseDay = false;
-          this.toastr.info(res?.msg);
-          this.openModalDay();
-        } else if (res?.close_day) {
-          this.isCloseDay = true;
+    this.companyService.getDayCheck().subscribe(
+      (res: any) => {
+        console.log(res);
+        this.companyService.setCheckDay(res); // send data to service
+        if (res.isSuccess) {
+          if (res?.close_day && res?.old_day) {
+            this.isCloseDay = true;
+            this.toastr.info(res?.msg);
+            this.openModalDayClose();
+          } else if (res?.open_day && res?.today) {
+            this.isCloseDay = false;
+            this.toastr.info(res?.msg);
+            this.openModalDay();
+          } else if (res?.close_day) {
+            this.isCloseDay = true;
+          }
+        } else {
+          this.toastr.error(res.msg);
         }
-      } else {
-        this.toastr.error(res.msg);
+      },
+      (err) => {
+        this.toastr.error(err.message);
       }
-    }, err => {
-      this.toastr.error(err.message);
-    })
+    );
   }
   submitDayClose() {
     if (this.dayCloseForm.valid) {
       this.loader = true;
       console.warn(this.dayCloseForm.value);
       let formData = new FormData();
-      formData.append('closing_amount', this.dayCloseForm.get('closing_amount')?.value);
+      formData.append(
+        'closing_amount',
+        this.dayCloseForm.get('closing_amount')?.value
+      );
       formData.append('remarks', this.dayCloseForm.get('remarks')?.value);
-      this.companyService.addDayClose(formData).subscribe((res: any) => {
-        console.log(res);
-        if (res.isSuccess) {
+      this.companyService.addDayClose(formData).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.isSuccess) {
+            this.loader = false;
+            this.closeModalDayClose();
+            this.toastr.success(res.msg);
+            this.getDayClose();
+            this.checkDayClose();
+          } else {
+            this.loader = false;
+            this.toastr.error(res.msg);
+          }
+        },
+        (err) => {
           this.loader = false;
-          this.closeModalDayClose();
-          this.toastr.success(res.msg);
-          this.getDayClose();
-          this.checkDayClose();
-        } else {
-          this.loader = false;
-          this.toastr.error(res.msg)
+          this.toastr.error(err.message);
         }
-      }, err => {
-        this.loader = false;
-        this.toastr.error(err.message)
-      })
+      );
     } else {
-      this.toastr.error('Please Enter Valid Data')
+      this.toastr.error('Please Enter Valid Data');
     }
   }
 
@@ -345,32 +412,37 @@ export class HeaderComponent implements OnInit {
     }
   }
   get opening_amount() {
-    return this.dayOpenForm.get('opening_amount')
+    return this.dayOpenForm.get('opening_amount');
   }
   submit() {
     if (this.dayOpenForm.valid) {
       this.loader = true;
       console.warn(this.dayOpenForm.value);
       let formData = new FormData();
-      formData.append('opening_amount', this.dayOpenForm.get('opening_amount')?.value);
-      this.companyService.addDayOpen(formData).subscribe((res: any) => {
-        console.log(res);
-        if (res.isSuccess) {
+      formData.append(
+        'opening_amount',
+        this.dayOpenForm.get('opening_amount')?.value
+      );
+      this.companyService.addDayOpen(formData).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.isSuccess) {
+            this.loader = false;
+            this.isCloseDay = true;
+            this.closeModalDay();
+            this.toastr.success(res.msg);
+          } else {
+            this.loader = false;
+            this.toastr.error(res.msg);
+          }
+        },
+        (err) => {
           this.loader = false;
-          this.isCloseDay = true;
-          this.closeModalDay();
-          this.toastr.success(res.msg)
-        } else {
-          this.loader = false;
-          this.toastr.error(res.msg)
+          this.toastr.error(err.message);
         }
-      }, err => {
-        this.loader = false;
-        this.toastr.error(err.message)
-      })
+      );
     }
   }
-
 
   financialYearList: any[] = [];
   startDate: string = '';
@@ -394,14 +466,14 @@ export class HeaderComponent implements OnInit {
       //     financial_year: currentYearFinancialYear.id
       //   });
       // }
-    })
+    });
   }
   getActiveFinancialYear() {
     this.coreService.getFinancialYearHeader().subscribe((res: any) => {
       this.financialYearForm.patchValue({
-        financial_year: res.id
+        financial_year: res.id,
       });
-    })
+    });
   }
 
   selectYear(val: any) {
@@ -412,7 +484,7 @@ export class HeaderComponent implements OnInit {
         localStorage.setItem('financialYear', JSON.stringify(res?.id));
         window.location.reload();
       }
-    })
+    });
   }
 
   getNotificationList() {
@@ -421,23 +493,22 @@ export class HeaderComponent implements OnInit {
       const totalNotifications = res?.notifications_count;
       this.totalNotificationCount = res?.notifications_count;
       const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
-  
-      this.notificationService.getNotificationPanel(lastPage).subscribe((lastPageRes) => {
-        this.notificationList = lastPageRes.notifications.slice(-5).map(notification => {
-          return {
-            ...notification,
-            minutesAgo: this.calculateMinutesAgo(notification.schedule_time)
-          };
+
+      this.notificationService
+        .getNotificationPanel(lastPage)
+        .subscribe((lastPageRes) => {
+          this.notificationList = lastPageRes.notifications
+            .slice(-5)
+            .map((notification) => {
+              return {
+                ...notification,
+                minutesAgo: this.calculateMinutesAgo(
+                  notification.schedule_time
+                ),
+              };
+            });
+          console.log(this.notificationList);
         });
-        console.log(this.notificationList);
-        
-      });
     });
   }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }
-

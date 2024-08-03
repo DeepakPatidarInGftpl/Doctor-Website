@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
@@ -9,17 +15,20 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 @Component({
   selector: 'app-add-payment-voucher',
   templateUrl: './add-payment-voucher.component.html',
-  styleUrls: ['./add-payment-voucher.component.scss']
+  styleUrls: ['./add-payment-voucher.component.scss'],
 })
 export class AddPaymentVoucherComponent implements OnInit {
-
-  constructor(private fb: FormBuilder, private toastr: ToastrService,
-    private router: Router, private transactionService: TransactionService,
-    private commonService: CommonServiceService) { }
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private router: Router,
+    private transactionService: TransactionService,
+    private commonService: CommonServiceService
+  ) {}
 
   supplierControl = new FormControl();
   filteredsupplier: Observable<any[]>;
-  // payer 
+  // payer
   payerControl = new FormControl();
   filteredPayer: Observable<any[]>;
   //sale bill
@@ -37,6 +46,7 @@ export class AddPaymentVoucherComponent implements OnInit {
   bankMaxDate: string = '';
   transactionMinDate: string = '';
   transactionMaxDate: string = '';
+  accountListData: any;
   get g() {
     return this.paymentVoucherBankForm.controls;
   }
@@ -53,13 +63,13 @@ export class AddPaymentVoucherComponent implements OnInit {
       payment_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate,),
+      date: new FormControl(defaultDate),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
       payment_voucher_cart: this.fb.array([]),
-    })
+    });
 
     this.paymentVoucherBankForm = this.fb.group({
       // receipt_type: new FormControl('Bank'),
@@ -72,15 +82,15 @@ export class AddPaymentVoucherComponent implements OnInit {
       amount: new FormControl(0),
       note: new FormControl(''),
       // against bill
-      bank_payment: new FormControl('',),
+      bank_payment: new FormControl(''),
       transaction_id: new FormControl(''),
       transaction_date: new FormControl(defaultDate),
       payment_voucher_cart: this.fb.array([]),
-    })
+    });
 
     this.filteredsupplier = this.supplierControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value, true))
+      map((value) => this._filter(value, true))
     );
 
     const financialYear = localStorage.getItem('financialYear');
@@ -95,58 +105,69 @@ export class AddPaymentVoucherComponent implements OnInit {
         this.supplierList = [];
         this.filteredsupplier = this.supplierControl.valueChanges.pipe(
           startWith(''),
-          map(value => this._filter(value, true))
+          map((value) => this._filter(value, true))
         );
       }
-    })
+    });
 
     //payer
-    this.filteredPayer = this.payerControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterr(value, true))
-    );
-    this.getAccount();
+    // this.filteredPayer = this.payerControl.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filterr(value, true))
+    // );
+    // this.getAccount();
     this.getPurchaseBill();
-    this.getDebitNote()
+    this.getDebitNote();
     this.getprefix();
+    this.getAccountByAlies('cash-in-hand');
   }
 
   dateValidation(financialYear) {
     const dateControl = this.paymentVoucherForm.get('date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } =
+      this.commonService.setMinMaxDates(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
   }
 
   bankDateValidation(financialYear) {
     const dateControl = this.paymentVoucherBankForm.get('date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } =
+      this.commonService.setMinMaxDates(dateControl, financialYear);
     this.bankMinDate = formattedMinDate;
     this.bankMaxDate = formattedMaxDate;
   }
 
   bankTransactionDateValidation(financialYear) {
     const dateControl = this.paymentVoucherBankForm.get('transaction_date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } =
+      this.commonService.setMinMaxDates(dateControl, financialYear);
     this.transactionMinDate = formattedMinDate;
     this.transactionMaxDate = formattedMaxDate;
   }
 
   prefixNo: any;
   getprefix() {
-    this.transactionService.getPaymentVoucherPrefix().subscribe((res: any) => {
-      console.log(res);
-      if (res.success) {
-        // this.prefixNo = res.prefix;
-        this.prefixNo = res?.data;
-        this.paymentVoucherForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
-        this.paymentVoucherBankForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
-      } else {
-        this.toastr.error(res.msg);
+    this.transactionService.getPaymentVoucherPrefix().subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.success) {
+          // this.prefixNo = res.prefix;
+          this.prefixNo = res?.data;
+          this.paymentVoucherForm
+            .get('payment_voucher_no')
+            .patchValue(this.prefixNo[0]?.id);
+          this.paymentVoucherBankForm
+            .get('payment_voucher_no')
+            .patchValue(this.prefixNo[0]?.id);
+        } else {
+          this.toastr.error(res.msg);
+        }
+      },
+      (err) => {
+        this.toastr.error(err.error.msg);
       }
-    }, err => {
-      this.toastr.error(err.error.msg)
-    })
+    );
   }
 
   cart(): FormGroup {
@@ -156,15 +177,15 @@ export class AddPaymentVoucherComponent implements OnInit {
       paid_amount: new FormControl(0),
       pending_amount: new FormControl(0),
       payment: new FormControl(0),
-      debit_note_cart: this.fb.array([])
-    })
+      debit_note_cart: this.fb.array([]),
+    });
   }
   getCart(): FormArray {
     return this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
   }
   isCart = false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
     this.myControls.push(new FormControl(''));
     this.isCart = false;
   }
@@ -183,9 +204,9 @@ export class AddPaymentVoucherComponent implements OnInit {
       redeem_amount: new FormControl(0),
       pending_amount: new FormControl(0),
       amount: new FormControl(0),
-    })
+    });
   }
-  // debit note cart form group 
+  // debit note cart form group
   getDebitNoteCartForm1(i: any): FormArray {
     return this.getCart().at(i).get('debit_note_cart') as FormArray;
   }
@@ -195,7 +216,10 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   removeDebitNoteForm1(e: any, i: any) {
     this.getDebitNoteCartForm1(e).removeAt(i);
-    if (this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length == 0) {
+    if (
+      this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart
+        ?.length == 0
+    ) {
       this.isDebitNoteCart1[e] = false;
     }
   }
@@ -204,7 +228,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray;
   }
   addCartBank() {
-    this.getCartBank().push(this.cart())
+    this.getCartBank().push(this.cart());
     this.myControls.push(new FormControl(''));
     this.isCartBank = false;
   }
@@ -225,18 +249,24 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   removeDebitNoteForm(e: any, i: any) {
     this.getDebitNoteCartForm(e).removeAt(i);
-    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length == 0) {
+    if (
+      this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]
+        ?.debit_note_cart?.length == 0
+    ) {
       this.isDebitNoteCart[e] = false;
     }
   }
 
-  // end 
+  // end
   isAgainstBill = false;
   setRadioValue(value: string) {
     this.paymentVoucherForm.get('mode_type').setValue(value);
-    if (value == 'Against Bill') {
+    const supplier = this.paymentVoucherForm.get('supplier').value;
+    if (value == 'Against Bill' && !!supplier) {
       this.isAgainstBill = true;
-      const cart = this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
+      const cart = this.paymentVoucherForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
       cart.clear();
       this.addCart();
     } else {
@@ -246,9 +276,12 @@ export class AddPaymentVoucherComponent implements OnInit {
   isAgainstBillBank = false;
   setRadioValue1(value: string) {
     this.paymentVoucherBankForm.get('mode_type').setValue(value);
-    if (value == 'Against Bill') {
+    const supplier = this.paymentVoucherBankForm.get('supplier').value;
+    if (value == 'Against Bill' && !!supplier) {
       this.isAgainstBillBank = true;
-      const cart = this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray;
+      const cart = this.paymentVoucherBankForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
       cart.clear();
       this.addCartBank();
     } else {
@@ -265,52 +298,70 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   //debit note Cart
   isLastDebitNote(cartIndex: number, rowIndex: number): boolean {
-    const cartControl = this.getCartBank().at(cartIndex).get('debit_note_cart') as FormArray;
+    const cartControl = this.getCartBank()
+      .at(cartIndex)
+      .get('debit_note_cart') as FormArray;
     return rowIndex === cartControl.length - 1;
   }
   isLastDebitNote1(cartIndex: number, rowIndex: number): boolean {
-    const cartControl = this.getCart().at(cartIndex).get('debit_note_cart') as FormArray;
+    const cartControl = this.getCart()
+      .at(cartIndex)
+      .get('debit_note_cart') as FormArray;
     return rowIndex === cartControl.length - 1;
   }
   isDebitNoteCart: boolean[] = [];
   debitNoteCartIndex(i: any) {
-    this.isDebitNoteCart[i] = true;
-    this.addDebitNoteCartForm(i)
+    if (this.myControls.at(i).value) {
+      this.isDebitNoteCart[i] = true;
+      this.addDebitNoteCartForm(i);
+    }
   }
   // for cash
   isDebitNoteCart1: boolean[] = [];
   debitNoteCartIndex1(i: any) {
-    this.isDebitNoteCart1[i] = true;
-    this.addDebitNoteCartForm1(i);
+    if (this.myControls.at(i).value) {
+      this.isDebitNoteCart1[i] = true;
+      this.addDebitNoteCartForm1(i);
+    }
   }
   // end
   supplierList: any[] = [];
 
   getSupplier(query) {
-    this.transactionService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
-      this.supplierList = res;
-      this.filteredsupplier = this.supplierControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value, true))
-      );
-    })
+    this.transactionService
+      .getSupplier(query)
+      .pipe(debounceTime(2000))
+      .subscribe((res: any) => {
+        this.supplierList = res;
+        this.filteredsupplier = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._filter(value, true))
+        );
+      });
   }
-  accountList: any[] = [];
-  getAccount() {
-    this.transactionService.getAccount().subscribe((res: any) => {
-      this.accountList = res;
-    })
+  // accountList: any[] = [];
+  // getAccount() {
+  //   this.transactionService.getAccount().subscribe((res: any) => {
+  //     this.accountList = res;
+  //   });
+  // }
+
+  getAccountByAlies(value: string) {
+    this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
+      this.accountListData = res;
+    });
   }
+
   purchaseBillList: any[] = [];
   filterPurchaseBill: any[] = [];
   getPurchaseBill() {
     this.transactionService.getPurchaseBill().subscribe((res: any) => {
       this.purchaseBillList = res;
       this.filterPurchaseBill = res;
-    })
+    });
   }
   getFilter(data: any) {
-    this.filterPurchaseBill = this.purchaseBillList.filter(salebill => {
+    this.filterPurchaseBill = this.purchaseBillList.filter((salebill) => {
       if (salebill && salebill?.refrence_bill_no) {
         const aliasLower = salebill?.refrence_bill_no.toLowerCase();
         return aliasLower.includes(data);
@@ -326,10 +377,10 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.transactionService.getDebitNote().subscribe((res: any) => {
       this.debitNoteList = res;
       this.filterdebitNote = res;
-    })
+    });
   }
   getFilterDebit(data: any) {
-    this.filterdebitNote = this.debitNoteList.filter(debit => {
+    this.filterdebitNote = this.debitNoteList.filter((debit) => {
       if (debit && debit?.debit_note_no) {
         const aliasLower = debit?.debit_note_no?.toLowerCase();
         return aliasLower.includes(data);
@@ -351,30 +402,39 @@ export class AddPaymentVoucherComponent implements OnInit {
   // }
 
   private _filter(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
+    const filterValue =
+      typeof value === 'string'
+        ? value?.toLowerCase()
+        : value?.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.supplierList.filter(supplier =>
-        supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
-      )
-      : this.supplierList.filter(supplier =>
-        !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
-      );
+      ? this.supplierList.filter(
+          (supplier) =>
+            supplier.name.toLowerCase().includes(filterValue) ||
+            supplier.company_name.toLowerCase().includes(filterValue)
+        )
+      : this.supplierList.filter(
+          (supplier) =>
+            !(
+              supplier.name.toLowerCase().includes(filterValue) ||
+              supplier.company_name.toLowerCase().includes(filterValue)
+            )
+        );
     if (!include && filteredSuppliers.length === 0) {
-      filteredSuppliers.push({ name: "No data found" });
+      filteredSuppliers.push({ name: 'No data found' });
     }
     return filteredSuppliers;
   }
 
-  private _filterr(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredPayer = include
-      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
-      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
-    if (!include && filteredPayer.length === 0) {
-      filteredPayer.push({ account: "No data found" });
-    }
-    return filteredPayer;
-  }
+  // private _filterr(value: string | number, include: boolean): any[] {
+  //   const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+  //   const filteredPayer = include
+  //     ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
+  //     : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
+  //   if (!include && filteredPayer.length === 0) {
+  //     filteredPayer.push({ account: "No data found" });
+  //   }
+  //   return filteredPayer;
+  // }
 
   get supplier() {
     return this.paymentVoucherForm.get('supplier') as FormControl;
@@ -382,18 +442,33 @@ export class AddPaymentVoucherComponent implements OnInit {
   oncheck(data: any) {
     const selectedItemId = data.id;
     this.paymentVoucherForm.patchValue({
-      supplier: selectedItemId
+      supplier: selectedItemId,
     });
+
+    const modeType = this.paymentVoucherForm.get('mode_type').value;
+    const supplier = this.paymentVoucherForm.get('supplier').value;
+    if (modeType === 'Against Bill' && !!supplier) {
+      this.isAgainstBill = true;
+      const cart = this.paymentVoucherForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
+      cart.clear();
+      this.addCart();
+    } else {
+      this.isAgainstBill = false;
+    }
   }
   oncheck1(data: any) {
     const selectedItemId = data.id;
     this.paymentVoucherForm.patchValue({
-      payment_account: selectedItemId
+      payment_account: selectedItemId,
     });
   }
   oncheck3(data: any, index: number) {
     console.log(data);
-    const cart = (this.paymentVoucherForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
+    const cart = (
+      this.paymentVoucherForm.get('payment_voucher_cart') as FormArray
+    ).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
       original_amount: data?.total || 0,
@@ -402,7 +477,9 @@ export class AddPaymentVoucherComponent implements OnInit {
     });
   }
   oncheckBankDebit1(data: any, index: number, debitNoteIndex: number) {
-    const cart = (this.paymentVoucherForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
+    const cart = (
+      this.paymentVoucherForm.get('payment_voucher_cart') as FormArray
+    ).at(index) as FormGroup;
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
@@ -416,17 +493,31 @@ export class AddPaymentVoucherComponent implements OnInit {
   oncheckBank(data: any) {
     const selectedItemId = data.id;
     this.paymentVoucherBankForm.patchValue({
-      supplier: selectedItemId
+      supplier: selectedItemId,
     });
+    const modeType = this.paymentVoucherBankForm.get('mode_type').value;
+    const supplier = this.paymentVoucherBankForm.get('supplier').value;
+    if (modeType === 'Against Bill' && !!supplier) {
+      this.isAgainstBillBank = true;
+      const cart = this.paymentVoucherBankForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
+      cart.clear();
+      this.addCartBank();
+    } else {
+      this.isAgainstBillBank = false;
+    }
   }
   oncheckBank1(data: any) {
     const selectedItemId = data.id;
     this.paymentVoucherBankForm.patchValue({
-      payment_account: selectedItemId
+      payment_account: selectedItemId,
     });
   }
   oncheckBank3(data: any, index: number) {
-    const cart = (this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
+    const cart = (
+      this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray
+    ).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
       original_amount: data?.total || 0,
@@ -435,7 +526,9 @@ export class AddPaymentVoucherComponent implements OnInit {
     });
   }
   oncheckBankDebit2(data: any, index: number, debitNoteIndex: number) {
-    const cart = (this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
+    const cart = (
+      this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray
+    ).at(index) as FormGroup;
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
@@ -452,30 +545,54 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.isCash = false;
     this.supplierControl.reset();
     this.payerControl.reset();
+    this.getAccountByAlies('bank-accounts');
   }
   toggleCash() {
     this.isBank = false;
     this.isCash = true;
     this.supplierControl.reset();
     this.payerControl.reset();
+    this.getAccountByAlies('cash-in-hand');
   }
 
-  loaders = false
+  loaders = false;
   addRes: any;
   onSubmit() {
     console.log(this.paymentVoucherForm.value);
+    const amount = this.paymentVoucherForm.get('amount')?.value;
+    if (amount < 1) {
+      this.toastr.error('Payment voucher amount must be greater than 0.');
+      return;
+    }
     if (this.paymentVoucherForm.valid) {
       const formdata = new FormData();
-      formdata.append('payment_type', this.paymentVoucherForm.get('payment_type')?.value);
-      formdata.append('supplier', this.paymentVoucherForm.get('supplier')?.value);
+      formdata.append(
+        'payment_type',
+        this.paymentVoucherForm.get('payment_type')?.value
+      );
+      formdata.append(
+        'supplier',
+        this.paymentVoucherForm.get('supplier')?.value
+      );
       formdata.append('date', this.paymentVoucherForm.get('date')?.value);
-      formdata.append('payment_voucher_no', this.paymentVoucherForm.get('payment_voucher_no')?.value);
-      formdata.append('mode_type', this.paymentVoucherForm.get('mode_type')?.value);
+      formdata.append(
+        'payment_voucher_no',
+        this.paymentVoucherForm.get('payment_voucher_no')?.value
+      );
+      formdata.append(
+        'mode_type',
+        this.paymentVoucherForm.get('mode_type')?.value
+      );
       formdata.append('amount', this.paymentVoucherForm.get('amount')?.value);
       formdata.append('note', this.paymentVoucherForm.get('note')?.value);
-      formdata.append('payment_account', this.paymentVoucherForm.get('payment_account')?.value);
+      formdata.append(
+        'payment_account',
+        this.paymentVoucherForm.get('payment_account')?.value
+      );
 
-      const cartArray = this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
+      const cartArray = this.paymentVoucherForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
       const cartData = [];
       cartArray.controls.forEach((paymentCart) => {
         const paymentCartGroup = paymentCart as FormGroup;
@@ -491,7 +608,9 @@ export class AddPaymentVoucherComponent implements OnInit {
         });
 
         //debit_note_cart into payment_voucher_cart
-        const debitNoteCartArray = paymentCartGroup.get('debit_note_cart') as FormArray;
+        const debitNoteCartArray = paymentCartGroup.get(
+          'debit_note_cart'
+        ) as FormArray;
         const debitNoteCartData = [];
 
         debitNoteCartArray.controls.forEach((debitNote) => {
@@ -500,7 +619,7 @@ export class AddPaymentVoucherComponent implements OnInit {
 
           Object.keys(debitNoteGroup.controls).forEach((key) => {
             const debitNoteControl = debitNoteGroup.controls[key];
-            // Convert  value float 
+            // Convert  value float
             if (!isNaN(debitNoteControl.value)) {
               debitNoteObject[key] = parseFloat(debitNoteControl.value);
             } else {
@@ -524,12 +643,12 @@ export class AddPaymentVoucherComponent implements OnInit {
           this.loaders = false;
           if (res.success) {
             this.toastr.success(res.msg);
-            this.router.navigate(['//transaction/paymentVoucherList'])
+            this.router.navigate(['//transaction/paymentVoucherList']);
           } else {
-            this.loaders = false
+            this.loaders = false;
             this.toastr.error(res.msg);
             if (res.error.amount) {
-              this.toastr.error(res.error.amount[0])
+              this.toastr.error(res.error.amount[0]);
             }
           }
         },
@@ -540,28 +659,62 @@ export class AddPaymentVoucherComponent implements OnInit {
     } else {
       // console.log('error');
       this.paymentVoucherForm.markAllAsTouched();
-      this.toastr.error('Please Fill All The Required Fields')
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   onBankSubmit() {
     console.log(this.paymentVoucherBankForm.value);
+    const amount = this.paymentVoucherBankForm.get('amount')?.value;
+    if (amount < 1) {
+      this.toastr.error('Payment voucher amount must be greater than 0.');
+      return;
+    }
     if (this.paymentVoucherBankForm.valid) {
       const formdata = new FormData();
 
-      formdata.append('payment_type', this.paymentVoucherBankForm.get('payment_type')?.value);
-      formdata.append('supplier', this.paymentVoucherBankForm.get('supplier')?.value);
+      formdata.append(
+        'payment_type',
+        this.paymentVoucherBankForm.get('payment_type')?.value
+      );
+      formdata.append(
+        'supplier',
+        this.paymentVoucherBankForm.get('supplier')?.value
+      );
       formdata.append('date', this.paymentVoucherBankForm.get('date')?.value);
-      formdata.append('payment_voucher_no', this.paymentVoucherBankForm.get('payment_voucher_no')?.value);
-      formdata.append('mode_type', this.paymentVoucherBankForm.get('mode_type')?.value);
-      formdata.append('amount', this.paymentVoucherBankForm.get('amount')?.value);
+      formdata.append(
+        'payment_voucher_no',
+        this.paymentVoucherBankForm.get('payment_voucher_no')?.value
+      );
+      formdata.append(
+        'mode_type',
+        this.paymentVoucherBankForm.get('mode_type')?.value
+      );
+      formdata.append(
+        'amount',
+        this.paymentVoucherBankForm.get('amount')?.value
+      );
       formdata.append('note', this.paymentVoucherBankForm.get('note')?.value);
-      formdata.append('payment_account', this.paymentVoucherBankForm.get('payment_account')?.value);
+      formdata.append(
+        'payment_account',
+        this.paymentVoucherBankForm.get('payment_account')?.value
+      );
 
-      formdata.append('bank_payment', this.paymentVoucherBankForm.get('bank_payment')?.value);
-      formdata.append('transaction_id', this.paymentVoucherBankForm.get('transaction_id')?.value);
-      formdata.append('transaction_date', this.paymentVoucherBankForm.get('transaction_date')?.value);
+      formdata.append(
+        'bank_payment',
+        this.paymentVoucherBankForm.get('bank_payment')?.value
+      );
+      formdata.append(
+        'transaction_id',
+        this.paymentVoucherBankForm.get('transaction_id')?.value
+      );
+      formdata.append(
+        'transaction_date',
+        this.paymentVoucherBankForm.get('transaction_date')?.value
+      );
 
-      const cartArray = this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray;
+      const cartArray = this.paymentVoucherBankForm.get(
+        'payment_voucher_cart'
+      ) as FormArray;
       const cartData = [];
       cartArray.controls.forEach((paymentCart) => {
         const paymentCartGroup = paymentCart as FormGroup;
@@ -577,14 +730,16 @@ export class AddPaymentVoucherComponent implements OnInit {
         });
 
         //debit_note_cart into payment_voucher_cart
-        const debitNoteCartArray = paymentCartGroup.get('debit_note_cart') as FormArray;
+        const debitNoteCartArray = paymentCartGroup.get(
+          'debit_note_cart'
+        ) as FormArray;
         const debitNoteCartData = [];
         debitNoteCartArray.controls.forEach((debitNote) => {
           const debitNoteGroup = debitNote as FormGroup;
           const debitNoteObject = {};
           Object.keys(debitNoteGroup.controls).forEach((key) => {
             const debitNoteControl = debitNoteGroup.controls[key];
-            // Convert  value float 
+            // Convert  value float
             if (!isNaN(debitNoteControl.value)) {
               debitNoteObject[key] = parseFloat(debitNoteControl.value);
             } else {
@@ -604,12 +759,12 @@ export class AddPaymentVoucherComponent implements OnInit {
           this.loaders = false;
           if (res.success) {
             this.toastr.success(res.msg);
-            this.router.navigate(['//transaction/paymentVoucherList'])
+            this.router.navigate(['//transaction/paymentVoucherList']);
           } else {
-            this.loaders = false
+            this.loaders = false;
             this.toastr.error(res.msg);
             if (res.error.amount) {
-              this.toastr.error(res.error.amount[0])
+              this.toastr.error(res.error.amount[0]);
             }
           }
         },
@@ -620,30 +775,30 @@ export class AddPaymentVoucherComponent implements OnInit {
     } else {
       console.log('invalid');
       this.paymentVoucherBankForm.markAllAsTouched();
-      this.toastr.error('Please Fill All The Required Fields')
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   //bank
   get Supplier() {
-    return this.paymentVoucherBankForm.get('supplier')
+    return this.paymentVoucherBankForm.get('supplier');
   }
   get date1() {
-    return this.paymentVoucherBankForm.get('date')
+    return this.paymentVoucherBankForm.get('date');
   }
   get payer1() {
-    return this.paymentVoucherBankForm.get('payment_account')
+    return this.paymentVoucherBankForm.get('payment_account');
   }
   get amount1() {
-    return this.paymentVoucherBankForm.get('amount')
+    return this.paymentVoucherBankForm.get('amount');
   }
   get description1() {
-    return this.paymentVoucherBankForm.get('note')
+    return this.paymentVoucherBankForm.get('note');
   }
   get payment_voucher_no1() {
-    return this.paymentVoucherBankForm.get('payment_voucher_no')
+    return this.paymentVoucherBankForm.get('payment_voucher_no');
   }
   get mode_type1() {
-    return this.paymentVoucherBankForm.get('mode_type')
+    return this.paymentVoucherBankForm.get('mode_type');
   }
   sale_bill1(index: number) {
     return this.getCartBank().controls[index].get('purchase_bill');
@@ -661,35 +816,35 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.getCartBank().controls[index].get('payment');
   }
   get bank_payment() {
-    return this.paymentVoucherBankForm.get('bank_payment')
+    return this.paymentVoucherBankForm.get('bank_payment');
   }
   get transaction_id() {
-    return this.paymentVoucherBankForm.get('transaction_id')
+    return this.paymentVoucherBankForm.get('transaction_id');
   }
   get transaction_date() {
-    return this.paymentVoucherBankForm.get('transaction_date')
+    return this.paymentVoucherBankForm.get('transaction_date');
   }
   // bank end
   get Supplier1() {
-    return this.paymentVoucherForm.get('supplier')
+    return this.paymentVoucherForm.get('supplier');
   }
   get date() {
-    return this.paymentVoucherForm.get('date')
+    return this.paymentVoucherForm.get('date');
   }
   get payer() {
-    return this.paymentVoucherForm.get('payment_account')
+    return this.paymentVoucherForm.get('payment_account');
   }
   get amount() {
-    return this.paymentVoucherForm.get('amount')
+    return this.paymentVoucherForm.get('amount');
   }
   get description() {
-    return this.paymentVoucherForm.get('note')
+    return this.paymentVoucherForm.get('note');
   }
   get payment_voucher_no() {
-    return this.paymentVoucherForm.get('payment_voucher_no')
+    return this.paymentVoucherForm.get('payment_voucher_no');
   }
   get mode_type() {
-    return this.paymentVoucherForm.get('mode_type')
+    return this.paymentVoucherForm.get('mode_type');
   }
   sale_bill(index: number) {
     return this.getCart().controls[index].get('purchase_bill');
@@ -706,6 +861,4 @@ export class AddPaymentVoucherComponent implements OnInit {
   payment(index: number) {
     return this.getCart().controls[index].get('payment');
   }
-
-
 }
