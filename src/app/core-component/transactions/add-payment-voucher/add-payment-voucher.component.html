@@ -25,13 +25,30 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Voucher Series</label>
+                        <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
+                            [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}"> -->
+                        <!-- 18-5 -->
+                        <select formControlName="payment_voucher_no">
+                            <option value="" selected disabled>Select Payment Voucher Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- end 18-5 -->
+                        <span class="text-danger"
+                            *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter
+                            Payment Voucher Series</span>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                                     width: 100%;
                                     min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
+                            <input type="text" placeholder="Search Supplier" aria-label="Customer" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': h['supplier'].touched && h['supplier'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
@@ -113,23 +130,6 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Voucher Series</label>
-                        <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
-                            [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}"> -->
-                        <!-- 18-5 -->
-                        <select formControlName="payment_voucher_no">
-                            <option value="" selected disabled>Select Payment Voucher Series</option>
-                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                        </select>
-                        <!-- end 18-5 -->
-                        <span class="text-danger"
-                            *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter
-                            Payment Voucher Series</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-4 col-12">
-                    <div class="form-group">
                         <label>Amount</label>
                         <input type="number" formControlName="amount" id="amount" placeholder="Enter Amount"
                             [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
@@ -137,7 +137,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-4 col-12">
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100"
@@ -161,6 +161,23 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select Payment
+                            Account</span>
+                    </div>
+                </div> -->
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Account*</label>
+                        <select formControlName="payment_account" class="form-control">
+                            <option value="" disabled selected>Select Payment Account
+                            </option>
+                            <option *ngFor="let account of accountListData" [value]="account?.id">
+                                {{ account.title }}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="paymentVoucherForm.get('payment_account').invalid && paymentVoucherForm.get('payment_account').touched">Select
+                            Payment
                             Account</span>
                     </div>
                 </div>
@@ -462,12 +479,29 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Voucher Series</label>
+                        <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
+                            [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': g['payment_voucher_no'].touched && g['payment_voucher_no'].invalid}"> -->
+                        <!-- 18-5 -->
+                        <select formControlName="payment_voucher_no">
+                            <option value="" selected disabled>Select Payment Voucher Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- end 18-5 -->
+                        <span class="text-danger"
+                            *ngIf="payment_voucher_no1 && payment_voucher_no1.invalid && payment_voucher_no1.touched">Enter
+                            Payment Voucher Series.</span>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
+                            <input type="text" placeholder="Search Supplier" aria-label="Customer" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="autobank"
                                 style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': g['supplier'].touched && g['supplier'].invalid}">
@@ -519,7 +553,7 @@
                             Id</span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-4 col-12">
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
                             <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'"
@@ -528,7 +562,7 @@
                                 style="margin-bottom: 0; margin-left: 5px;">Online</label>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-12 col-sm-12 col-12">
                     <div class="form-group">
                         <div class="row">
@@ -580,23 +614,6 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Voucher Series</label>
-                        <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
-                            [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': g['payment_voucher_no'].touched && g['payment_voucher_no'].invalid}"> -->
-                        <!-- 18-5 -->
-                        <select formControlName="payment_voucher_no">
-                            <option value="" selected disabled>Select Payment Voucher Series</option>
-                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                        </select>
-                        <!-- end 18-5 -->
-                        <span class="text-danger"
-                            *ngIf="payment_voucher_no1 && payment_voucher_no1.invalid && payment_voucher_no1.touched">Enter
-                            Payment Voucher Series.</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-4 col-12">
-                    <div class="form-group">
                         <label>Amount</label>
                         <input type="number" formControlName="amount" placeholder="Enter Amount" id="amount"
                             [ngClass]="{'is-invalid': g['amount'].touched && g['amount'].invalid}">
@@ -605,6 +622,19 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <div class="d-flex">
+                            <select formControlName="bank_payment">
+                                <option value="" selected disabled>Select Payment Mode</option>
+                                <option>Online</option>
+                                <option>Cheque</option>
+                                <option>NEFT-RTGS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100"
@@ -627,6 +657,22 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Select Payment
+                            Account</span>
+                    </div>
+                </div> -->
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Account*</label>
+                        <select formControlName="payment_account" class="form-control">
+                            <option value="" disabled selected>Select Payment Account
+                            </option>
+                            <option *ngFor="let account of accountListData" [value]="account?.id">
+                                {{ account.title }}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="paymentVoucherForm.get('payment_account').invalid && paymentVoucherForm.get('payment_account').touched">Select
+                            Payment
                             Account</span>
                     </div>
                 </div>

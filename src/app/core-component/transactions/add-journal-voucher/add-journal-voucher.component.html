@@ -42,7 +42,7 @@
                                         <th>#</th>
                                         <th></th>
                                         <th>From Account<span style="color:red">*</span></th>
-                                        <th>Amount Type<span style="color:red">*</span></th>
+                                        <!-- <th>Amount Type<span style="color:red">*</span></th> -->
                                         <th>Debit<span style="color:red">*</span></th>
                                         <th>Credit<span style="color:red">*</span></th>
                                         <th>Note</th>
@@ -103,7 +103,10 @@
                                                                     <mat-option *ngIf="account.is_active==true"
                                                                         [value]="account?.account_id"
                                                                         (onSelectionChange)="oncheck(account,i)"
-                                                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name : (account?.title + ' (' + account?.account_id + ')')
+                                                                        style="color:#FF9F43">{{ (account?.account_id &&
+                                                                        account?.company_name) ?
+                                                                        (account?.company_name + ' (' +
+                                                                        account?.account_id + ')') : account?.account_id
                                                                         }}</mat-option>
                                                                 </ng-container>
                                                                 <ng-container
@@ -125,7 +128,7 @@
                                                         *ngIf="from_account(i) && from_account(i).invalid && from_account(i).touched">Select
                                                         Account</span>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     <select formControlName="amount_type">
                                                         <option value="" selected disabled>Select Amount Type</option>
                                                         <option value="Credit">Credit</option>
@@ -134,7 +137,7 @@
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="amount_type(i) && amount_type(i).invalid && amount_type(i).touched">Select
                                                         Amount Type</span>
-                                                </td>
+                                                </td> -->
                                                 <td><input type="number" formControlName="amount"
                                                         [value]="debitAmount[i]" #cr (keyup)="debit(i,cr.value)"
                                                         class="input">

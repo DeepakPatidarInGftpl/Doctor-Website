@@ -135,7 +135,7 @@
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
@@ -158,7 +158,7 @@
                         <td class="text-center">{{products?.payment_type}}</td>
                         <td>{{products?.mode_type}}</td>
                         <td>{{products?.payment_voucher_no}}</td>
-                        <td>{{products?.payment_account?.account_id}}</td>
+                        <td>{{products?.payment_account?.company_name}}</td>
                         <td>{{products?.bank_payment}}</td>
                         <td>{{products?.date}}</td>
                         <td>{{products?.transaction_date}}</td>
