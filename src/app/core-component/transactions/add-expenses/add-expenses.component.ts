@@ -21,11 +21,15 @@ export class AddExpensesComponent implements OnInit {
     private toastrService: ToastrService,
     private transactionService: TransactionService,
     private contactService: ContactService,
-    private commonService: CommonServiceService) {
+    private commonService: CommonServiceService,
+  private coreService: CoreService) {
   }
   expensevoucherForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  selectedTaxPercentage: any[] = [];
+  selectedPercentageData: any[] = [];
+  taxSlabList: any[] = [];
   get f() {
     return this.expensevoucherForm.controls;
   }
@@ -56,6 +60,7 @@ export class AddExpensesComponent implements OnInit {
     this.getUser();
     this.getprefix();
     this.addCart(0);
+    this.getTaxSlabList();
 
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
       startWith(''),
@@ -136,6 +141,14 @@ export class AddExpensesComponent implements OnInit {
       account: data?.id,
     });
   }
+
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
   oncheckParty(party: any) {
     let partyId = party;
     this.expensevoucherForm.get('party')?.patchValue(partyId);
@@ -146,7 +159,7 @@ export class AddExpensesComponent implements OnInit {
       service_or_product: new FormControl('Service',),
       amount: new FormControl(0, [Validators.required]),
       discount: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(''),
       tax_value: new FormControl(0,),
       total: new FormControl(0,),
       description: ('')
@@ -321,12 +334,16 @@ export class AddExpensesComponent implements OnInit {
   }
   totalTax(): number {
     let totalAmount = 0;
-    this.getCart().controls.forEach((res: any, index: any) => {
-      const amountControl = this.getCart().controls[index].get('tax');
-      if (amountControl) {
-        totalAmount += +amountControl.value || 0;
-      }
+    this.selectedTaxPercentage.forEach((val, index) => {
+      totalAmount += +val || 0;
     })
+    // this.getCart().controls.forEach((res: any, index: any) => {
+    //   const amountControl = this.getCart().controls[index].get('tax');
+    //   if (amountControl) {
+    //     totalAmount += +amountControl.value || 0;
+    //   }
+    // })
+
     return totalAmount;
   }
   totalTaxValue(): number {
@@ -349,6 +366,39 @@ export class AddExpensesComponent implements OnInit {
     })
     return totalAmount;
   }
+
+  calculateTaxAmout(index) {
+    const taxControl = this.getCart().controls[index].get('tax');
+    const amountControl = this.getCart().controls[index].get('amount');
+    if (this.selectedPercentageData[index]?.variable_tax) {
+      if (this.selectedPercentageData[index]?.amount_tax_slabs[1]?.from_amount < amountControl) {
+        const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        this.selectedTaxPercentage[index] = taxPercentage;
+      } else {
+        const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        this.selectedTaxPercentage[index] = taxPercentage;
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      this.selectedTaxPercentage[index] = taxPercentage;
+    }
+    this.totalTax();
+    this.calculateTotalEveryIndex(index);
+  }
+
+  onChangePercentage(event, index) {
+    console.log(event);
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix.slab_title === (selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData[index] = selectedPrefix;
+    }
+    console.log(selectedPrefix);
+    this.calculateTaxAmout(index);
+  }
+
   // 
   isPercentage: boolean[] = [];
   isAmount: boolean[] = [];
@@ -365,12 +415,14 @@ export class AddExpensesComponent implements OnInit {
   calculateTotalEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const amountControl = cartItem.get('amount');
-    const taxPercentageControl = cartItem.get('tax');
+    // const taxPercentageControl = cartItem.get('tax');
+    const taxPercentageControl = this.selectedTaxPercentage[index];
     const discountPercentageControl = cartItem.get('discount');
     if (amountControl && taxPercentageControl && discountPercentageControl) {
       const discountPercentage = +discountPercentageControl.value || 0;
       const amountControlValue = +amountControl.value || 0;
-      const taxPercentageValue = +taxPercentageControl.value || 0;
+      // const taxPercentageValue = +taxPercentageControl.value || 0;
+      const taxPercentageValue = +taxPercentageControl || 0;
       console.log(discountPercentage, 'discountPercentage');
       console.log(amountControlValue, 'amountControlValue');
       console.log(taxPercentageValue, 'taxPercentageValue');

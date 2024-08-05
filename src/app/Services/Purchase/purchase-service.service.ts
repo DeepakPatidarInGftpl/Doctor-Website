@@ -114,6 +114,12 @@ export class PurchaseServiceService {
     let url = this.apiUrl + '/pv-api/material_inward/?id='
     return this.http.get<any>(`${url}${id}`)
   }
+
+  getMaterialByUserId(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/material_inward/?user_id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+
   MaterialIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/material_inward/?id=';
     return this.http.patch(`${url}${id}`, data);
@@ -164,6 +170,12 @@ export class PurchaseServiceService {
     let url = this.apiUrl + '/pv-api/purchase_bill/?id='
     return this.http.get<any>(`${url}${id}`)
   }
+
+  getPurchaseBillByUserId(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?user_id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+
   PurchaseBillIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/purchase_bill/?id=';
     return this.http.patch(`${url}${id}`, data);

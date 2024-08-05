@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-12">
+                <!-- <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100" style="padding: 0;
@@ -54,7 +54,54 @@
                             Payment Account
                         </span>
                     </div>
+                </div> -->
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Receipt Voucher Series</label>
+                        <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
+                            [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
+                        <select formControlName="receipt_voucher_no">
+                            <option value="" selected disabled>Select Receipt Voucher Series
+                            </option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
+                            Receipt Voucher Series</span>
+                    </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payer*</label>
+                        <mat-form-field class="w-100"
+                            style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search Payer" aria-label="Payer" matInput
+                                [formControl]="payerControl" [matAutocomplete]="Payerauto"
+                                style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': h['payer'].touched && h['payer'].invalid}">
+                            <mat-autocomplete #Payerauto="matAutocomplete">
+                                <mat-option *ngFor="let customer of filteredPayer | async" [value]="customer.account_id"
+                                    (onSelectionChange)="oncheck1(customer)" style="color:#FF9F43">{{
+                                    (customer.title && customer.company_name) ? (customer?.title + '(' +
+                                    customer.company_name + ')' ) : customer?.title }}</mat-option>
+                                <ng-container *ngIf="(filteredPayer | async) as accounts">
+                                    <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
+                                        <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add
+                                            Account</a>
+                                    </mat-option>
+                                    <mat-option *ngIf="payerControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select
+                            Payer</span>
+                    </div>
+                </div>
+
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date*</label>
@@ -113,21 +160,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-4 col-12">
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series*</label>
                         <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
-                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}">
-                        <!-- <select formControlName="receipt_voucher_no">
+                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
+                <!-- <select formControlName="receipt_voucher_no">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                             </select> -->
-                        <span class="text-danger"
+                <!-- <span class="text-danger"
                             *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
                             Receipt Voucher Series</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount*</label>
@@ -140,29 +187,33 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payer*</label>
-                        <mat-form-field class="w-100"
-                            style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Payer" aria-label="Payer" matInput
-                                [formControl]="payerControl" [matAutocomplete]="Payerauto"
-                                style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': h['payer'].touched && h['payer'].invalid}">
-                            <mat-autocomplete #Payerauto="matAutocomplete">
-                                <mat-option *ngFor="let customer of filteredPayer | async" [value]="customer.account_id"
-                                    (onSelectionChange)="oncheck1(customer)" style="color:#FF9F43">{{
-                                    customer.account_id }}</mat-option>
-                                <ng-container *ngIf="(filteredPayer | async) as accounts">
-                                    <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
-                                        <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add
-                                            Account</a>
-                                    </mat-option>
-                                    <mat-option *ngIf="payerControl.value?.length < 3" class="is-loading">Please
-                                        Enter 1 or more characters</mat-option>
-                                </ng-container>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Enter
-                            Payer</span>
+                        <label>Tax Percentage</label>
+                        <select [formControl]="taxPercentage" (change)="onChangePercentage($event, 'bank')">
+                            <option value="" selected disabled>Select Tax Percentage</option>
+                            <option [value]="prefix?.id" *ngFor="let prefix of taxSlabList">
+                                {{prefix?.slab_title}}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="taxPercentage && taxPercentage.invalid && taxPercentage.touched">Select
+                            Tax Slab</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Account*</label>
+                        <select formControlName="payment_account" class="form-control">
+                            <option value="" disabled selected>Select Payment Account
+                            </option>
+                            <option *ngFor="let account of accountListData" [value]="account?.id">
+                                {{ account.title }}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="recieptVoucherForm.get('payment_account').invalid && recieptVoucherForm.get('payment_account').touched">Select
+                            Payment
+                            Account</span>
                     </div>
                 </div>
 
@@ -331,7 +382,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-12">
+                <!-- <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Payment Account*</label>
                         <mat-form-field class="w-100"
@@ -356,7 +407,53 @@
                             *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select Payment
                             Account </span>
                     </div>
+                </div> -->
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Receipt Voucher Series</label>
+                        <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
+                            [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
+                        <select formControlName="receipt_voucher_no">
+                            <option value="" selected disabled>Select Receipt Voucher Series
+                            </option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
+                            Receipt Voucher Series</span>
+                    </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payer*</label>
+                        <mat-form-field class="w-100"
+                            style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search Payer" aria-label="Payer" matInput
+                                [formControl]="payerControl" [matAutocomplete]="Payerautobank"
+                                style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': g['payer'].touched && g['payer'].invalid}">
+                            <mat-autocomplete #Payerautobank="matAutocomplete">
+                                <mat-option *ngFor="let customer of filteredPayer | async" [value]="customer.account_id"
+                                    (onSelectionChange)="oncheckBank1(customer)" style="color:#FF9F43">{{
+                                    customer.account_id }}</mat-option>
+                                <ng-container *ngIf="(filteredPayer | async) as accounts">
+                                    <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
+                                        <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add
+                                            Account</a>
+                                    </mat-option>
+                                    <mat-option *ngIf="payerControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Select
+                            Payer</span>
+                    </div>
+                </div>
+
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date</label>
@@ -386,7 +483,7 @@
                             Voucher no.</span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-4 col-12">
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
                             <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'"
@@ -395,7 +492,7 @@
                                 style="margin-bottom: 0; margin-left: 5px;">Online</label>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-12 col-sm-12 col-12">
                     <div class="form-group">
                         <div class="row">
@@ -446,21 +543,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-4 col-12">
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series</label>
                         <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
-                            [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}">
-                        <!-- <select formControlName="receipt_voucher_no1">
+                            [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
+                <!-- <select formControlName="receipt_voucher_no1">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                             </select> -->
-                        <span class="text-danger"
+                <!-- <span class="text-danger"
                             *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
                             Receipt Voucher Series</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount</label>
@@ -470,7 +567,54 @@
                             Amount</span>
                     </div>
                 </div>
+
                 <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Tax Percentage</label>
+                        <select [formControl]="bankTaxPercentage" (change)="onChangePercentage($event, 'bank')">
+                            <option value="" selected disabled>Select Tax Percentage
+                            </option>
+                            <option [value]="prefix?.id" *ngFor="let prefix of taxSlabList">
+                                {{prefix?.slab_title}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="bankTaxPercentage && bankTaxPercentage.invalid && bankTaxPercentage.touched">Select
+                            Tax Slab</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <div class="d-flex">
+                            <select formControlName="bank_payment">
+                                <option value="" selected disabled>Select Payment Mode</option>
+                                <option>Online</option>
+                                <option>Cheque</option>
+                                <option>NEFT-RTGS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Payment Account*</label>
+                        <select formControlName="payment_account" class="form-control">
+                            <option value="" disabled selected>Select Payment Account
+                            </option>
+                            <option *ngFor="let account of accountListData" [value]="account?.id">
+                                {{ account.title }}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="recieptVoucherForm.get('payment_account').invalid && recieptVoucherForm.get('payment_account').touched">Select
+                            Payment
+                            Account</span>
+                    </div>
+                </div>
+
+                <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Payer*</label>
                         <mat-form-field class="w-100"
@@ -496,7 +640,7 @@
                         <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Enter
                             Payer</span>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">

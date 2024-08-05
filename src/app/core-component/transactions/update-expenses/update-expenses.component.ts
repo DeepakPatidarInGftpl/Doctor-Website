@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -20,12 +21,17 @@ export class UpdateExpensesComponent implements OnInit {
     private transactionService: TransactionService,
     private Arout: ActivatedRoute,
     private contactService: ContactService,
-    private commonService: CommonServiceService
+    private commonService: CommonServiceService,
+    private coreService: CoreService
   ) {
   }
   expensevoucherForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  taxSlabList: any[] = [];
+  selectedTaxPercentage: any[] = [];
+  selectedPercentageData: any[] = [];
+
   get f() {
     return this.expensevoucherForm.controls;
   }
@@ -56,6 +62,8 @@ export class UpdateExpensesComponent implements OnInit {
       status: new FormControl(''),
       note: new FormControl(''),
     });
+
+    this.getTaxSlabList();
 
     this.transactionService.getExpensVoucherById(this.id).subscribe(res => {
       this.editRes = res;
@@ -108,6 +116,13 @@ export class UpdateExpensesComponent implements OnInit {
     })
   }
 
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getExpenceVoucherPrefix().subscribe((res: any) => {
@@ -124,7 +139,8 @@ export class UpdateExpensesComponent implements OnInit {
 
   udateCart(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    // let formarr = new FormArray([]);
+    const expanseVoucherCart: any = this.expensevoucherForm.get('expenses_voucher_cart') as FormArray;
     add.forEach((j: any, i) => {
       if (j.discount > 100) {
         this.isAmount[i] = true;
@@ -134,7 +150,7 @@ export class UpdateExpensesComponent implements OnInit {
         this.isPercentage[i] = true;
         this.isAmount[i] = false;
       }
-      formarr.push(this.fb.group({
+      expanseVoucherCart.push(this.fb.group({
         account: j?.account,
         service_or_product: j?.service_or_product,
         amount: j?.amount,
@@ -144,9 +160,19 @@ export class UpdateExpensesComponent implements OnInit {
         total: j?.total,
         description: j?.description
       }))
+      setTimeout(() => {
+        if(!!this.taxSlabList?.length){
+          const taxTitle = this.getTaxTitleByPercentage(j?.tax);
+          if (taxTitle) {
+            expanseVoucherCart.controls[i].controls['tax'].setValue(taxTitle);
+          }
+          this.selectedTaxPercentage[i] = j?.tax;
+          this.totalTax();
+        }
+      }, 2000);
       this.myControls.push(new FormControl(j.account));
     })
-    return formarr
+    return expanseVoucherCart;
   }
   accountList: any[] = [];
   filterAccount: any[] = [];
@@ -156,6 +182,17 @@ export class UpdateExpensesComponent implements OnInit {
       this.filterAccount = res
     })
   }
+
+  getTaxTitleByPercentage(taxPercentage: number): string {
+    for (let taxSlab of this.taxSlabList) {
+        for (let amountTaxSlab of taxSlab?.amount_tax_slabs) {
+            if (amountTaxSlab.tax.tax_percentage === Number(taxPercentage)) {
+                return taxSlab?.slab_title;
+            }
+        }
+    }
+    return '';
+}
 
   getFilter(data: any) {
     this.filterAccount = this.accountList.filter(account => {
@@ -183,7 +220,7 @@ export class UpdateExpensesComponent implements OnInit {
       service_or_product: new FormControl('',),
       amount: new FormControl(0, [Validators.required]),
       discount: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(''),
       tax_value: new FormControl(0,),
       total: new FormControl(0,),
       description: ('')
@@ -356,14 +393,50 @@ export class UpdateExpensesComponent implements OnInit {
   }
   totalTax(): number {
     let totalAmount = 0;
-    this.getCart().controls.forEach((res: any, index: any) => {
-      const amountControl = this.getCart().controls[index].get('tax');
-      if (amountControl) {
-        totalAmount += +amountControl.value || 0;
-      }
+    this.selectedTaxPercentage.forEach((val, index) => {
+      totalAmount += +val || 0;
     })
+    // this.getCart().controls.forEach((res: any, index: any) => {
+    //   const amountControl = this.getCart().controls[index].get('tax');
+    //   if (amountControl) {
+    //     totalAmount += +amountControl.value || 0;
+    //   }
+    // })
     return totalAmount;
   }
+
+  calculateTaxAmout(index) {
+    const taxControl = this.getCart().controls[index].get('tax');
+    const amountControl = this.getCart().controls[index].get('amount');
+    if (this.selectedPercentageData[index]?.variable_tax) {
+      if (this.selectedPercentageData[index]?.amount_tax_slabs[1]?.from_amount < amountControl) {
+        const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        this.selectedTaxPercentage[index] = taxPercentage;
+      } else {
+        const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        this.selectedTaxPercentage[index] = taxPercentage;
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      this.selectedTaxPercentage[index] = taxPercentage;
+    }
+    this.totalTax();
+    this.calculateTotalEveryIndex(index);
+  }
+
+  onChangePercentage(event, index) {
+    console.log(event);
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix.slab_title === (selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData[index] = selectedPrefix;
+    }
+    console.log(selectedPrefix);
+    this.calculateTaxAmout(index);
+  }
+
   totalTaxValue(): number {
     let totalAmount = 0;
     this.getCart().controls.forEach((res: any, index: any) => {
@@ -399,12 +472,14 @@ export class UpdateExpensesComponent implements OnInit {
   calculateTotalEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const amountControl = cartItem.get('amount');
-    const taxPercentageControl = cartItem.get('tax');
+    // const taxPercentageControl = cartItem.get('tax');
+    const taxPercentageControl = this.selectedTaxPercentage[index];
     const discountPercentageControl = cartItem.get('discount');
     if (amountControl && taxPercentageControl && discountPercentageControl) {
       const discountPercentage = +discountPercentageControl.value || 0;
       const amountControlValue = +amountControl.value || 0;
-      const taxPercentageValue = +taxPercentageControl.value || 0;
+      // const taxPercentageValue = +taxPercentageControl.value || 0;
+      const taxPercentageValue = +taxPercentageControl || 0;
       console.log(discountPercentage, 'discountPercentage');
       console.log(amountControlValue, 'amountControlValue');
       console.log(taxPercentageValue, 'taxPercentageValue');

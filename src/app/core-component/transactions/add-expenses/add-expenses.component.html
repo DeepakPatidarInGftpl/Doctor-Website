@@ -200,7 +200,8 @@
                                                         *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
                                                         Amount</span>
                                                 </td>
-                                                <td><input type="number" formControlName="discount" class="input"
+                                                <td><input type="number" formControlName="discount"
+                                                        class="input discount-input-wrapper"
                                                         (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="symbol" (click)="percentage(i)"
                                                         *ngIf="isPercentage[i]">%</span>
@@ -211,12 +212,30 @@
                                                         Discount (ex:1-100)</span>
                                                 </td>
 
-                                                <td><input type="number" formControlName="tax" class="input"
+                                                <td>
+                                                    <div class="form-group">
+                                                        <label>Tax Percentage</label>
+                                                        <select formControlName="tax"
+                                                            (change)="onChangePercentage($event, i)"
+                                                            (blur)="calculateTotalEveryIndex(i)">
+                                                            <option value="" selected disabled>Select Tax Percentage
+                                                            </option>
+                                                            <option *ngFor="let prefix of taxSlabList;"
+                                                                [value]="prefix?.slab_title">
+                                                                {{prefix?.slab_title}}
+                                                            </option>
+                                                        </select>
+                                                        <span class="text-danger"
+                                                            *ngIf="tax(i) && tax(i).invalid && tax(i).touched">Enter Tax
+                                                            (ex:1-100)</span>
+                                                    </div>
+                                                </td>
+                                                <!-- <td><input type="number" formControlName="tax" class="input"
                                                         (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="tax(i) && tax(i).invalid && tax(i).touched">Enter Tax
                                                         (ex:1-100)</span>
-                                                </td>
+                                                </td> -->
                                                 <td><input type="number" formControlName="tax_value" class="input"
                                                         readonly>
                                                     <span class="text-danger" style="display: block;"
