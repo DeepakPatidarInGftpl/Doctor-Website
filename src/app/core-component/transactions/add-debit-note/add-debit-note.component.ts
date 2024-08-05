@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -14,10 +15,13 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class AddDebitNoteComponent implements OnInit {
   constructor(private fb: FormBuilder, private transactionService: TransactionService,
-    private purchaseService: PurchaseServiceService, private toastr: ToastrService, private router: Router, private commonService: CommonServiceService) { }
+    private purchaseService: PurchaseServiceService, private toastr: ToastrService, private router: Router, private commonService: CommonServiceService, private coreService: CoreService) { }
   debitNoteForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  taxSlabList: any[] = [];
+  selectedPercentageData: any;
+  selectedTaxPercentage: any;
 
   get f() {
     return this.debitNoteForm.controls;
@@ -45,13 +49,14 @@ export class AddDebitNoteComponent implements OnInit {
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       amount: new FormControl(0),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(''),
       note: new FormControl('',),
       total: new FormControl(0),
     })
 
     this.getPurchaseBill();
     this.getprefix()
+    this.getTaxSlabList();
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
@@ -79,6 +84,42 @@ export class AddDebitNoteComponent implements OnInit {
     const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
+  }
+
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
+  onChangePercentage(event) {
+    console.log(event);
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix?.slab_title === (selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData = selectedPrefix;
+    }
+    console.log(selectedPrefix);
+    this.calculateTaxAmout();
+  }
+
+  calculateTaxAmout() {
+    const amountControl = this.debitNoteForm.get('total')?.value;
+    if (this.selectedPercentageData?.variable_tax) {
+      if (this.selectedPercentageData?.amount_tax_slabs[1]?.from_amount < amountControl) {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      } else {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      this.selectedTaxPercentage = taxPercentage;
+    }
   }
 
   prefixNo: any;
@@ -154,10 +195,15 @@ export class AddDebitNoteComponent implements OnInit {
     return filteredSuppliers;
   }
 
-  oncheck(data: any) {
+  oncheck(id: any, data: any) {
     console.log(data);
     this.debitNoteForm.patchValue({
-      party: data
+      party: id
+    })
+
+    const userId = data?.userid?.id;
+    this.purchaseService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+      this.purchaseList = res;
     })
   }
   oncheck2(data: any) {
@@ -173,6 +219,11 @@ export class AddDebitNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
+    const totalAmount = this.debitNoteForm.get('total')?.value;
+    if(totalAmount < 0) {
+      this.toastr.error('Payment voucher amount must be greater than 0.');
+      return;
+    }
     if (this.debitNoteForm.valid) {
       this.loaders = true;
       const formdata = new FormData();
@@ -183,7 +234,7 @@ export class AddDebitNoteComponent implements OnInit {
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
       formdata.append('amount', this.debitNoteForm.get('amount')?.value);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
-      formdata.append('tax', this.debitNoteForm.get('tax')?.value);
+      formdata.append('tax', this.selectedTaxPercentage);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
 
       this.transactionService.addDebitNote(formdata).subscribe(res => {

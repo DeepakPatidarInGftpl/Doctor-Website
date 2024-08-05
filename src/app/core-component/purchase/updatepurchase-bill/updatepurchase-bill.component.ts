@@ -506,7 +506,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   supplierId: any;
-  oncheck(event: any) {
+  oncheck(event: any, data: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
@@ -522,6 +522,12 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.puchaseBillForm.patchValue({
       party: selectedItemId
     }, { emitEvent: false });
+
+    const userId = data?.userid?.id;
+    this.purchaseService.getMaterialByUserId(userId).subscribe((res) => {
+      this.materialList = res;
+    });
+
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;

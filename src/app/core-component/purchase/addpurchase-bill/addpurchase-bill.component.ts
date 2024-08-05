@@ -402,7 +402,7 @@ export class AddpurchaseBillComponent implements OnInit {
   selectBatch: any;
   selectPaymentTerm: any;
   supplierId: any;
-  oncheck(event: any) {
+  oncheck(event: any, data: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
@@ -462,7 +462,8 @@ export class AddpurchaseBillComponent implements OnInit {
       party: selectedItemId,
     });
 
-    this.purchaseService.getMaterialById(selectedItemId).subscribe((res) => {
+    const userId = data?.userid?.id;
+    this.purchaseService.getMaterialByUserId(userId).subscribe((res) => {
       // console.log(res);
       this.materialList = res;
     });

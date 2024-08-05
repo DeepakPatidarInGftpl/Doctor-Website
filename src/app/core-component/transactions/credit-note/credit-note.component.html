@@ -86,7 +86,8 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Credit Note Date</label>
-                                    <input type="date" [formControl]="creditNoteDate" [attr.min]="minDate" [attr.max]="maxDate" (change)="filterData()">
+                                    <input type="date" [formControl]="creditNoteDate" [attr.min]="minDate"
+                                        [attr.max]="maxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -122,7 +123,7 @@
                         <th (click)="sort('id')" class="thone">Credit Note Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Credit Note No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sales Bill<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Round off <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
@@ -148,7 +149,7 @@
                         <td>{{products?.date}}</td>
                         <td>{{products.credit_note_no}}</td>
                         <td>{{products?.sale_bill_no?.customer_bill_no}}</td>
-                        <td>{{products.reason}}</td>
+                        <!-- <td>{{products.reason}}</td> -->
                         <td>{{products.roundoff}}</td>
                         <td>{{products.tax}}</td>
                         <td>{{products.total}}</td>

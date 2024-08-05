@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -17,10 +18,13 @@ export class UpdateDebitNoteComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private transactionService: TransactionService,
     private purchaseService: PurchaseServiceService, private toastr: ToastrService,
-    private router: Router, private Arout: ActivatedRoute, private contactService: ContactService, private commonService: CommonServiceService) { }
+    private router: Router, private Arout: ActivatedRoute, private contactService: ContactService, private commonService: CommonServiceService, private coreService: CoreService) { }
   debitNoteForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  taxSlabList: any[] = [];
+  selectedPercentageData: any;
+  selectedTaxPercentage: any;
 
   get f() {
     return this.debitNoteForm.controls;
@@ -55,10 +59,12 @@ export class UpdateDebitNoteComponent implements OnInit {
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       amount: new FormControl(''),
-      tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(''),
       note: new FormControl('',),
       total: new FormControl(''),
     })
+
+    this.getTaxSlabList();
 
     this.transactionService.getDebitNoteById(this.id).subscribe(res => {
       this.getRes = res;
@@ -66,6 +72,16 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.debitNoteForm.patchValue(this.getRes);
       this.debitNoteForm.get('party')?.patchValue(res.party.id);
       this.debitNoteForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
+
+    setTimeout(() => {
+      if(!!this.taxSlabList?.length){
+        const taxTitle = this.getTaxTitleByPercentage(res?.tax);
+        if (taxTitle) {
+          this.debitNoteForm.controls['tax'].setValue(taxTitle);
+        }
+      }
+    }, 2000);
+
       // this.debitNoteForm.get('debit_note_no')?.patchValue(res?.debit_note_no?.id); //20-5
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
 
@@ -103,6 +119,17 @@ export class UpdateDebitNoteComponent implements OnInit {
       }
     })
   }
+
+  getTaxTitleByPercentage(taxPercentage: number): string {
+    for (let taxSlab of this.taxSlabList) {
+        for (let amountTaxSlab of taxSlab?.amount_tax_slabs) {
+            if (amountTaxSlab.tax.tax_percentage === Number(taxPercentage)) {
+                return taxSlab?.slab_title;
+            }
+        }
+    }
+    return '';
+}
 
   dateValidation(financialYear) {
     const dateControl = this.debitNoteForm.get('date');
@@ -151,6 +178,41 @@ export class UpdateDebitNoteComponent implements OnInit {
     })
   }
 
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
+  onChangePercentage(event) {
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix?.slab_title === (selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData = selectedPrefix;
+    }
+    console.log(selectedPrefix);
+    this.calculateTaxAmout();
+  }
+
+  calculateTaxAmout() {
+    const amountControl = this.debitNoteForm.get('total')?.value;
+    if (this.selectedPercentageData?.variable_tax) {
+      if (this.selectedPercentageData?.amount_tax_slabs[1]?.from_amount < amountControl) {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      } else {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      this.selectedTaxPercentage = taxPercentage;
+    }
+  }
+
   purchaseList: any[] = []
   filterPurchaseBill: any[] = []
   getPurchaseBill() {
@@ -185,11 +247,15 @@ export class UpdateDebitNoteComponent implements OnInit {
   }
 
 
-  oncheck(event: any) {
+  oncheck(event: any, data: any) {
     console.log(event);
     this.debitNoteForm.patchValue({
       party: event
     })
+      const userId = data?.userid?.id;
+      this.purchaseService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+        this.purchaseList = res;
+      })
   }
   oncheck2(data: any) {
     console.log(data);
@@ -204,6 +270,11 @@ export class UpdateDebitNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
+    const totalAmount = this.debitNoteForm.get('total')?.value;
+    if(totalAmount < 0) {
+      this.toastr.error('Payment voucher amount must be greater than 0.');
+      return;
+    }
     if (this.debitNoteForm.valid) {
       this.loaders = true;
       const formdata = new FormData();
@@ -215,7 +286,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
       formdata.append('amount', this.debitNoteForm.get('amount')?.value);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
-      formdata.append('tax', this.debitNoteForm.get('tax')?.value);
+      formdata.append('tax', this.selectedTaxPercentage);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
       this.transactionService.updateDebitNote(formdata, this.id).subscribe(res => {
         // console.log(res);

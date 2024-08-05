@@ -17,10 +17,13 @@ export class UpdateCreditNoteComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private transactionService: TransactionService,
     private saleService: SalesService, private toastr: ToastrService, private router: Router,
-    private Aroute: ActivatedRoute, private commonService: CommonServiceService) { }
+    private Aroute: ActivatedRoute, private commonService: CommonServiceService, private coreService: CoreService) { }
   debitNoteForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  taxSlabList: any[] = [];
+  selectedPercentageData: any;
+  selectedTaxPercentage: any;
 
   get f() {
     return this.debitNoteForm.controls;
@@ -43,7 +46,7 @@ export class UpdateCreditNoteComponent implements OnInit {
       sale_bill_no: new FormControl(''),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
-      tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(''),
       note: new FormControl('',),
       total: new FormControl(''),
       status: new FormControl('')
@@ -52,6 +55,7 @@ export class UpdateCreditNoteComponent implements OnInit {
     this.getAccount()
     this.getSaleBill()
     this.getprefix()
+    this.getTaxSlabList();
 
     this.transactionService.getCreditNoteById(this.id).subscribe(res => {
       console.log(res);
@@ -61,10 +65,54 @@ export class UpdateCreditNoteComponent implements OnInit {
       // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
       this.fromAccountControl.setValue(res?.account?.account_id);
       this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
+      setTimeout(() => {
+        if(!!this.taxSlabList?.length){
+          const taxTitle = this.getTaxTitleByPercentage(res?.tax);
+          if (taxTitle) {
+            this.debitNoteForm.controls['tax'].setValue(taxTitle);
+          }
+        }
+      }, 2000);
     })
 
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
+  }
+
+  getTaxSlabList() {
+    this.coreService.getTaxSlab().subscribe((res: any) => {
+      console.log(res);
+      this.taxSlabList = res;
+    })
+  }
+
+  onChangePercentage(event) {
+    console.log(event);
+    const target = event.target as HTMLSelectElement;
+    const selectedValue = target.value;
+    const selectedPrefix = this.taxSlabList.find(prefix => prefix?.slab_title === (selectedValue));
+
+    if (selectedPrefix) {
+      this.selectedPercentageData = selectedPrefix;
+    }
+    console.log(selectedPrefix);
+    this.calculateTaxAmout();
+  }
+
+  calculateTaxAmout() {
+    const amountControl = this.debitNoteForm.get('total')?.value;
+    if (this.selectedPercentageData?.variable_tax) {
+      if (this.selectedPercentageData?.amount_tax_slabs[1]?.from_amount < amountControl) {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[1]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      } else {
+        const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+        this.selectedTaxPercentage = taxPercentage;
+      }
+    } else {
+      const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
+      this.selectedTaxPercentage = taxPercentage;
+    }
   }
 
   dateValidation(financialYear) {
@@ -139,10 +187,26 @@ export class UpdateCreditNoteComponent implements OnInit {
     }
   }
 
+  getTaxTitleByPercentage(taxPercentage: number): string {
+    for (let taxSlab of this.taxSlabList) {
+        for (let amountTaxSlab of taxSlab?.amount_tax_slabs) {
+            if (amountTaxSlab.tax.tax_percentage === Number(taxPercentage)) {
+                return taxSlab?.slab_title;
+            }
+        }
+    }
+    return '';
+}
 
   oncheck(event: any) {
     this.debitNoteForm.patchValue({
       account: event.id
+    })
+
+    const userId = event?.user ? event?.user : '';
+    this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      this.FiltersaleBillList = res;
     })
   }
   oncheck2(data: any) {
@@ -157,6 +221,11 @@ export class UpdateCreditNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
+    const totalAmount = this.debitNoteForm.get('total')?.value;
+    if(totalAmount < 0) {
+      this.toastr.error('Payment voucher amount must be greater than 0.');
+      return;
+    }
     if (this.debitNoteForm.valid) {
       this.loaders = true;
 
@@ -168,7 +237,7 @@ export class UpdateCreditNoteComponent implements OnInit {
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
       formdata.append('roundoff', this.debitNoteForm.get('roundoff')?.value);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
-      formdata.append('tax', this.debitNoteForm.get('tax')?.value);
+      formdata.append('tax', this.selectedTaxPercentage);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
       formdata.append('pos_bill', '');
       formdata.append('type', '');

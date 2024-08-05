@@ -317,6 +317,12 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  viewAllNotification() {
+    this.notificationService.viewAllNotification().subscribe((res) => {
+      this.getNotificationList();
+    })
+  }
+
   isCloseDay = false;
   checkDayClose() {
     this.companyService.getDayCheck().subscribe(
