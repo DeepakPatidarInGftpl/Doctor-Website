@@ -67,12 +67,15 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Select Sale Bill*</label>
-                        <!-- <select formControlName="sale_bill_no"  id="sale_bill_no" [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
+                        <select formControlName="sale_bill_no" id="sale_bill_no"
+                            [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
                             <option value="" selected disabled>Select Sale Bill</option>
-                            <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of accountList"> {{purchasebill?.refrence_bill_no}}</option>
-                        </select> -->
+                            <option value="{{item?.id}}" *ngFor="let item of saleBillList">
+                                {{item?.id}}</option>
+                            <option *ngIf="!saleBillList?.length" value="" disabled>Select Sale Bill</option>
+                        </select>
 
-                        <mat-form-field class="w-100"
+                        <!-- <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
                             <input type="text" placeholder="Search Sale Bill" aria-label="Search sale Bills" matInput
                                 [formControl]="billControl" (input)="getFilterBill($event.target.value)"
@@ -90,19 +93,10 @@
                                 <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or
                                     more characters </mat-option>
                             </mat-autocomplete>
-                        </mat-form-field>
+                        </mat-form-field> -->
                         <span class="text-danger"
                             *ngIf="sale_bill_no && sale_bill_no.invalid && sale_bill_no.touched">Select Sale Bill No.
                         </span>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-sm-4 col-12">
-                    <div class="form-group">
-                        <label>Reason</label>
-                        <input type="text" formControlName="reason" placeholder="Enter Reason"
-                            [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
-                        <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
                     </div>
                 </div>
 
@@ -116,12 +110,27 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-sm-4 col-12">
+                <!-- <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Tax %</label>
                         <input type="number" formControlName="tax" placeholder="Enter Tax"
                             [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
+                    </div>
+                </div> -->
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Tax Percentage</label>
+                        <select formControlName="tax" (change)="onChangePercentage($event)">
+                            <option value="" selected disabled>Select Tax Percentage
+                            </option>
+                            <option *ngFor="let prefix of taxSlabList;" [value]="prefix?.slab_title">
+                                {{prefix?.slab_title}}
+                            </option>
+                        </select>
+                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax
+                            (ex:1-100)</span>
                     </div>
                 </div>
 
@@ -136,10 +145,19 @@
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
+                        <label>Reason</label>
+                        <input type="text" formControlName="reason" placeholder="Enter Reason"
+                            [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
+                        <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
                         <label>Note</label>
                         <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
-                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Note</span>
+                        <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter Note</span>
                     </div>
                 </div>
 

@@ -163,6 +163,12 @@ export class SalesService {
     let url = this.apiUrl + '/pv-api/sale_bill/?id='
     return this.http.get<any>(`${url}${id}`)
   }
+
+  getSalesBillByUserId(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/sale_bill/?user_id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+
   SalesBillIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/sale_bill/?id=';
     return this.http.patch(`${url}${id}`, data);

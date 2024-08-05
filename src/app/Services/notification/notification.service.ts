@@ -28,5 +28,14 @@ export class NotificationService {
       }),
     })
 }
+
+  viewAllNotification() : Observable<any> {
+    let url = this.apiUrl + `/pv-api/notification_all_view/`;
+    return this.http.get<any>(`${url}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }),
+    })
+  }
   
 }

@@ -22,6 +22,7 @@ export class NotificationsComponent implements OnInit {
   itemsPerPage: number = 10;
   notificationIds: any = [];
   selectedNotificationIds = [];
+  isAllNotificationView = false;
 
   constructor(private notificationService: NotificationService) {}
 
@@ -61,6 +62,11 @@ export class NotificationsComponent implements OnInit {
         };
       });
       console.log(this.notificationList);
+      let isAllNotificationView = [];
+      this.notificationList.map((val)=> {
+        isAllNotificationView.push(val?.is_view);
+      })
+      this.isAllNotificationView = isAllNotificationView.every(value => value === true);
     });
   }
 
@@ -85,6 +91,12 @@ export class NotificationsComponent implements OnInit {
         this.selectedNotificationIds = [];
       }
     );
+  }
+
+  viewAllNotification() {
+    this.notificationService.viewAllNotification().subscribe((res) => {
+      this.getNotificationList(this.page);
+    })
   }
 
   notificationRead(id: number, isView: boolean) {
