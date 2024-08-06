@@ -1,4 +1,3 @@
-
 <div class="page-header">
     <div class="page-title">
         <h4 class="titl">Payment Voucher LIST</h4>
@@ -9,29 +8,35 @@
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="form-group w-100" *ngIf="isAdmin">
                     <div class="dropdown">
-                        <button type="button" class="dropdown-toggle button" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
+                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">Select Branch</button>
                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                            <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                            <li> <input type="text" placeholder="search category" class="form-control"
+                                    [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                    [ngModelOptions]="{standalone: true}">
                             </li>
                             <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                    <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                            </a></li>
+                                    <input type="checkbox" [value]="branch.id"
+                                        [checked]="selectData.includes(branch.id)"
+                                        (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                        style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                        (click)="onLabelClick($event)">{{branch.title}}</label>
+                                </a></li>
                         </ul>
                     </div>
                     <div class="d-flex">
-                    <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                        <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                     </div>
                 </div>
             </div>
         </div>
-    
-    
-   <ng-container *ngIf="isAdd">
-        <a routerLink="//transaction/addpaymentVoucher" class="btn btn-added">
-            <img src="assets/img/icons/plus.svg" alt="img">Add New Payment Voucher
-        </a>
+
+
+        <ng-container *ngIf="isAdd">
+            <a routerLink="//transaction/addpaymentVoucher" class="btn btn-added">
+                <img src="assets/img/icons/plus.svg" alt="img">Add New Payment Voucher
+            </a>
         </ng-container>
     </div>
 </div>
@@ -48,29 +53,34 @@
                 </div>
                 <div class="search-input">
                     <a class="btn btn-searchset">
-                      <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Supplier/Voucher No" [(ngModel)]="titlee" (ngModelChange)="search()">
-                    </label>
-                  </div>
+                            <input type="search" class="form-control form-control-sm"
+                                placeholder="Search Supplier/Voucher No" [(ngModel)]="titlee"
+                                (ngModelChange)="search()">
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                                src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                                src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
-           <!-- /Filter -->
-           <div class="card mb-0" id="filter_inputs">
+        <!-- /Filter -->
+        <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
@@ -78,13 +88,14 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Reciept Voucher Date</label>
-                                    <input type="date" [formControl]="paymentVoucherDate" [attr.min]="minDate" [attr.max]="maxDate" (change)="filterData()">
+                                    <input type="date" [formControl]="paymentVoucherDate" [attr.min]="minDate"
+                                        [attr.max]="maxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Reciept Type</label>
-                                    <select [(ngModel)]="selectedRecieptType" (change)="filterData()"> 
+                                    <select [(ngModel)]="selectedRecieptType" (change)="filterData()">
                                         <option value="" selected disabled>Select Reciept Type</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Bank">Bank</option>
@@ -98,25 +109,26 @@
                                         <option value="" selected disabled>Select Mode Type</option>
                                         <option value="On Account">On Account</option>
                                         <option value="Advance Payment">Advance Payment</option>
-                                        <option value="Against Bill">Against Bill</option>      
+                                        <option value="Against Bill">Against Bill</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Amount</label>
-                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount"
+                                        (keyup)="filterData()">
                                     <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span>
                                 </div>
                             </div>
                         </div>
-                         <div class="form-group d-flex justify-content-end">
+                        <div class="form-group d-flex justify-content-end">
                             <a class="btn btn-filters p-4" style="width: 20%;" (click)="clearFilters()">Clear Filter</a>
-                          </div>     
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
         <!-- /Filter -->
         <div class="table-responsive">
             <table class="table datanew" id="mytable">
@@ -130,10 +142,10 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
@@ -146,7 +158,8 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0 ">
-                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -154,10 +167,11 @@
                             </label>
                         </td>
                         <td>{{i+1+'.'}}</td>
-                        <td class="productimgname"><a routerLink="//transaction/detailspaymentVoucher/{{products.id}}" style="line-height: 3;">{{products?.supplier?.company_name}}</a></td>
+                        <td>{{products?.payment_voucher_no}}</td>
+                        <td class="productimgname"><a routerLink="//transaction/detailspaymentVoucher/{{products.id}}"
+                                style="line-height: 3;">{{products?.supplier?.company_name}}</a></td>
                         <td class="text-center">{{products?.payment_type}}</td>
                         <td>{{products?.mode_type}}</td>
-                        <td>{{products?.payment_voucher_no}}</td>
                         <td>{{products?.payment_account?.company_name}}</td>
                         <td>{{products?.bank_payment}}</td>
                         <td>{{products?.date}}</td>
@@ -165,14 +179,19 @@
                         <td class="text-center">{{products?.transaction_id}}</td>
                         <td>{{products?.amount}}</td>
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
+                            <span
+                                [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}"
+                                class="badges">{{products.status}}</span>
                         </td>
-                        <td><mat-slide-toggle (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)" [(ngModel)]="products.is_active"></mat-slide-toggle></td>
+                        <td><mat-slide-toggle
+                                (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle></td>
                         <td>
                             <a class="me-1" routerLink="//transaction/detailspaymentVoucher/{{products?.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//transaction/updatepaymentVoucher/{{products?.id}}" *ngIf="isEdit">
+                            <a class="me-1" routerLink="//transaction/updatepaymentVoucher/{{products?.id}}"
+                                *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products?.id)" class="me-1 confirm-text" *ngIf="isDelete">
@@ -182,36 +201,37 @@
                     </tr>
                 </tbody>
                 <tbody *ngIf="filteredData?.length===0 && !loader">
-                    <tr> 
-                      <td colspan="10">
-                        <p class="center-textt">Data not available</p>
-                      </td>
+                    <tr>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                        </td>
                     </tr>
-                  </tbody>
-             </table>
-             <div class="progressbar">
+                </tbody>
+            </table>
+            <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
-             </div>
+            </div>
             <div class="row" *ngIf="!loader">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
-                    <select [(ngModel)]="itemsPerPage" class="pagination"  #v (change)="changePg(v.value)">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="-1">All</option>
-                      </select>
+                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
-               <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                <div class="f-right">
-                    <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                    <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                    <div class="f-right">
+                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
+                    </div>
                 </div>
-               </div>
-             </div>
+            </div>
         </div>
     </div>
 </div>

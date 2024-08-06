@@ -11,21 +11,22 @@
       <div class="row">
         <div class="col-lg-4 col-md-6 col-12">
           <div class="form-group">
-            <label>User*</label>
+            <label>Payer*</label>
             <mat-form-field class="w-100" style="padding: 0;
                     width: 100%;
                     min-width: 100%;border-top: none;">
-              <input type="text" placeholder="Search Company" aria-label="User" matInput [formControl]="supplierControl"
+              <input type="text" placeholder="Search Payer" aria-label="User" matInput [formControl]="supplierControl"
                 [matAutocomplete]="auto" style="box-sizing: border-box;"
                 [ngClass]="{'is-invalid': f['user'].touched && f['user'].invalid}">
               <mat-autocomplete #auto="matAutocomplete">
                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                  <mat-option *ngIf="supplier.is_active==true && !!supplier?.detail?.company_name" [value]="supplier.username+' '+supplier?.username"
-                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{supplier?.detail?.company_name}}</mat-option>
+                  <mat-option *ngIf="supplier.is_active==true && !!supplier?.detail?.company_name"
+                    [value]="supplier.username+' '+supplier?.username" (onSelectionChange)="oncheck(supplier.id)"
+                    style="color:#FF9F43">{{supplier?.detail?.company_name}}</mat-option>
                 </ng-container>
                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                   <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
-                    <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add User</a>
+                    <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Payer</a>
                   </mat-option>
                   <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
                     Enter 1 or more characters</mat-option>
@@ -33,7 +34,7 @@
               </mat-autocomplete>
             </mat-form-field>
             <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
-              User
+              Payer
             </span>
           </div>
         </div>
@@ -41,7 +42,8 @@
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Debit Note Date*</label>
-            <input type="date" formControlName="consumption_date" [attr.min]="minDate" [attr.max]="maxDate" id="consumption_date"
+            <input type="date" formControlName="consumption_date" [attr.min]="minDate" [attr.max]="maxDate"
+              id="consumption_date"
               [ngClass]="{'is-invalid': f['consumption_date'].touched && f['consumption_date'].invalid}">
             <span class="text-danger"
               *ngIf="consumption_date && consumption_date.invalid && consumption_date.touched">Select Consumption Date
@@ -56,22 +58,22 @@
             <select formControlName="prefix">
               <option value="" selected disabled>Select Journal Consumption Series</option>
               <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-          </select> 
+            </select>
             <span class="text-danger" *ngIf="prefix && prefix.invalid && prefix.touched">Enter Prefix</span>
           </div>
         </div>
 
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Consumption Series</label>
+            <label>Material Consumption No</label>
             <!-- <input type="text" formControlName="consumption_no" placeholder="Enter Consumtion No." id="consumption_no"
               [ngClass]="{ 'is-invalid': f['consumption_no'].touched && f['consumption_no'].invalid}"> -->
-              <select formControlName="consumption_no">
-                <option value="" selected disabled>Select Journal Consumption Series</option>
-                <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-            </select> 
+            <select formControlName="consumption_no">
+              <option value="" selected disabled>Select Journal Consumption Series</option>
+              <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+            </select>
             <span class="text-danger" *ngIf="consumption_no && consumption_no.invalid && consumption_no.touched">Enter
-              Consumption Series</span>
+              Material Consumption No</span>
           </div>
         </div>
         <div class="col-lg-4 col-sm-4 col-12">
@@ -104,54 +106,55 @@
         <div class="card">
           <div class="card-body">
             <div class="row">
-            <div class="col-lg-3 col-sm-3 col-12">
-              <div class="form-group">
-                <label>Select Product</label>
-                <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
-                  [formControl]="barcodeControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
-                  style="box-sizing: border-box;" />
-                <mat-autocomplete #autos="matAutocomplete">
-                  <ng-container *ngIf="barcodeControl.value?.length >= 1 && barcodeControl.value?.length > 0">
-                    <ng-container *ngFor="let option of variantList">
-                      <mat-option *ngIf="option.is_active==true"
-                        [value]="option?.product_title + ' ' + option?.variant_name"
-                        (onSelectionChange)="oncheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title + '
-                        ' + option?.variant_name}}</mat-option>
+              <div class="col-lg-3 col-sm-3 col-12">
+                <div class="form-group">
+                  <label>Select Product</label>
+                  <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
+                    [formControl]="barcodeControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
+                    style="box-sizing: border-box;" />
+                  <mat-autocomplete #autos="matAutocomplete">
+                    <ng-container *ngIf="barcodeControl.value?.length >= 1 && barcodeControl.value?.length > 0">
+                      <ng-container *ngFor="let option of variantList">
+                        <mat-option *ngIf="option.is_active==true"
+                          [value]="option?.product_title + ' ' + option?.variant_name"
+                          (onSelectionChange)="oncheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title +
+                          '
+                          ' + option?.variant_name}}</mat-option>
+                      </ng-container>
                     </ng-container>
-                  </ng-container>
-                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
-                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                  </mat-option>
-                  <mat-option *ngIf="barcodeControl.value?.length < 3" class="is-loading"> Please Enter 3 or more
-                    characters</mat-option>
-                </mat-autocomplete>
+                    <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
+                      <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                    </mat-option>
+                    <mat-option *ngIf="barcodeControl.value?.length < 3" class="is-loading"> Please Enter 3 or more
+                      characters</mat-option>
+                  </mat-autocomplete>
+                </div>
               </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12">
-              <div class="form-group">
-                <label>QTY</label>
-                <input type="number" formControlName="qty" placeholder="Enter qty" id="qty"
-                  [ngClass]="{ 'is-invalid': f['qty'].touched && f['qty'].invalid}">
-                <span class="text-danger" *ngIf="qty && qty.invalid && qty.touched">Enter qty</span>
+              <div class="col-lg-3 col-sm-3 col-12">
+                <div class="form-group">
+                  <label>QTY</label>
+                  <input type="number" formControlName="qty" placeholder="Enter qty" id="qty"
+                    [ngClass]="{ 'is-invalid': f['qty'].touched && f['qty'].invalid}">
+                  <span class="text-danger" *ngIf="qty && qty.invalid && qty.touched">Enter qty</span>
+                </div>
               </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12">
-              <div class="form-group">
-                <label>Price</label>
-                <input type="number" formControlName="price" placeholder="Enter price" id="price"
-                  [ngClass]="{ 'is-invalid': f['price'].touched && f['price'].invalid}">
-                <span class="text-danger" *ngIf="price && price.invalid && price.touched">Enter Price</span>
+              <div class="col-lg-3 col-sm-3 col-12">
+                <div class="form-group">
+                  <label>Price</label>
+                  <input type="number" formControlName="price" placeholder="Enter price" id="price"
+                    [ngClass]="{ 'is-invalid': f['price'].touched && f['price'].invalid}">
+                  <span class="text-danger" *ngIf="price && price.invalid && price.touched">Enter Price</span>
+                </div>
               </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12">
-              <div class="form-group">
-                <label>Total Action</label>
-                <input type="number" formControlName="total_action" placeholder="Enter total_action" id="total_action"
-                  [ngClass]="{ 'is-invalid': f['total_action'].touched && f['total_action'].invalid}">
-                <span class="text-danger" *ngIf="total_action && total_action.invalid && total_action.touched">Enter
-                  Total Action</span>
+              <div class="col-lg-3 col-sm-3 col-12">
+                <div class="form-group">
+                  <label>Total Action</label>
+                  <input type="number" formControlName="total_action" placeholder="Enter total_action" id="total_action"
+                    [ngClass]="{ 'is-invalid': f['total_action'].touched && f['total_action'].invalid}">
+                  <span class="text-danger" *ngIf="total_action && total_action.invalid && total_action.touched">Enter
+                    Total Action</span>
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </div>

@@ -112,7 +112,7 @@ export class UpdatePaymentVoucherComponent implements OnInit {
           map((value) => this._filter(value, true))
         );
       }
-    });
+    });    
 
     //payer
     this.getPurchaseBill();
@@ -133,6 +133,12 @@ export class UpdatePaymentVoucherComponent implements OnInit {
         this.paymentVoucherBankForm
           .get('payment_account')
           .patchValue(this.editRes?.payment_account?.id);
+
+          const userId = res?.supplier?.userid ? res?.supplier?.userid : ''
+          this.transactionService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+            this.purchaseBillList = res;
+            this.filterPurchaseBill = res;
+          });
 
         // this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
         if (this.editRes?.payment_cart.length > 0) {
@@ -159,6 +165,12 @@ export class UpdatePaymentVoucherComponent implements OnInit {
         this.paymentVoucherForm
           .get('payment_voucher_no')
           ?.patchValue(res?.payment_voucher_no); // 20-5.
+
+          const userId = res?.supplier?.userid ? res?.supplier?.userid : ''
+          this.transactionService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+            this.purchaseBillList = res;
+            this.filterPurchaseBill = res;
+          });
 
         if (this.editRes?.payment_cart.length > 0) {
           this.paymentVoucherForm.setControl(
@@ -218,10 +230,11 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   }
 
   udateCart(add: any): FormArray {
-    let formarr = new FormArray([]);
+    // let formarr = new FormArray([]);
+    let paymentVoucherCart = this.getCart();
     add.forEach((j: any, i) => {
       this.isAgainstBill = true;
-      formarr.push(
+      paymentVoucherCart.push(
         this.fb.group({
           purchase_bill: j.purchase_bill?.id,
           original_amount: j?.original_amount,
@@ -231,9 +244,9 @@ export class UpdatePaymentVoucherComponent implements OnInit {
           debit_note_cart: this.updateDebitNoteCart(j.debit_note_cart, i),
         })
       );
-      this.myControls.push(new FormControl(j?.purchase_bill?.refrence_bill_no));
+      this.myControls.push(new FormControl(j?.purchase_bill?.supplier_bill_no));
     });
-    return formarr;
+    return paymentVoucherCart;
   }
   //update cart
   updateDebitNoteCart(debit_Cart: any, i: any): FormArray {
@@ -261,10 +274,11 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   }
 
   udateCartBank(add: any): FormArray {
-    let formarr = new FormArray([]);
+    // let formarr = new FormArray([]);
+    let paymentVoucherBankCart = this.getCartBank();
     add.forEach((j: any, i) => {
       this.isAgainstBillBank = true;
-      formarr.push(
+      paymentVoucherBankCart.push(
         this.fb.group({
           purchase_bill: j.purchase_bill?.id,
           original_amount: j?.original_amount,
@@ -274,9 +288,9 @@ export class UpdatePaymentVoucherComponent implements OnInit {
           debit_note_cart: this.updateDebitNoteCartBank(j.debit_note_cart, i),
         })
       );
-      this.myControls.push(new FormControl(j?.purchase_bill?.refrence_bill_no));
+      this.myControls.push(new FormControl(j?.purchase_bill?.supplier_bill_no));
     });
-    return formarr;
+    return paymentVoucherBankCart;
   }
   //update cart
   updateDebitNoteCartBank(debit_Cart: any, i: any): FormArray {
@@ -489,8 +503,8 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   }
   getFilter(data: any) {
     this.filterPurchaseBill = this.purchaseBillList.filter((salebill) => {
-      if (salebill && salebill?.refrence_bill_no) {
-        const aliasLower = salebill?.refrence_bill_no.toLowerCase();
+      if (salebill && salebill?.supplier_bill_no) {
+        const aliasLower = salebill?.supplier_bill_no.toLowerCase();
         return aliasLower.includes(data);
       }
       return false;
@@ -659,7 +673,7 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   onSubmit() {
     console.log(this.paymentVoucherForm.value);
     const amount = this.paymentVoucherForm.get('amount')?.value;
-    if (amount < 1) {
+    if (!amount || Number(amount) < 1) {
       this.toastr.error('Payment voucher amount must be greater than 0.');
       return;
     }
@@ -762,7 +776,7 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   onBankSubmit() {
     console.log(this.paymentVoucherBankForm.value);
     const amount = this.paymentVoucherBankForm.get('amount')?.value;
-    if (amount < 1) {
+    if (!amount || Number(amount) < 1) {
       this.toastr.error('Payment voucher amount must be greater than 0.');
       return;
     }

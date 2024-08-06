@@ -116,7 +116,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     //   map(value => this._filterr(value, true))
     // );
     // this.getAccount();
-    this.getPurchaseBill();
+    // this.getPurchaseBill();
     this.getDebitNote();
     this.getprefix();
     this.getAccountByAlies('cash-in-hand');
@@ -362,7 +362,7 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   getFilter(data: any) {
     this.filterPurchaseBill = this.purchaseBillList.filter((salebill) => {
-      if (salebill && salebill?.refrence_bill_no) {
+      if (salebill && salebill?.supplier_bill_no) {
         const aliasLower = salebill?.refrence_bill_no.toLowerCase();
         return aliasLower.includes(data);
       }
@@ -443,6 +443,11 @@ export class AddPaymentVoucherComponent implements OnInit {
     const selectedItemId = data.id;
     this.paymentVoucherForm.patchValue({
       supplier: selectedItemId,
+    });
+    const userId = data?.userid?.id ? data?.userid?.id : '';
+    this.transactionService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+      this.purchaseBillList = res;
+      this.filterPurchaseBill = res;
     });
 
     const modeType = this.paymentVoucherForm.get('mode_type').value;
@@ -560,7 +565,7 @@ export class AddPaymentVoucherComponent implements OnInit {
   onSubmit() {
     console.log(this.paymentVoucherForm.value);
     const amount = this.paymentVoucherForm.get('amount')?.value;
-    if (amount < 1) {
+    if (!amount || amount < 1) {
       this.toastr.error('Payment voucher amount must be greater than 0.');
       return;
     }
@@ -665,7 +670,7 @@ export class AddPaymentVoucherComponent implements OnInit {
   onBankSubmit() {
     console.log(this.paymentVoucherBankForm.value);
     const amount = this.paymentVoucherBankForm.get('amount')?.value;
-    if (amount < 1) {
+    if (!amount || amount < 1) {
       this.toastr.error('Payment voucher amount must be greater than 0.');
       return;
     }

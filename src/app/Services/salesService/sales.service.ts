@@ -109,6 +109,12 @@ export class SalesService {
     let url = this.apiUrl + '/pv-api/estimate/';
     return this.http.get(url)
   }
+
+  getSalesEstimateByUserId(id) {
+    let url = this.apiUrl + '/pv-api/estimate/?user_id=' + id;
+    return this.http.get(url)
+  }
+
   getSalesEstimateById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/estimate/?id='
     return this.http.get<any>(`${url}${id}`)

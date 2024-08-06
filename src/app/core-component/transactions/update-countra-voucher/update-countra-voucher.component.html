@@ -21,17 +21,17 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Contra Voucher Series</label>
+                        <label>Contra Voucher No</label>
                         <input type="text" formControlName="countra_voucher_no" readonly
                             [ngClass]="{'is-invalid': f['countra_voucher_no'].touched && f['countra_voucher_no'].invalid}">
                         <!-- <select formControlName="countra_voucher_no">
-                                <option value="" selected disabled>Select Contra Voucher Series
+                                <option value="" selected disabled>Select Contra Voucher No
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                             </select> -->
                         <span class="text-danger"
                             *ngIf="countra_voucher_no && countra_voucher_no.invalid && countra_voucher_no.touched">Enter
-                            Contra Voucher Series</span>
+                            Contra Voucher No</span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-4 col-12">
@@ -53,7 +53,8 @@
                                 <ng-container *ngFor="let account of filteredFromAccount | async">
                                     <mat-option *ngIf="account.is_active==true" [value]="account?.account_id"
                                         (onSelectionChange)="oncheck(account)"
-                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name : account?.title }}</mat-option>
+                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name :
+                                        account?.title }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredFromAccount | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
@@ -89,7 +90,8 @@
                                 <ng-container *ngFor="let account of filteredToAccount | async">
                                     <mat-option *ngIf="account.is_active==true" [value]="account?.account_id"
                                         (onSelectionChange)="oncheck1(account)"
-                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name : account?.title }}</mat-option>
+                                        style="color:#FF9F43">{{account?.company_name ? account?.company_name :
+                                        account?.title }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredToAccount | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">

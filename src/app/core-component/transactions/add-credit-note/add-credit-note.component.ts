@@ -39,7 +39,7 @@ export class AddCreditNoteComponent implements OnInit {
       sale_bill_no: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
-      tax: new FormControl(''),
+      tax: new FormControl('', [Validators.required]),
       note: new FormControl('',),
       total: new FormControl(''),
       status: new FormControl('')
@@ -47,7 +47,7 @@ export class AddCreditNoteComponent implements OnInit {
 
     this.getAccount();
     this.getprefix();
-    this.getSaleBill();
+    // this.getSaleBill();
     this.getTaxSlabList();
 
     this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
@@ -190,8 +190,8 @@ export class AddCreditNoteComponent implements OnInit {
   loaders = false;
   submit() {
     const totalAmount = this.debitNoteForm.get('total')?.value;
-    if(totalAmount < 0) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    if(!totalAmount || totalAmount < 1) {
+      this.toastr.error('CreditNote voucher amount must be greater than 0.');
       return;
     }
     if (this.debitNoteForm.valid) {

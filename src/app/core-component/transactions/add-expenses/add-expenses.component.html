@@ -87,7 +87,7 @@
             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                 <div class="form-group mt-4">
                     <div class="d-flex ">
-                        <input type="checkbox" formControlName="reverse_charge" [id]="'checkboxTax-'" [ngModel]="true">
+                        <input type="checkbox" formControlName="reverse_charge" [id]="'checkboxTax-'">
                         <label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Reverse
                             Charge</label>
                     </div>
@@ -152,8 +152,7 @@
                                                             style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
                                                             <input type="text" placeholder="Select From Account"
                                                                 aria-label="from_account" matInput
-                                                                [formControl]="fromAccountControl"
-                                                                [matAutocomplete]="auto"
+                                                                formControlName="account" [matAutocomplete]="auto"
                                                                 style="box-sizing: border-box;">
                                                             <mat-autocomplete #auto="matAutocomplete">
                                                                 <ng-container
@@ -161,8 +160,13 @@
                                                                     <mat-option *ngIf="account.is_active==true"
                                                                         [value]="account?.account_id"
                                                                         (onSelectionChange)="oncheck(account,i)"
-                                                                        style="color:#FF9F43">{{account?.account_id+ ' -
-                                                                        ' + account?.title }}</mat-option>
+                                                                        style="color:#FF9F43">
+                                                                        {{(account?.account_id &&
+                                                                        account?.company_name) ?
+                                                                        (account?.company_name + ' (' +
+                                                                        account?.account_id + ')') : account?.account_id
+                                                                        }}
+                                                                    </mat-option>
                                                                 </ng-container>
                                                                 <ng-container
                                                                     *ngIf="(filteredFromAccount | async) as accounts">
@@ -171,8 +175,7 @@
                                                                         <a routerLink="//account/accountlist"
                                                                             style="color:#FF9F43">+ Add Account</a>
                                                                     </mat-option>
-                                                                    <mat-option
-                                                                        *ngIf="fromAccountControl.value?.length < 3"
+                                                                    <mat-option *ngIf="account(i)?.value?.length < 3"
                                                                         class="is-loading">Please
                                                                         Enter 1 or more characters</mat-option>
                                                                 </ng-container>
@@ -195,7 +198,7 @@
                                                 <td><input type="text" formControlName="description"
                                                         placeholder="Enter Note" class="input"></td>
                                                 <td><input type="number" formControlName="amount" class="input"
-                                                        (blur)="calculateTotalEveryIndex(i)">
+                                                        (blur)="calculateTaxAmout(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
                                                         Amount</span>
@@ -213,8 +216,7 @@
                                                 </td>
 
                                                 <td>
-                                                    <div class="form-group">
-                                                        <label>Tax Percentage</label>
+                                                    <div class="form-group mb-0">
                                                         <select formControlName="tax"
                                                             (change)="onChangePercentage($event, i)"
                                                             (blur)="calculateTotalEveryIndex(i)">

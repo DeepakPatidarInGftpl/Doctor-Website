@@ -209,7 +209,7 @@ export class AddScrapEntryComponent implements OnInit {
       item_code: event?.sku,
       item_name: event?.product_title,
       unit: event?.product?.unit?.title,
-      qty: event.batch[0]?.stock,
+      qty: 1,
       mrp: this.originalCoastPrice.toFixed(2)
     });
   }

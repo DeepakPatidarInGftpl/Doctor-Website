@@ -170,7 +170,7 @@ export class ListExpensesComponent implements OnInit {
 
     //20-5
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;

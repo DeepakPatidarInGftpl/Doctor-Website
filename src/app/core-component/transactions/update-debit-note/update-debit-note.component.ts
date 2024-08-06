@@ -59,7 +59,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       amount: new FormControl(''),
-      tax: new FormControl(''),
+      tax: new FormControl('', [Validators.required]),
       note: new FormControl('',),
       total: new FormControl(''),
     })
@@ -72,7 +72,10 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.debitNoteForm.patchValue(this.getRes);
       this.debitNoteForm.get('party')?.patchValue(res.party.id);
       this.debitNoteForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
-
+      const userId = res?.party?.userid?.id;
+      this.purchaseService.getPurchaseBillByUserId(userId).subscribe((res: any) => {
+        this.purchaseList = res;
+      })
     setTimeout(() => {
       if(!!this.taxSlabList?.length){
         const taxTitle = this.getTaxTitleByPercentage(res?.tax);
@@ -95,7 +98,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       })
     })
 
-    this.getPurchaseBill();
+    // this.getPurchaseBill();
     this.getprefix();
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -270,9 +273,14 @@ export class UpdateDebitNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
-    const totalAmount = this.debitNoteForm.get('total')?.value;
-    if(totalAmount < 0) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    const totalAmount = this.debitNoteForm.get('amount')?.value;
+    const total = this.debitNoteForm.get('total')?.value;
+    if(!totalAmount || Number(totalAmount) < 1) {
+      this.toastr.error('DebitNote voucher amount must be greater than 0.');
+      return;
+    }
+    if(!total || total < 0) {
+      this.toastr.error('DebitNote voucher total must be greater than 0.');
       return;
     }
     if (this.debitNoteForm.valid) {

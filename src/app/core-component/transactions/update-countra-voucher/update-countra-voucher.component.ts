@@ -157,8 +157,9 @@ export class UpdateCountraVoucherComponent implements OnInit {
   loaders = false;
   submit() {
     const amount = this.countraVoucherForm.get('amount').value;
-    if(amount < 0) {
+    if(!amount || Number(amount) < 1) {
       this.toastr.error('Countra voucher amount must be greater than 0.');
+      return;
     }
     if (this.countraVoucherForm.valid) {
       this.loaders = true;

@@ -26,7 +26,7 @@ export class AddJournalVoucherComponent implements OnInit {
   get f() {
     return this.journalvoucherForm.controls;
   }
-  fromAccountControl = new FormControl();
+  // fromAccountControl = new FormControl();
   filteredFromAccount: Observable<any[]>;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -42,11 +42,12 @@ export class AddJournalVoucherComponent implements OnInit {
     this.getprefix();
     this.addCart();
 
-    this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(this.fromAccountControl?.value, true))
-    );
+    // this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filter(this.fromAccountControl?.value, true))
+    // );
 
+    this.subscribeToAccountChanges();
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
   }
@@ -56,6 +57,19 @@ export class AddJournalVoucherComponent implements OnInit {
     const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
+  }
+
+  subscribeToAccountChanges(): void {
+    const journalVoucherCart = this.getCart();
+    journalVoucherCart.controls.forEach((group: FormGroup) => {
+      const accountControl = group.get('from_account');
+      if (accountControl) {
+        this.filteredFromAccount = accountControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    });
   }
 
   prefixNo: any;
@@ -104,7 +118,7 @@ export class AddJournalVoucherComponent implements OnInit {
   cart(): FormGroup {
     return this.fb.group({
       from_account: new FormControl('', [Validators.required]),
-      amount_type: new FormControl('', [Validators.required]),
+      amount_type: new FormControl(''),
       amount: new FormControl(0, [Validators.required]),
       description: ('')
     })
@@ -216,9 +230,9 @@ export class AddJournalVoucherComponent implements OnInit {
   from_account(index: number) {
     return this.getCart().controls[index].get('from_account');
   }
-  amount_type(index: number) {
-    return this.getCart().controls[index].get('amount_type');
-  }
+  // amount_type(index: number) {
+  //   return this.getCart().controls[index].get('amount_type');
+  // }
   amount(index: number) {
     return this.getCart().controls[index].get('amount');
   }

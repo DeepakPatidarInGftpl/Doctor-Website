@@ -95,18 +95,18 @@
                 </div>
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series</label>
+                        <label>Receipt Voucher *ngFor="let item of stream | async as list"</label>
                         <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
                         <select formControlName="receipt_voucher_no">
-                            <option value="" selected disabled>Select Receipt Voucher Series
+                            <option value="" selected disabled>Select Receipt Voucher No
                             </option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger"
-                            *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
-                            Receipt Voucher Series</span>
+                            *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Select
+                            Receipt Voucher No</span>
                     </div>
                 </div>
                 <div class="col-sm-4 col-12">
@@ -438,18 +438,18 @@
                 </div>
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series</label>
+                        <label>Receipt Voucher No</label>
                         <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
                         <select formControlName="receipt_voucher_no">
-                            <option value="" selected disabled>Select Receipt Voucher Series
+                            <option value="" selected disabled>Select Receipt Voucher No
                             </option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger"
-                            *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
-                            Receipt Voucher Series</span>
+                            *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Select
+                            Receipt Voucher No</span>
                     </div>
                 </div>
 
