@@ -31,6 +31,7 @@ export class UpdateExpensesComponent implements OnInit {
   taxSlabList: any[] = [];
   selectedTaxPercentage: any[] = [];
   selectedPercentageData: any[] = [];
+  filteredFromAccount: Observable<any[]>;
 
   get f() {
     return this.expensevoucherForm.controls;
@@ -51,7 +52,7 @@ export class UpdateExpensesComponent implements OnInit {
       expense_date: new FormControl(defaultDate, [Validators.required]),
       expense_no: new FormControl('', [Validators.required]),
       refrence_bill_no: new FormControl('',),
-      reverse_charge: new FormControl('',), //boolean
+      reverse_charge: new FormControl(false), //boolean
       created_from: new FormControl('ERP',),
       expenses_voucher_cart: this.fb.array([]),
       tax_amount: new FormControl(0),
@@ -81,6 +82,7 @@ export class UpdateExpensesComponent implements OnInit {
     this.getAccount();
     this.getUser();
     this.getprefix();
+    this.subscribeToAccountChanges();
     // party
     this.filteredFromParty = this.fromPartyControl.valueChanges.pipe(
       startWith(''),
@@ -114,6 +116,30 @@ export class UpdateExpensesComponent implements OnInit {
     this.contactService.getUser().subscribe((res: any) => {
       this.userList = res;
     })
+  }
+
+  subscribeToAccountChanges(): void {
+    const expanseVoucherCart = this.getCart();
+    expanseVoucherCart.controls.forEach((group: FormGroup) => {
+      const accountControl = group.get('account');
+      if (accountControl) {
+        this.filteredFromAccount = accountControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    });
+  }
+
+  private _filter(value: string | number, include: boolean): any[] {
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredFromAccount = include
+      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue) || account?.company_name?.toLowerCase().includes(filterValue))
+      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue) || account?.company_name?.toLowerCase().includes(filterValue));
+    if (!include && filteredFromAccount.length === 0) {
+      filteredFromAccount.push({ account: "No data found" });
+    }
+    return filteredFromAccount;
   }
 
   getTaxSlabList() {
@@ -220,7 +246,7 @@ export class UpdateExpensesComponent implements OnInit {
       service_or_product: new FormControl('',),
       amount: new FormControl(0, [Validators.required]),
       discount: new FormControl(0, [Validators.required, Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(''),
+      tax: new FormControl('', [Validators.required]),
       tax_value: new FormControl(0,),
       total: new FormControl(0,),
       description: ('')
@@ -409,7 +435,7 @@ export class UpdateExpensesComponent implements OnInit {
     const taxControl = this.getCart().controls[index].get('tax');
     const amountControl = this.getCart().controls[index].get('amount');
     if (this.selectedPercentageData[index]?.variable_tax) {
-      if (this.selectedPercentageData[index]?.amount_tax_slabs[1]?.from_amount < amountControl) {
+      if (this.selectedPercentageData[index]?.amount_tax_slabs[1]?.from_amount < amountControl.value) {
         const taxPercentage = this.selectedPercentageData[index]?.amount_tax_slabs[1]?.tax?.tax_percentage;
         this.selectedTaxPercentage[index] = taxPercentage;
       } else {
@@ -475,7 +501,7 @@ export class UpdateExpensesComponent implements OnInit {
     // const taxPercentageControl = cartItem.get('tax');
     const taxPercentageControl = this.selectedTaxPercentage[index];
     const discountPercentageControl = cartItem.get('discount');
-    if (amountControl && taxPercentageControl && discountPercentageControl) {
+    if (amountControl && discountPercentageControl) {
       const discountPercentage = +discountPercentageControl.value || 0;
       const amountControlValue = +amountControl.value || 0;
       // const taxPercentageValue = +taxPercentageControl.value || 0;

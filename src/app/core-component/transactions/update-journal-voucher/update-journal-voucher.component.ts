@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { map, Observable, startWith } from 'rxjs';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -24,6 +25,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
   journalvoucherForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  filteredFromAccount: Observable<any[]>;
   get f() {
     return this.journalvoucherForm.controls;
   }
@@ -44,12 +46,15 @@ export class UpdateJournalVoucherComponent implements OnInit {
       description: new FormControl(''),
     });
 
+    this.getAccount();
+
     this.transactionService.getJournalVoucherById(this.id).subscribe(res => {
       this.editRes = res;
       this.journalvoucherForm.patchValue(this.editRes);
       // this.journalvoucherForm.get('journal_voucher_no')?.patchValue(res?.journal_voucher_no?.id) // 20-5
       if (this.editRes?.cart?.length > 0) {
         this.journalvoucherForm.setControl('journal_voucher_cart', this.udateCart(this.editRes?.cart));
+        this.subscribeToAccountChanges();
       } else {
         this.isCart = true;
       }
@@ -58,7 +63,10 @@ export class UpdateJournalVoucherComponent implements OnInit {
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
 
-    this.getAccount();
+    console.log(this.filteredFromAccount);
+    
+
+    // this.getAccount();
     this.getprefix();
   }
 
@@ -69,6 +77,37 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
   }
+
+  subscribeToAccountChanges(): void {
+    const journalVoucherCart = this.getCart();
+    journalVoucherCart.controls.forEach((group: FormGroup) => {
+      const accountControl = group.get('from_account');
+      if (accountControl) {
+        this.filteredFromAccount = accountControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    });
+  }
+
+  private _filter(value: string | number, include: boolean): any[] {
+    const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
+    const filteredFromAccount = this.accountList.filter(account => {
+      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      
+      return include
+        ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+        : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+    });
+    if (!include && filteredFromAccount.length === 0) {
+      filteredFromAccount.push({ account: "No data found" });
+    }
+    return filteredFromAccount;
+  }
+
   prefixNo: any;
   getprefix() {
     this.transactionService.getJournalVoucherPrefix().subscribe((res: any) => {
@@ -85,7 +124,8 @@ export class UpdateJournalVoucherComponent implements OnInit {
 
   udateCart(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    // let formarr = new FormArray([]);
+    const journalVoucherCart = this.getCart();
     add.forEach((j: any, i) => {
       if (j?.amount_type == 'Credit') {
         this.creditAmount[i] = j?.amount;
@@ -94,7 +134,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
         this.debitAmount[i] = j?.amount;
         console.log(this.creditAmount[i]);
       }
-      formarr.push(this.fb.group({
+      journalVoucherCart.push(this.fb.group({
         from_account: j.from_account?.id,
         amount_type: j?.amount_type,
         amount: j?.amount,
@@ -102,7 +142,8 @@ export class UpdateJournalVoucherComponent implements OnInit {
       }))
       this.myControls.push(new FormControl(j.from_account?.account_id));
     })
-    return formarr
+    this.subscribeToAccountChanges();
+    return journalVoucherCart;
   }
   accountList: any[] = [];
   filterAccount: any[] = [];
@@ -136,7 +177,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
   cart(): FormGroup {
     return this.fb.group({
       from_account: new FormControl('', [Validators.required]),
-      amount_type: new FormControl('', [Validators.required]),
+      // amount_type: new FormControl('', [Validators.required]),
       amount: new FormControl(0, [Validators.required]),
       description: ('')
     })
@@ -247,9 +288,9 @@ export class UpdateJournalVoucherComponent implements OnInit {
   from_account(index: number) {
     return this.getCart().controls[index].get('from_account');
   }
-  amount_type(index: number) {
-    return this.getCart().controls[index].get('amount_type');
-  }
+  // amount_type(index: number) {
+  //   return this.getCart().controls[index].get('amount_type');
+  // }
   amount(index: number) {
     return this.getCart().controls[index].get('amount');
   }

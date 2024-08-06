@@ -120,9 +120,9 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Debit Note No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Debit Note No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Amount <i class="fa fa-sort"></i></th>
@@ -143,12 +143,12 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
+                        <td>{{products?.debit_note_no}}</td>
                         <td class="productimgname">
                             <a routerLink="//transaction/detailsdebitnote/{{products.id}}"
                                 style="line-height: 3;">{{products?.party?.company_name}}</a>
                         </td>
                         <td>{{products?.date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products.debit_note_no}}</td>
                         <td>{{products.purchase_bill?.supplier_bill_no
                             }}</td>
                         <!-- <td>{{products.reason}}</td> -->

@@ -24,8 +24,12 @@
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let account of filteredFromAccount | async">
                                     <mat-option *ngIf="account.is_active==true" [value]="account?.account_id"
-                                        (onSelectionChange)="oncheck(account)"
-                                        style="color:#FF9F43">{{account?.account_id }}</mat-option>
+                                        (onSelectionChange)="oncheck(account)" style="color:#FF9F43">{{
+                                        (account?.account_id &&
+                                        account?.company_name) ?
+                                        (account?.company_name + ' (' +
+                                        account?.account_id + ')') : account?.account_id
+                                        }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredFromAccount | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
@@ -52,15 +56,15 @@
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Credit Note Series</label>
+                        <label>Credit Note No</label>
                         <!-- <input type="text" formControlName="credit_note_no" placeholder="Enter Credit Note No." id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}"> -->
                         <select formControlName="credit_note_no">
-                            <option value="" selected disabled>Select Credit Note Series</option>
+                            <option value="" selected disabled>Select Credit Note No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger"
                             *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note
-                            Series</span>
+                            No</span>
                     </div>
                 </div>
 
@@ -129,8 +133,8 @@
                                 {{prefix?.slab_title}}
                             </option>
                         </select>
-                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax
-                            (ex:1-100)</span>
+                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select Tax
+                            Percentage</span>
                     </div>
                 </div>
 

@@ -105,13 +105,19 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.dateValidation(financialYear);
     this.bankDateValidation(financialYear);
     this.bankTransactionDateValidation(financialYear);
-
+    this.getTaxSlabList();
     this.getAccount();
-    this.getSaleBill();
+    // this.getSaleBill();
     this.getprefix();
 
     this.transactionService.getRecieptVoucherById(this.id).subscribe(res => {
       this.editRes = res;
+      const userId = res?.payer?.user ? res?.payer?.user : ''
+      this.transactionService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      this.filterSaleBill = res;
+      });
+
       // bank
       if (this.editRes?.receipt_type == 'Bank') {
         this.isBank = true;
@@ -119,6 +125,14 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherBankForm.patchValue(this.editRes)
         this.recieptVoucherBankForm.get('payment_account')?.patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
+        setTimeout(() => {
+          if(!!this.taxSlabList?.length){
+            const taxTitle = this.getTaxTitleByPercentage(res?.tax_percentage);
+            if (taxTitle) {
+              this.bankTaxPercentage.setValue(taxTitle);
+            }
+          }
+        }, 2000);
         // this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if (this.editRes?.bill_cart.length > 0) {
           this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
@@ -134,6 +148,14 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherForm.patchValue(this.editRes);
         this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
+        setTimeout(() => {
+          if(!!this.taxSlabList?.length){
+            const taxTitle = this.getTaxTitleByPercentage(res?.tax_percentage);
+            if (taxTitle) {
+              this.taxPercentage.setValue(taxTitle);
+            }
+          }
+        }, 2000);
         // this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if (this.editRes?.bill_cart.length > 0) {
           this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
@@ -162,6 +184,17 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.bankMinDate = formattedMinDate;
     this.bankMaxDate = formattedMaxDate;
   }
+
+  getTaxTitleByPercentage(taxPercentage: number): string {
+    for (let taxSlab of this.taxSlabList) {
+        for (let amountTaxSlab of taxSlab?.amount_tax_slabs) {
+            if (amountTaxSlab.tax.tax_percentage === Number(taxPercentage)) {
+                return taxSlab?.slab_title;
+            }
+        }
+    }
+    return '';
+}
 
   bankTransactionDateValidation(financialYear) {
     const dateControl = this.recieptVoucherBankForm.get('transaction_date');
@@ -367,6 +400,13 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.recieptVoucherForm.patchValue({
       payer: selectedItemId,
     });
+
+    const userId = data?.user ? data?.user : ''
+    this.transactionService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      this.filterSaleBill = res;
+    });
+
     const modeType = this.recieptVoucherForm.get('mode_type').value;
     const payer = this.recieptVoucherForm.get('payer').value;
     if (modeType === 'Against Bill' && !!payer) {
@@ -518,8 +558,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.calculateTaxAmout('cash');
     console.log(this.recieptVoucherForm.value);
     const amount = this.recieptVoucherForm.get('amount')?.value;
-    if (amount < 1) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    if (!amount || Number(amount) < 1) {
+      this.toastr.error('Receipt voucher amount must be greater than 0.');
       return;
     }
     if (this.recieptVoucherForm.valid) {
@@ -585,8 +625,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.calculateTaxAmout('bank');
     console.log(this.recieptVoucherBankForm.value);
     const amount = this.recieptVoucherBankForm.get('amount')?.value;
-    if (amount < 1) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    if (!amount || Number(amount) < 1) {
+      this.toastr.error('Receipt voucher amount must be greater than 0.');
       return;
     }
     if (this.recieptVoucherBankForm.valid) {

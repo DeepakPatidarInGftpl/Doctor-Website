@@ -49,12 +49,12 @@ export class AddDebitNoteComponent implements OnInit {
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       amount: new FormControl(0),
-      tax: new FormControl(''),
+      tax: new FormControl('', [Validators.required]),
       note: new FormControl('',),
       total: new FormControl(0),
     })
 
-    this.getPurchaseBill();
+    // this.getPurchaseBill();
     this.getprefix()
     this.getTaxSlabList();
 
@@ -219,11 +219,17 @@ export class AddDebitNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
-    const totalAmount = this.debitNoteForm.get('total')?.value;
-    if(totalAmount < 0) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    const totalAmount = this.debitNoteForm.get('amount')?.value;
+    const total = this.debitNoteForm.get('total')?.value;
+    if(!totalAmount || totalAmount < 1) {
+      this.toastr.error('DebitNote voucher amount must be greater than 0.');
       return;
     }
+    if(!total || total < 0) {
+      this.toastr.error('DebitNote voucher total must be greater than 0.');
+      return;
+    }
+
     if (this.debitNoteForm.valid) {
       this.loaders = true;
       const formdata = new FormData();

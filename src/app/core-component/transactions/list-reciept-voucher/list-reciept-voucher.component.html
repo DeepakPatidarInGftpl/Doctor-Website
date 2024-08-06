@@ -144,10 +144,10 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Account<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reciept Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payer<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
@@ -169,11 +169,11 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
+                        <td>{{products?.receipt_voucher_no}}</td>
                         <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}"
                                 style="line-height: 3;">{{ products?.payer?.company_name }}</a></td>
                         <td class="text-center">{{products?.receipt_type}}</td>
-                        <td>{{products.mode_type}}</td>
-                        <td>{{products.receipt_voucher_no}}</td>
+                        <td>{{products?.mode_type}}</td>
                         {{ products?.payer?.title && products?.payer?.company_name ? products?.payer?.title + ' (' +
                         products?.payer?.company_name + ')' : products?.payer?.title }}
                         <td>{{products?.receipt_type}}</td>

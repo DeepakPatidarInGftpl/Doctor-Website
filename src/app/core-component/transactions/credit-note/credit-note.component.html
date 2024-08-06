@@ -119,9 +119,9 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Credit Note No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Credit Note Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Credit Note No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sales Bill<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Round off <i class="fa fa-sort"></i></th>
@@ -142,12 +142,14 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
+                        <td>{{products.credit_note_no}}</td>
                         <td class="productimgname">
                             <a routerLink="//transaction/detailscreditnote/{{products.id}}"
-                                style="line-height: 3;">{{products?.account?.account_id}}</a>
+                                style="line-height: 3;">{{!!products?.account?.company_name ?
+                                (products?.account?.company_name + '(' +
+                                products?.account?.account_id + ')') : products?.account?.account_id}}</a>
                         </td>
                         <td>{{products?.date}}</td>
-                        <td>{{products.credit_note_no}}</td>
                         <td>{{products?.sale_bill_no?.customer_bill_no}}</td>
                         <!-- <td>{{products.reason}}</td> -->
                         <td>{{products.roundoff}}</td>
