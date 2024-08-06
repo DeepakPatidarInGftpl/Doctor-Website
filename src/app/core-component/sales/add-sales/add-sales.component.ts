@@ -155,7 +155,7 @@ export class AddSalesComponent implements OnInit {
         );
       }
     })
-    this.getEstimate();
+    // this.getEstimate();
     this.getPaymentTerms()
     this.getprefix();
     this.getCategory();
@@ -474,6 +474,11 @@ export class AddSalesComponent implements OnInit {
     this.userType = data?.user_type;
     const user = this.employeeList.filter((val) => val?.name === userName);
     this.discountLimit = user[0]?.discount_limit;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
+    this.saleService.getSalesEstimateByUserId(userId).subscribe(res => {
+      this.estimateList = res
+    })
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);

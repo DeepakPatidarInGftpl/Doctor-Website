@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { map, Observable, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -46,14 +46,14 @@ export class UpdateCreditNoteComponent implements OnInit {
       sale_bill_no: new FormControl(''),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
-      tax: new FormControl(''),
+      tax: new FormControl('', [Validators.required]),
       note: new FormControl('',),
       total: new FormControl(''),
       status: new FormControl('')
     })
 
     this.getAccount()
-    this.getSaleBill()
+    // this.getSaleBill()
     this.getprefix()
     this.getTaxSlabList();
 
@@ -65,6 +65,11 @@ export class UpdateCreditNoteComponent implements OnInit {
       // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
       this.fromAccountControl.setValue(res?.account?.account_id);
       this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
+      const userId = res?.account?.user ? res?.account?.user : '';
+      this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      this.FiltersaleBillList = res;
+    })
       setTimeout(() => {
         if(!!this.taxSlabList?.length){
           const taxTitle = this.getTaxTitleByPercentage(res?.tax);
@@ -74,6 +79,11 @@ export class UpdateCreditNoteComponent implements OnInit {
         }
       }, 2000);
     })
+
+    this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, true))
+    );
 
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
@@ -222,8 +232,8 @@ export class UpdateCreditNoteComponent implements OnInit {
   loaders = false;
   submit() {
     const totalAmount = this.debitNoteForm.get('total')?.value;
-    if(totalAmount < 0) {
-      this.toastr.error('Payment voucher amount must be greater than 0.');
+    if(!totalAmount || Number(totalAmount) < 1) {
+      this.toastr.error('CreditNote voucher amount must be greater than 0.');
       return;
     }
     if (this.debitNoteForm.valid) {

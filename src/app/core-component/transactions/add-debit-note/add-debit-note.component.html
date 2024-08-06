@@ -51,14 +51,14 @@
 
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Debit Note Series</label>
+            <label>Debit Note No</label>
             <!-- <input type="text" formControlName="debit_note_no" placeholder="Enter Debit Note No." [ngModel]="prefixNo" readonly id="debit_note_no" [ngClass]="{ 'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}"> -->
             <select formControlName="debit_note_no">
-              <option value="" selected disabled>Select Debit Note Series</option>
+              <option value="" selected disabled>Select Debit Note No</option>
               <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
             </select>
-            <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Enter
-              Debit Note Series</span>
+            <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Select
+              Debit Note No</span>
           </div>
         </div>
 
@@ -124,8 +124,8 @@
                 {{prefix?.slab_title}}
               </option>
             </select>
-            <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax
-              (ex:1-100)</span>
+            <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select Tax
+              Percentage</span>
           </div>
         </div>
 
@@ -152,7 +152,7 @@
             <label>Note</label>
             <textarea formControlName="note" placeholder="Enter Note"
               [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
-            <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Note</span>
+            <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter Note</span>
           </div>
         </div>
 

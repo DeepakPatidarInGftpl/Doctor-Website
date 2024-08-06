@@ -39,7 +39,7 @@ export class AddCountraVoucherComponent implements OnInit {
       from_account: new FormControl('', [Validators.required]),
       to_account: new FormControl('', [Validators.required]),
       amount: new FormControl(0,),
-      note: new FormControl('', [Validators.required])
+      note: new FormControl('')
     })
     this.getAccount();
     this.getprefix();
@@ -142,8 +142,9 @@ export class AddCountraVoucherComponent implements OnInit {
   loaders = false;
   submit() {
     const amount = this.countraVoucherForm.get('amount').value;
-    if(amount < 0) {
+    if(!amount || amount < 1) {
       this.toastr.error('Countra voucher amount must be greater than 0.');
+      return;
     }
     if (this.countraVoucherForm.valid) {
       this.loaders = true;

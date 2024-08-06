@@ -58,18 +58,18 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series</label>
-                        <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
+                        <label>Receipt Voucher No</label>
+                        <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
                             [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
-                        <select formControlName="receipt_voucher_no">
-                            <option value="" selected disabled>Select Receipt Voucher Series
+                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}">
+                        <!-- <select formControlName="receipt_voucher_no">
+                            <option value="" selected disabled>Select Receipt Voucher No
                             </option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger"
                             *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
-                            Receipt Voucher Series</span>
+                            Receipt Voucher No</span> -->
                     </div>
                 </div>
 
@@ -85,8 +85,8 @@
                             <mat-autocomplete #Payerauto="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredPayer | async" [value]="customer.account_id"
                                     (onSelectionChange)="oncheck1(customer)" style="color:#FF9F43">{{
-                                    (customer.title && customer.company_name) ? (customer?.title + '(' +
-                                    customer.company_name + ')' ) : customer?.title }}</mat-option>
+                                    (customer?.account_id && customer?.company_name) ? (customer?.company_name + '(' +
+                                    customer?.account_id + ')' ) : customer?.account_id }}</mat-option>
                                 <ng-container *ngIf="(filteredPayer | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
                                         <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add
@@ -162,17 +162,17 @@
                 </div>
                 <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series*</label>
+                        <label>Receipt Voucher No*</label>
                         <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
                             [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
                 <!-- <select formControlName="receipt_voucher_no">
-                                <option value="" selected disabled>Select Receipt Voucher Series
+                                <option value="" selected disabled>Select Receipt Voucher No
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                             </select> -->
                 <!-- <span class="text-danger"
                             *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
-                            Receipt Voucher Series</span>
+                            Receipt Voucher No</span>
                     </div>
                 </div> -->
                 <div class="col-lg-3 col-sm-4 col-12">
@@ -190,7 +190,7 @@
                         <label>Tax Percentage</label>
                         <select [formControl]="taxPercentage" (change)="onChangePercentage($event, 'bank')">
                             <option value="" selected disabled>Select Tax Percentage</option>
-                            <option [value]="prefix?.id" *ngFor="let prefix of taxSlabList">
+                            <option [value]="prefix?.slab_title" *ngFor="let prefix of taxSlabList">
                                 {{prefix?.slab_title}}
                             </option>
                         </select>
@@ -411,18 +411,18 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series</label>
+                        <label>Receipt Voucher No</label>
                         <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
                         <select formControlName="receipt_voucher_no">
-                            <option value="" selected disabled>Select Receipt Voucher Series
+                            <option value="" selected disabled>Select Receipt Voucher No
                             </option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger"
                             *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
-                            Receipt Voucher Series</span>
+                            Receipt Voucher No</span>
                     </div>
                 </div>
 
@@ -436,9 +436,11 @@
                                 style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': g['payer'].touched && g['payer'].invalid}">
                             <mat-autocomplete #Payerautobank="matAutocomplete">
-                                <mat-option *ngFor="let customer of filteredPayer | async" [value]="customer.account_id"
-                                    (onSelectionChange)="oncheckBank1(customer)" style="color:#FF9F43">{{
-                                    customer.account_id }}</mat-option>
+                                <mat-option *ngFor="let customer of filteredPayer | async"
+                                    [value]="customer?.account_id" (onSelectionChange)="oncheckBank1(customer)"
+                                    style="color:#FF9F43">{{
+                                    (customer?.account_id && customer?.company_name) ? (customer?.company_name + '(' +
+                                    customer?.account_id + ')' ) : customer?.account_id }}</mat-option>
                                 <ng-container *ngIf="(filteredPayer | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
                                         <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add
@@ -545,17 +547,17 @@
                 </div>
                 <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher Series</label>
+                        <label>Receipt Voucher No</label>
                         <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
                             [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
                 <!-- <select formControlName="receipt_voucher_no1">
-                                <option value="" selected disabled>Select Receipt Voucher Series
+                                <option value="" selected disabled>Select Receipt Voucher No
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                             </select> -->
                 <!-- <span class="text-danger"
-                            *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
-                            Receipt Voucher Series</span>
+                            *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Select
+                            Receipt Voucher No</span>
                     </div>
                 </div> -->
                 <div class="col-lg-3 col-sm-4 col-12">

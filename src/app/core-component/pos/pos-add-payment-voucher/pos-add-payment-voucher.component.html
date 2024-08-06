@@ -104,19 +104,19 @@
                 </div>
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Voucher Series</label>
+                        <label>Payment Voucher No</label>
                         <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}"> -->
                         <!-- 18-5 -->
                         <select formControlName="payment_voucher_no">
-                            <option value="" selected disabled>Select Payment Voucher Series</option>
+                            <option value="" selected disabled>Select Payment Voucher No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
                         <span class="text-danger"
-                            *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter
-                            Payment Voucher Series</span>
+                            *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Select
+                            Payment Voucher No</span>
                     </div>
                 </div>
                 <div class="col-sm-4 col-12">
@@ -551,19 +551,19 @@
                 </div>
                 <div class="col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Voucher Series</label>
+                        <label>Payment Voucher No</label>
                         <!-- <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': g['payment_voucher_no'].touched && g['payment_voucher_no'].invalid}"> -->
                         <!-- 18-5 -->
                         <select formControlName="payment_voucher_no">
-                            <option value="" selected disabled>Select Payment Voucher Series</option>
+                            <option value="" selected disabled>Select Payment Voucher No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
                         <span class="text-danger"
-                            *ngIf="payment_voucher_no1 && payment_voucher_no1.invalid && payment_voucher_no1.touched">Enter
-                            Payment Voucher Series.</span>
+                            *ngIf="payment_voucher_no1 && payment_voucher_no1.invalid && payment_voucher_no1.touched">Select
+                            Payment Voucher No.</span>
                     </div>
                 </div>
 

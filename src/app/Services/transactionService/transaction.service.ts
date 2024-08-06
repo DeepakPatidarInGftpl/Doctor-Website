@@ -347,11 +347,22 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/sale_bill/';
     return this.http.get(url)
   }
+
+  getSalesBillByUserId(id) {
+    let url = this.apiUrl + '/pv-api/sale_bill/?user_id=' + id;
+    return this.http.get(url)
+  }
   // purchase bill
   getPurchaseBill() {
     let url = this.apiUrl + '/pv-api/purchase_bill/';
     return this.http.get(url);
   }
+
+  getPurchaseBillByUserId(id) {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?user_id=' + id;
+    return this.http.get(url);
+  }
+
   // supplier 
   getSupplier(query) {
     let url = this.apiUrl + '/pv-api/supplier/?search=' + query;
