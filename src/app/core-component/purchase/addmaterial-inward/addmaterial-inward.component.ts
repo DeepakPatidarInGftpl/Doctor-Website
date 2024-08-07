@@ -115,7 +115,7 @@ export class AddmaterialInwardComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     // this.getVariants();
-    this.getPurchase();
+    // this.getPurchase();
     this.getprefix();
     this.getCategory();
 
@@ -235,12 +235,18 @@ export class AddmaterialInwardComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   supplierId: any;
-  oncheck(event: any) {
+  oncheck(event: any, data) {
     // console.log(event);
+    console.log(data);
     const selectedItemId = event;
     // console.log(selectedItemId);
     this.supplierId = event;
     //call detail api
+    let userId = data?.userid?.id ? data?.userid?.id : ''
+    this.purchaseService.getPurchaseOrderByUserId(userId).subscribe(res => {
+      this.purchaseList = res;
+    })
+
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.getVariant('', '', '')

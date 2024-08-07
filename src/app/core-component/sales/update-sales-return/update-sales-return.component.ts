@@ -109,6 +109,10 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.saleReturnForm.patchValue(this.editRes);
       // this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes) // 20-5
       this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
+      let userId = res?.customer?.id ? res?.customer?.id : '';
+      this.saleService.getSalesBillByUserId(userId).subscribe(res => {
+        this.salesBillList = res
+      })
       // 21-5
       if (this.editRes.status == 'Draft' || this.editRes.status == null) {
         this.isStatusDraft = true;
@@ -150,7 +154,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       }
     })
     this.getCategory();
-    this.getsalesBill();
+    // this.getsalesBill();
     this.getProfile();
     this.getEmployee();
 
@@ -160,10 +164,12 @@ export class UpdateSalesReturnComponent implements OnInit {
     });
 
     this.saleReturnForm.controls['sale_bill'].valueChanges.subscribe((res: any) => {
-      const selectedBillDate = this.salesBillList?.filter((val) => val?.id === Number(res));
-      if(selectedBillDate?.length){
-        this.selectedBillDate = selectedBillDate[0]?.bill_date;
-        console.log(this.selectedBillDate);
+      if(!!this.salesBillList?.length){
+        const selectedBillDate = this.salesBillList?.filter((val) => val?.id === Number(res));
+        if(selectedBillDate?.length){
+          this.selectedBillDate = selectedBillDate[0]?.bill_date;
+          console.log(this.selectedBillDate);
+        }
       }
     })
   }
@@ -506,6 +512,12 @@ export class UpdateSalesReturnComponent implements OnInit {
     console.log(data);
     const selectedItemId = data.id;
     this.userType = data?.user_type;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : '';
+    this.saleService.getSalesBillByUserId(userId).subscribe(res => {
+      this.salesBillList = res
+    })
+
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);

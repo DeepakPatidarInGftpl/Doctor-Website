@@ -23,10 +23,11 @@ export class AddJournalVoucherComponent implements OnInit {
   journalvoucherForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  myControls: FormArray;
   get f() {
     return this.journalvoucherForm.controls;
   }
-  // fromAccountControl = new FormControl();
+  filteredFromAccountList : any[] = [];
   filteredFromAccount: Observable<any[]>;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -38,16 +39,11 @@ export class AddJournalVoucherComponent implements OnInit {
       total_debit: new FormControl(0),
       description: new FormControl(''),
     });
+    this.myControls = new FormArray([]);
     this.getAccount();
     this.getprefix();
     this.addCart();
 
-    // this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this._filter(this.fromAccountControl?.value, true))
-    // );
-
-    this.subscribeToAccountChanges();
     const financialYear = localStorage.getItem('financialYear');
     this.dateValidation(financialYear);
   }
@@ -59,16 +55,13 @@ export class AddJournalVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  subscribeToAccountChanges(): void {
-    const journalVoucherCart = this.getCart();
-    journalVoucherCart.controls.forEach((group: FormGroup) => {
-      const accountControl = group.get('from_account');
-      if (accountControl) {
-        this.filteredFromAccount = accountControl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value, true))
-        );
-      }
+  subscribeToControlValueChanges(index: number) {
+    const control = this.myControls.at(index);
+    control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, true))
+    ).subscribe((res)=> {
+      console.log(res);
     });
   }
 
@@ -95,7 +88,7 @@ export class AddJournalVoucherComponent implements OnInit {
   }
   private _filter(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
-    const filteredFromAccount = this.accountList.filter(account => {
+    this.filteredFromAccountList = this.accountList.filter(account => {
       const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
       const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
       const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
@@ -104,10 +97,11 @@ export class AddJournalVoucherComponent implements OnInit {
         ? (accountIdIncludes || titleIncludes || companyNameIncludes)
         : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
     });
-    if (!include && filteredFromAccount.length === 0) {
-      filteredFromAccount.push({ account: "No data found" });
+    if (!include && this.filteredFromAccountList?.length === 0) {
+      // filteredFromAccount.push({ account: "No data found" });
+      this.filteredFromAccountList = [];
     }
-    return filteredFromAccount;
+    return this.filteredFromAccountList;
   }
   oncheck(data: any, index: number) {
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(index) as FormGroup;
@@ -130,10 +124,13 @@ export class AddJournalVoucherComponent implements OnInit {
   addCart() {
     this.getCart().push(this.cart());
     this.isCart = false;
-
+    
+    this.myControls.push(new FormControl(''));
+    this.subscribeToControlValueChanges(this.myControls.length - 1);
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
+    this.myControls.removeAt(i);
     if (this.journalvoucherForm?.value?.journal_voucher_cart?.length == 0) {
       this.isCart = true;
     }
@@ -240,10 +237,18 @@ export class AddJournalVoucherComponent implements OnInit {
   debitAmount: number[] = [];
   creditAmount: number[] = [];
   debit(i: number, dr: number) {
+    const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
+    cart.patchValue({
+      amount_type: "Debit",
+    });
     this.creditAmount[i] = 0;
     this.debitAmount[i] = dr;
   }
   credit(i: number, cr: number) {
+    const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
+    cart.patchValue({
+      amount_type: "Credit",
+    });
     this.creditAmount[i] = cr;
     this.debitAmount[i] = 0;
   }

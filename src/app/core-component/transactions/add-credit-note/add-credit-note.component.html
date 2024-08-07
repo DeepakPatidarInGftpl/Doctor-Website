@@ -23,7 +23,10 @@
                                 style="box-sizing: border-box;">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let account of filteredFromAccount | async">
-                                    <mat-option *ngIf="account.is_active==true" [value]="account?.account_id"
+                                    <mat-option *ngIf="account.is_active==true" [value]="(account?.account_id &&
+                                    account?.company_name) ?
+                                    (account?.company_name + ' (' +
+                                    account?.account_id + ')') : account?.account_id"
                                         (onSelectionChange)="oncheck(account)" style="color:#FF9F43">{{
                                         (account?.account_id &&
                                         account?.company_name) ?

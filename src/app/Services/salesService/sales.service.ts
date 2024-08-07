@@ -41,6 +41,12 @@ export class SalesService {
     let url = this.apiUrl + '/pv-api/sale_order/';
     return this.http.get(url)
   }
+
+  getSalesOrderByUserId(id) {
+    let url = this.apiUrl + '/pv-api/sale_order/?user_id=' + id;
+    return this.http.get(url)
+  }
+
   getSalesOrderById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/sale_order/?id='
     return this.http.get<any>(`${url}${id}`)

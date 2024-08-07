@@ -48,6 +48,12 @@ export class PurchaseServiceService {
     let url = this.apiUrl + '/pv-api/purchase_order/';
     return this.http.get(url);
   }
+
+  getPurchaseOrderByUserId(id) {
+    let url = this.apiUrl + '/pv-api/purchase_order/?user_id=' + id;
+    return this.http.get(url);
+  }
+
   addPurchase(data: any) {
     let url = this.apiUrl + '/pv-api/purchase_order/';
     return this.http.post(url, data);

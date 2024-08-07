@@ -30,10 +30,12 @@ export class AddExpensesComponent implements OnInit {
   selectedTaxPercentage: any[] = [];
   selectedPercentageData: any[] = [];
   taxSlabList: any[] = [];
+  myControls: FormArray;
+  filteredFromAccountList : any[] = [];
+
   get f() {
     return this.expensevoucherForm.controls;
   }
-  fromAccountControl = new FormControl();
   filteredFromAccount: Observable<any[]>;
   //party
   fromPartyControl = new FormControl();
@@ -56,16 +58,14 @@ export class AddExpensesComponent implements OnInit {
       status: new FormControl(''),
       note: new FormControl(''),
     });
+
+    this.myControls = new FormArray([]);
     this.getAccount();
     this.getUser();
     this.getprefix();
     this.addCart(0);
     this.getTaxSlabList();
 
-    this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, true))
-    );
     // party
     this.filteredFromParty = this.fromPartyControl.valueChanges.pipe(
       startWith(''),
@@ -77,7 +77,6 @@ export class AddExpensesComponent implements OnInit {
 
     this.isPercentage[0] = true;
     this.isAmount[0] = false;
-    this.subscribeToAccountChanges();
   }
 
   dateValidation(financialYear) {
@@ -87,16 +86,13 @@ export class AddExpensesComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  subscribeToAccountChanges(): void {
-    const expanseVoucherCart = this.getCart();
-    expanseVoucherCart.controls.forEach((group: FormGroup) => {
-      const accountControl = group.get('account');
-      if (accountControl) {
-        this.filteredFromAccount = accountControl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value, true))
-        );
-      }
+  subscribeToControlValueChanges(index: number) {
+    const control = this.myControls.at(index);
+    control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, true))
+    ).subscribe((res)=> {
+      console.log(res);
     });
   }
   prefixNo: any;
@@ -127,14 +123,21 @@ export class AddExpensesComponent implements OnInit {
     })
   }
   private _filter(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredFromAccount = include
-      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue) || account?.company_name?.toLowerCase().includes(filterValue))
-      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue) || account?.company_name?.toLowerCase().includes(filterValue));
-    if (!include && filteredFromAccount.length === 0) {
-      filteredFromAccount.push({ account: "No data found" });
+    const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
+    this.filteredFromAccountList = this.accountList.filter(account => {
+      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      
+      return include
+        ? (accountIdIncludes || titleIncludes || companyNameIncludes)
+        : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
+    });
+    if (!include && this.filteredFromAccountList?.length === 0) {
+      // filteredFromAccount.push({ account: "No data found" });
+      this.filteredFromAccountList = [];
     }
-    return filteredFromAccount;
+    return this.filteredFromAccountList;
   }
 
   private _filter2(value: string | number, include: boolean): any[] {
@@ -185,6 +188,8 @@ export class AddExpensesComponent implements OnInit {
   addCart(i) {
     this.getCart().push(this.cart());
     this.isCart = false;
+    this.myControls.push(new FormControl(''));
+    this.subscribeToControlValueChanges(this.myControls.length - 1);
     if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
@@ -192,6 +197,7 @@ export class AddExpensesComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
+    this.myControls.removeAt(i);
     if (this.expensevoucherForm?.value?.expenses_voucher_cart?.length == 0) {
       this.isCart = true;
     }
@@ -241,6 +247,12 @@ export class AddExpensesComponent implements OnInit {
         });
         cartData.push(cartObject);
       });
+      cartData.forEach((item, index) => {
+        if (this.selectedTaxPercentage[index] !== undefined) {
+          item.tax = Number(this.selectedTaxPercentage[index]);
+        }
+      });
+
       formdata.append('expenses_voucher_cart', JSON.stringify(cartData));
       this.transactionService.addExpensVoucher(formdata).subscribe((res: any) => {
         this.loaders = false;

@@ -7,7 +7,7 @@
 
 <div class="card" id="purchaseForm">
     <div class="card-body">
-        <form [formGroup]="deliveryChallanForm">   
+        <form [formGroup]="deliveryChallanForm">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
@@ -20,9 +20,10 @@
                                 [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let user of filteredusers | async">
-                                    <mat-option *ngIf="user.is_active==true"
-                                    [value]="user?.name + ' ' + user?.username" (onSelectionChange)="oncheck(user)"
-                                    style="color:#FF9F43"> {{user?.detail?.company_name ? user?.detail?.company_name : user?.name}}</mat-option>
+                                    <mat-option *ngIf="user.is_active==true" [value]="user?.name + ' ' + user?.username"
+                                        (onSelectionChange)="oncheck(user)" style="color:#FF9F43">
+                                        {{user?.name + ' (' +
+                                        user?.username + ')'}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredusers | async) as users">
                                     <mat-option *ngIf="users.length === 0" [value]="'No data found'">
@@ -46,14 +47,20 @@
                             'is-invalid': f['bill_date'].touched && f['bill_date'].invalid}">
                         <span class="text-danger" *ngIf="bill_date && bill_date.invalid && bill_date.touched">Select
                             Bill Date
-                        </span>      
+                        </span>
                     </div>
                 </div>
-          
+
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Select Sale Bill*</label>
-                        <mat-form-field class="w-100" style="padding: 0;
+                        <select formControlName="sale_bill">
+                            <option value="" selected disabled>Select Sales Bill</option>
+                            <option value="{{bill.id}}" *ngFor="let bill of saleBillList">{{bill?.id}}
+                            </option>
+                            <option *ngIf="!saleBillList?.length" value="" disabled>Sales Bill not found</option>
+                        </select>
+                        <!-- <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Bill No." aria-label="Bill No." matInput
@@ -62,8 +69,9 @@
                             <mat-autocomplete #autoBill="matAutocomplete">
                                 <ng-container *ngFor="let bill of filteredBill | async">
                                     <mat-option *ngIf="bill.is_active==true"
-                                    [value]="bill?.customer_bill_no+ ' '+ bill?.customer?.username" (onSelectionChange)="oncheckBill(bill)"
-                                    style="color:#FF9F43"> {{bill?.customer_bill_no + ' (' + bill?.customer?.username + ')'}}</mat-option>
+                                        [value]="bill?.customer_bill_no+ ' '+ bill?.customer?.username"
+                                        (onSelectionChange)="oncheckBill(bill)" style="color:#FF9F43">
+                                        {{bill?.customer_bill_no + ' (' + bill?.customer?.username + ')'}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredBill | async) as saleBillList">
                                     <mat-option *ngIf="saleBillList.length === 0" [value]="'No data found'">
@@ -73,8 +81,9 @@
                                         Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
-                        </mat-form-field>
-                        <span class="text-danger" *ngIf="sale_bill && sale_bill.invalid && sale_bill.touched">Select Sale Bill</span>
+                        </mat-form-field> -->
+                        <span class="text-danger" *ngIf="sale_bill && sale_bill.invalid && sale_bill.touched">Select
+                            Sale Bill</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -84,13 +93,15 @@
                         width: 100%;
                         min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Bill No." aria-label="Bill No." matInput
-                                [formControl]="accountControl" [matAutocomplete]="autoAc" style="box-sizing: border-box;"
+                                [formControl]="accountControl" [matAutocomplete]="autoAc"
+                                style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['transporter_account'].touched && f['transporter_account'].invalid}">
                             <mat-autocomplete #autoAc="matAutocomplete">
                                 <ng-container *ngFor="let account of filteredAccount | async">
                                     <mat-option *ngIf="account.is_active==true"
-                                    [value]="account?.title+ ' '+ account?.account_id" (onSelectionChange)="oncheckAccount(account)"
-                                    style="color:#FF9F43"> {{account?.title + ' (' + account?.account_id + ')'}}</mat-option>
+                                        [value]="account?.title+ ' '+ account?.account_id"
+                                        (onSelectionChange)="oncheckAccount(account)" style="color:#FF9F43">
+                                        {{account?.title + ' (' + account?.account_id + ')'}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredAccount | async) as accountList">
                                     <mat-option *ngIf="accountList.length === 0" [value]="'No data found'">
@@ -101,24 +112,29 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="transporter_account && transporter_account.invalid && transporter_account.touched">Select Transporter Account</span>
+                        <span class="text-danger"
+                            *ngIf="transporter_account && transporter_account.invalid && transporter_account.touched">Select
+                            Transporter Account</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Delivery Challan Bill Series *</label>
+                        <label>Delivery Challan Bill No *</label>
                         <!-- <input type="text" formControlName="delivery_challan_bill_no" readonly placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['delivery_challan_bill_no'].touched && f['delivery_challan_bill_no'].invalid}"> -->
                         <!-- <select formControlName="delivery_challan_bill_no">
-                            <option value="" selected disabled>Select Delivery Challan Bill Series</option>
+                            <option value="" selected disabled>Select Delivery Challan Bill No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select> -->
                         <select formControlName="delivery_challan_bill_no" *ngIf="isStatusDraft">
-                            <option value="" selected disabled>Select Delivery Challan Bill Series</option>
+                            <option value="" selected disabled>Select Delivery Challan Bill No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
-                        <input *ngIf="!isStatusDraft" type="text" formControlName="delivery_challan_bill_no" readonly [ngClass]="{'is-invalid': f['delivery_challan_bill_no'].touched && f['delivery_challan_bill_no'].invalid}">
-                  
-                        <span class="text-danger" *ngIf="delivery_challan_bill_no && delivery_challan_bill_no.invalid && delivery_challan_bill_no.touched">Enter Delivery Challan Bill Series </span>
+                        <input *ngIf="!isStatusDraft" type="text" formControlName="delivery_challan_bill_no" readonly
+                            [ngClass]="{'is-invalid': f['delivery_challan_bill_no'].touched && f['delivery_challan_bill_no'].invalid}">
+
+                        <span class="text-danger"
+                            *ngIf="delivery_challan_bill_no && delivery_challan_bill_no.invalid && delivery_challan_bill_no.touched">Enter
+                            Delivery Challan Bill No </span>
                     </div>
                 </div>
 
@@ -416,190 +432,253 @@
 
             </div>
             <div class="card">
-             <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="page-title">
-                            <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="form-group">
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id"
+                                                    (change)="getSubCategory(category.id)"
+                                                    (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i">
+                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{category?.title}}</label>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
                             <div class="dropdown">
                                 <button type="button" class="dropdown-toggle button" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
+                                    <li><input type="text" placeholder="search category" class="form-control"
+                                            [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()"
+                                            [ngModelOptions]="{standalone: true}">
                                     </li>
-                                    <li><a class="dropdown-item" *ngFor="let category of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="category.id" (change)="getSubCategory(category.id)" (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.title}}</label>
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                            <input type="checkbox" [value]="subcategory.id"
+                                                (change)="SelectedProductSubCat(subcategory?.id)"
+                                                [id]="'checkboxSubCat-' + i">
+                                            <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                        </a></li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="dropdown">
-                            <button type="button" class="dropdown-toggle button" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
-                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchSubCategory"  (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}">
-                                </li>
-                                <li><a class="dropdown-item"
-                                        *ngFor="let subcategory of filteredSubCategoryList let i=index;">
-                                        <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.id)" 
-                                            [id]="'checkboxSubCat-' + i">
-                                        <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.title}}</label>
-                                    </a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table datanew">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th></th>
-                                    <th>Barcode/SKU</th>
-                                    <th>Product Name</th>
-                                    <th>QTY</th>
-                                    <th>MRP</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <ng-container formArrayName="cart">
-                                    <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                        <tr [formGroupName]="i">
-                                            <td>{{i+1+'.'}}</td>
-                                            <td>
-                                                <div>
-                                                    <div class="me-2">
-                                                        <svg (click)="removeCart(i)" style="color:red"
-                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <div class="table-responsive">
+                            <table class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th></th>
+                                        <th>Barcode/SKU</th>
+                                        <th>Product Name</th>
+                                        <th>QTY</th>
+                                        <th>MRP</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart"
+                                                *ngIf="isCart">Add Cart+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="cart">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>{{i+1+'.'}}</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                             <path
                                                                 d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                             <path
-                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                         </svg>
                                                     </div>
-                                                    <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                    </svg>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input class="input" type="text" placeholder="Search Barcode"
-                                                    [attr.data-index]="i"
-                                                    [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                    (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
-                                            </td>
-                                            <td colspan="1">
-                                                <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
-                                            <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
-                                                <input type="text" placeholder="Search Product"
-                                                aria-label="Search Products" matInput [formControl]="d.get('item_name')"
-                                                (input)="getVariant($event.target.value,i,'')"
-                                                [matAutocomplete]="autos" style="box-sizing: border-box;" />
-                                            <mat-autocomplete #autos="matAutocomplete">
-                                                <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
-                                                    <ng-container *ngFor="let option of variantList[i]">
-                                                    <mat-option *ngIf="option?.is_active==true"
-                                                        [value]="option?.product_title + ' ' + option?.variant_name"
-                                                        (onSelectionChange)="oncheckVariant(option,i)"
-                                                        (onSelectionChange)="variantChanged(option, i)"
-                                                        style="color:#FF9F43">
-                                                        {{ option?.product_title + ' ' + option?.variant_name}}
-                                                    </mat-option>
-                                                    <!-- </ng-container> -->
-                                                </ng-container>
-                                                <mat-option *ngIf="searchLength?.toString()?.length < 2 && isSearch" style="color:#FF9F43">Loading...</mat-option>
-                                                <mat-option *ngIf="variantList[i]?.length === 0 && !isSearch" [value]="'No data found'">
-                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                                                </mat-option>
-                                                <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading"> Please Enter 3 or more characters </mat-option>
-                                            </mat-autocomplete>
-                                                    <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalProduct(i)"></i>
-                                                    <!-- </mat-form-field> -->
-                                                    <div class="modal fade " id="productModal-{{i}}" tabindex="-1" role="dialog"
-                                                    aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Variants</h1>
-                                                                <button type="button" class="close" (click)="closeModalProduct(i)" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="form-group" *ngIf="variantList[indexCartValue]">
-                                                                    <div class="row">
-                                                                        <div class="table-responsive">
-                                                                            <table class="table datanew">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th class="boder space-text">Sr.No.</th>
-                                                                                        <th class="boder space-text">Barcode</th>
-                                                                                        <th class="boder space-text">Product</th>
-                                                                                        <th class="boder space-text">Variant Name</th>
-                                                                                        <th class="boder space-text">Date</th>
-                                                                                        <th class="boder space-text">MRP</th>
-                                                                                        <th class="boder space-text">Action</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        *ngFor="let prod of variantList[indexCartValue];let ind=index;">
-                                                                                        <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                        <td class="boder">{{ prod?.sku}}</td>
-                                                                                        <td class="boder">{{ prod?.product_title }}</td>
-                                                                                        <td class="boder">{{prod?.variant_name}}</td>
-                                                                                        <td class="boder">{{ prod?.created_date}}</td>
-                                                                                        <td class="boder">{{ prod?.batch[0]?.mrp}}</td>
-                                                                                        <td><button type="button" (click)="oncheckVariant(prod,indexCartValue)" (click)="variantChanged(prod, indexCartValue)" class="btn btn-primary btn-sm" style="float: right;">Select </button> </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
+                                                </td>
+                                                <td>
+                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                        [attr.data-index]="i"
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                        (keyup)="getVariant(id.value,i,'barcode')"
+                                                        (blur)="hideSearch()">
+                                                </td>
+                                                <td colspan="1">
+                                                    <div class="form-group d-flex item-align-center"
+                                                        style="margin-bottom: 0;">
+                                                        <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
+                                                        <input type="text" placeholder="Search Product"
+                                                            aria-label="Search Products" matInput
+                                                            [formControl]="d.get('item_name')"
+                                                            (input)="getVariant($event.target.value,i,'')"
+                                                            [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                        <mat-autocomplete #autos="matAutocomplete">
+                                                            <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
+                                                            <ng-container *ngFor="let option of variantList[i]">
+                                                                <mat-option *ngIf="option?.is_active==true"
+                                                                    [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                    (onSelectionChange)="oncheckVariant(option,i)"
+                                                                    (onSelectionChange)="variantChanged(option, i)"
+                                                                    style="color:#FF9F43">
+                                                                    {{ option?.product_title + ' ' +
+                                                                    option?.variant_name}}
+                                                                </mat-option>
+                                                                <!-- </ng-container> -->
+                                                            </ng-container>
+                                                            <mat-option
+                                                                *ngIf="searchLength?.toString()?.length < 2 && isSearch"
+                                                                style="color:#FF9F43">Loading...</mat-option>
+                                                            <mat-option
+                                                                *ngIf="variantList[i]?.length === 0 && !isSearch"
+                                                                [value]="'No data found'">
+                                                                <a routerLink="//product/addproduct"
+                                                                    style="color:#FF9F43">+add Product</a>
+                                                            </mat-option>
+                                                            <mat-option *ngIf="searchLength?.toString()?.length < 2"
+                                                                class="is-loading"> Please Enter 3 or more characters
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                        <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                            title="ion-information" (click)="openModalProduct(i)"></i>
+                                                        <!-- </mat-form-field> -->
+                                                        <div class="modal fade " id="productModal-{{i}}" tabindex="-1"
+                                                            role="dialog" aria-labelledby="addressModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                                role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5"
+                                                                            id="staticBackdropLabel">Selected Variants
+                                                                        </h1>
+                                                                        <button type="button" class="close"
+                                                                            (click)="closeModalProduct(i)"
+                                                                            aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group"
+                                                                            *ngIf="variantList[indexCartValue]">
+                                                                            <div class="row">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table datanew">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Sr.No.</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Barcode</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Product</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Variant Name</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Date</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    MRP</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Action</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr
+                                                                                                *ngFor="let prod of variantList[indexCartValue];let ind=index;">
+                                                                                                <td class="boder">{{
+                                                                                                    ind+1+'.'}}</td>
+                                                                                                <td class="boder">{{
+                                                                                                    prod?.sku}}</td>
+                                                                                                <td class="boder">{{
+                                                                                                    prod?.product_title
+                                                                                                    }}</td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.variant_name}}
+                                                                                                </td>
+                                                                                                <td class="boder">{{
+                                                                                                    prod?.created_date}}
+                                                                                                </td>
+                                                                                                <td class="boder">{{
+                                                                                                    prod?.batch[0]?.mrp}}
+                                                                                                </td>
+                                                                                                <td><button
+                                                                                                        type="button"
+                                                                                                        (click)="oncheckVariant(prod,indexCartValue)"
+                                                                                                        (click)="variantChanged(prod, indexCartValue)"
+                                                                                                        class="btn btn-primary btn-sm"
+                                                                                                        style="float: right;">Select
+                                                                                                    </button> </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                </div>
-                                            </td>
-                                            <td><input type="number" formControlName="qty" class="input"></td>
-                                            <td><input type="number" formControlName="mrp" class="input"></td>   
-                                        </tr>
+                                                </td>
+                                                <td><input type="number" formControlName="qty" class="input"></td>
+                                                <td><input type="number" formControlName="mrp" class="input"></td>
+                                            </tr>
+                                        </ng-container>
                                     </ng-container>
-                                </ng-container>
-                                <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-start"><strong>Total</strong></td>
-                                    <td class="text-start">{{calculateTotalQty()}}
-                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()" style="display: none;">
-                                    </td>
-                                    <td class="text-start">{{calculateTotalMRP()}}</td>
-                                  </tr>
-                            </tbody>
-                        </table>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start">{{calculateTotalQty()}}
+                                            <input type="text" formControlName="total_qty" class="input"
+                                                [ngModel]="calculateTotalQty()" style="display: none;">
+                                        </td>
+                                        <td class="text-start">{{calculateTotalMRP()}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-             </div>
             </div>
             <div class="row">
                 <div class="col-lg-6 my-3">
@@ -612,36 +691,42 @@
                         </span>
                     </div>
                 </div>
-               
+
             </div>
-              <div class="col-lg-12">
+            <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//sales/delivery-challan-list" class="btn btn-cancel text-white me-2 mb-1" style=" background-color: #f4516c;">Cancel</a>
+                        <a routerLink="//sales/delivery-challan-list" class="btn btn-cancel text-white me-2 mb-1"
+                            style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                            Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Print</button>
                         <ng-container *ngIf="isStatusDraft">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
-                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save
+                                as Draft</button>
+                            <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>&nbsp; Save as Draft</button>
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Save</button>              
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            &nbsp; Save</button>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                            Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save & Create New</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-  
