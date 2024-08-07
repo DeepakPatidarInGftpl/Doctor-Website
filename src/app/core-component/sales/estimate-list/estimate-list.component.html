@@ -3,34 +3,40 @@
         <h4 class="titl">Sales Estimate list</h4>
         <h6>View/Search Sales Estimate</h6>
     </div>
-  
-    <div class="page-btn" >
+
+    <div class="page-btn">
         <div class="row">
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="form-group w-100" *ngIf="isAdmin">
                     <div class="dropdown">
-                        <button type="button" class="dropdown-toggle button" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
+                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">Select Branch</button>
                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                            <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                            <li> <input type="text" placeholder="search category" class="form-control"
+                                    [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()"
+                                    [ngModelOptions]="{standalone: true}">
                             </li>
                             <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
-                                    <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
-                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
-                            </a></li>
+                                    <input type="checkbox" [value]="branch.id"
+                                        [checked]="selectData.includes(branch.id)"
+                                        (change)="SelectedBranch(branch.id,$event.target.checked)"
+                                        style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                    <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                        (click)="onLabelClick($event)">{{branch.title}}</label>
+                                </a></li>
                         </ul>
                     </div>
                     <div class="d-flex">
-                    <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                        <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <ng-container *ngIf="isAdd">
-        <a routerLink="//sales/addsalesEstimate" class="btn btn-added">
-            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Sales Estimate
-        </a>
+            <a routerLink="//sales/addsalesEstimate" class="btn btn-added">
+                <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Sales Estimate
+            </a>
         </ng-container>
     </div>
 </div>
@@ -49,7 +55,9 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search Customer/Estimate No." [(ngModel)]="titlee" (ngModelChange)="search()" >
+                            <input type="search" class="form-control form-control-sm"
+                                placeholder="Search Customer/Estimate No." [(ngModel)]="titlee"
+                                (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -57,8 +65,8 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -80,40 +88,45 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Estimate Date</label>
-                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search" >
+                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Estimate Expire Date</label>
-                                    <input type="date" [(ngModel)]="espireDate" (ngModelChange)="filterData()" class="search" >
+                                    <input type="date" [(ngModel)]="espireDate" (ngModelChange)="filterData()"
+                                        class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Payment terms</label>
-                                    <select [(ngModel)]="filterPaymentTerms" (change)="filterData()" class="form-select">
+                                    <label>Payment terms</label>
+                                    <select [(ngModel)]="filterPaymentTerms" (change)="filterData()"
+                                        class="form-select">
                                         <option value="" selected disabled>Select Payment Terms</option>
-                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}</option>
+                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Total Amount</label>
-                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
-                                    <span class="text-success">Amount Filter (Less than & Equal to Total amount value)</span>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount"
+                                        (keyup)="filterData()">
+                                    <span class="text-success">Amount Filter (Less than & Equal to Total amount
+                                        value)</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Select Status</label>
                                     <select [(ngModel)]="statusFilter" (change)="filterData()" class="form-select">
-                                   <option value="" selected disabled>Select Status</option>
-                                    <option value="Draft">Draft</option>
-                                    <option value="Expired">Expired</option>
-                                    <option value="Converted to order">Converted to order</option>
-                                </select>
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="Draft">Draft</option>
+                                        <option value="Expired">Expired</option>
+                                        <option value="Converted to order">Converted to order</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -137,9 +150,9 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Estimate no <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">User Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Estimate Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Estimate no <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Expire Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th>
@@ -159,17 +172,20 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
+                        <td>{{products.estimate_no}}</td>
                         <td class="productimgname">
                             <a routerLink="//sales/salesEstimatedetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username + ')'}}</a>
+                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
+                                + ')'}}</a>
                         </td>
                         <td>{{products?.estimate_date}}</td>
-                        <td>{{products.estimate_no}}</td>
                         <td>{{products.payment_terms.title}}</td>
                         <td>{{products?.estimate_expiry_date}}</td>
                         <td>{{products?.subtotal}}</td>
                         <td>{{products?.total}}</td>
-                        <td><span [ngClass]="{'bg-lightgreen': products.status === 'Converted to order', 'bg-lightred' : products.status === 'Expired','bg-lightyellow' : products.status === 'Draft'}" class="badges">{{products.status}}</span></td>
+                        <td><span
+                                [ngClass]="{'bg-lightgreen': products.status === 'Converted to order', 'bg-lightred' : products.status === 'Expired','bg-lightyellow' : products.status === 'Draft'}"
+                                class="badges">{{products.status}}</span></td>
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td> -->
@@ -214,7 +230,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}}
+                            entries</div>
                     </div>
                 </div>
             </div>

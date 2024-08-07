@@ -59,7 +59,7 @@
                             [ngClass]="{'is-invalid': f['sale_order_no'].touched && f['sale_order_no'].invalid}">
                         <!-- 18-5 -->
                         <select formControlName="sale_order_no" *ngIf="isStatusDraft">
-                            <option value="" selected disabled>Select Sale Series</option>
+                            <option value="" selected disabled>Select Sale No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
@@ -387,6 +387,7 @@
                                 Estimate</option>
                             <option value="{{estimate.id}}" *ngFor="let estimate of estimateList">
                                 {{estimate.estimate_no}}</option>
+                            <option *ngIf="!estimateList?.length" value="" disabled>Estimate not found</option>
                         </select>
 
                     </div>
@@ -639,8 +640,7 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input"
-                                                        #price>
+                                                <td><input type="number" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -793,16 +793,20 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td *ngIf="!selectedStates[discountCartIndex][ind]">
-                                                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                                            <td
+                                                                                                *ngIf="!selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-primary btn-md"
                                                                                                     (click)="selectDiscount(discount,i,ind)">
-                                                                                                 Select
+                                                                                                    Select
                                                                                                 </button>
-                                                                                                </td>
-                                                                                                <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
+                                                                                            </td>
+                                                                                            <td
+                                                                                                *ngIf="selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
                                                                                                     class="btn btn-primary btn-md"
                                                                                                     (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
-                                                                                                </td>
+                                                                                            </td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                     <tbody

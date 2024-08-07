@@ -63,11 +63,11 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Return Bill Series* </label>
+                        <label>Sale Return Bill No* </label>
                         <!-- <input type="text" formControlName="sale_return_bill_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['sale_return_bill_no'].touched && f['sale_return_bill_no'].invalid}"> -->
                         <!-- 18-5 -->
                         <select formControlName="sale_return_bill_no">
-                            <option value="" selected disabled>Select Sale Series</option>
+                            <option value="" selected disabled>Select Sale No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
@@ -85,6 +85,7 @@
                             <option value="" selected disabled>Select Sales Bill</option>
                             <option value="{{bill.id}}" *ngFor="let bill of salesBillList">{{bill?.id}}
                             </option>
+                            <option *ngIf="!salesBillList?.length" value="" disabled>Sales Bill not found</option>
                         </select>
                         <span class="text-danger" *ngIf="sale_bill && sale_bill.invalid && sale_bill.touched">Select
                             Sales Bill</span>
@@ -620,8 +621,7 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input"
-                                                         #price>
+                                                <td><input type="number" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"

@@ -181,7 +181,7 @@ export class AddSaleBillComponent implements OnInit {
     })
     this.getCategory();
     this.getPaymentTerms();
-    this.getSaleOrder();
+    // this.getSaleOrder();
     this.getEmployee();
     this.getprefix();
     this.addAdditionalCharge();
@@ -244,7 +244,7 @@ export class AddSaleBillComponent implements OnInit {
   saleEstimateList: any
   getSaleEstimate() {
     this.saleService.getSalesEstimate().subscribe(res => {
-      this.saleOderList = res;
+      this.saleEstimateList = res;
     })
   }
 
@@ -592,6 +592,12 @@ export class AddSaleBillComponent implements OnInit {
     const userName = data?.username;
     const selectedItemId = data.id;
     this.userType = data?.user_type;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
+    this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
+      this.saleOderList = res;
+    })
+
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);
@@ -638,8 +644,10 @@ export class AddSaleBillComponent implements OnInit {
     this.coreService.getProfile().subscribe((res: any) => {
       console.log(res);
       this.currentEmployee = res?.username;
-      const user = this.employeeList.filter((val) => val?.name === this.currentEmployee);
-      this.discountLimit = user[0]?.discount_limit;
+      if(!!this.employeeList?.length){
+        const user = this.employeeList.filter((val) => val?.name === this.currentEmployee);
+        this.discountLimit = user[0]?.discount_limit;
+      }
     })
   }
 

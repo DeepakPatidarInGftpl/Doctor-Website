@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Estimate Series* </label>
+                        <label>Sale Estimate No* </label>
                         <select formControlName="estimate_no" *ngIf="isStatusDraft">
                             <option value="" selected disabled>Select Estimate Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -624,8 +624,7 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input"
-                                                        #price>
+                                                <td><input type="number" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -777,16 +776,20 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td *ngIf="!selectedStates[discountCartIndex][ind]">
-                                                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                                            <td
+                                                                                                *ngIf="!selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-primary btn-md"
                                                                                                     (click)="selectDiscount(discount,i,ind)">
-                                                                                                 Select
+                                                                                                    Select
                                                                                                 </button>
-                                                                                                </td>
-                                                                                                <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
+                                                                                            </td>
+                                                                                            <td
+                                                                                                *ngIf="selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
                                                                                                     class="btn btn-primary btn-md"
                                                                                                     (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
-                                                                                                </td>
+                                                                                            </td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                     <tbody

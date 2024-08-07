@@ -36,7 +36,8 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="userControl && userControl.invalid && userControl.touched">Select
+                        <span class="text-danger"
+                            *ngIf="userControl && userControl.invalid && userControl.touched">Select
                             User
                         </span>
                     </div>
@@ -66,11 +67,11 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label> Advance Booking Series*</label>
+                        <label> Advance Booking No*</label>
                         <!-- <input type="text" formControlName="booking_no" placeholder="Enter Advance Booking No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}"> -->
                         <!-- 18-5 -->
                         <select formControlName="booking_no">
-                            <option value="" selected disabled>Select Booking Series</option>
+                            <option value="" selected disabled>Select Booking No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
@@ -531,7 +532,8 @@
                                                                     <a routerLink="//product/addproduct"
                                                                         style="color:#FF9F43">+add Product</a>
                                                                 </mat-option>
-                                                                <mat-option *ngIf="d.get('item_name')?.value?.length < 3"
+                                                                <mat-option
+                                                                    *ngIf="d.get('item_name')?.value?.length < 3"
                                                                     class="is-loading"> Please Enter 3 or more
                                                                     characters
                                                                 </mat-option>
@@ -539,10 +541,8 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"
-                                                        ></td>
-                                                <td><input type="number" formControlName="price" class="input"
-                                                         #price>
+                                                <td><input type="number" formControlName="qty" class="input"></td>
+                                                <td><input type="number" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch()"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"

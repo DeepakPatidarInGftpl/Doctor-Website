@@ -60,10 +60,16 @@ export class UpdateCreditNoteComponent implements OnInit {
     this.transactionService.getCreditNoteById(this.id).subscribe(res => {
       console.log(res);
       this.debitNoteForm.patchValue(res);
-      this.debitNoteForm.get('account').patchValue(res?.account?.id);
+      this.debitNoteForm.get('account').patchValue((res?.account?.account_id &&
+        res?.account?.company_name) ?
+        (res?.account?.company_name + ' (' +
+          res?.account?.account_id + ')') : res?.account?.account_id);
       this.debitNoteForm.get('sale_bill_no').patchValue(res?.sale_bill_no?.id);
       // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
-      this.fromAccountControl.setValue(res?.account?.account_id);
+      this.fromAccountControl.setValue((res?.account?.account_id &&
+        res?.account?.company_name) ?
+        (res?.account?.company_name + ' (' +
+          res?.account?.account_id + ')') : res?.account?.account_id);
       this.billControl.setValue(res?.sale_bill_no?.customer_bill_no);
       const userId = res?.account?.user ? res?.account?.user : '';
       this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {

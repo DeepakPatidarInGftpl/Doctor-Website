@@ -152,6 +152,12 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order == null ? '' : this.editRes?.sale_order.id);
       this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man == null ? '' : this.editRes?.sales_man?.id);
+
+      let userId = res?.customer?.detail?.userid?.id ? res?.customer?.detail?.userid?.id : ''
+      this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
+        this.saleOderList = res;
+      })
+
       // this.saleBillForm.get('customer_bill_no').patchValue(this.editRes);
       // 21-5
       if (this.editRes.status == 'Draft' || this.editRes.status == null) {
@@ -207,7 +213,7 @@ export class UpdateSaleBillComponent implements OnInit {
     })
     this.getCategory();
     this.getPaymentTerms();
-    this.getSaleOrder();
+    // this.getSaleOrder();
     this.getEmployee();
 
     this.addAdditionalCharge();
@@ -275,7 +281,7 @@ export class UpdateSaleBillComponent implements OnInit {
   saleEstimateList: any
   getSaleEstimate() {
     this.saleService.getSalesEstimate().subscribe(res => {
-      this.saleOderList = res;
+      this.saleEstimateList = res;
     })
   }
 
@@ -683,6 +689,12 @@ export class UpdateSaleBillComponent implements OnInit {
     console.log(data);
     const selectedItemId = data.id;
     this.userType = data?.user_type;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
+    this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
+      this.saleOderList = res;
+    })
+
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);
@@ -729,8 +741,10 @@ export class UpdateSaleBillComponent implements OnInit {
     this.coreService.getProfile().subscribe((res: any) => {
       console.log(res);
       this.currentEmployee = res?.username;
-      const user = this.employeeList.filter((val) => val?.name === this.currentEmployee);
-      this.discountLimit = user[0]?.discount_limit;
+      if(!!this.employeeList.length) {
+        const user = this.employeeList.filter((val) => val?.name === this.currentEmployee);
+        this.discountLimit = user[0]?.discount_limit;
+      }
     })
   }
 

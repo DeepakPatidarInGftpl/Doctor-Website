@@ -52,14 +52,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase Return Series</label>
+                        <label>Purchase Return *ngFor="let item of list"</label>
                         <!-- <input type="text" formControlName="purchase_return_no" placeholder="Enter Purchase Return No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}"> -->
                         <!-- <select formControlName="purchase_return_no">
-                            <option value="" selected disabled>Select Purchase Return Series</option>
+                            <option value="" selected disabled>Select Purchase Return No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select> -->
                         <select formControlName="purchase_return_no" *ngIf="isStatusDraft">
-                            <option value="" selected disabled>Select Purchase Return Series</option>
+                            <option value="" selected disabled>Select Purchase Return No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <input *ngIf="!isStatusDraft" type="text" formControlName="purchase_return_no" readonly
@@ -580,9 +580,12 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="qty" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
-                                                <td><input type="text" formControlName="unit_cost" [ngClass]="{'error-border': isFormCartInvalid}" class="input"
-                                                         #price>
+                                                <td><input type="text" formControlName="qty"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}" class="input">
+                                                </td>
+                                                <td><input type="text" formControlName="unit_cost"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}" class="input"
+                                                        #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -660,9 +663,10 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}" formControlName="mrp" class="input"></td>
-                                                <td><input type="number" [ngClass]="{'error-border': isFormCartInvalid}" formControlName="deduction" class="input"
-                                                        >
+                                                <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
+                                                        formControlName="mrp" class="input"></td>
+                                                <td><input type="number" [ngClass]="{'error-border': isFormCartInvalid}"
+                                                        formControlName="deduction" class="input">
                                                     <span class="symbol" (click)="percentage(i)"
                                                         *ngIf="isPercentage[i]">%</span>
                                                     <span class=symbol (click)="amount(i)"
@@ -675,14 +679,19 @@
                                                     <br>
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                                 </td>
-                                                <td class="text-end"><input type="text" [ngClass]="{'error-border': isFormCartInvalid}" formControlName="landing_cost"
-                                                        readonly (change)="priceValidation()" class="input"></td>
+                                                <td class="text-end"><input type="text"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}"
+                                                        formControlName="landing_cost" readonly
+                                                        (change)="priceValidation()" class="input"></td>
                                                 <td class="text-end">
-                                                    <input type="text" class="input" readonly [ngClass]="{'error-border': isFormCartInvalid}"
+                                                    <input type="text" class="input" readonly
+                                                        [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [value]="TotalWithoutTax[i] | number:'1.2-2'">
                                                 </td>
                                                 <td class="text-end">
-                                                    <input type="text" formControlName="total" [ngClass]="{'error-border': isFormCartInvalid}" class="input" readonly>
+                                                    <input type="text" formControlName="total"
+                                                        [ngClass]="{'error-border': isFormCartInvalid}" class="input"
+                                                        readonly>
                                                     <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
                                                 </td>
                                             </tr>

@@ -89,6 +89,12 @@ isStatusDraft=false; //21-5
         this.deliveryChallanForm.get('sale_bill').patchValue(this.editRes?.sale_bill.id);
         // this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.editRes); //20-5
 
+        let userId = res?.account?.user ? res?.account?.user : '';
+        this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
+          this.saleBillList = res;
+          console.log(this.saleBillList);
+        })
+
         this.deliveryChallanForm.get('transporter_account').patchValue(this.editRes?.transporter_account?.id);
              // 21-5
       if(this.editRes.status=='Draft' || this.editRes.status==null){
@@ -144,7 +150,7 @@ isStatusDraft=false; //21-5
 
     this.getAccount();
     this.getCategory();
-    this.getSaleBill();
+    // this.getSaleBill();
 
   }
 
@@ -390,6 +396,13 @@ isStatusDraft=false; //21-5
     const selectedItemId = data.id;
     this.userType = data?.user_type;
     this.supplierAddress = data?.detail;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : '';
+    this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      console.log(this.saleBillList);
+    })
+
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -678,9 +691,9 @@ isStatusDraft=false; //21-5
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = this.users.filter(account => {
-      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
-      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
-      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      const accountIdIncludes = account?.username?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.name?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.detail?.company_name?.toLowerCase().includes(filterValue);
       return include
         ? (accountIdIncludes || titleIncludes || companyNameIncludes)
         : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);
