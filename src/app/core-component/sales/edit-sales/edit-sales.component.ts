@@ -137,6 +137,12 @@ export class EditSalesComponent implements OnInit {
       this.editRes = res;
       this.saleForm.patchValue(this.editRes,{ emitEvent: true });
       this.saleForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id, { emitEvent: true })
+
+      let userId = res?.customer?.detail?.userid?.id ? res?.customer?.detail?.userid?.id : ''
+      this.saleService.getSalesEstimateByUserId(userId).subscribe(res => {
+        this.estimateList = res
+      })
+
       if (this.editRes?.cart.length > 0) {
         this.saleForm.setControl('sale_order_cart', this.udateCart(this.editRes?.cart));
       } else {
@@ -188,7 +194,7 @@ export class EditSalesComponent implements OnInit {
         );
       }
     })
-    this.getEstimate();
+    // this.getEstimate();
     this.getPaymentTerms();
     this.getprefix();
     this.getCategory();
@@ -597,6 +603,12 @@ export class EditSalesComponent implements OnInit {
     //     }
     //   })
     // })
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
+    this.saleService.getSalesEstimateByUserId(userId).subscribe(res => {
+      this.estimateList = res
+    })
+
     this.supplierAddress = data;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {

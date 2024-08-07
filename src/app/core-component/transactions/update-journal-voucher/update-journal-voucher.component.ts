@@ -54,7 +54,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
       // this.journalvoucherForm.get('journal_voucher_no')?.patchValue(res?.journal_voucher_no?.id) // 20-5
       if (this.editRes?.cart?.length > 0) {
         this.journalvoucherForm.setControl('journal_voucher_cart', this.udateCart(this.editRes?.cart));
-        this.subscribeToAccountChanges();
+        // this.subscribeToAccountChanges();
       } else {
         this.isCart = true;
       }
@@ -78,18 +78,18 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  subscribeToAccountChanges(): void {
-    const journalVoucherCart = this.getCart();
-    journalVoucherCart.controls.forEach((group: FormGroup) => {
-      const accountControl = group.get('from_account');
-      if (accountControl) {
-        this.filteredFromAccount = accountControl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value, true))
-        );
-      }
-    });
-  }
+  // subscribeToAccountChanges(): void {
+  //   const journalVoucherCart = this.getCart();
+  //   journalVoucherCart.controls.forEach((group: FormGroup) => {
+  //     const accountControl = group.get('from_account');
+  //     if (accountControl) {
+  //       this.filteredFromAccount = accountControl.valueChanges.pipe(
+  //         startWith(''),
+  //         map(value => this._filter(value, true))
+  //       );
+  //     }
+  //   });
+  // }
 
   private _filter(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
@@ -129,9 +129,11 @@ export class UpdateJournalVoucherComponent implements OnInit {
     add.forEach((j: any, i) => {
       if (j?.amount_type == 'Credit') {
         this.creditAmount[i] = j?.amount;
+        this.debitAmount[i] = 0;
         console.log(this.debitAmount[i]);
       } else if (j?.amount_type == 'Debit') {
         this.debitAmount[i] = j?.amount;
+        this.creditAmount[i] = 0;
         console.log(this.creditAmount[i]);
       }
       journalVoucherCart.push(this.fb.group({
@@ -140,9 +142,12 @@ export class UpdateJournalVoucherComponent implements OnInit {
         amount: j?.amount,
         description: j?.description,
       }))
-      this.myControls.push(new FormControl(j.from_account?.account_id));
+      this.myControls.push(new FormControl((j?.from_account?.account_id &&
+        j.from_account?.company_name) ?
+        (j.from_account?.company_name + ' (' +
+          j.from_account?.account_id + ')') : j.from_account?.account_id));
     })
-    this.subscribeToAccountChanges();
+    // this.subscribeToAccountChanges();
     return journalVoucherCart;
   }
   accountList: any[] = [];
@@ -189,9 +194,11 @@ export class UpdateJournalVoucherComponent implements OnInit {
   addCart() {
     this.getCart().push(this.cart());
     this.isCart = false;
+    this.myControls.push(new FormControl(''));
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
+    this.myControls.removeAt(i);
     if (this.journalvoucherForm?.value?.journal_voucher_cart?.length == 0) {
       this.isCart == true;
     }
@@ -302,7 +309,8 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.debitAmount[i] = dr;
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
     cart.patchValue({
-      amount: this.debitAmount[i]
+      amount: this.debitAmount[i],
+      amount_type: "Debit"
     })
   }
   credit(i: number, cr: number) {
@@ -310,7 +318,8 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.debitAmount[i] = 0;
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
     cart.patchValue({
-      amount: this.creditAmount[i]
+      amount: this.creditAmount[i],
+      amount_type: "Credit"
     })
   }
 

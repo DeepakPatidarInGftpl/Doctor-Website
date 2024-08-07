@@ -109,7 +109,7 @@ export class AddDeliveryChallanComponent implements OnInit {
 
     this.getAccount();
     this.getCategory();
-    this.getSaleBill();
+    // this.getSaleBill();
     this.getprefix();
 
   }
@@ -343,6 +343,13 @@ export class AddDeliveryChallanComponent implements OnInit {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
     this.supplierAddress = data?.detail;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : '';
+    this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
+      this.saleBillList = res;
+      console.log(this.saleBillList);
+    })
+
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -624,9 +631,9 @@ export class AddDeliveryChallanComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = this.users.filter(account => {
-      const accountIdIncludes = account?.account_id?.toLowerCase().includes(filterValue);
-      const titleIncludes = account?.title?.toLowerCase().includes(filterValue);
-      const companyNameIncludes = account?.company_name?.toLowerCase().includes(filterValue);
+      const accountIdIncludes = account?.username?.toLowerCase().includes(filterValue);
+      const titleIncludes = account?.name?.toLowerCase().includes(filterValue);
+      const companyNameIncludes = account?.detail?.company_name?.toLowerCase().includes(filterValue);
       return include
         ? (accountIdIncludes || titleIncludes || companyNameIncludes)
         : (!accountIdIncludes && !titleIncludes && !companyNameIncludes);

@@ -32,6 +32,7 @@ export class UpdateExpensesComponent implements OnInit {
   selectedTaxPercentage: any[] = [];
   selectedPercentageData: any[] = [];
   filteredFromAccount: Observable<any[]>;
+  filteredFromAccountList : any[] = [];
 
   get f() {
     return this.expensevoucherForm.controls;
@@ -177,7 +178,7 @@ export class UpdateExpensesComponent implements OnInit {
         this.isAmount[i] = false;
       }
       expanseVoucherCart.push(this.fb.group({
-        account: j?.account,
+        account: j?.account?.id,
         service_or_product: j?.service_or_product,
         amount: j?.amount,
         discount: j?.discount,
@@ -196,7 +197,11 @@ export class UpdateExpensesComponent implements OnInit {
           this.totalTax();
         }
       }, 2000);
-      this.myControls.push(new FormControl(j.account));
+      // this.myControls.push(new FormControl(j?.account?.id));
+      this.myControls.push(new FormControl((j?.account?.account_id &&
+        j.account?.company_name) ?
+        (j.account?.company_name + ' (' +
+          j.account?.account_id + ')') : j.account?.account_id));
     })
     return expanseVoucherCart;
   }
@@ -221,15 +226,20 @@ export class UpdateExpensesComponent implements OnInit {
 }
 
   getFilter(data: any) {
-    this.filterAccount = this.accountList.filter(account => {
+    this.filteredFromAccountList = this.accountList.filter(account => {
       if (account && account.account_id) {
-        const aliasLower = account.account_id.toLowerCase();
-        return aliasLower.includes(data);
+        const accountIdIncludes = account?.account_id?.toLowerCase().includes(data);
+      const titleIncludes = account?.title?.toLowerCase().includes(data);
+      const companyNameIncludes = account?.company_name?.toLowerCase().includes(data);
+      if(accountIdIncludes || companyNameIncludes || titleIncludes) {
+        return true;
+      }
       }
       return false;
     });
     console.log(this.filterAccount);
   }
+
   oncheck(data: any, index: number) {
     const cart = (this.expensevoucherForm.get('expenses_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
@@ -259,6 +269,7 @@ export class UpdateExpensesComponent implements OnInit {
   addCart(i) {
     this.getCart().push(this.cart());
     this.isCart = false;
+    this.myControls.push(new FormControl(''));
     if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
@@ -266,6 +277,7 @@ export class UpdateExpensesComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
+    this.myControls.removeAt(i);
     if (this.expensevoucherForm?.value?.expenses_voucher_cart?.length == 0) {
       this.isCart == true;
     }
@@ -314,6 +326,11 @@ export class UpdateExpensesComponent implements OnInit {
           }
         });
         cartData.push(cartObject);
+      });
+      cartData.forEach((item, index) => {
+        if (this.selectedTaxPercentage[index] !== undefined) {
+          item.tax = Number(this.selectedTaxPercentage[index]);
+        }
       });
       formdata.append('expenses_voucher_cart', JSON.stringify(cartData));
       this.transactionService.updateExpensVoucher(formdata, this.id).subscribe(res => {

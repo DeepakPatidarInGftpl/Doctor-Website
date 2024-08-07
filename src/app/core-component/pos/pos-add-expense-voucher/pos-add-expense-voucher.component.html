@@ -43,13 +43,13 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Expence Voucher Series<span style="color:red">*</span></label>
+                        <label>Expence Voucher No<span style="color:red">*</span></label>
                         <select formControlName="expense_no">
-                            <option value="" selected disabled>Select Expence Voucher Series</option>
+                            <option value="" selected disabled>Select Expence Voucher No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <span class="text-danger" *ngIf="expense_no && expense_no.invalid && expense_no.touched">Enter
-                            Expence Voucher Series</span>
+                            Expence Voucher No</span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">

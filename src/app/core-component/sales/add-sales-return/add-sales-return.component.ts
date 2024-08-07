@@ -119,7 +119,7 @@ export class AddSalesReturnComponent implements OnInit {
       }
     })
     this.getCategory();
-    this.getsalesBill();
+    // this.getsalesBill();
     this.getprefix();
     this.getProfile();
     this.getEmployee();
@@ -127,9 +127,11 @@ export class AddSalesReturnComponent implements OnInit {
     this.isAmount[0] = false;
 
     this.saleReturnForm.controls['sale_bill'].valueChanges.subscribe((res: any) => {
-      const selectedBillDate = this.salesBillList.filter((val) => val?.id === Number(res));
-      this.selectedBillDate = selectedBillDate[0]?.bill_date;
-      console.log(this.selectedBillDate);
+      if(!!this.salesBillList?.length){
+        const selectedBillDate = this.salesBillList.filter((val) => val?.id === Number(res));
+        this.selectedBillDate = selectedBillDate[0]?.bill_date;
+        console.log(this.selectedBillDate);
+      }
     })
   }
 
@@ -404,6 +406,11 @@ export class AddSalesReturnComponent implements OnInit {
     this.userType = data?.user_type;
     const user = this.employeeList.filter((val) => val?.name === userName);
     this.discountLimit = user[0]?.discount_limit;
+
+    let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : '';
+    this.saleService.getSalesBillByUserId(userId).subscribe(res => {
+      this.salesBillList = res
+    })
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
     //   // console.log(res);

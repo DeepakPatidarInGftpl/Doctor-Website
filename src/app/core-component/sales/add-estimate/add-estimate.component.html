@@ -68,17 +68,17 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Estimate Series*</label>
-                        <!-- <input type="text" formControlName="estimate_no" placeholder="Enter Sale Estimate Series" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['estimate_no'].touched && f['estimate_no'].invalid}"> -->
+                        <label>Sale Estimate No*</label>
+                        <!-- <input type="text" formControlName="estimate_no" placeholder="Enter Sale Estimate No" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['estimate_no'].touched && f['estimate_no'].invalid}"> -->
                         <!-- 16-5 -->
                         <select formControlName="estimate_no">
-                            <option value="" selected disabled>Select Estimate Series</option>
+                            <option value="" selected disabled>Select Estimate No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 16-5 -->
                         <span class="text-danger"
-                            *ngIf="estimate_no && estimate_no.invalid && estimate_no.touched">Enter Estimate
-                            Series</span>
+                            *ngIf="estimate_no && estimate_no.invalid && estimate_no.touched">Select Estimate
+                            No</span>
                     </div>
                 </div>
 
@@ -620,9 +620,10 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" min="0" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input"
-                                                         #price readonly>
+                                                <td><input type="number" formControlName="qty" min="0" class="input">
+                                                </td>
+                                                <td><input type="number" formControlName="price" class="input" #price
+                                                        readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -773,16 +774,20 @@
                                                                                                 discount?.flat_discount?discount?.flat_discount:''}}
                                                                                                 {{discount?.discount_type?discount.discount_type:''}}
                                                                                             </td>
-                                                                                            <td *ngIf="!selectedStates[discountCartIndex][ind]">
-                                                                                                <button type="button" class="btn btn-primary btn-md"
+                                                                                            <td
+                                                                                                *ngIf="!selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-primary btn-md"
                                                                                                     (click)="selectDiscount(discount,i,ind)">
-                                                                                                 Select
+                                                                                                    Select
                                                                                                 </button>
-                                                                                                </td>
-                                                                                                <td *ngIf="selectedStates[discountCartIndex][ind]"><button type="button"
+                                                                                            </td>
+                                                                                            <td
+                                                                                                *ngIf="selectedStates[discountCartIndex][ind]">
+                                                                                                <button type="button"
                                                                                                     class="btn btn-primary btn-md"
                                                                                                     (click)="selectedDiscountChange(discount,i, ind)">Selected</button>
-                                                                                                </td>
+                                                                                            </td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                     <tbody

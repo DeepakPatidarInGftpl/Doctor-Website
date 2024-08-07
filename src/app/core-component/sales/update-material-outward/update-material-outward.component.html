@@ -67,14 +67,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Voucher Series</label>
+                        <label>Voucher No</label>
                         <!-- <input type="text" formControlName="voucher_number" [ngClass]="{'is-invalid': f['voucher_number'].touched && f['voucher_number'].invalid}"> -->
                         <!-- <select formControlName="voucher_number">
-                            <option value="" selected disabled>Select Voucher Series</option>
+                            <option value="" selected disabled>Select Voucher No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select> -->
                         <select formControlName="voucher_number" *ngIf="isStatusDraft">
-                            <option value="" selected disabled>Select Voucher Series</option>
+                            <option value="" selected disabled>Select Voucher No</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <input *ngIf="!isStatusDraft" type="text" formControlName="voucher_number" readonly
@@ -82,7 +82,7 @@
 
                         <span class="text-danger"
                             *ngIf="voucher_number && voucher_number.invalid && voucher_number.touched">Enter Voucher
-                            Series </span>
+                            No </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
@@ -691,7 +691,7 @@
                                         <td class="text-start"><strong>Total</strong></td>
                                         <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
                                             <input type="text" formControlName="total_qty" class="input"
-                                                 style="display: none;">
+                                                style="display: none;">
                                         </td>
                                     </tr>
                                 </tbody>

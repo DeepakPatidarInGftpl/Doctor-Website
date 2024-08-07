@@ -94,6 +94,10 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.patchValue(res);
       // this.materialForm.get('material_inward_no')?.patchValue(res?.party);
       this.materialForm.get('party')?.patchValue(res?.party?.id);
+      let userId = res?.party?.userid?.id ? res?.party?.userid?.id : ''
+      this.purchaseService.getPurchaseOrderByUserId(userId).subscribe(res => {
+        this.purchaseList = res;
+      })
 
       this.materialForm.get('purchase_order')?.patchValue(res?.purchase_order?.id === undefined ? '' : res?.purchase_order?.id);
       this.materialForm.get('product_type')?.patchValue(res?.product_type == null ? '' : res?.product_type)
@@ -165,7 +169,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getPurchase();
+    // this.getPurchase();
     this.getCategory();
   }
 
@@ -300,11 +304,16 @@ export class UpdatematerialInwardComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   supplierId: any;
-  oncheck(event: any) {
+  oncheck(event: any, data) {
     // console.log(event);
     const selectedItemId = event;
     // console.log(selectedItemId);
     this.supplierId = event;
+
+    let userId = data?.userid?.id ? data?.userid?.id : ''
+    this.purchaseService.getPurchaseOrderByUserId(userId).subscribe(res => {
+      this.purchaseList = res;
+    })
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
