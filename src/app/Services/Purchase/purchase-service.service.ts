@@ -361,5 +361,8 @@ export class PurchaseServiceService {
     return this.http.get<any>(url);
   }
 
-
+  purchaseReturnStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/purchase_return_status_update/';
+    return this.http.post(url, data);
+  }
 }

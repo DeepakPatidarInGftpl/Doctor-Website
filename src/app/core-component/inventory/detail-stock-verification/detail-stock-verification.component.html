@@ -20,135 +20,168 @@
                 <div class="sub-card row">
                     <div class="content-part my-3">
                         <div class="container py-10">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download
-                                    Invoice</button>
-                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>&nbsp; Download Invoice</button>
-                            </div>
-                            <p style="margin-bottom: 0;">
-                                <button class="btn btn" (click)="printForm()"
-                                    style="border: 1px solid antiquewhite;">Print Invoice</button>
-                            </p>
-
-                            <div class="outer container" id="debitNote">
-                                <div class="pdf-div" id="doc-target">
-
-                                    <div class="page-title mb-3">
-                                        <p class="heading">Stock Transfer Details</p>
+                            <div class="py-3">
+                                <div class="d-flex justify-content-between align-items-center container mb-3">
+                                    <div class="ps-2 ms-1">
+                                        <span [ngClass]="getBadgeClass(stockVerifactionDetail?.status)"
+                                            class="badge p-2">{{stockVerifactionDetail?.status}}</span>
                                     </div>
-                                    <div class="pdf-table1 mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="table-responsive">
-                                                    <table class="table datanew">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="thone"style="white-space: normal !important;">Sr.No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">Voucher Date</th>
-                                                                <th class="thone" style="white-space: normal !important;">Voucher No</th>
-                                                                <th class="thone" style="white-space: normal !important;">Updater Name</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>{{1}}</td>
-                                                                <td style="color:black"> {{stockVerifactionDetail?.voucher_date}}</td>
-                                                                <td style="color:black"> {{stockVerifactionDetail?.voucher_no}}</td>
-                                                                <td style="color:black">{{stockVerifactionDetail?.updater_name}}</td>
-                                                               
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
+                                    <div class="d-flex align-items-center">
+                                        <div *ngIf="userDetails?.role === 'admin' && stockVerifactionDetail?.status === 'Pending'"
+                                            class="me-3">
+                                            <button class="btn approve-status-badge me-3" data-bs-toggle="modal"
+                                                data-bs-target="#approval_modal">
+                                                Approve
+                                            </button>
+                                            <button class="btn reject-status-badge" data-bs-toggle="modal"
+                                                data-bs-target="#reject_modal">
+                                                Reject
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                title="print" (click)="printForm()"><img
+                                                    src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                    alt="img"></button>
+                                            <button class="chat-attach-download border-0 bg-white"
+                                                (click)="generatePdf()">
+                                                <i class="fas fa-download download-icon"></i>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="pdf-table2 mb-4">
-                                        <div class="container">
-                                            <div class="page-title">
-                                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                <div class="outer container" id="debitNote">
+                                    <div class="pdf-div" id="doc-target">
+
+                                        <div class="page-title mb-3">
+                                            <p class="heading">Stock Transfer Details</p>
+                                        </div>
+                                        <div class="pdf-table1 mb-4">
+                                            <div class="container">
+                                                <div class="col-sm-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table datanew">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="thone"
+                                                                        style="white-space: normal !important;">Sr.No.
+                                                                    </th>
+                                                                    <th class="thone"
+                                                                        style="white-space: normal !important;">Voucher
+                                                                        Date</th>
+                                                                    <th class="thone"
+                                                                        style="white-space: normal !important;">Voucher
+                                                                        No</th>
+                                                                    <th class="thone"
+                                                                        style="white-space: normal !important;">Updater
+                                                                        Name</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>{{1}}</td>
+                                                                    <td style="color:black">
+                                                                        {{stockVerifactionDetail?.voucher_date}}</td>
+                                                                    <td style="color:black">
+                                                                        {{stockVerifactionDetail?.voucher_no}}</td>
+                                                                    <td style="color:black">
+                                                                        {{stockVerifactionDetail?.updater_name}}</td>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                            <div class="col-sm-12 mb-3">
-                                                <div>
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Barcode/SKU</th>
-                                                                <th>Product Name</th>
-                                                                <th>Unit</th>
-                                                                <th>System qty</th>
-                                                                <th>Physical qty</th>
-                                                                <th>Difference qty</th>
-                                                                <th>Remark</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr
-                                                                *ngFor="let cart of stockVerifactionDetail?.cart; let i =index">
-                                                                <td>{{i+1}}</td>
-                                                                <td>{{cart?.item_code}}</td>
-                                                                <td>{{cart?.item_name}}</td>
-                                                                <td>{{cart?.unit}}</td>
-                                                                <td>{{cart?.system_qty}}</td>
-                                                                <td>{{cart?.physical_qty}}</td>
-                                                                <td>{{cart?.discrepancy}}</td>
-                                                                <td>{{cart?.reason_for_adjustment}}</td>
-                                                            </tr>
-                                                            <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        </div>
+
+                                        <div class="pdf-table2 mb-4">
+                                            <div class="container">
+                                                <div class="page-title">
+                                                    <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                                </div>
+                                                <div class="col-sm-12 mb-3">
+                                                    <div>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Barcode/SKU</th>
+                                                                    <th>Product Name</th>
+                                                                    <th>Unit</th>
+                                                                    <th>System qty</th>
+                                                                    <th>Physical qty</th>
+                                                                    <th>Difference qty</th>
+                                                                    <th>Remark</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let cart of stockVerifactionDetail?.cart; let i =index">
+                                                                    <td>{{i+1}}</td>
+                                                                    <td>{{cart?.item_code}}</td>
+                                                                    <td>{{cart?.item_name}}</td>
+                                                                    <td>{{cart?.unit}}</td>
+                                                                    <td>{{cart?.system_qty}}</td>
+                                                                    <td>{{cart?.physical_qty}}</td>
+                                                                    <td>{{cart?.discrepancy}}</td>
+                                                                    <td>{{cart?.reason_for_adjustment}}</td>
+                                                                </tr>
+                                                                <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
                                                                 <td class="text-center" colspan="3">
                                                                     <strong>Total</strong>
                                                                 </td>
                                                                 <td class="text-center">
                                                                     {{stockVerifactionDetail?.total_qty}}</td>
                                                             </tr> -->
-                                                        </tbody>
-                                                    </table>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <p>Please notify us on any disrepancies within 3 days of receipt
+                                                        <br />
+                                                        Overdue invoices will be charged 24% interest.
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
-                                                <p>Please notify us on any disrepancies within 3 days of receipt <br />
-                                                    Overdue invoices will be charged 24% interest.</p>
-                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="pdf-table2 mb-4" *ngIf="stockVerifactionDetail?.logs?.length>0">
-                                        <div class="container">
-                                            <div class="page-title">
-                                                <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
-                                            </div>
-                                            <div class="col-sm-12 mb-3">
-                                                <div>
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>User</th>
-                                                                <th>Operation Type</th>
-                                                                <th>Date Time</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr
-                                                                *ngFor="let log of stockVerifactionDetail?.logs; let i =index">
-                                                                <td>{{i+1}}</td>
-                                                                <td>{{log?.userid}}</td>
-                                                                <td>{{log?.operation_type}}</td>
-                                                                <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                        <div class="pdf-table2 mb-4" *ngIf="stockVerifactionDetail?.logs?.length>0">
+                                            <div class="container">
+                                                <div class="page-title">
+                                                    <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
+                                                </div>
+                                                <div class="col-sm-12 mb-3">
+                                                    <div>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>User</th>
+                                                                    <th>Operation Type</th>
+                                                                    <th>Date Time</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let log of stockVerifactionDetail?.logs; let i =index">
+                                                                    <td>{{i+1}}</td>
+                                                                    <td>{{log?.userid}}</td>
+                                                                    <td>{{log?.operation_type}}</td>
+                                                                    <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss
+                                                                        a'}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
-                                  
                                 </div>
                             </div>
                         </div>
@@ -157,4 +190,39 @@
             </div>
         </div>
     </div>
-</div>
+
+    <div id="approval_modal" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header approve-modal-wrapper">
+                    <button type="button" class="btn-close closeApprovalModal close-wrapper" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h5 class="modal-title">Are you sure you want to approve stock verification?</h5>
+                </div>
+                <div class="modal-body approve-modal-wrapper">
+                    <div class="mt-2 d-flex justify-content-end align-items-center">
+                        <button class="btn btn-primary me-3" (click)="approve()">Submit</button>
+                        <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reject_modal" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header approve-modal-wrapper">
+                    <button type="button" class="btn-close closeRejectModal close-wrapper" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h5 class="modal-title">Are you sure you want to reject stock verification?</h5>
+                </div>
+                <div class="modal-body approve-modal-wrapper">
+                    <div class="mt-2 d-flex justify-content-end align-items-center">
+                        <button class="btn btn-primary me-3" (click)="reject()">Submit</button>
+                        <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -94,6 +94,7 @@
                         <th (click)="sort('id')" class="thone">Voucher No <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Updater Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
@@ -113,6 +114,13 @@
                                 style="line-height: 3;">{{products?.date}}</a>
                         </td>
                         <td>{{products.updater_name}}</td>
+                        <td>
+                            <span [ngClass]="{
+                                'bg-lightgreen': products.status === 'Approved',
+                                'bg-lightred': products.status === 'Rejected',
+                                'bg-lightyellow': ['Pending', 'Sent', 'Draft'].includes(products.status)
+                              }" class="badges">{{products.status}}</span>
+                        </td>
                         <td>
                             <a class="me-1" routerLink="//transaction/details-scarp-entry/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">

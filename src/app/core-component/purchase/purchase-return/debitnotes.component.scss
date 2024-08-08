@@ -1,4 +1,4 @@
-input[type="date"]{
+input[type="date"] {
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
     width: 100%;
@@ -8,7 +8,8 @@ input[type="date"]{
     padding: 10px 15px;
     border-radius: 5px;
 }
-.button{
+
+.button {
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
     width: 421%;
@@ -21,5 +22,4 @@ input[type="date"]{
     justify-content: space-between;
     align-items: center;
     background: white;
-  }
-  
+}

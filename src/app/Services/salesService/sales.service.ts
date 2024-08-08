@@ -457,4 +457,9 @@ export class SalesService {
     let url = this.apiUrl + '/pv-api/delivery_challan/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  advanceBookingStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/advance_booking_status_update/';
+    return this.http.post(url, data);
+  }
 }

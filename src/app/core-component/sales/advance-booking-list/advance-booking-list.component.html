@@ -190,9 +190,10 @@
                         <ng-container *ngIf="!products?.cart?.length">
                             <td>{{products?.total ?? ''}}</td>
                         </ng-container>
-                        <td><span
-                                [ngClass]="{'bg-lightgreen': products?.status === 'Converted to order', 'bg-lightred' : products?.status === 'Expired','bg-lightyellow' : products?.status === 'Draft'}"
-                                class="badges">{{products?.status}}</span></td>
+                        <td><span [ngClass]="{
+                                'bg-lightgreen': products.status === 'Booked',
+                                'bg-lightyellow': ['Pending', 'Converted to order', 'Expired', 'Draft'].includes(products.status)
+                              }" class="badges">{{products?.status}}</span></td>
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"

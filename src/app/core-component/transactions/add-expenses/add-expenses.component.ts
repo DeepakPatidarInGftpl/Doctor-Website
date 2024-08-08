@@ -227,7 +227,7 @@ export class AddExpensesComponent implements OnInit {
       formdata.append('total_amount', this.expensevoucherForm.get('total_amount')?.value);
       formdata.append('round_off', this.expensevoucherForm.get('round_off')?.value);
       formdata.append('net_amount', this.expensevoucherForm.get('net_amount')?.value);
-      formdata.append('status', this.expensevoucherForm.get('status')?.value);
+      // formdata.append('status', this.expensevoucherForm.get('status')?.value);
       formdata.append('note', this.expensevoucherForm.get('note')?.value);
 
       const cartArray = this.expensevoucherForm.get('expenses_voucher_cart') as FormArray;
