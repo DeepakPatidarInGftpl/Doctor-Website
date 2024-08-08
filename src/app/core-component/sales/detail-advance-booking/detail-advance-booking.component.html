@@ -5,7 +5,7 @@
                 <div class="page-title">
                     <h6 class="subhead-color" (click)="goBack()"><mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                            Back to Advance Booking</h6>
+                        Back to Advance Booking</h6>
                     <h4>New Advance Booking</h4>
                 </div>
                 <div class="page-btn">
@@ -122,297 +122,378 @@
 
             <mat-tab-group animationDuration="0ms" #tabGroup>
                 <mat-tab label="Advance Booking">
-            <div class="company-details-card card" *ngIf="estimateDetail">
-                <div class="sub-card row">
-                    <div class="content-part my-3">
-                        <div class="container py-10">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Delivery Challan</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download
-                                    Delivery Challan</button>
-                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>&nbsp; Download Delivery Challan</button>
-                            </div>
-                            <p style="margin-bottom: 0;">
-                                <button class="btn btn" (click)="printForm()" style="border: 1px solid antiquewhite;">Print Delivery Challan</button>
-                            </p>
+                    <div class="company-details-card card" *ngIf="estimateDetail">
+                        <div class="sub-card row">
+                            <div class="content-part my-3">
+                                <div class="container py-10">
+                                    <div class="d-flex justify-content-between align-items-center container mb-3">
+                                        <div class="ps-2 ms-1">
+                                            <span [ngClass]="getBadgeClass(estimateDetail?.status)"
+                                                class="badge p-2">{{estimateDetail?.status}}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div *ngIf="userDetails?.role === 'admin' && estimateDetail?.status === 'Pending'"
+                                                class="me-3">
+                                                <button class="btn approve-status-badge me-3" data-bs-toggle="modal"
+                                                    data-bs-target="#booked_modal">
+                                                    Advance Booking
+                                                </button>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                    title="print" (click)="printForm()"><img
+                                                        src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                        alt="img"></button>
 
-                            <div class="outer container" id="debitNote">
-                                <div class="pdf-div" id="doc-target">
-                                    <div class="top mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="row">
-                                                    <div class="col-sm-7">
-                                                        <div class="d-flex justify-content-between align-items-center top-div"
-                                                            style="float: inline-start;">
-                                                            <div class="left-top">
-                                                                <img src="assets/dummy/pos.png" alt="">
-                                                                <p class="gst"><span>GST</span> {{companyDetails?.gst}}</p>
-                                                                <p><span>Company Name </span>: {{companyDetails?.name}}</p>
-                                                                <p><span>Financial Year</span> :
-                                                                    {{companyDetails?.financial_year?.financial_year}}
-                                                                </p>
-                                                                <p><span>Address</span> :
-                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
-                                                                </p>
-                                                                <p><span>Phone</span> : {{companyDetails?.phone}}</p>
+                                                <button class="chat-attach-download border-0 bg-white"
+                                                    (click)="generatePdf()">
+                                                    <i class="fas fa-download download-icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="outer container" id="debitNote">
+                                        <div class="pdf-div" id="doc-target">
+                                            <div class="top mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div class="row">
+                                                            <div class="col-sm-7">
+                                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                                    style="float: inline-start;">
+                                                                    <div class="left-top">
+                                                                        <img src="assets/dummy/pos.png" alt="">
+                                                                        <p class="gst"><span>GST</span>
+                                                                            {{companyDetails?.gst}}</p>
+                                                                        <p><span>Company Name </span>:
+                                                                            {{companyDetails?.name}}</p>
+                                                                        <p><span>Financial Year</span> :
+                                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                                        </p>
+                                                                        <p><span>Address</span> :
+                                                                            {{companyDetails?.address+' ,
+                                                                            '+companyDetails?.city?.city+' ,
+                                                                            '+companyDetails?.state?.state+' ,
+                                                                            '+companyDetails?.country?.country_name+' ,
+                                                                            '+companyDetails?.pincode}}
+                                                                        </p>
+                                                                        <p><span>Phone</span> :
+                                                                            {{companyDetails?.phone}}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <div class="d-flex justify-content-between align-items-center top-div my-3"
+                                                                    style=" float: inline-end;">
+                                                                    <div class="right-top">
+                                                                        <!-- <p>GST {{estimateDetail?.party?.gstin}}</p> -->
+                                                                        <h1 class="pb-4">Delivery Challan</h1>
+                                                                        <p><span>Delivery Challan Date</span> :
+                                                                            {{estimateDetail?.estimate_date| date:
+                                                                            'dd-MMMM-yyyy'}}</p>
+                                                                        <p><span>Delivery Challan NO</span> :
+                                                                            {{estimateDetail?.estimate_no}} </p>
+                                                                        <p><span>Expiry Date</span> :
+                                                                            {{estimateDetail?.estimate_expiry_date |
+                                                                            date: 'dd-MMMM-yyyy'}}</p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-5">
-                                                        <div class="d-flex justify-content-between align-items-center top-div my-3"
-                                                            style=" float: inline-end;">
-                                                            <div class="right-top">
-                                                                <!-- <p>GST {{estimateDetail?.party?.gstin}}</p> -->
-                                                                <h1 class="pb-4">Delivery Challan</h1>
-                                                                <p><span>Delivery Challan Date</span> : {{estimateDetail?.estimate_date| date: 'dd-MMMM-yyyy'}}</p>
-                                                                <p><span>Delivery Challan NO</span> : {{estimateDetail?.estimate_no}} </p>
-                                                                <p><span>Expiry Date</span> : {{estimateDetail?.estimate_expiry_date | date: 'dd-MMMM-yyyy'}}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="page-title">
-                                        <p class="heading">Sales Advance Booking Details</p>
-                                    </div>
-                                    <div class="pdf-address mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div
-                                                    class="d-flex justify-content-between align-items-center top-div container">
-                                              <div *ngIf="selectedAddressBilling">
-                                                        <p class="heading">Billing Address</p>
-                                                        <p class="heading2">
-                                                            {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1 + ' , ' +
-                                                            selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2 +' , ' +
-                                                            selectedAddressBilling?.city?.city}}
-                                                            <br>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
-                                                            selectedAddressBilling?.country?.country_name}}
-                                                            <br />
-                                                            Phone: {{estimateDetail?.customer?.phone_number}}
-                                                            <br />
-                                                            {{estimateDetail?.customer?.email}}
-                                                        </p>
-                                                    </div>
-                                                    <div *ngIf="selectedAddressShipping">
-                                                        <p class="heading">Shipping Address</p>
-                                                        <p class="heading2">
-                                                            {{selectedAddressShipping?.address_line_1==null?'':selectedAddressShipping?.address_line_1 + ' , ' +
-                                                            selectedAddressShipping?.address_line_2==null?'':selectedAddressShipping?.address_line_2 +' , ' +
-                                                            selectedAddressShipping?.city?.city}}
-                                                            <br>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
-                                                            selectedAddressBilling?.country?.country_name}}
-                                                            <br />
-                                                            Phone: {{estimateDetail?.customer?.phone_number}}
-                                                            <br />
-                                                            {{estimateDetail?.customer?.email}}
-                                                        </p>
-                                                    </div> 
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="pdf-table1 mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="table-responsive">
-                                                    <table class="table datanew">
-                                                        <thead>
-                                                            <tr>
-                                                                <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
-                                                                <th class="thone" style="white-space: normal !important;">Advance Booking No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">Account</th>
-                                                                <th class="thone" style="white-space: normal !important;">Payment Terms</th>
-                                                                <th class="thone" style="white-space: normal !important;"> Advance Booking Date</th>   
-                                                                <th class="thone" style="white-space: normal !important;">Advance Due date</th>  
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <!-- <td>{{1}}</td> -->
-                                                                <td style="color:black">{{estimateDetail?.booking_no}}</td>
-                                                                <td style="color:black">{{estimateDetail?.account?.title+ ' (' + estimateDetail?.account?.accounts_type + ')'}}</td>
-                                                                <td style="color:black">{{estimateDetail?.payment_terms?.title}}</td>
-                                                                <td style="color:black"> {{estimateDetail?.booking_date |date: 'dd-MMMM-yyyy'}}</td>
-                                                                <td style="color:black" class="text-center"> {{estimateDetail?.due_date |date: 'dd-MMMM-yyyy'}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  
-                                    <div class="pdf-table2 mb-4">
-                                        <div class="container">
                                             <div class="page-title">
-                                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                                <p class="heading">Sales Advance Booking Details</p>
                                             </div>
-                                            <div class="col-sm-12 mb-3">
-                                                <div>
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Barcode/SKU</th>
-                                                                <th>Product Name</th>
-                                                                <th>Price</th>
-                                                                <th>QTY</th>
-                                                                <th>Discount %</th>
-                                                                <th>Tax %</th>
-                                                                <th>Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr *ngFor="let cart of estimateDetail?.cart; let i =index">
-                                                                <td>{{i+1}}</td>
-                                                                <td>{{cart?.barcode?.sku}}</td>
-                                                                <td>{{cart?.item_name}}</td>
-                                                                <td>{{cart?.price}}</td>
-                                                                <td>{{cart?.qty}}</td>
-                                                                <td>{{cart?.discount}}</td>
-                                                                <td>{{cart?.tax}}</td>
-                                                                <td>{{cart?.total}}</td>
-                                                            </tr>
-                                                            <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                                                <td class="text-center" colspan="3">
-                                                                    <strong>Total</strong>
-                                                                </td>
-                                                                <td class="text-center">{{totalMrp?.toFixed(2)}}</td>
-                                                                <td class="text-center">{{estimateDetail?.total_qty}}</td>
-                                                                <td class="text-center">{{estimateDetail?.total_discount+'%' + ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{estimateDetail?.total_tax+'%'+  ' (' + '₹'+calculateTax?.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{estimateDetail?.total.toFixed(2)}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <p>Please notify us on any disrepancies within 3 days of receipt <br />
-                                                    Overdue Delivery Challans will be charged 24% interest.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 
-                                    <div class="row container">
-                                        <div class="col-lg-6 col-sm-6 col-12">
-                                            <div class="form-group">
-                                                <strong>Note:</strong>
-                                                <div style="white-space: break-spaces; border: 1px solid rgb(234, 232, 232); border-radius: 4%;" class="py-3 px-2">
-                                                    <p>{{estimateDetail?.note}}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-6 col-12" style="float: inline-end;">
-                                            <div class="form-group text-end">
-                                                <div class="total-order">
-                                                    <ul>
-                                                        <li class="total">
-                                                            <h4>Sub Total</h4>
-                                                            <h5>{{ estimateDetail?.subtotal.toFixed(2)}}
-                                                            </h5>
-                                                        </li>
-                                                        <li class="total">
-                                                            <h4>Round Off</h4>
-                                                            <h5>{{ estimateDetail?.roundoff.toFixed(2)}}
-                                                            </h5>
-                                                        </li>
-                                                        <li class="total">
-                                                            <h4>Total</h4>
-                                                            <h5>{{ estimateDetail?.total.toFixed(2)}}
-                                                            </h5>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <div class="pdf-address mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center top-div container">
+                                                            <div *ngIf="selectedAddressBilling">
+                                                                <p class="heading">Billing Address</p>
+                                                                <p class="heading2">
+                                                                    {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1
+                                                                    + ' , ' +
+                                                                    selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
+                                                                    +' , ' +
+                                                                    selectedAddressBilling?.city?.city}}
+                                                                    <br>
+                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    <br />
+                                                                    Phone: {{estimateDetail?.customer?.phone_number}}
+                                                                    <br />
+                                                                    {{estimateDetail?.customer?.email}}
+                                                                </p>
+                                                            </div>
+                                                            <div *ngIf="selectedAddressShipping">
+                                                                <p class="heading">Shipping Address</p>
+                                                                <p class="heading2">
+                                                                    {{selectedAddressShipping?.address_line_1==null?'':selectedAddressShipping?.address_line_1
+                                                                    + ' , ' +
+                                                                    selectedAddressShipping?.address_line_2==null?'':selectedAddressShipping?.address_line_2
+                                                                    +' , ' +
+                                                                    selectedAddressShipping?.city?.city}}
+                                                                    <br>
+                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    <br />
+                                                                    Phone: {{estimateDetail?.customer?.phone_number}}
+                                                                    <br />
+                                                                    {{estimateDetail?.customer?.email}}
+                                                                </p>
+                                                            </div>
 
-                                    <div class="d-flex mx-5">
-                                        <p><strong>Status : </strong><span
-                                            [ngClass]="{'bg-lightgreen': estimateDetail?.status === 'Complete', 'bg-lightred' : estimateDetail?.status === 'Pending','bg-lightyellow' : estimateDetail?.status === 'Draft'}"
-                                            class="badges">{{estimateDetail?.status}}</span></p>
-                                        <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': estimateDetail?.is_active === true, 'bg-lightred' : estimateDetail?.is_active === false,'bg-lightyellow' : estimateDetail?.is_active === 'Partial' }"
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pdf-table1 mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table datanew">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Advance Booking No.</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Account</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Payment Terms</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Advance Booking Date</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Advance Due date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <!-- <td>{{1}}</td> -->
+                                                                        <td style="color:black">
+                                                                            {{estimateDetail?.booking_no}}</td>
+                                                                        <td style="color:black">
+                                                                            {{estimateDetail?.account?.title+ ' (' +
+                                                                            estimateDetail?.account?.accounts_type +
+                                                                            ')'}}</td>
+                                                                        <td style="color:black">
+                                                                            {{estimateDetail?.payment_terms?.title}}
+                                                                        </td>
+                                                                        <td style="color:black">
+                                                                            {{estimateDetail?.booking_date |date:
+                                                                            'dd-MMMM-yyyy'}}</td>
+                                                                        <td style="color:black" class="text-center">
+                                                                            {{estimateDetail?.due_date |date:
+                                                                            'dd-MMMM-yyyy'}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="pdf-table2 mb-4">
+                                                <div class="container">
+                                                    <div class="page-title">
+                                                        <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-3">
+                                                        <div>
+                                                            <table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Barcode/SKU</th>
+                                                                        <th>Product Name</th>
+                                                                        <th>Price</th>
+                                                                        <th>QTY</th>
+                                                                        <th>Discount %</th>
+                                                                        <th>Tax %</th>
+                                                                        <th>Total</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let cart of estimateDetail?.cart; let i =index">
+                                                                        <td>{{i+1}}</td>
+                                                                        <td>{{cart?.barcode?.sku}}</td>
+                                                                        <td>{{cart?.item_name}}</td>
+                                                                        <td>{{cart?.price}}</td>
+                                                                        <td>{{cart?.qty}}</td>
+                                                                        <td>{{cart?.discount}}</td>
+                                                                        <td>{{cart?.tax}}</td>
+                                                                        <td>{{cart?.total}}</td>
+                                                                    </tr>
+                                                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                                                        <td class="text-center" colspan="3">
+                                                                            <strong>Total</strong>
+                                                                        </td>
+                                                                        <td class="text-center">{{totalMrp}}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {{estimateDetail?.total_qty}}</td>
+                                                                        <td class="text-center">
+                                                                            {{estimateDetail?.total_discount+'%' + ' ('
+                                                                            + '₹'+totaldiscount+ ')'}}</td>
+                                                                        <td class="text-center">
+                                                                            {{estimateDetail?.total_tax+'%'+ ' (' +
+                                                                            '₹'+calculateTax+ ')'}}</td>
+                                                                        <td class="text-center">
+                                                                            {{estimateDetail?.total}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <p>Please notify us on any disrepancies within 3 days of receipt
+                                                            <br />
+                                                            Overdue Delivery Challans will be charged 24% interest.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row container">
+                                                <div class="col-lg-6 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <strong>Note:</strong>
+                                                        <div style="white-space: break-spaces; border: 1px solid rgb(234, 232, 232); border-radius: 4%;"
+                                                            class="py-3 px-2">
+                                                            <p>{{estimateDetail?.note}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6 col-12" style="float: inline-end;">
+                                                    <div class="form-group text-end">
+                                                        <div class="total-order">
+                                                            <ul>
+                                                                <li class="total">
+                                                                    <h4>Sub Total</h4>
+                                                                    <h5>{{ estimateDetail?.subtotal}}
+                                                                    </h5>
+                                                                </li>
+                                                                <li class="total">
+                                                                    <h4>Round Off</h4>
+                                                                    <h5>{{ estimateDetail?.roundoff}}
+                                                                    </h5>
+                                                                </li>
+                                                                <li class="total">
+                                                                    <h4>Total</h4>
+                                                                    <h5>{{ estimateDetail?.total}}
+                                                                    </h5>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex mx-5">
+                                                <p><strong>Status : </strong><span
+                                                        [ngClass]="{'bg-lightgreen': estimateDetail?.status === 'Complete', 'bg-lightred' : estimateDetail?.status === 'Pending','bg-lightyellow' : estimateDetail?.status === 'Draft'}"
+                                                        class="badges">{{estimateDetail?.status}}</span></p>
+                                                <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': estimateDetail?.is_active === true, 'bg-lightred' : estimateDetail?.is_active === false,'bg-lightyellow' : estimateDetail?.is_active === 'Partial' }"
                                             class="badges">{{estimateDetail?.is_active}}</span> </p> -->
-                                    </div>
+                                            </div>
 
-                                    <div class="pdf-footer">
-                                        <p>Please make cheques payable to <span>PV LTD.</span></p>
+                                            <div class="pdf-footer">
+                                                <p>Please make cheques payable to <span>PV LTD.</span></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </mat-tab>
+                <mat-tab label="Logs">
+                    <div class="pdf-table2 mb-4" *ngIf="estimateDetail?.logs?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">User</th>
+                                                <th (click)="sort('id')">Operation Type</th>
+                                                <th (click)="sort('id')">Date Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let log of estimateDetail?.logs | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{log?.userid}}</td>
+                                                <td>{{log?.operation_type}}</td>
+                                                <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{estimateDetail?.logs?.length}} of {{p}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="estimateDetail?.logs?.length==0">
+                        <span class="text-danger">Logs Not Available</span>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>
+
+<div id="booked_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header approve-modal-wrapper">
+                <button type="button" class="btn-close closeAdvanceBookingModal close-wrapper" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h5 class="modal-title">Are you sure you want to do advance booking?</h5>
+            </div>
+            <div class="modal-body approve-modal-wrapper">
+                <div class="mt-2 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-primary me-3" (click)="advanceBooking()">Submit</button>
+                    <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>
-            </mat-tab>
-            <mat-tab label="Logs">
-                <div class="pdf-table2 mb-4" *ngIf="estimateDetail?.logs?.length>0">
-                    <div class="container">
-                        <div class="page-title">
-                            <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th (click)="sort('id')">#</th>
-                                            <th (click)="sort('id')">User</th>
-                                            <th (click)="sort('id')">Operation Type</th>
-                                            <th (click)="sort('id')">Date Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            *ngFor="let log of estimateDetail?.logs | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                                            <td>{{i+1}}</td>
-                                            <td>{{log?.userid}}</td>
-                                            <td>{{log?.operation_type}}</td>
-                                            <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="row">
-                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                                        <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="-1">All</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                                        <div class="f-right">
-                                            <pagination-controls
-                                                (pageChange)="p = $event"></pagination-controls>
-                                                <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                    {{estimateDetail?.logs?.length}} of {{p}} entries</div> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center" *ngIf="estimateDetail?.logs?.length==0">
-                    <span class="text-danger">Logs Not Available</span>
-                </div>
-            </mat-tab>
-            </mat-tab-group>
         </div>
     </div>
 </div>

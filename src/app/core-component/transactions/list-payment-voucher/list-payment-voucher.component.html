@@ -147,7 +147,6 @@
                         <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
@@ -173,15 +172,16 @@
                         <td class="text-center">{{products?.payment_type}}</td>
                         <td>{{products?.mode_type}}</td>
                         <td>{{products?.payment_account?.company_name}}</td>
-                        <td>{{products?.bank_payment}}</td>
+                        <!-- <td>{{products?.bank_payment}}</td> -->
                         <td>{{products?.date}}</td>
                         <td>{{products?.transaction_date}}</td>
                         <td class="text-center">{{products?.transaction_id}}</td>
                         <td>{{products?.amount}}</td>
                         <td>
-                            <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}"
-                                class="badges">{{products.status}}</span>
+                            <span [ngClass]="{
+                                'bg-lightgreen': products.status === 'Paid',
+                                'bg-lightyellow': ['Pending', 'Sent', 'Ordered', 'Draft'].includes(products.status)
+                              }" class="badges">{{products.status}}</span>
                         </td>
                         <td><mat-slide-toggle
                                 (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)"

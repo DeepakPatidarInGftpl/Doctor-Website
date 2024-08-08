@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-details-reciept-voucher',
@@ -10,11 +11,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class DetailsRecieptVoucherComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location) { }
+  userDetails: any;
+  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService) { }
   id: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
   }
   recieptVoucherDetail: any
   getdata() {
@@ -38,6 +43,47 @@ export class DetailsRecieptVoucherComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
+
+
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'pending-status-badge';
+      case 'Approved':
+        return 'approve-status-badge';
+      case 'Rejected':
+        return 'reject-status-badge';
+      default:
+        return '';
+    }
+  }
+
+  approve() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Approved')
+    this.transactionService.receiptVoucherStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+      closeModal.click();
+    })
+  }
+
+  reject() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Rejected')
+    this.transactionService.receiptVoucherStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+      closeModal.click();
+    })
+  }
+
     // filter data
     filteredData: any[]; 
     filterOpertion:any;

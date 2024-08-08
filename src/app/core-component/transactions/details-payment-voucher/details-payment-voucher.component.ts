@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-details-payment-voucher',
@@ -9,12 +10,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./details-payment-voucher.component.scss']
 })
 export class DetailsPaymentVoucherComponent implements OnInit {
-
-  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location) { }
+  userDetails: any;
+  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService ) { }
   id: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
   }
   
   paymentVoucherDetail: any
@@ -30,6 +34,32 @@ export class DetailsPaymentVoucherComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'pending-status-badge';
+      case 'Paid':
+        return 'approve-status-badge';
+      default:
+        return '';
+    }
+  }
+
+  paidPaymentVoucher() {
+    let id: any = Number(this.id)
+
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Paid')
+
+    this.transactionService.paymentVoucherStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closePaidPaymentModal');
+      closeModal.click();
+    })
   }
 
   p: number = 1

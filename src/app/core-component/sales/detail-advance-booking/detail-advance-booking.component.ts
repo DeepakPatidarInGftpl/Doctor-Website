@@ -5,6 +5,7 @@ import { SalesService } from 'src/app/Services/salesService/sales.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-detail-advance-booking',
@@ -13,28 +14,32 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 })
 export class DetailAdvanceBookingComponent implements OnInit {
 
-  constructor(private companyService: CompanyService, private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
+  constructor(private companyService: CompanyService, private Arout: ActivatedRoute, private saleService: SalesService, private location: Location, private coreService: CoreService) { }
   id: any;
   companyDetails: any;
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
+  userDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
     this.companyService.getCompany().subscribe(res => {
       this.companyDetails = res[0];
     })
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
   }
   estimateDetail: any;
   totalmrp: any[] = [];
-  totalMrp = 0;
+  totalMrp: any = 0;
   totalDiscount: any[] = [];
   discount = 0;
   totaldiscount = 0;
 
   // tax
-  calculateTax = 0;
+  calculateTax: any = 0;
   totalTax: any[] = [];
 
   getdata() {
@@ -48,11 +53,13 @@ export class DetailAdvanceBookingComponent implements OnInit {
           console.log(item?.price?.toFixed(2) - d.toFixed(2));
           this.discount = item?.price?.toFixed(2) - d.toFixed(2);
           this.totaldiscount = 0;
+          let totaldiscount = 0;
           this.totalDiscount.push(this.discount);
           console.log(this.totalDiscount);
           this.totalDiscount?.forEach((number: any) => {
-            this.totaldiscount += number;
+            totaldiscount += number;
           });
+          this.totaldiscount = totaldiscount;
           console.log(this.totaldiscount?.toFixed(2));
 
           // calulating tax
@@ -64,15 +71,17 @@ export class DetailAdvanceBookingComponent implements OnInit {
           console.log(taxPrice, 'taxprice');
           this.totalTax.push(taxPrice || 0);
           console.log(this.totalTax);  
-          this.calculateTax = this.totaldiscount - taxPrice;
+          this.calculateTax = (this.totaldiscount - taxPrice).toFixed(2);
           console.log(this.calculateTax);
           
           // mrp
+          let mrp = 0;
           this.totalmrp.push(item?.price);
           this.totalMrp = 0;
           this?.totalmrp?.forEach((number: any) => {
-            this.totalMrp += number;
+            mrp += number
           })
+          this.totalMrp = mrp ;
         });
         // address selected
         this.supplierAddress = res;
@@ -93,6 +102,29 @@ export class DetailAdvanceBookingComponent implements OnInit {
     this.location.back();
   }
 
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'pending-status-badge';
+      case 'Booked':
+        return 'approve-status-badge';
+      default:
+        return '';
+    }
+  }
+
+  advanceBooking() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Booked')
+    this.saleService.advanceBookingStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeAdvanceBookingModal');
+      closeModal.click();
+    })
+  }
 
   loaderPdf = false;
   generatePdf() {

@@ -9,6 +9,7 @@
     border-right: 2px solid white;
     border-bottom: 2px solid white;
 }
+
 .td {
     background-color: #F2F4F3;
     font-family: 'Poppins';
@@ -19,4 +20,41 @@
     color: #3B3B3B;
     border-right: 2px solid white;
     border-bottom: 2px solid white;
+}
+
+.print-icon-wrapper {
+    height: 24px;
+}
+
+.download-icon {
+    color: #848080;
+    font-size: 24px;
+}
+
+.pending-status-badge {
+    color: #FFF;
+    background-color: #FF9F43;
+    font-size: 16px;
+}
+
+.approve-status-badge {
+    color: #FFF;
+    background-color: #5cb85c;
+    font-size: 16px;
+}
+
+.reject-status-badge {
+    color: #FFF;
+    background-color: #d9534f;
+    font-size: 16px;
+}
+
+.approve-modal-wrapper {
+    padding: 20px;
+}
+
+.close-wrapper {
+    top: 10px;
+    right: 10px;
+    position: absolute;
 }

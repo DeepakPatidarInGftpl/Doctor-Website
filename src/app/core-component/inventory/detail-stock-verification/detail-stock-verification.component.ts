@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ToastrService } from 'ngx-toastr';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 
 @Component({
@@ -12,13 +13,16 @@ import { StockService } from 'src/app/Services/stockService/stock.service';
   styleUrls: ['./detail-stock-verification.component.scss']
 })
 export class DetailStockVerificationComponent implements OnInit {
-
-  constructor(private Arout: ActivatedRoute,private toastr:ToastrService, private stockService: StockService, private location:Location) { }
+  userDetails: any;
+  constructor(private Arout: ActivatedRoute,private toastr:ToastrService, private stockService: StockService, private location:Location, private coreService: CoreService) { }
   id: any;
   printDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
   }
   stockVerifactionDetail: any
   totalPurchase: any[] = [];
@@ -40,6 +44,45 @@ export class DetailStockVerificationComponent implements OnInit {
     this.location.back();
   }
 
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'pending-status-badge';
+      case 'Approved':
+        return 'approve-status-badge';
+      case 'Rejected':
+        return 'reject-status-badge';
+      default:
+        return '';
+    }
+  }
+
+  approve() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Approved')
+    this.stockService.stockVerificationStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+      closeModal.click();
+    })
+  }
+
+  reject() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Rejected')
+
+    this.stockService.stockVerificationStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+      closeModal.click();
+    })
+  }
 
   loaderPdf = false;
   generatePdf() {
