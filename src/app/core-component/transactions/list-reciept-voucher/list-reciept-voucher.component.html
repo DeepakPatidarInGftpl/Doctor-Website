@@ -182,9 +182,11 @@
                         <td class="text-center">{{products?.transaction_id}}</td>
                         <td>{{products?.amount}}</td>
                         <td>
-                            <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}"
-                                class="badges">{{products.status}}</span>
+                            <span [ngClass]="{
+                                'bg-lightgreen': products.status === 'Approved',
+                                'bg-lightred': products.status === 'Rejected',
+                                'bg-lightyellow': ['Pending', 'Sent', 'Draft'].includes(products.status)
+                              }" class="badges">{{products.status}}</span>
                         </td>
                         <td><mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"

@@ -164,4 +164,9 @@ export class StockService {
     let url = this.apiUrl + '/pv-api/stock_verification/?id=';
     return this.http.get(`${url}${id}`)
   }
+
+  stockVerificationStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/stock_verification_status_update/';
+    return this.http.post(url, data);
+  }
 }

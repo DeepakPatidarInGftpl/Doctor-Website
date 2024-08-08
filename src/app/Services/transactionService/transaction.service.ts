@@ -509,4 +509,24 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/variant-search/?search=';
     return this.http.get(url + query);
   }
+
+  receiptVoucherStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/receipt_voucher_status_update/';
+    return this.http.post(url, data);
+  }
+
+  expanseVoucherStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/expense_voucher_status_update/';
+    return this.http.post(url, data);
+  }
+
+  paymentVoucherStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/payment_voucher_status_update/';
+    return this.http.post(url, data);
+  }
+
+  scarpEntryStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/scarp_entry_status_update/';
+    return this.http.post(url, data);
+  }
 }

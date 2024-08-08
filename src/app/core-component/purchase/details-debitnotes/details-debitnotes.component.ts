@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-details-debitnotes',
@@ -13,27 +14,31 @@ import { jsPDF } from 'jspdf';
 })
 export class DetailsDebitnotesComponent implements OnInit {
 
-  constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location) { }
+  constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location, private coreService: CoreService) { }
   id: any;
   companyDetails:any;
   printDetails: any;
   supplierAddress:any;
   selectedAddressBilling:any;
   selectedAddressShipping:any;
+  userDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
     this.companyService.getCompany().subscribe(res=>{
       this.companyDetails=res[0];
     })
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
   }
   purchaseBillDetail: any
   totalPurchase:any[]=[];
-  totalPurchaseRate=0;
+  totalPurchaseRate: any = 0;
   totalmrp:any[]=[];
-  totalMrp=0;
+  totalMrp: any = 0;
   totallanding:any[]=[];
-  totalLandingCost=0;
+  totalLandingCost: any = 0;
   getdata() {
     this.purchaseService.getPurchaseReturnById(this.id).subscribe(res => {
       if (this.id == res.id) {
@@ -53,22 +58,28 @@ export class DetailsDebitnotesComponent implements OnInit {
          // calculation
          this.purchaseBillDetail?.cart?.forEach((res:any)=>{
           this.totalPurchase.push(res?.unit_cost);
-          this.totalPurchaseRate =0
+          // this.totalPurchaseRate = 0
+          let purchaseRate = 0;
           this?.totalPurchase?.forEach((number: any) => {
-            this.totalPurchaseRate += number;
+            purchaseRate += number;
           })
+          this.totalPurchaseRate = Number(purchaseRate).toFixed(2);
           // mrp
           this.totalmrp.push(res?.mrp);
-          this.totalMrp=0;
+          // this.totalMrp = 0;
+          let mrp = 0;
           this?.totalmrp?.forEach((number: any) => {
-            this.totalMrp += number;
+          mrp += number;
           })
+          this.totalMrp = Number(mrp).toFixed(2);
           //landing cost
           this.totallanding.push(res?.landing_cost);
-          this.totalLandingCost=0;
+          this.totalLandingCost = 0;
+          let landingCost = 0;
           this?.totallanding?.forEach((number: any) => {
-            this.totalLandingCost += number;
+            landingCost += number;
           })
+          this.totalLandingCost = Number(landingCost).toFixed(2);
           // total deduction
           
         })
@@ -77,6 +88,45 @@ export class DetailsDebitnotesComponent implements OnInit {
   }
   goBack() {
     this.location.back();
+  }
+
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'pending-status-badge';
+      case 'Approved':
+        return 'approve-status-badge';
+      case 'Rejected':
+        return 'reject-status-badge';
+      default:
+        return '';
+    }
+  }
+
+  approve() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Approved')
+    this.purchaseService.purchaseReturnStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+      closeModal.click();
+    })
+  }
+
+  reject() {
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Rejected')
+    this.purchaseService.purchaseReturnStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      this.getdata();
+      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+      closeModal.click();
+    })
   }
 
   loaderPdf = false;

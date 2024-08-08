@@ -173,9 +173,11 @@
                         <td>{{products?.reverse_charge}}</td>
                         <td>{{products?.purchase_bill?.supplier_bill_no}}</td>
                         <td>
-                            <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Approved', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Sent','bg-lightyellow' : products.status === 'Draft'}"
-                                class="badges">{{products.status}}</span>
+                            <span [ngClass]="{
+                                'bg-lightgreen': products.status === 'Approved',
+                                'bg-lightred': products.status === 'Rejected',
+                                'bg-lightyellow': ['Pending', 'Sent', 'Draft'].includes(products.status)
+                              }" class="badges">{{products.status}}</span>
                         </td>
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
