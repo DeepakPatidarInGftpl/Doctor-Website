@@ -58,3 +58,117 @@
     right: 10px;
     position: absolute;
 }
+
+
+.right-top {
+    color: black;
+    // text-align: end;
+}
+
+.right-top p {
+    margin-bottom: 2px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.right-top p:first-child {
+    font-weight: 600;
+    margin: 0;
+}
+
+.right-top h1 {
+    margin-bottom: 12px;
+    margin-top: 12px;
+    font-size: 48px;
+    letter-spacing: .8px;
+}
+
+.right-top p:last-child {
+    margin-bottom: 0;
+}
+
+.left-top {
+    color: black;
+    padding: 20px 0;
+}
+
+.left-top p {
+    color: #000;
+    margin-bottom: 2px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.gst {
+    font-weight: 600 !important;
+    margin: 0;
+}
+
+.left-top p:last-child {
+    margin-bottom: 0;
+}
+
+.left-top img {
+    // width: 100px;
+    width: 35%;
+}
+
+.table-title-wrapper {
+    color: #FF9F43;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pdf-table2 table,
+.pdf-table2 th {
+    border: 1px solid #000;
+    border-collapse: collapse;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    margin: 0;
+    padding: 0;
+}
+
+.pdf-table2 table {
+    width: 100%;
+}
+
+.pdf-table2 th {
+    padding: 5px;
+    color: #212B36;
+    background-color: #FF9F43;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.pdf-table2 td {
+    text-align: center;
+    padding: 5px;
+}
+
+.pdf-table2 tbody td {
+    border: 1px solid #000;
+    font-weight: 400;
+    color: black;
+    font-size: 13px;
+}
+
+.pdf-table2 p {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+}
+
+::ng-deep {
+    .scrap-entry-wrapper {
+        .mat-tab-label {
+            width: 50% !important;
+        }
+    }
+}

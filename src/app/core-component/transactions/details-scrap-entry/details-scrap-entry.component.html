@@ -10,7 +10,7 @@
                 </div>
 
             </div>
-            <div class="company-details-card card" *ngIf="recieptVoucherDetail">
+            <div class="scrap-entry-wrapper company-details-card card" *ngIf="recieptVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
@@ -79,57 +79,40 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">Updater Name</td>
-                                            <td class="td">{{recieptVoucherDetail?.updater_name}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Voucher No.</td>
-                                            <td class="td">{{recieptVoucherDetail?.voucher_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Date</td>
-                                            <td class="td">{{recieptVoucherDetail?.date}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div> -->
-
-                        </mat-tab>
-                        <mat-tab label="Cart">
-                            <div class="table-responsive" *ngIf="recieptVoucherDetail?.cart?.length>0">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="th">#</th>
-                                            <th class="th">SKU</th>
-                                            <th class="th">Name</th>
-                                            <th class="th">QTY</th>
-                                            <th class="th">Unit</th>
-                                            <th class="th">Reason</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let cart of recieptVoucherDetail?.cart; index as i">
+                            <div class="mt-3 container pdf-table2">
+                                <h4 class="table-title-wrapper mb-2">Product Details</h4>
+                                <div class="table-responsive" *ngIf="recieptVoucherDetail?.cart?.length>0">
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td class="td">{{i+1+'.'}}</td>
-                                                <td class="td">{{cart?.item_code}}</td>
-                                                <td class="td">{{cart?.item_name}}</td>
-                                                <td class="td">{{cart?.qty}}</td>
-                                                <td class="td">{{cart?.unit}}</td>
-                                                <td class="td">{{cart?.reason}}</td>
+                                                <th class="th">#</th>
+                                                <th class="th">SKU</th>
+                                                <th class="th">Name</th>
+                                                <th class="th">QTY</th>
+                                                <th class="th">Unit</th>
+                                                <th class="th">Reason</th>
                                             </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let cart of recieptVoucherDetail?.cart; index as i">
+                                                <tr>
+                                                    <td class="td">{{i+1+'.'}}</td>
+                                                    <td class="td">{{cart?.item_code}}</td>
+                                                    <td class="td">{{cart?.item_name}}</td>
+                                                    <td class="td">{{cart?.qty}}</td>
+                                                    <td class="td">{{cart?.unit}}</td>
+                                                    <td class="td">{{cart?.reason}}</td>
+                                                </tr>
 
-                                        </ng-container>
-                                    </tbody>
-                                </table>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center" *ngIf="recieptVoucherDetail?.cart?.length==0">
+                                    <span class="text-danger">Data Not Available</span>
+                                </div>
                             </div>
-                            <div class="text-center" *ngIf="recieptVoucherDetail?.cart?.length==0">
-                                <span class="text-danger">Data Not Available</span>
-                            </div>
+
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="recieptVoucherDetail?.logs?.length>0">
                             <div class="card">

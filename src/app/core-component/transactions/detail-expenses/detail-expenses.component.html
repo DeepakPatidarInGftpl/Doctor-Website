@@ -15,12 +15,12 @@
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="journelVoucherDetail">
+            <div class="expanse-voucher-wrapper company-details-card card" *ngIf="journelVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
                             <div class="py-3">
-                                <div class="d-flex justify-content-between align-items-center container-fluid mb-3">
+                                <div class="d-flex justify-content-between align-items-center container mb-3">
                                     <div>
                                         <span [ngClass]="getBadgeClass(journelVoucherDetail?.status)"
                                             class="badge p-2">{{journelVoucherDetail?.status}}</span>
@@ -40,112 +40,161 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">Party</td>
-                                            <td class="td">{{journelVoucherDetail?.party?.name}}</td>
-                                        </tr>
 
-                                        <tr>
-                                            <td class="th">Expense Voucher No.</td>
-                                            <td class="td">{{journelVoucherDetail?.expense_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Refrence Bill No.</td>
-                                            <td class="td">{{journelVoucherDetail?.refrence_bill_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Date</td>
-                                            <td class="td">{{journelVoucherDetail?.expense_date}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Net Amount</td>
-                                            <td class="td">{{journelVoucherDetail?.net_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Paid Amount</td>
-                                            <td class="td">{{journelVoucherDetail?.paid_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Roound Off</td>
-                                            <td class="td">{{journelVoucherDetail?.round_off}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Tax Amount</td>
-                                            <td class="td">{{journelVoucherDetail?.tax_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Total Amount</td>
-                                            <td class="td">{{journelVoucherDetail?.total_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Status</td>
-                                            <td class="td">{{journelVoucherDetail?.status}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Reverse Charge</td>
-                                            <td class="td">{{journelVoucherDetail?.reverse_charge}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Description</td>
-                                            <td class="td">{{journelVoucherDetail?.note}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="container">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <div class="d-flex justify-content-between align-items-center top-div"
+                                                style="float: inline-start;">
+                                                <div class="left-top">
+                                                    <img src="assets/dummy/pos.png" alt="">
+                                                    <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                    <p>Company Name: {{companyDetails?.name}}</p>
+                                                    <p>Financial Year:
+                                                        {{companyDetails?.financial_year?.financial_year}}
+                                                    </p>
+                                                    <p><span>Address</span> :
+                                                        {{companyDetails?.address+' ,
+                                                        '+companyDetails?.city?.city+' ,
+                                                        '+companyDetails?.state?.state+' ,
+                                                        '+companyDetails?.country?.country_name+' ,
+                                                        '+companyDetails?.pincode}}
+                                                    </p>
+                                                    <p>Phone: {{companyDetails?.phone}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center my-3 mx-3">
-                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                <span
-                                    [ngClass]="{'bg-lightgreen': journelVoucherDetail?.is_active === true, 'bg-lightred' : journelVoucherDetail?.is_active === false,'bg-lightyellow' : journelVoucherDetail?.is_active === 'Partial' }"
-                                    class="badges">{{journelVoucherDetail?.is_active}}</span>
-                            </div>
-                        </mat-tab>
-                        <mat-tab label="Cart">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <td class="th">Sr.No.</td>
-                                            <td class="th">Account</td>
-                                            <td class="th">Service/Product</td>
-                                            <td class="th">Description</td>
-                                            <td class="th">Amount</td>
-                                            <td class="th">Discount</td>
-                                            <td class="th">Tax</td>
-                                            <td class="th">Tax Value</td>
-                                            <td class="th">Total</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let cart of journelVoucherDetail?.cart; index as i">
-                                            <td class="td">{{i+1}}</td>
-                                            <td class="td">{{cart?.account?.account_id}}</td>
-                                            <td class="td">{{cart?.service_or_product}}</td>
-                                            <td class="td">{{cart?.description}}</td>
-                                            <td class="td">{{cart?.amount}}</td>
-                                            <td class="td">{{cart?.discount}}</td>
-                                            <td class="td">{{cart?.tax}}</td>
-                                            <td class="td">{{cart?.tax_value}}</td>
-                                            <td class="td">{{cart?.total}}</td>
-                                        </tr>
-                                        <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-start"><strong>Total</strong></td>
-                                            <td></td>
-                                            <td class="text-start">{{journelVoucherDetail?.net_amount | number:'1.2-2'}}
-                                            </td>
-                                            <td class="text-start">{{totalDiscount}}</td>
-                                            <td class="text-start">{{totalTax}}</td>
-                                            <td class="text-start">{{journelVoucherDetail?.tax_amount | number:'1.2-2'}}
-                                            </td>
-                                            <td class="text-start">{{journelVoucherDetail?.total_amount | number:'1.2-2'
-                                                }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                            <div class="pdf-table1 my-4">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <h4 class="table-title-wrapper mb-2">Expanse Voucher Details</h4>
+                                        <div class="table-responsive">
+                                            <table class="table datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Party </th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Expense Voucher No.</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Refrence Bill No.</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Date</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Net Amount</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Paid Amount</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Roound Off</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Tax Amount</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Total Amount</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Status</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Reverse Charge</th>
+                                                        <th class="thone" style="white-space: normal !important;">
+                                                            Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.party?.name}}
+                                                        </td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.expense_no}}
+                                                        </td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.refrence_bill_no}}
+                                                        </td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.expense_date}}</td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.net_amount}}</td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.paid_amount}}
+                                                        </td>
+                                                        <td style="color:black">
+                                                            {{journelVoucherDetail?.round_off}}</td>
+                                                        <td style="color:black" class="td">
+                                                            {{journelVoucherDetail?.tax_amount}}</td>
+                                                        <td style="color:black" class="td">
+                                                            {{journelVoucherDetail?.total_amount}}</td>
+                                                        <td style="color:black" class="td">
+                                                            {{journelVoucherDetail?.status}}</td>
+                                                        <td style="color:black" class="td">
+                                                            {{journelVoucherDetail?.reverse_charge}}</td>
+                                                        <td style="color:black" class="td">
+                                                            {{journelVoucherDetail?.note}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="pdf-table1 table-responsive mt-4 pt-2">
+                                        <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="thone">Sr.No.</th>
+                                                    <th class="thone">Account</th>
+                                                    <th class="thone">Service/Product</th>
+                                                    <th class="thone">Description</th>
+                                                    <th class="thone">Amount</th>
+                                                    <th class="thone">Discount</th>
+                                                    <th class="thone">Tax</th>
+                                                    <th class="thone">Tax Value</th>
+                                                    <th class="thone">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let cart of journelVoucherDetail?.cart; index as i">
+                                                    <td class="td">{{i+1}}</td>
+                                                    <td class="td">{{cart?.account?.account_id}}</td>
+                                                    <td class="td">{{cart?.service_or_product}}</td>
+                                                    <td class="td">{{cart?.description}}</td>
+                                                    <td class="td">{{cart?.amount}}</td>
+                                                    <td class="td">{{cart?.discount}}</td>
+                                                    <td class="td">{{cart?.tax}}</td>
+                                                    <td class="td">{{cart?.tax_value}}</td>
+                                                    <td class="td">{{cart?.total}}</td>
+                                                </tr>
+                                                <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-start"><strong>Total</strong></td>
+                                                    <td></td>
+                                                    <td class="text-start">{{journelVoucherDetail?.net_amount |
+                                                        number:'1.2-2'}}
+                                                    </td>
+                                                    <td class="text-start">{{totalDiscount}}</td>
+                                                    <td class="text-start">{{totalTax}}</td>
+                                                    <td class="text-start">{{journelVoucherDetail?.tax_amount |
+                                                        number:'1.2-2'}}
+                                                    </td>
+                                                    <td class="text-start">{{journelVoucherDetail?.total_amount |
+                                                        number:'1.2-2'
+                                                        }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="d-flex align-items-center my-3 pt-3">
+                                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                        <span
+                                            [ngClass]="{'bg-lightgreen': journelVoucherDetail?.is_active === true, 'bg-lightred' : journelVoucherDetail?.is_active === false,'bg-lightyellow' : journelVoucherDetail?.is_active === 'Partial' }"
+                                            class="badges">{{journelVoucherDetail?.is_active}}</span>
+                                    </div>
+                                </div>
                             </div>
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="journelVoucherDetail?.logs?.length>0">
