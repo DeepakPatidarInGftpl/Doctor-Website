@@ -7,7 +7,7 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 @Component({
   selector: 'app-details-scrap-entry',
   templateUrl: './details-scrap-entry.component.html',
-  styleUrls: ['./details-scrap-entry.component.scss', '../../purchase/commonDetails.scss']
+  styleUrls: ['./details-scrap-entry.component.scss']
 })
 export class DetailsScrapEntryComponent implements OnInit {
   userDetails: any;
