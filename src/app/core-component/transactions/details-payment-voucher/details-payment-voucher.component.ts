@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-details-payment-voucher',
@@ -11,13 +12,17 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailsPaymentVoucherComponent implements OnInit {
   userDetails: any;
-  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService ) { }
+  companyDetails:any;
+  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService ) { }
   id: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
     this.coreService.profileDetails.subscribe((res)=> {
       this.userDetails = res;
+    })
+    this.companyService.getCompany().subscribe(res=>{
+      this.companyDetails=res[0];
     })
   }
   
