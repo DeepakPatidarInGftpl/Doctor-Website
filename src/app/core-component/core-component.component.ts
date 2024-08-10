@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { SettingsService } from '../shared/settings/settings.service';
+import { CoreService } from '../Services/CoreService/core.service';
 
 @Component({
   selector: 'app-core-component.',
@@ -11,10 +12,12 @@ export class CoreComponentComponent implements OnInit {
 
 
   public sideBaractivePath: boolean = false;
+  isSyncLoading = false;
+
   // public headeractivePath: boolean = false;
   public changeLayout: string = '1';
 
-  constructor(private Router: Router, private settings: SettingsService) {
+  constructor(private Router: Router, private settings: SettingsService, private coreService: CoreService) {
     this.getRoutes(this.Router
     )
 
@@ -28,6 +31,14 @@ export class CoreComponentComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.coreService.loaderBehaveSub.subscribe((res)=> {
+      console.log(res);
+      if(!!res) {
+        this.isSyncLoading = true;
+      } else{
+        this.isSyncLoading = false;
+      }
+    })
   }
   private getRoutes(data: any): void {
     $('div').removeClass('slide-nav');

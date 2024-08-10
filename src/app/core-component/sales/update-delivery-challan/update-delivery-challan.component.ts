@@ -74,7 +74,7 @@ isStatusDraft=false; //21-5
       cart: this.fb.array([]),
       total_qty: new FormControl(1),
       status: new FormControl(''),
-      note: new FormControl(''),
+      note: new FormControl('', [Validators.required]),
     });
 
     this.searchForm = this.fb.group({

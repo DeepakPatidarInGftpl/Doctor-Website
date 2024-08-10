@@ -1,4 +1,4 @@
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-3 container pdf-table2">
+                            <div class="mt-3 container pdf-table1">
                                 <h4 class="table-title-wrapper mb-2">Product Details</h4>
                                 <div class="table-responsive" *ngIf="recieptVoucherDetail?.cart?.length>0">
                                     <table class="table">
@@ -108,9 +108,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="text-center" *ngIf="recieptVoucherDetail?.cart?.length==0">
+                                <div class="text-start mt-4 pt-2" *ngIf="recieptVoucherDetail?.cart?.length==0">
+                                    <h4 class="table-title-wrapper mb-2">Cart Details</h4>
                                     <span class="text-danger">Data Not Available</span>
                                 </div>
+
                             </div>
 
                         </mat-tab>
@@ -219,7 +221,7 @@
     </div>
 </div>
 
-<div id="approval_modal" class="modal custom-modal fade" role="dialog">
+<div id="approval_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">
@@ -237,7 +239,7 @@
     </div>
 </div>
 
-<div id="reject_modal" class="modal custom-modal fade" role="dialog">
+<div id="reject_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">

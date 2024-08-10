@@ -69,7 +69,7 @@ export class AddDeliveryChallanComponent implements OnInit {
       cart: this.fb.array([]),
       total_qty: new FormControl(1),
       status: new FormControl(''),
-      note: new FormControl(''),
+      note: new FormControl('', [Validators.required]),
     });
 
     this.searchForm = this.fb.group({
@@ -340,7 +340,7 @@ export class AddDeliveryChallanComponent implements OnInit {
   oncheck(data: any) {
     console.log(data);
     this.getVariant('...','','')
-    const selectedItemId = data.id;
+    const selectedItemId = data?.detail?.account;
     this.userType = data?.user_type;
     this.supplierAddress = data?.detail;
 
@@ -493,7 +493,7 @@ export class AddDeliveryChallanComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           mrp: event.batch[0]?.mrp
         });
     }else{

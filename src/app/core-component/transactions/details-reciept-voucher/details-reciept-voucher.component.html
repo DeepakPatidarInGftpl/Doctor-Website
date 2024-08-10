@@ -1,4 +1,4 @@
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
@@ -15,12 +15,12 @@
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="recieptVoucherDetail">
+            <div class="receipt-voucher-wrapper company-details-card card" *ngIf="recieptVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
                             <div class="py-3">
-                                <div class="d-flex justify-content-between align-items-center container-fluid mb-3">
+                                <div class="d-flex justify-content-between align-items-center container mb-3">
                                     <div>
                                         <span [ngClass]="getBadgeClass(recieptVoucherDetail?.status)"
                                             class="badge p-2">{{recieptVoucherDetail?.status}}</span>
@@ -93,7 +93,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <td class="td">{{recieptVoucherDetail?.payment_account.account_id}}</td>
+                                                <td class="td">{{recieptVoucherDetail?.payment_account}}</td>
                                                 <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
                                                 <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
                                                 <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
@@ -111,6 +111,33 @@
                                         </table>
                                     </div>
 
+                                    <div *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'"
+                                        class="pdf-table1 table-responsive mt-5 pt-2">
+                                        <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="th">Sr. No.</th>
+                                                    <th class="th">Sale Bill</th>
+                                                    <th class="th">Original Amount</th>
+                                                    <th class="th">Paid Amount</th>
+                                                    <th class="th">Pending Amount</th>
+                                                    <th class="th">Payment</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
+                                                    <td class="td">{{i+1}}</td>
+                                                    <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
+                                                    <td class="td">{{cart?.original_amount}}</td>
+                                                    <td class="td">{{cart?.paid_amount}}</td>
+                                                    <td class="td">{{cart?.pending_amount}}</td>
+                                                    <td class="td">{{cart?.payment}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                     <div class="d-flex align-items-center my-3 pt-3">
                                         <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
                                         <span
@@ -120,32 +147,7 @@
                                 </div>
                             </div>
                         </mat-tab>
-                        <mat-tab label="Cart" *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="th">Sr. No.</th>
-                                            <th class="th">Sale Bill</th>
-                                            <th class="th">Original Amount</th>
-                                            <th class="th">Paid Amount</th>
-                                            <th class="th">Pending Amount</th>
-                                            <th class="th">Payment</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
-                                            <td class="td">{{i+1}}</td>
-                                            <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
-                                            <td class="td">{{cart?.original_amount}}</td>
-                                            <td class="td">{{cart?.paid_amount}}</td>
-                                            <td class="td">{{cart?.pending_amount}}</td>
-                                            <td class="td">{{cart?.payment}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </mat-tab>
+
                         <mat-tab label="Logs" *ngIf="recieptVoucherDetail?.logs?.length>0">
                             <div class="card">
                                 <!-- <div class="search-set mx-3 mt-3">
@@ -251,7 +253,7 @@
     </div>
 </div>
 
-<div id="approval_modal" class="modal custom-modal fade" role="dialog">
+<div id="approval_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">
@@ -269,7 +271,7 @@
     </div>
 </div>
 
-<div id="reject_modal" class="modal custom-modal fade" role="dialog">
+<div id="reject_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">
