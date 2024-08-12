@@ -123,6 +123,8 @@
                         <th (click)="sort('id')" class="thone">GSTIN <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Supplier Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">City <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Created By <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -148,6 +150,8 @@
                         <td>{{products?.gstin}}</td>
                         <!-- <td>{{products?.pan_no}}</td> -->
                         <td>{{products?.supplier_type}}</td>
+                        <td>{{products?.address[0]?.city?.city}}</td>
+                        <td>{{products?.name}}</td>
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
