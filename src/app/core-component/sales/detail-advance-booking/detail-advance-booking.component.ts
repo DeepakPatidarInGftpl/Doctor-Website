@@ -20,6 +20,7 @@ export class DetailAdvanceBookingComponent implements OnInit {
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
+  isSyncLoading = false;
   userDetails: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -114,15 +115,24 @@ export class DetailAdvanceBookingComponent implements OnInit {
   }
 
   advanceBooking() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
     formData.append('status', 'Booked')
     this.saleService.advanceBookingStatusUpdate(formData).subscribe((res)=> {
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeAdvanceBookingModal');
+        closeModal.click();
+      }, 500);
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeAdvanceBookingModal');
-      closeModal.click();
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 

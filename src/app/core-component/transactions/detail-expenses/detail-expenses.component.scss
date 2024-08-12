@@ -176,3 +176,8 @@
         }
     }
 }
+
+.blur-modal {
+    filter: blur(3px);
+    z-index: 1;
+}

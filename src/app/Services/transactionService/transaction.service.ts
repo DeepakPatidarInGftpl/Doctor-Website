@@ -529,4 +529,9 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/scarp_entry_status_update/';
     return this.http.post(url, data);
   }
+
+  materialConsumptionStatusUpdate(data) {
+    let url = this.apiUrl + '/pv-api/material_consumption_status_update/';
+    return this.http.post(url, data);
+  }
 }

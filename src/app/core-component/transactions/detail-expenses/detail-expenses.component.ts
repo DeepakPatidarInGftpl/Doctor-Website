@@ -15,6 +15,7 @@ export class DetailExpensesComponent implements OnInit {
   constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService) { }
   id: any;
   companyDetails:any;
+  isSyncLoading = false;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -72,28 +73,46 @@ export class DetailExpensesComponent implements OnInit {
   }
 
   approve() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
     formData.append('status', 'Approved')
     this.transactionService.expanseVoucherStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+        closeModal.click();
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 
   reject() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
     formData.append('status', 'Rejected')
     this.transactionService.expanseVoucherStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+        closeModal.click();
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 

@@ -35,6 +35,7 @@ export class CoreService {
   productListBehaviur = new BehaviorSubject(null);
   StaticPageBehaveSub = new BehaviorSubject(null);
   profileDetails = new BehaviorSubject(null);
+  loaderBehaveSub = new BehaviorSubject(null);
 
 
 

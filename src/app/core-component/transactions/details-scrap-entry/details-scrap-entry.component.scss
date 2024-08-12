@@ -164,10 +164,20 @@
     letter-spacing: 0.1px;
 }
 
+.pdf-table1 thead tr {
+    background: #FF9F43;
+    border-bottom: 3px solid #FF9F43;
+}
+
 ::ng-deep {
     .scrap-entry-wrapper {
         .mat-tab-label {
             width: 50% !important;
         }
     }
+}
+
+.blur-modal {
+    filter: blur(3px);
+    z-index: 1;
 }

@@ -12,6 +12,7 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 export class DetailsScrapEntryComponent implements OnInit {
   userDetails: any;
   companyDetails:any;
+  isSyncLoading = false;
   constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService) { }
   id: any;
   ngOnInit(): void {
@@ -66,28 +67,46 @@ export class DetailsScrapEntryComponent implements OnInit {
   }
 
   approve() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let payload = {
       id: Number(this.id),
       status: 'Approved'
     }
     this.transactionService.scarpEntryStatusUpdate(payload).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+        closeModal.click();
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 
   reject() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let payload = {
       id: Number(this.id),
       status: 'Rejected'
     }
     this.transactionService.scarpEntryStatusUpdate(payload).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+        closeModal.click();
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 
