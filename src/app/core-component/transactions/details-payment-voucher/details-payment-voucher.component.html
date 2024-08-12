@@ -1,4 +1,4 @@
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
@@ -297,7 +297,7 @@
     </div>
 </div>
 
-<div id="paid_modal" class="modal custom-modal fade" role="dialog">
+<div id="paid_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">

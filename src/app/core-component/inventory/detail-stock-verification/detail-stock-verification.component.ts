@@ -17,6 +17,7 @@ export class DetailStockVerificationComponent implements OnInit {
   constructor(private Arout: ActivatedRoute,private toastr:ToastrService, private stockService: StockService, private location:Location, private coreService: CoreService) { }
   id: any;
   printDetails: any;
+  isSyncLoading = false;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -58,19 +59,30 @@ export class DetailStockVerificationComponent implements OnInit {
   }
 
   approve() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
     formData.append('status', 'Approved')
     this.stockService.stockVerificationStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+        closeModal.click();
+      }, 500);
+    },(err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 
   reject() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
@@ -78,9 +90,16 @@ export class DetailStockVerificationComponent implements OnInit {
 
     this.stockService.stockVerificationStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+        closeModal.click();
+      }, 500);
+    },(err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
   }
 

@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -9,21 +11,33 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./detail-material-consumption.component.scss']
 })
 export class DetailMaterialConsumptionComponent implements OnInit {
-
-  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location) { }
+  userDetails: any;
+  companyDetails:any;
+  isSyncLoading = false;
+  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location, private coreService: CoreService, private companyService: CompanyService) { }
   consuptionDetail: any
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-    this.transactionService.getMaterialConsuptionById(this.id).subscribe(res=>{
-      this.consuptionDetail=res;
-      this.filteredData = this.consuptionDetail?.logs.slice(); // Initialize filteredData with the original data
-      this.filterData(); 
+    this.getdata();
+    this.coreService.profileDetails.subscribe((res)=> {
+      this.userDetails = res;
+    })
+    this.companyService.getCompany().subscribe(res=>{
+      this.companyDetails=res[0];
     })
   }
 
   goBack() {
     this.location.back();
+  }
+
+  getdata() {
+    this.transactionService.getMaterialConsuptionById(this.id).subscribe(res=>{
+      this.consuptionDetail=res;
+      this.filteredData = this.consuptionDetail?.logs.slice(); // Initialize filteredData with the original data
+      this.filterData(); 
+    })
   }
 
   p: number = 1
@@ -55,6 +69,63 @@ export class DetailMaterialConsumptionComponent implements OnInit {
       if (val == -1) {
         this.itemsPerPage = this.filteredData?.length;
       }
+    }
+
+    getBadgeClass(status: string): string {
+      switch (status) {
+        case 'Pending':
+          return 'pending-status-badge';
+        case 'Approved':
+          return 'approve-status-badge';
+        case 'Rejected':
+          return 'reject-status-badge';
+        default:
+          return '';
+      }
+    }
+  
+    approve() {
+      this.isSyncLoading = true;
+      this.coreService.loaderBehaveSub.next(true);
+      let id: any = Number(this.id)
+      const formData = new FormData();
+      formData.append('id', id)
+      formData.append('status', 'Approved')
+      this.transactionService.materialConsumptionStatusUpdate(formData).subscribe((res)=> {
+        setTimeout(() => {
+          this.coreService.loaderBehaveSub.next(false);
+          this.isSyncLoading = false;
+          this.getdata();
+          let closeModal = <HTMLElement>document.querySelector('.closeApprovalModal');
+          closeModal.click();
+        }, 500);
+      }, (err) => {
+        this.isSyncLoading = false;
+        this.coreService.loaderBehaveSub.next(false);
+      })
+    }
+  
+    reject() {
+      this.isSyncLoading = true;
+      this.coreService.loaderBehaveSub.next(true);
+      let id: any = Number(this.id)
+      const formData = new FormData();
+      formData.append('id', id)
+      formData.append('status', 'Rejected')
+      this.transactionService.materialConsumptionStatusUpdate(formData).subscribe((res)=> {
+        console.log(res);
+        setTimeout(() => {
+          this.coreService.loaderBehaveSub.next(false);
+          this.isSyncLoading = false;
+          this.getdata();
+          let closeModal = <HTMLElement>document.querySelector('.closeRejectModal');
+          closeModal.click();
+        }, 500);
+      }, (err) => {
+          this.isSyncLoading = false;
+          this.coreService.loaderBehaveSub.next(false);
+        }
+      )
     }
 }
 

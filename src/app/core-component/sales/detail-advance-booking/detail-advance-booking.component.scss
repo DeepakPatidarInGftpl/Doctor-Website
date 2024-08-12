@@ -34,3 +34,8 @@
     right: 10px;
     position: absolute;
 }
+
+.blur-modal {
+    filter: blur(3px);
+    z-index: 1;
+}
