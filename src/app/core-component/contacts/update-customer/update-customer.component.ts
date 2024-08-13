@@ -73,7 +73,7 @@ export class UpdateCustomerComponent implements OnInit {
       }
     })
 
-    this.addAddress()
+    // this.addAddress()
     this.getCountry();
     this.getgstType();
     this.getPaymentTerms();
@@ -87,15 +87,16 @@ export class UpdateCustomerComponent implements OnInit {
   }
   // updated data
   updateAddress(add: any[]): FormArray {
-    const formArr = new FormArray([]);
+    const formArr = this.getAddresss();
     add.forEach((j: any) => {
       // console.log(j);
       const addressGroup = this.fb.group({
+        id: j?.id,
         address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
         address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
-        state: null,
-        city: null,
+        state: j?.state.id,
+        city: j?.city.id,
         pincode: j?.pincode == null ? '' : j?.pincode,
         address_type: j?.address_type == null ? '' : j?.address_type
       });
@@ -139,13 +140,14 @@ export class UpdateCustomerComponent implements OnInit {
   }
   addressAdd(): FormGroup {
     return this.fb.group({
+      id: (''),
       address_line_1: (''),
       address_line_2: (''),
       country: new FormControl('23', [Validators.required]),
       state: new FormControl('28', [Validators.required]),
       city: new FormControl('42', [Validators.required]),
       pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
-      address_type: ('')
+      address_type: new FormControl('Shipping',[Validators.required])
     });
   }
   getAddresss(): FormArray {
@@ -189,7 +191,9 @@ export class UpdateCustomerComponent implements OnInit {
         res => {
           this.state[i] = res;
           const addressControl = addressArray.at(i);
-          addressControl.get('state').setValue('28');
+          setTimeout(() => {
+            addressControl.get('state').setValue('28');
+          }, 0);
           // Reset city for the current formArray item
           this.city[i] = [];
           resolve();
@@ -241,7 +245,7 @@ export class UpdateCustomerComponent implements OnInit {
     let formdata: any = new FormData();
     formdata.append('login_access', this.customerForm.get('login_access')?.value);
     formdata.append('name', this.customerForm.get('name')?.value);
-    formdata.append('company_name', this.customerForm.get('company_name')?.value);
+    formdata.append('company_name', this.customerForm.get('company_name')?.value.toUpperCase());
     formdata.append('mobile_no', this.customerForm.get('mobile_no')?.value);
     formdata.append('telephone_no', this.customerForm.get('telephone_no')?.value);
     formdata.append('whatsapp_no', this.customerForm.get('whatsapp_no')?.value);
@@ -250,8 +254,8 @@ export class UpdateCustomerComponent implements OnInit {
     formdata.append('date_of_birth', this.customerForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.customerForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.customerForm.get('gst_type')?.value);
-    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.customerForm.get('gstin')?.value : '');
-    formdata.append('pan_no', this.customerForm.get('pan_no')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.customerForm.get('gstin')?.value.toUpperCase() : '');
+    formdata.append('pan_no', this.customerForm.get('pan_no')?.value.toUpperCase());
     formdata.append('apply_tds', this.customerForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.customerForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.customerForm.get('payment_terms')?.value);
@@ -269,7 +273,15 @@ export class UpdateCustomerComponent implements OnInit {
         const control = featuresGroup.controls[key];
         featureObj[key] = control.value;
       });
-      addressData.push(featureObj);
+      if (featureObj['address_type'] === 'Both') {
+        const shippingAddress = { ...featureObj, address_type: 'Shipping' };
+        const billingAddress = { ...featureObj, address_type: 'Billing' };
+    
+        addressData.push(shippingAddress);
+        addressData.push(billingAddress);
+      } else {
+        addressData.push(featureObj);
+      }
     });
     formdata.append('address', JSON.stringify(addressData));
 
@@ -398,6 +410,9 @@ export class UpdateCustomerComponent implements OnInit {
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+  addressType(index: number) {
+    return this.getAddresss().controls[index].get('address_type')
   }
   get opening_balance_type() {
     return this.customerForm.get('opening_balance_type');

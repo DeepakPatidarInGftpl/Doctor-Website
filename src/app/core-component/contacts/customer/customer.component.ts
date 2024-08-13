@@ -233,6 +233,7 @@ export class CustomerComponent implements OnInit {
         const companyNameLower = res?.company_name?.toLocaleLowerCase();
         const mobileNo = res?.mobile_no?.toString()?.toLocaleLowerCase();
         const memberShip = res.membership?.toString()?.toLocaleLowerCase();
+        const city = res?.address[0]?.city?.city?.toLocaleLowerCase();
         if (nameLower && nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower && companyNameLower.match(searchTerm)) {
@@ -240,6 +241,8 @@ export class CustomerComponent implements OnInit {
         } else if (memberShip && memberShip.match(searchTerm)) {
           return true;
         } else if (mobileNo && mobileNo.match(searchTerm)) {
+          return true;
+        } else if (city.match(searchTerm)) {
           return true;
         }
         return false;
