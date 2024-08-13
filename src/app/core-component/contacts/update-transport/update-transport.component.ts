@@ -49,8 +49,8 @@ export class UpdateTransportComponent implements OnInit {
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required])
     })
-    this.addAddress()
-    this.addBank()
+    // this.addAddress()
+    // this.addBank()
     this.getCountry();
     this.getgstType();
     this.getPaymentTerms();
@@ -83,17 +83,18 @@ export class UpdateTransportComponent implements OnInit {
   }
   // updated data
   updateAddress(add: any[]): FormArray {
-    const formArr = new FormArray([]);
+    const formArr = this.getAddresss();
 
     add.forEach((j: any) => {
       // console.log(j);
 
       const addressGroup = this.fb.group({
+        id: j?.id,
         address_line_1: j?.address_line_1 == null ? '' : j?.address_line_1,
         address_line_2: j?.address_line_2 == null ? '' : j?.address_line_2,
         country: j?.country.id,
-        state: null,
-        city: null,
+        state: j?.state.id,
+        city: j?.city.id,
         pincode: j?.pincode == null ? '' : j?.pincode,
         address_type: j?.address_type == null ? '' : j?.address_type
       });
@@ -130,9 +131,10 @@ export class UpdateTransportComponent implements OnInit {
 
   // updated data
   udateBank(add: any): FormArray {
-    let formarr = new FormArray([]);
+    let formarr = this.getBanks();
     add.forEach((j: any) => {
       formarr.push(this.fb.group({
+        id: j?.id,
         bank_ifsc_code: j.bank_ifsc_code,
         bank_name: j.bank_name,
         branch_name: j.branch_name,
@@ -159,13 +161,14 @@ export class UpdateTransportComponent implements OnInit {
   }
   addressAdd(): FormGroup {
     return this.fb.group({
+      id: (''),
       address_line_1: (''),
       address_line_2: (''),
       country: new FormControl('23', [Validators.required]),
       state: new FormControl('28', [Validators.required]),
       city: new FormControl('42', [Validators.required]),
       pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
-      address_type: ('')
+      address_type: new FormControl('Shipping',[Validators.required])
     });
   }
   getAddresss(): FormArray {
@@ -186,6 +189,7 @@ export class UpdateTransportComponent implements OnInit {
 
   bankAdd(): FormGroup {
     return this.fb.group({
+      id: (''),
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
@@ -232,7 +236,9 @@ export class UpdateTransportComponent implements OnInit {
         res => {
           this.state[i] = res;
           const addressControl = addressArray.at(i);
-          addressControl.get('state').setValue('28');
+          setTimeout(() => {
+            addressControl.get('state').setValue('28');
+          }, 0);
           // Reset city for the current formArray item
           this.city[i] = [];
           resolve();
@@ -284,7 +290,7 @@ export class UpdateTransportComponent implements OnInit {
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
     formdata.append('name', this.transportForm.get('name')?.value);
-    formdata.append('company_name', this.transportForm.get('company_name')?.value);
+    formdata.append('company_name', this.transportForm.get('company_name')?.value.toUpperCase());
     formdata.append('mobile_no', this.transportForm.get('mobile_no')?.value);
     formdata.append('telephone_no', this.transportForm.get('telephone_no')?.value);
     formdata.append('whatsapp_no', this.transportForm.get('whatsapp_no')?.value);
@@ -293,8 +299,8 @@ export class UpdateTransportComponent implements OnInit {
     formdata.append('date_of_birth', this.transportForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.transportForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.transportForm.get('gst_type')?.value);
-    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.transportForm.get('gstin')?.value : '');
-    formdata.append('pan_no', this.transportForm.get('pan_no')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.transportForm.get('gstin')?.value.toUpperCase() : '');
+    formdata.append('pan_no', this.transportForm.get('pan_no')?.value.toUpperCase());
     formdata.append('apply_tds', this.transportForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.transportForm.get('payment_terms')?.value);
@@ -310,7 +316,15 @@ export class UpdateTransportComponent implements OnInit {
         const control = featuresGroup.controls[key];
         featureObj[key] = control.value;
       });
-      addressData.push(featureObj);
+      if (featureObj['address_type'] === 'Both') {
+        const shippingAddress = { ...featureObj, address_type: 'Shipping' };
+        const billingAddress = { ...featureObj, address_type: 'Billing' };
+    
+        addressData.push(shippingAddress);
+        addressData.push(billingAddress);
+      } else {
+        addressData.push(featureObj);
+      }
     });
     formdata.append('address', JSON.stringify(addressData));
 
@@ -322,7 +336,11 @@ export class UpdateTransportComponent implements OnInit {
       const featureObj = {};
       Object.keys(featuresGroup.controls).forEach((key) => {
         const control = featuresGroup.controls[key];
-        featureObj[key] = control.value;
+        if (key === 'account_holder_name' || key === 'bank_ifsc_code') {
+          featureObj[key] = control.value.toUpperCase();
+        } else {
+          featureObj[key] = control.value;
+        }
       });
       bankData.push(featureObj);
     });
@@ -445,6 +463,10 @@ export class UpdateTransportComponent implements OnInit {
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
+  addressType(index: number) {
+    return this.getAddresss().controls[index].get('address_type')
+  }
+
 
   // nested bank error
 

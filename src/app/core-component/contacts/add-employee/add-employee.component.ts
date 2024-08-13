@@ -54,7 +54,7 @@ export class AddEmployeeComponent implements OnInit {
 
     })
     this.addAddress();
-    this.addBank();
+    // this.addBank();
     this.getCountry();
     this.selectState(23, 0);
     this.selectCity(28, 0);
@@ -92,7 +92,7 @@ export class AddEmployeeComponent implements OnInit {
       state: new FormControl('28', [Validators.required]),
       city: new FormControl('42', [Validators.required]),
       pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
-      address_type: ('')
+      address_type: new FormControl('Shipping',[Validators.required])
     });
   }
   getAddresss(): FormArray {
@@ -155,7 +155,9 @@ export class AddEmployeeComponent implements OnInit {
         res => {
           this.state[i] = res;
           const addressControl = addressArray.at(i);
-          addressControl.get('state').setValue('28');
+          setTimeout(() => {
+            addressControl.get('state').setValue('28');
+          }, 0);
           // Reset city for the current formArray item
           this.city[i] = [];
           resolve();
@@ -265,7 +267,15 @@ export class AddEmployeeComponent implements OnInit {
         const control = featuresGroup.controls[key];
         featureObj[key] = control.value;
       });
-      addressData.push(featureObj);
+      if (featureObj['address_type'] === 'Both') {
+        const shippingAddress = { ...featureObj, address_type: 'Shipping' };
+        const billingAddress = { ...featureObj, address_type: 'Billing' };
+    
+        addressData.push(shippingAddress);
+        addressData.push(billingAddress);
+      } else {
+        addressData.push(featureObj);
+      }
     });
     formdata.append('address', JSON.stringify(addressData));
 
@@ -277,7 +287,11 @@ export class AddEmployeeComponent implements OnInit {
       const featureObj = {};
       Object.keys(featuresGroup.controls).forEach((key) => {
         const control = featuresGroup.controls[key];
-        featureObj[key] = control.value;
+        if (key === 'account_holder_name' || key === 'bank_ifsc_code') {
+          featureObj[key] = control.value.toUpperCase();
+        } else {
+          featureObj[key] = control.value;
+        }
       });
       bankData.push(featureObj);
     });
@@ -425,6 +439,9 @@ export class AddEmployeeComponent implements OnInit {
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+  addressType(index: number) {
+    return this.getAddresss().controls[index].get('address_type')
   }
 
   // nested bank error
