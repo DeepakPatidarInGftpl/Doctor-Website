@@ -3,10 +3,11 @@
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    <h6 class="subhead-color" (click)="goBack()">
+                        <mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Purchase Order</h6>
-                    <h4>New Purchase Order</h4>
+                    <h4>New Purchase Order </h4>
                 </div>
                 <div class="page-btn">
                     <a routerLink="//purchase/editpurchase/{{purchaseDetail ?.id}}" class="btn btn-added">
@@ -245,7 +246,7 @@
                                                                 <td style="color:black;font-weight: 500;">
                                                                     {{purchaseDetail?.order_no}}</td>
                                                                 <td style="color:black;font-weight: 500;">
-                                                                    {{purchaseDetail?.party?.company_name}}</td>
+                                                                    {{purchaseDetail?.order_no}}</td>
                                                                 <td style="color:black;font-weight: 500;">{{purchaseDetail?.order_date |
                                                                     date: 'dd-MMMM-yyyy'}}</td>
                                                                 <td style="color:black;font-weight: 500;"> {{purchaseDetail?.shipping_date
@@ -299,16 +300,16 @@
                                                                     <strong>Total</strong></td>
                                                                 <td class="text-center">{{ purchaseDetail?.total_qty}}
                                                                 </td>
-                                                                <td class="text-center">{{ totalPurchaseRate.toFixed(2)}}</td>
-                                                                <td class="text-center">{{ totalMrp.toFixed(2)}}</td>
+                                                                <td class="text-center">{{ totalPurchaseRate}}</td>
+                                                                <td class="text-center">{{ totalMrp}}</td>
                                                                 <td class="text-center">{{
                                                                     purchaseDetail?.total_discount+'%'}}</td>
                                                                 <td class="text-center">{{ purchaseDetail?.total_tax
                                                                     +'%'}}</td>
-                                                                <td class="text-center">{{totalLandingCost.toFixed(2)}}
+                                                                <td class="text-center">{{totalLandingCost}}
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    {{purchaseDetail?.total.toFixed(2)}}</td>
+                                                                    {{purchaseDetail?.total}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -337,7 +338,7 @@
                                                     <ul>
                                                         <li class="total">
                                                             <h4>Sub Total</h4>
-                                                            <h5>{{ purchaseDetail?.sub_total.toFixed(2) | currency :'INR'}}
+                                                            <h5>{{ purchaseDetail?.sub_total | currency :'INR'}}
                                                             </h5>
                                                         </li>
                                                         <!-- <li class="total">
@@ -356,13 +357,13 @@
                                                         </li> -->
                                                         <li class="total">
                                                             <h4>Round Off</h4>
-                                                            <h5>{{ purchaseDetail?.round_off.toFixed(2) | currency
+                                                            <h5>{{ purchaseDetail?.round_off | currency
                                                                 :'INR'}}
                                                             </h5>
                                                         </li>
                                                         <li class="total">
                                                             <h4>Total</h4>
-                                                            <h5>{{ purchaseDetail?.total.toFixed(2) | currency :'INR'}}
+                                                            <h5>{{ purchaseDetail?.total | currency :'INR'}}
                                                             </h5>
                                                         </li>
                                                     </ul>

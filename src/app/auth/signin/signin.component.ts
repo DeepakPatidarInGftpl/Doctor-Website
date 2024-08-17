@@ -94,16 +94,31 @@ export class SigninComponent implements OnInit {
   }
 
   updateUserDeviceToken() {
-    if (this.deviceToken) {
-      let payload = {
-        device_token: this.deviceToken
-      };
-      this.authService.updateUserDeviceToken(payload).subscribe((res) => {
-        console.log(res);
-      }, (error) => {
-        console.error('Error updating device token:', error);
-      });
+
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        if (this.deviceToken) {
+            let payload = {
+              device_token: this.deviceToken
+            };
+            this.authService.updateUserDeviceToken(payload).subscribe((res) => {
+              console.log(res);
+            }, (error) => {
+              console.error('Error updating device token:', error);
+            });
+          }
+
+
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
     }
+
+
   }
 
   loginRes: undefined | Auth

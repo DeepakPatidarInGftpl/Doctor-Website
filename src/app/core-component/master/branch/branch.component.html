@@ -3,7 +3,7 @@
         <div class="page-header">
             <div class="page-title">
                 <h4 class="titl">Branch list</h4>
-                <h6>Manage your Branch</h6>
+                <h6>Manage your Branch </h6>
             </div>
             <div class="page-btn" *ngIf="isAdd">
                 <a class="btn btn-added" routerLink="//masters/addBranch">
@@ -63,6 +63,16 @@
                                                     [(ngModel)]="gst" (ngModelChange)="filterData()"
                                                     placeholder="Enter GSTIN Number">
                                             </div>
+                                        </div>
+                                    </div>
+                                 <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label> Is Active </label>
+                                            <select  (change)="filterActive_StatusData($event.target.value)" class="form-select">
+                                                <option value="" selected disabled>Select Active Status</option>
+                                                <option >Yes</option>
+                                                <option >No</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

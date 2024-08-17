@@ -178,13 +178,16 @@ export class BranchComponent implements OnInit {
       this.tableData.forEach((f: any) => {
         f.isSelected = true
       })
-    } else {
+    } else { 
+        
       this.tableData.forEach((f: any) => {
         f.isSelected = false
       })
     }
   }
-
+  filterActive_StatusData( event : string){
+    this.tableData =  this.tableData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
+}
 
 
   search() {
@@ -193,8 +196,10 @@ export class BranchComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.title?.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const includesTerm = str => (str || '').toLocaleLowerCase().includes(searchTerm);
+        return [
+          res?.title, res?.city?.city, res?.state?.state, res?.country?.country_name,res?.pincode?.toString()
+        ].some(includesTerm);
       });
     }
   }
