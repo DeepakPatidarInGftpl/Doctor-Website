@@ -6,12 +6,11 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-// import {autoTable} from 'jspdf-autotable'
-
+import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 type address_type = {
   address_type : 'Billing' | 'Shipping'
 }
+
 @Component({
   selector: 'app-details-purchase',
   templateUrl: './details-purchase.component.html',
@@ -19,11 +18,16 @@ type address_type = {
   providers : [DatePipe]
 
 })
-export class DetailsPurchaseComponent implements OnInit {
+export class DetailsPurchaseComponent  implements OnInit  {
 
   constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location,
     private _date_pipe : DatePipe
   ) { }
+
+
+
+
+
   id: any;
   companyDetails:any;
   printDetails: any;
@@ -36,6 +40,7 @@ export class DetailsPurchaseComponent implements OnInit {
     this.companyService.getCompany().subscribe(res=>{
       this.companyDetails=res[0];
     })
+
   }
   purchaseDetail: any = [];
   totalPurchase:any[]=[];
@@ -44,7 +49,7 @@ export class DetailsPurchaseComponent implements OnInit {
   totalMrp=0;
   totallanding:any[]=[];
   totalLandingCost=0;
-  getdata() {
+  getdata() : void {
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseDetail = res
@@ -102,269 +107,166 @@ export class DetailsPurchaseComponent implements OnInit {
     //     pdf.save('purchaseOrder.pdf').;
     //   });
     // }
+    const img  = new Image();
     const pdf = new jsPDF('p','mm','a4');
-   const order_date = this._date_pipe.transform(this.purchaseDetail?.order_date, 'dd-MMMM-yyyy');
-    const shipping_date = this._date_pipe.transform(this.purchaseDetail?.shipping_date, 'dd-MMMM-yyyy');
+    img.src = 'assets/logo/pdfLogo.png';
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const width =200;
+      const heigth = 200;
+      canvas.width = width;
+      canvas.height = heigth;
+      ctx.clearRect(0,0,width,heigth);
+      ctx.drawImage(img,0,0,width,heigth);
+      const compressedImage = canvas.toDataURL('image/png',0.9);
+      const order_date = this._date_pipe.transform(this.purchaseDetail?.order_date, 'dd-MMMM-yyyy');
+      const shipping_date = this._date_pipe.transform(this.purchaseDetail?.shipping_date, 'dd-MMMM-yyyy');
 
     const thead1 = [['Order No.','Supplier Name','Purchase Date','Shipping Date','Shipping Note']];
-    const tbody1 = [[`${this.purchaseDetail?.order_no}`,`${this.purchaseDetail?.order_no}`,`${order_date}`,`${shipping_date}`,`${this.purchaseDetail?.shipping_note}`]]
-
-
-
-        
-        const table2 = {
-          head : [['#', 'Barcode/SKU' , 'Product Name','QTY','Cost Price','Mrp','Discount %','Tax','Landing Cost','Total']],
-         
-          body : [
-            ['1' ,' 3/4" ADAPTER' , '3/4" ADAPTER', '2.00','1','2.00','56','345','rer','93'],
-          ],
-          // foot2 :[
-          //   [],
-          //   [
-          //     {content :'THIS QUOTATION REMAINS VALID FOR 7 DAYS WITH THE EXCEPTION OF COMMODITY ITEMS INCLUDING GIVEN ITEMS AS PRICING IS SUBJECT  TO CHANGE WITHOUT NOTICE.', colSpan:3
-          //   },
-          //   {
-          //     content:'Sub Total',
-          //     colSpan:2
-          //   },
-          //   {
-          //     content: `${obj.subtotal}`
-          //   }
-          //   ],
-          //   // [{content :'', colSpan:3
-          //   // },
-          //   // {
-          //   //   content: "ENV FEES",
-          //   //   colSpan:2
-          //   // },
-          //   // {
-          //   //   content: `${obj.env_tax}`
-          //   // }
-          //   // ],
-          //   // [
-          //   //   {content :'', colSpan:3
-          //   // },
-          //   // {
-          //   //   content: "GST ",
-          //   //   colSpan:2
-          //   // },
-          //   // {
-          //   //   content: `${obj.GST}`
-          //   // }
-            
-          //   // ],
-          //   // [
-          //   //   {
-          //   //     content:" ",
-          //   //     colSpan:3
-    
-          //   //   }
-          //   //   ,{
-          //   //     content: "HST ",
-          //   //     colSpan:2
-          //   //   },
-          //   //   {
-          //   //     content: `${obj.HST}`
-          //   //   }
-          //   // ],
-          //   // [
-          //   //   {
-          //   //     content:" ",
-          //   //     colSpan:3
-    
-          //   //   }
-          //   //   ,{
-          //   //     content: "PST ",
-          //   //     colSpan:2
-          //   //   },
-          //   //   {
-          //   //     content: `${obj.PST}`
-          //   //   }
-            
-          //   // ],
-            
-          //   // [
-          //   //   {
-          //   //     content:" ",
-          //   //     colSpan:3
-    
-          //   //   }
-          //   //   ,{
-          //   //     content: "Round Off ",
-          //   //     colSpan:2
-          //   //   },
-          //   //   {
-          //   //     content: `${obj.roundoff}`
-          //   //   }
-            
-          //   // ],
-          //   // [
-          //   //   {
-          //   //     content:" ",
-          //   //     colSpan:3
-    
-          //   //   }
-          //   //   ,{
-          //   //     content: "Delivery Charge ",
-          //   //     colSpan:2
-          //   //   },
-          //   //   {
-          //   //     content: `${obj.delivery_charge}`
-          //   //   }
-            
-          //   // ],
-          //   [
-          //     {
-          //       content:" ",
-          //       colSpan:3
-    
-          //     }
-          //     ,{
-          //       content: "Total ",
-          //       colSpan:2
-          //     },
-          //     {
-          //       content: `${obj.Total}`
-          //     }
-            
-          //   ],
-            
-          //   // [
-          //   // {
-          //   //     content:" ",
-          //   //     colSpan:3
-    
-          //   // }
-          //   // ,{
-          //   //     content: "",
-          //   //     colSpan:3
-          //   // }],
-            
-            
-           
-          // ],
-          
-        }
-        const foot2 = [
-          [
-          {
-            content :'THIS QUOTATION REMAINS VALID FOR 7 DAYS WITH THE EXCEPTION OF COMMODITY ITEMS INCLUDING GIVEN ITEMS AS PRICING IS SUBJECT TO CHANGE WITHOUT NOTICE.', colSpan:3,
-            styles : {fontSize : 5}
-          },
-          
-          {
-            content: 'Sub Total',
-            styles: { halign: 'right' },
-            colSpan:2
-    
-          },
-          {
-            content: `hiii`,
-            styles: { halign: 'lift' }
-          }
-          ],
-    
+    const tbody1 = [[`${this.purchaseDetail?.order_no}`,`${this.purchaseDetail?.order_no}`,`${order_date}`,`${shipping_date}`,`${this.purchaseDetail?.shipping_note}`]];
+    const table2head = [['#', 'Barcode/SKU' , 'Product Name','QTY','Cost Price','Mrp','Discount %','Tax','Landing Cost','Total']];
+    const foot2 = [
           [
             {
-              content:" ",
-              colSpan:3
-    
-            }
-            ,{
-              content: "Total ",
-              colSpan:2,
-            styles: { halign: 'right' }
-    
+              content : 'Total',
+              colSpan:3,
+              styles: { halign: 'center' }
             },
             {
-              content: `hiii`,
-            styles: { halign: 'lift' }
-    
-            }
-          
+              content : `${this.purchaseDetail?.total_qty}`,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.totalPurchaseRate}`,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.totalMrp}`,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.purchaseDetail?.total_discount}%`,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.purchaseDetail?.total_tax}%`,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.totalLandingCost} `,
+              styles: { halign: 'center' }
+              
+            },
+            {
+              content : `${this.purchaseDetail?.total} `,
+              styles: { halign: 'center' }
+              
+            },
           ],
+          [
+            {
+              content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+              colSpan : 10,
+              styles : {halign : 'left'}
+            }
+            
+          ],
+          [
+            {
+              content : ``,
+              colSpan : 7,
+            },
+            {
+              content : `Sub Total `,
+              colSpan : 2,
+              styles : {halign : 'right'}
+            },
+            {
+              content : `${this.purchaseDetail?.sub_total}`,
+              colSpan : 1,
+              styles : {halign : 'left'}
+            }
+
+          ],
+          [
+            {
+              content : '',
+              colSpan : 7,
+              // styles : {halign : 'left'}
+            },
+           { content : 'Round Off ',
+            colSpan : 2,
+            styles : {halign : 'right'}
+          },
+           { content : `${this.purchaseDetail?.round_off}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          },
+          ],
+          [
+            {
+              content : '',
+              colSpan : 7,
+              styles : {halign : 'left'}
+            },
+           { content : 'Total ',
+            colSpan : 2,
+            styles : {halign : 'right'}
+          },
+           { content : `${this.purchaseDetail?.total}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          },
+          ],
+          [
+            {
+              content : '',
+            colSpan : 7,
+            },
+            {
+              content : '',
+            colSpan : 3,
+            },
+          ]
         ];
     
     
-        const addTaxDetail = (taxType: string, show: boolean, taxValue: number, index: number) => {
-          if (taxValue > 0 || (show && (taxType === 'PST' || taxType === 'GST' || taxType === 'HST'))) {
-            let arr = [
-              { content: '', colSpan: 3, styles: { fontSize: 5 } },
-              { content: taxType, colSpan: 2, styles: { halign: 'right' } },
-              { content: taxValue+"", styles: { halign: 'left' } }
-            ];
-            foot2.splice(index, 0, arr);
-            return null;
-          }
-          return index;
-        };
-    
+
         
-    // let a = addTaxDetail("ENV FEES",false ,obj.env_tax, 1);
-    // let b = addTaxDetail("GST", obj.gst_show,obj.GST, (a ? a : 2));
-    // let c = addTaxDetail("Round Off", false,obj.roundoff, (b ? b : 2));
-    // let d = addTaxDetail("HST", obj.hst_show,obj.HST, (c ? c : 3));
-    // let e = addTaxDetail("PST",obj.pst_show ,obj.PST, (d ? d : 4));
-    // let f = addTaxDetail("Delivery Charge",false ,obj.delivery_charge, (e ? e : 5));
-    if (foot2.length <= 8) {
-      let lens = ( 8 - foot2.length);
-      
-        for (let i = 0; i < lens; i++) {
-          if(i === lens-1){
-            console.log('last')
-            foot2.push([{
-              content:"",
-              colSpan:3}
-          ,{
-              content: "",
-              colSpan:3
-          }
-          ])
-    }
-    else if(i === lens-2){
-      foot2.push([{
-        content:`Note : ${''}`,
-        // content:`Note : ${obj.notes ? obj.notes.substring(0,100) : ''}`,
-        colSpan:12
-      }
-    ,
-    
-    ])
-    }
-    
-    else{
-          foot2.push([{
-                content:"",
-                colSpan:3}
-            ,{
-                content: "",
-                colSpan:2
-            }
-            ])
-          }
-        
-      }
-      
-      
-      }
+          
     
     
     // table2.body = obj.table2Body
-    let len = foot2.length;
-    // let lenArr = table2.body.length
-    // let row : number = 20
-    // let loop = (lenArr % row);
-    // let newval = (row - loop)
-    // if (loop !== 0) for(let i = 0; i < newval; i++) table2.body.push([]);
-    (pdf as any).autoTable({
-      head : table2.head,
-      body : table2.body,
+    let arr2 = new Array() 
+ this.purchaseDetail?.cart.forEach((cart : any,n : number) => {
+  arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.barcode?.product_title}`,`${cart?.qty}`,`${cart?.purchase_rate}`,`${cart?.mrp}`,`${cart?.discount ?? '' }`,`${cart?.tax ?? ''}`,`${cart?.landing_cost}`,`${cart?.total}`])
+});
+
+
+let len = foot2.length;
+let lenArr = arr2.length;
+let row : number = 21;
+let loop = (lenArr % row);
+let newval = (row - loop);
+if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
+ (pdf as any).autoTable({
+      head : table2head,
+      body : arr2,
       foot : foot2,
-      startY: 88,
+      startY: 92,
+      
       headStyles:{
-        fontSize : 9,
+        fontSize : 7,
         textColor :[0,0,0],
-        fillColor :[255,255,255],
+        fillColor :[255, 202, 153],
+        // lineColor:[0,0,0],
+        // lineWidth:0.1,  
        },
       bodyStyles:{
         fillColor :[255, 255, 255],
@@ -375,65 +277,78 @@ export class DetailsPurchaseComponent implements OnInit {
           fillColor :[255, 255, 255],
           textColor :[0,0,0],
           fontSize : 7,
-          halign :'left'
+          // lineHeight : 0.7,
+          // cellPadding:0.7,
+          halign :'left',
+
     
        },
       styles:{
-        lineColor:[0,0,0],
-        
+           
        },
-      margin : {top :88},
+      margin : {top :92},
       alternateRowStyles:{
         fillColor :[255, 255, 255],
     
     },
-      didDrawCell: (data : any)=>{
-        const {cell} = data;
-        const {x,y,width,height} = cell;
+    
+
+
+    didDrawCell: (data : any)=>{
+      const {cell,table} = data;
+      const {x,y,width,height} = cell;
+
+          if (data.column.index == table.columns.length -1) {
+            pdf.setDrawColor(0,0,0);
+            pdf.setLineWidth(0.2);
+            pdf.line(cell.x+cell.width,cell.y,cell.x+cell.width,cell.y+cell.height)
+          }else{
+            pdf.setDrawColor(0,0,0);
+            pdf.setLineWidth(0.4);
+            pdf.line(cell.x + cell.width ,cell.y,cell.x + cell.width, cell.y + cell.height);
+          }
+
+      if( data.section === 'head' ){
+          // top
+        if (data.row.index == 0 || data.row.index == 1) {
           pdf.setDrawColor(0,0,0);
           pdf.setLineWidth(0.2);
-          pdf.line(cell.x + cell.width ,cell.y,cell.x + cell.width, cell.y + cell.height);
-         
-        if( data.section === 'head' ){
-            // top
-          if (data.row.index == 0 || data.row.index == 1) {
-            pdf.setDrawColor(0,0,0);
-            pdf.setLineWidth(0.2);
-            pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
-          }
-          if (data.row.index == 2) {
-            pdf.setDrawColor(0,0,0);
-            pdf.setLineWidth(0.2);
-            pdf.line(cell.x,cell.y+cell.height,cell.x+cell.width,cell.y+cell.height)
-          }}
-    
-        if( data.section === 'foot'){
-          if(data.row.index === 0 || data.row.index === len-1 || data.row.index === len-2 ){
-            pdf.setDrawColor(0,0,0);
-            pdf.setLineWidth(0.2);
-            pdf.line(x,y,x+width,y);
-            pdf.line(x,y+height,x+width,y+height);
-    
-          }
-          if (data.row.index == 1) {
-            pdf.setDrawColor(0,0,0);
-            pdf.setLineWidth(0.2);
-            pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
-          }
-    
-    
+          pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
         }
-          // lift  
-        if (data.column.index == 0) {
+        if (data.row.index == 2) {
           pdf.setDrawColor(0,0,0);
           pdf.setLineWidth(0.2);
-          pdf.line(cell.x,cell.y,cell.x,cell.y+cell.height)
+          pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
         }
+        if(data.column.index === 4){
+            pdf.setDrawColor(0,0,0);
+            pdf.setLineWidth(0);
+            pdf.line(cell.x + cell.width ,cell.y,cell.x + cell.width, cell.y + cell.height);
+        
+          }
+        }
+  
+      if( data.section === 'foot'){
+        if(data.row.index === 0 ||data.row.index === 1 || data.row.index === len-1 ){
+          pdf.setDrawColor(0,0,0);
+          pdf.setLineWidth(0.2);
+          pdf.line(x,y,x+width,y);
+          pdf.line(x,y+height,x+width,y+height);
+  
+        }
+      }
+        // lift  
+      if (data.column.index == 0) {
+        pdf.setDrawColor(0,0,0);
+        pdf.setLineWidth(0.2);
+        pdf.line(cell.x,cell.y,cell.x,cell.y+cell.height)
+      }
+  }
+  });
+
+  
     
-       
-    },
-    });
-    
+    // console.log('deepak',totalHightOfTable2)
     
     
     
@@ -441,21 +356,27 @@ export class DetailsPurchaseComponent implements OnInit {
     for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i)
     pdf.setFontSize(9)
-    pdf.text(`Page ${i} of ${pageCount}`,14 , 287);
+    // pdf.text(`Page ${i} of ${pageCount}`,14 , 287);
     pdf.setFontSize(8);
     if(i === pageCount) {
-      if(table2.body.length >= 20){
-        pdf.text("Instant Light - Proudly coded",16,280.5)
+
+
+
+
+
+
+      if(arr2.length >= 20){
+        pdf.text(`${this.companyDetails?.name} - Proudly coded`,16,276.4)
         pdf.setTextColor(24,129,176)
-        pdf.text("by GFTPL",54,280.5)
+        pdf.text("by GFTPL",60,276.4)
         pdf.setTextColor(0,0,0)
-        pdf.text("Thank You For The Business",157,280.5) 
+        pdf.text("Thank You For The Business",157,276.4) 
       }else{
-        pdf.text("Instant Light - Proudly coded",16,260.5)
+        pdf.text(`${this.companyDetails?.name} - Proudly coded`,16,262.5)
         pdf.setTextColor(24,129,176)
-        pdf.text("by GFTPL",54,260.5)
+        pdf.text("by GFTPL",60,262.5)
         pdf.setTextColor(0,0,0)
-        pdf.text("Thank You For The Business",157,260.5) 
+        pdf.text("Thank You For The Business",157,262.5) 
     
       }
     
@@ -463,7 +384,7 @@ export class DetailsPurchaseComponent implements OnInit {
     }
     
     else{ 
-      if(table2.body.length >= 20){
+      if(arr2.length >= 20){
         pdf.text("Continued on next page",160,280.5);
       }else {
         pdf.text("Continued on next page",190,275);
@@ -473,56 +394,92 @@ export class DetailsPurchaseComponent implements OnInit {
     
    
     
-    
+    let leftcontantSpaces : number = 14;
+   
     
     // lift content
-    // pdf.addImage('../../../../assets/dummy/pos.png', 'PNG', 10, 0, 40, 16);
-    pdf.setTextColor(256,112,8)
+    pdf.addImage(compressedImage,"PNG",leftcontantSpaces, 8, 31, 10)
     pdf.setFontSize(18)
+    pdf.setTextColor(256,112,8)
+
+    pdf.text(`${(this.companyDetails?.name as string)}`,51,15)
+
+    pdf.setTextColor(256,112,8)
     // pdf.text(`${obj.topLift.company_name}`,35,13);
     pdf.setTextColor(0,0,0)
-    pdf.setFontSize(7)
-    pdf.text(`GST ${this.companyDetails?.gst}`,10,22);
-    pdf.setFontSize(6)
-    pdf.text(`Company Name : ${this.companyDetails?.name}`,10,26);
-    pdf.text(`Financial Year: ${this.companyDetails?.financial_year?.financial_year}`,10,30);
-    pdf.text(`Address : ${this.companyDetails?.address+' , '+this.companyDetails?.city?.city+' , '+this.companyDetails?.state?.state+' , '+this.companyDetails?.country?.country_name+' , '+this.companyDetails?.pincode}`,10,34);
-    pdf.text(`Phone: ${this.companyDetails?.phone}`,10,34);
+    pdf.setFontSize(9)
+    pdf.text(`GST ${this.companyDetails?.gst}`,leftcontantSpaces,23);
+    pdf.text(`${this.companyDetails?.address+' , '+this.companyDetails?.city?.city}`,leftcontantSpaces,27);
+    pdf.text(`${this.companyDetails?.state?.state+' , '+this.companyDetails?.country?.country_name+' , '+this.companyDetails?.pincode}`,leftcontantSpaces,31)
+    pdf.text(`Phone: ${this.companyDetails?.phone}`,leftcontantSpaces,39);
+    pdf.text(`Email: ${this.companyDetails?.email}`,leftcontantSpaces,35);
+    console.log('comm',this.companyDetails)
     pdf.setTextColor(256,112,8)
-    pdf.setFontSize(8)
-    pdf.text('BILLING ADDRESS',16,41);
+    pdf.setFontSize(11)
+    pdf.text('BILLING ADDRESS',leftcontantSpaces,48);
     pdf.setTextColor(0,0,0)
-    pdf.setFontSize(7)
-    // pdf.text(`${obj.BILLING_address.company_name}`,16,45);
-    pdf.text(`${this.selectedAddressBilling?.address_line_1==null?'':this.selectedAddressBilling?.address_line_1}`,16,49);
-    pdf.text(`${this.selectedAddressBilling?.address_line_2==null?'':this.selectedAddressBilling?.address_line_2}`,16,53);
-    pdf.text(`${this.selectedAddressBilling?.city?.city+' ,'+this.selectedAddressBilling?.state?.state + ' ,' +this.selectedAddressBilling?.country?.country_name}`,16,57);
-    // pdf.text(`Phone: ${this.purchaseDetail?.party?.mobile_no}`,16,61);
-    pdf.text(`${this.purchaseDetail?.party?.email}`,16,65);
+    pdf.setFontSize(9)
+    pdf.text(`${this.companyDetails?.name}`,leftcontantSpaces,55)
+    pdf.text(`${this.selectedAddressBilling?.address_line_1==null?'':this.selectedAddressBilling?.address_line_1} ,${this.selectedAddressBilling?.address_line_2==null?'':this.selectedAddressBilling?.address_line_2}`,leftcontantSpaces,59);
+    pdf.text(`${this.selectedAddressBilling?.city?.city+' ,'+this.selectedAddressBilling?.state?.state + ' ,' +this.selectedAddressBilling?.country?.country_name}`,leftcontantSpaces,63);
+    pdf.text(`Phone: ${this.purchaseDetail?.party?.mobile_no}`,leftcontantSpaces,67);
+    pdf.text(`${this.purchaseDetail?.party?.email}`,leftcontantSpaces,71);
     // pdf.text(`GST ${obj.BILLING_address?.gst}`,16,69);
     
-    
+    // console.log('biil', this.selectedAddressBilling)
     // right content
     pdf.setTextColor(0,0,0)
     pdf.setFontSize(19)
-    pdf.text(`INVOICE`,145,11);
+    pdf.text(`Purchase Order`,145,14);
+    // pdf.setFontSize(9)
+    // pdf.text(`INVOICE DATE : ${order_date}`,145,20);
+    // pdf.text(`INVOICE NO : ${this.purchaseDetail?.order_no}`,145,25);
+
+// fist row
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(197,17,142,17)
     pdf.setFontSize(7)
-    pdf.text(`${this.purchaseDetail?.party?.gstin}`,145,16);
-    pdf.text(`INVOICE DATE : ${order_date}`,145,20);
-    // if(obj.type === 'Order')
-    pdf.text(`INVOICE NO : ${this.purchaseDetail?.order_no}`,145,25);
-    pdf.text(`EXPIRY DATE : ${shipping_date}`,145,30);
+    pdf.text(`PURCHASE ORDER DATE : ${order_date}`,145,20);
+
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(197,22,142,22)
+
+    pdf.text(`PURCHASE ORDER NO : ${this.purchaseDetail?.order_no}`,145,25);
+
+
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(197,27,142,27)
+
+    pdf.text(`PAGE : ${i}`,145,30);
+ 
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(197,32,142,32)
+
+// left
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(142,32,142,17)
+// rigth
+    pdf.setDrawColor(0, 0, 0)
+    pdf.setLineWidth(0.2);
+    pdf.line(197,32,197,17)
+
+    let SHIPPING_ADDRESS_X_value : number = 159
+
     pdf.setTextColor(256,112,8)
-    pdf.setFontSize(8)
-    pdf.text('SHIPPING ADDRESS',147,41);
+    pdf.setFontSize(11)
+    pdf.text('SHIPPING ADDRESS',SHIPPING_ADDRESS_X_value,48);
     pdf.setTextColor(0,0,0)
-    pdf.setFontSize(7)
-    // pdf.text(`${obj.SHIPPING_address.company_name}`,147,45);
-    pdf.text(`${this.selectedAddressBilling?.address_line_1==null?'':this.selectedAddressBilling?.address_line_1 }`,147,49);
-    pdf.text(`${this.selectedAddressBilling?.address_line_2==null?'':this.selectedAddressBilling?.address_line_2 }`,147,53);
-    pdf.text(`${this.selectedAddressShipping?.city?.city+" ,"+this.selectedAddressBilling?.state?.state + ' , ' +this.selectedAddressBilling?.country?.country_name}`,147,57);
-    pdf.text(`Phone: ${this.purchaseDetail?.party?.mobile_no}`,147,61);
-    pdf.text(`${this.purchaseDetail?.party?.email}`,147,65);
+    pdf.setFontSize(9)
+    pdf.text(`${this.companyDetails?.name}`,SHIPPING_ADDRESS_X_value,55)
+    pdf.text(`${this.selectedAddressBilling?.address_line_1==null?'':this.selectedAddressBilling?.address_line_1 } ,${this.selectedAddressBilling?.address_line_2==null?'':this.selectedAddressBilling?.address_line_2 }`,SHIPPING_ADDRESS_X_value,59);
+    pdf.text(`${this.selectedAddressShipping?.city?.city+" ,"+this.selectedAddressBilling?.state?.state + ' , ' +this.selectedAddressBilling?.country?.country_name}`,SHIPPING_ADDRESS_X_value,63);
+    pdf.text(`Phone: ${this.purchaseDetail?.party?.mobile_no}`,SHIPPING_ADDRESS_X_value,67);
+    pdf.text(`${this.purchaseDetail?.party?.email}`,SHIPPING_ADDRESS_X_value,71);
     // pdf.text(`GST ${obj.SHIPPING_address?.gst}`,147,69);
     
     // add bottom border
@@ -530,17 +487,17 @@ export class DetailsPurchaseComponent implements OnInit {
     const margin =5;
     pdf.setDrawColor(224, 224, 224)
     pdf.setLineWidth(0.2);
-    pdf.line(margin,37,pageWigth-margin,37)
+    pdf.line(margin,42,pageWigth-margin,42)
     //add table first
     
     autoTable(pdf,{
     head : thead1,
     body : tbody1,
-    startY: 71,
+    startY: 75,
     headStyles:{
     fontSize : 9,
     textColor :[0,0,0],
-    fillColor :[255,255,255],
+    fillColor :[255, 202, 153],
     
     },
     alternateRowStyles:{
@@ -554,6 +511,7 @@ export class DetailsPurchaseComponent implements OnInit {
     },
     
     didDrawCell: (data)=>{
+      // totalHightOfTable1 =Math.floor(data.cursor.y - data.settings.startY);
     if(data.section === 'body' || data.section === 'head' ){
     const {cell,table} = data;
     // top
@@ -587,55 +545,17 @@ export class DetailsPurchaseComponent implements OnInit {
     
     }
     })
+
+
     
     pdf.setDrawColor(0, 0, 0)
     pdf.setLineWidth(0.2);
-    pdf.line(14,95.5,196,95.5)
+    pdf.line(14,98.5,196,98.5)
     
     }
-    
-    
-    
     pdf.save('purchase-order.pdf')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }
+  } 
+}
 
   printForm(): void {
     const printContents = document.getElementById('debitNote').outerHTML;
