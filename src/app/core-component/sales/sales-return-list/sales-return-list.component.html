@@ -169,7 +169,7 @@
                         <td>{{products?.subtotal}}</td>
                         <td>{{products?.total}}</td>
                         <td> <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Draft'}"
+                                [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending' || products?.status === 'New','bg-lightyellow' : products.status === 'Draft'}"
                                 class="badges">{{products.status}}</span></td>
                         <!-- <td><mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>  </td> -->
                         <td>
