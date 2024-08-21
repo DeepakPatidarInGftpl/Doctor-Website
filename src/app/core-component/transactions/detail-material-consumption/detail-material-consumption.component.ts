@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -70,6 +72,31 @@ export class DetailMaterialConsumptionComponent implements OnInit {
         this.itemsPerPage = this.filteredData?.length;
       }
     }
+
+    loaderPdf = false;
+  async generatePdf() {
+    this.loaderPdf = true;
+    const elementToCapture = document.getElementById('debitNote');
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas) => {
+        this.loaderPdf = false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('receiptVoucher.pdf');
+      });
+    }
+  }
+
+  printForm() {
+    const printContents = document.getElementById('debitNote').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
 
     getBadgeClass(status: string): string {
       switch (status) {

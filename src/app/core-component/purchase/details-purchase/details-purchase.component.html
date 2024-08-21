@@ -3,10 +3,11 @@
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
-                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                        Back to Purchase Order</h6>
-                    <h4>New Purchase Order</h4>
+                    <h6 class="subhead-color" (click)="goBack()">
+                        <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                        Back to Purchase Order
+                    </h6>
+                    <h4>New Purchase Order </h4>
                 </div>
                 <div class="page-btn">
                     <a routerLink="//purchase/editpurchase/{{purchaseDetail ?.id}}" class="btn btn-added">
@@ -130,217 +131,267 @@
 
             <mat-tab-group animationDuration="0ms" #tabGroup>
                 <mat-tab label="Purchase Order">
-            <div class="company-details-card card" *ngIf="purchaseDetail" id="my-element">
-                <div class="sub-card row">
-                    <div class="content-part my-3">
-                        <div class="container py-10">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download Invoice</button>
-                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Download Invoice</button>
-                            </div>
-                            <p style="margin-bottom: 0;">
-                                <button class="btn btn" (click)="printForm()" style="border: 1px solid antiquewhite;">Print Invoice</button>
-                            </p>
+                    <div class="company-details-card card" *ngIf="purchaseDetail" id="my-element">
+                        <div class="sub-card row">
+                            <div class="content-part my-3">
+                                <div class="container py-10">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h3>Invoice</h3>
+                                        <button class="btn btn-primary" (click)="generatePdf()"
+                                            *ngIf="!loaderPdf">Download Invoice</button>
+                                        <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>&nbsp; Download Invoice</button>
+                                    </div>
+                                    <p style="margin-bottom: 0;">
+                                        <button class="btn btn" (click)="printForm()"
+                                            style="border: 1px solid antiquewhite;">Print Invoice</button>
+                                    </p>
 
-                            <div class="outer container" id="debitNote" >
-                                <div class="pdf-div" id="doc-target">
-                                    <div class="top mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="row">
-                                                    <div class="col-sm-7">
-                                                        <div class="d-flex justify-content-between align-items-center top-div" style="float: inline-start;">
-                                                            <div class="left-top">
-                                                                <img src="assets/dummy/pos.png" alt="">
-                                                                <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                                <p>Company Name: {{companyDetails?.name}}</p>
-                                                                <p>Financial Year: {{companyDetails?.financial_year?.financial_year}}</p>
-                                                                <p><span>Address</span> :
-                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
-                                                                </p>
-                                                                <p>Phone: {{companyDetails?.phone}}</p>
+                                    <div class="outer container" id="debitNote">
+                                        <div class="pdf-div" id="doc-target">
+                                            <div class="top mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div class="row">
+                                                            <div class="col-sm-7">
+                                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                                    style="float: inline-start;">
+                                                                    <div class="left-top">
+                                                                        <img src="assets/dummy/pos.png" alt="">
+                                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                                        <p>Financial Year:
+                                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                                        </p>
+                                                                        <p><span>Address</span> :
+                                                                            {{companyDetails?.address+' ,
+                                                                            '+companyDetails?.city?.city+' ,
+                                                                            '+companyDetails?.state?.state+' ,
+                                                                            '+companyDetails?.country?.country_name+' ,
+                                                                            '+companyDetails?.pincode}}
+                                                                        </p>
+                                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <div class="d-flex justify-content-between align-items-center top-div my-3"
+                                                                    style=" float: inline-end;">
+                                                                    <div class="right-top">
+                                                                        <p>GST {{purchaseDetail?.party?.gstin}}</p>
+                                                                        <h1 class="pb-4">Invoice</h1>
+                                                                        <p>Invoice Date: {{purchaseDetail?.order_date
+                                                                            |date: 'dd-MMMM-yyyy'}}</p>
+                                                                        <p>Invoice NO: {{purchaseDetail?.order_no}}</p>
+                                                                        <p>Shipping Date:
+                                                                            {{purchaseDetail?.shipping_date}}</p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <div class="d-flex justify-content-between align-items-center top-div my-3" style=" float: inline-end;">          
-                                                            <div class="right-top"> 
-                                                                <p>GST {{purchaseDetail?.party?.gstin}}</p>
-                                                                <h1 class="pb-4">Invoice</h1>
-                                                                <p>Invoice Date: {{purchaseDetail?.order_date |date: 'dd-MMMM-yyyy'}}</p>
-                                                                <p>Invoice NO: {{purchaseDetail?.order_no}}</p>
-                                                                <p >Shipping Date: {{purchaseDetail?.shipping_date}}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                               
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="page-title">
-                                        <p class="headingg">Purchase Order Details</p>
-                                    </div>
-                                    <div class="pdf-address mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="d-flex justify-content-between align-items-center top-div container">
-                                                    <div *ngIf="selectedAddressBilling">
-                                                        <p class="heading">Billing Address</p>
-                                                        <p class="heading2">
-                                                            {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1 + ' , ' +
-                                                            selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2 + ' , ' +
-                                                            selectedAddressBilling?.city?.city}}
-                                                            <br>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
-                                                            selectedAddressBilling?.country?.country_name}}
-                                                            <br />
-                                                            Phone: {{purchaseDetail?.party?.mobile_no}}
-                                                            <br />
-                                                            {{purchaseDetail?.party?.email}}
-                                                        </p>
-                                                    </div>
-                                                    <div *ngIf="selectedAddressShipping">
-                                                        <p class="heading">Shipping Address</p>
-                                                        <p class="heading2">
-                                                            {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1 + ' , ' +
-                                                            selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2 + ' , '+
-                                                            selectedAddressShipping?.city?.city}}
-                                                            <br>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
-                                                            selectedAddressBilling?.country?.country_name}}
-                                                            <br />
-                                                            Phone: {{purchaseDetail?.party?.mobile_no}}
-                                                            <br />
-                                                            {{purchaseDetail?.party?.email}}
-                                                        </p>
-                                                    </div>
 
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="pdf-table1 mb-4">
-                                        <div class="container">
-                                            <div class="col-sm-12">
-                                                <div class="table-responsive">
-                                                    <table class="table datanew">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="thone"
-                                                                    style="white-space: normal !important;">Order No.
-                                                                </th>
-                                                                <th class="thone"
-                                                                    style="white-space: normal !important;">Supplier
-                                                                    Name</th>
-                                                                <th class="thone" style="white-space: normal !important;">Purchase Date</th>
-                                                                <th class="thone" style="white-space: normal !important;">Shipping Date</th>
-                                                                <th class="thone" style="white-space: normal !important;">Shipping Note</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td style="color:black;font-weight: 500;">
-                                                                    {{purchaseDetail?.order_no}}</td>
-                                                                <td style="color:black;font-weight: 500;">
-                                                                    {{purchaseDetail?.party?.company_name}}</td>
-                                                                <td style="color:black;font-weight: 500;">{{purchaseDetail?.order_date |
-                                                                    date: 'dd-MMMM-yyyy'}}</td>
-                                                                <td style="color:black;font-weight: 500;"> {{purchaseDetail?.shipping_date
-                                                                    | date: 'dd-MMMM-yyyy'}}</td>
-                                                                <td style="color:black;font-weight: 500;">
-                                                                    {{purchaseDetail?.shipping_note}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="pdf-table2 mb-4">
-                                        <div class="container">
                                             <div class="page-title">
-                                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                                <p class="headingg">Purchase Order Details</p>
                                             </div>
-                                            <div class="col-sm-12 mb-3">
-                                                <div>
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Barcode/SKU</th>
-                                                                <th>Product Name</th>
-                                                                <th>QTY</th>
-                                                                <th>Cost Price</th>
-                                                                <th>Mrp</th>
-                                                                <th>Discount %</th>
-                                                                <th>Tax</th>
-                                                                <th>Landing Cost</th>
-                                                                <th>Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr *ngFor="let cart of purchaseDetail?.cart">
-                                                                <td>{{cart?.barcode?.sku}}</td>
-                                                                <td>{{cart?.barcode?.product_title}}</td>
-                                                                <td>{{cart?.qty}}</td>
-                                                                <td>{{cart?.purchase_rate}}</td>
-                                                                <td>{{cart?.mrp}}</td>
-                                                                <td>{{cart?.discount}}</td>
-                                                                <td>{{cart?.tax}}</td>
-                                                                <td>{{cart?.landing_cost}}</td>
-                                                                <td>{{cart?.total}}</td>
-                                                            </tr>
-                                                            <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                            <div class="pdf-address mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center top-div container">
+                                                            <div *ngIf="selectedAddressBilling">
+                                                                <p class="heading">Billing Address</p>
+                                                                <p class="heading2">
+                                                                    {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1
+                                                                    + ' , ' +
+                                                                    selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
+                                                                    }}
+                                                                </p>
+                                                                <br>
+                                                                <p> {{selectedAddressBilling?.city?.city}} </p>
+                                                                <br>
+                                                                <p> {{selectedAddressBilling?.state?.state + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                </p>
+                                                                <br />
+                                                                <p>
+                                                                    Phone: {{purchaseDetail?.party?.mobile_no}} </p>
+                                                                <br />
+                                                                <p>
+                                                                    {{purchaseDetail?.party?.email}}
+                                                                </p>
+                                                            </div>
+                                                            <div *ngIf="selectedAddressShipping">
+                                                                <p class="heading">Shipping Address</p>
+                                                                <p *ngIf="selectedAddressShipping.address_line_1 || selectedAddressShipping.address_line_2"
+                                                                    class="mb-0">
+                                                                    {{ (selectedAddressShipping.address_line_1 || '') +
+                                                                    (selectedAddressShipping.address_line_1 &&
+                                                                    selectedAddressShipping.address_line_2 ? ' , ' : '')
+                                                                    +
+                                                                    (selectedAddressShipping.address_line_2 || '') }}
+                                                                </p>
+                                                                <p class="mb-0">
+                                                                    {{selectedAddressShipping.city?.city}}</p>
+                                                                <p class="mb-0">
+                                                                    {{(selectedAddressShipping.state?.state || '') +
+                                                                    (selectedAddressShipping.state?.state &&
+                                                                    selectedAddressShipping.country?.country_name ? ' ,
+                                                                    ' : '') +
+                                                                    (selectedAddressShipping.country?.country_name ||
+                                                                    '')}}</p>
+                                                                <p class="mb-0">Phone:
+                                                                    {{purchaseDetail?.party?.mobile_no}}</p>
+                                                                <p class="mb-0">
+                                                                    {{purchaseDetail?.party?.email}}</p>
+                                                            </div>
 
-                                                                <td class="text-center" colspan="2">
-                                                                    <strong>Total</strong></td>
-                                                                <td class="text-center">{{ purchaseDetail?.total_qty}}
-                                                                </td>
-                                                                <td class="text-center">{{ totalPurchaseRate.toFixed(2)}}</td>
-                                                                <td class="text-center">{{ totalMrp.toFixed(2)}}</td>
-                                                                <td class="text-center">{{
-                                                                    purchaseDetail?.total_discount+'%'}}</td>
-                                                                <td class="text-center">{{ purchaseDetail?.total_tax
-                                                                    +'%'}}</td>
-                                                                <td class="text-center">{{totalLandingCost.toFixed(2)}}
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    {{purchaseDetail?.total.toFixed(2)}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
-                                                <p>Please notify us on any disrepancies within 3 days of receipt <br />
-                                                    Overdue invoices will be charged 24% interest.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 
-                                    <div class="row container">
-                                        <div class="col-lg-6 col-sm-6 col-12">
-                                            <div class="form-group">
-                                                <strong>Note:</strong>
-                                                <!-- <textarea [ngModel]="purchaseDetail?.note" disabled="true"></textarea> -->
-                                                <div style="white-space: break-spaces; border: 1px solid rgb(234, 232, 232); border-radius: 4%;" class="py-3 px-2">
-                                                    <p>{{purchaseDetail?.note}}</p>
+                                            <div class="pdf-table1 mb-4">
+                                                <div class="container">
+                                                    <div class="col-sm-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table datanew">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Order No.
+                                                                        </th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Supplier
+                                                                            Name</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Purchase Date</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Shipping Date</th>
+                                                                        <th class="thone"
+                                                                            style="white-space: normal !important;">
+                                                                            Shipping Note</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="color:black;font-weight: 500;">
+                                                                            {{purchaseDetail?.order_no}}</td>
+                                                                        <td style="color:black;font-weight: 500;">
+                                                                            {{purchaseDetail?.party?.company_name}}</td>
+                                                                        <td style="color:black;font-weight: 500;">
+                                                                            {{purchaseDetail?.order_date |
+                                                                            date: 'dd-MMMM-yyyy'}}</td>
+                                                                        <td style="color:black;font-weight: 500;">
+                                                                            {{purchaseDetail?.shipping_date
+                                                                            | date: 'dd-MMMM-yyyy'}}</td>
+                                                                        <td style="color:black;font-weight: 500;">
+                                                                            {{purchaseDetail?.shipping_note}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-6 col-12" >
-                                            <div class="form-group" style="float: inline-end;">
-                                                <div class="total-order text-end">
-                                                    <ul>
-                                                        <li class="total">
-                                                            <h4>Sub Total</h4>
-                                                            <h5>{{ purchaseDetail?.sub_total.toFixed(2) | currency :'INR'}}
-                                                            </h5>
-                                                        </li>
-                                                        <!-- <li class="total">
+
+                                            <div class="pdf-table2 mb-4">
+                                                <div class="container">
+                                                    <div class="page-title">
+                                                        <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-3">
+                                                        <div>
+                                                            <table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Barcode/SKU</th>
+                                                                        <th>Product Name</th>
+                                                                        <th>QTY</th>
+                                                                        <th>Cost Price</th>
+                                                                        <th>Mrp</th>
+                                                                        <th>Discount %</th>
+                                                                        <th>Tax</th>
+                                                                        <th>Landing Cost</th>
+                                                                        <th>Total</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let cart of purchaseDetail?.cart">
+                                                                        <td>{{cart?.barcode?.sku}}</td>
+                                                                        <td>{{cart?.barcode?.product_title}}</td>
+                                                                        <td>{{cart?.qty}}</td>
+                                                                        <td>{{cart?.purchase_rate}}</td>
+                                                                        <td>{{cart?.mrp}}</td>
+                                                                        <td>{{cart?.discount}}</td>
+                                                                        <td>{{cart?.tax}}</td>
+                                                                        <td>{{cart?.landing_cost}}</td>
+                                                                        <td>{{cart?.total}}</td>
+                                                                    </tr>
+                                                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+
+                                                                        <td class="text-center" colspan="2">
+                                                                            <strong>Total</strong>
+                                                                        </td>
+                                                                        <td class="text-center">{{
+                                                                            purchaseDetail?.total_qty}}
+                                                                        </td>
+                                                                        <td class="text-center">{{
+                                                                            totalPurchaseRate}}</td>
+                                                                        <td class="text-center">{{ totalMrp}}
+                                                                        </td>
+                                                                        <td class="text-center">{{
+                                                                            purchaseDetail?.total_discount+'%'}}</td>
+                                                                        <td class="text-center">{{
+                                                                            purchaseDetail?.total_tax
+                                                                            +'%'}}</td>
+                                                                        <td class="text-center">
+                                                                            {{totalLandingCost}}
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {{purchaseDetail?.total}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <p>Please notify us on any disrepancies within 3 days of receipt
+                                                            <br />
+                                                            Overdue invoices will be charged 24% interest.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row container">
+                                                <div class="col-lg-6 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <strong>Note:</strong>
+                                                        <!-- <textarea [ngModel]="purchaseDetail?.note" disabled="true"></textarea> -->
+                                                        <div style="white-space: break-spaces; border: 1px solid rgb(234, 232, 232); border-radius: 4%;"
+                                                            class="py-3 px-2">
+                                                            <p>{{purchaseDetail?.note}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6 col-12">
+                                                    <div class="form-group" style="float: inline-end;">
+                                                        <div class="total-order text-end">
+                                                            <ul>
+                                                                <li class="total">
+                                                                    <h4>Sub Total</h4>
+                                                                    <h5>{{ purchaseDetail?.sub_total |
+                                                                        currency :'INR'}}
+                                                                    </h5>
+                                                                </li>
+                                                                <!-- <li class="total">
                                                             <h4>Total QTY</h4>
                                                             <h5>{{ purchaseDetail?.total_qty}}
                                                             </h5>
@@ -354,24 +405,26 @@
                                                             <h4>Total Discount %</h4>
                                                             <h5>{{ purchaseDetail?.total_discount+'%'}} </h5>
                                                         </li> -->
-                                                        <li class="total">
-                                                            <h4>Round Off</h4>
-                                                            <h5>{{ purchaseDetail?.round_off.toFixed(2) | currency
-                                                                :'INR'}}
-                                                            </h5>
-                                                        </li>
-                                                        <li class="total">
-                                                            <h4>Total</h4>
-                                                            <h5>{{ purchaseDetail?.total.toFixed(2) | currency :'INR'}}
-                                                            </h5>
-                                                        </li>
-                                                    </ul>
+                                                                <li class="total">
+                                                                    <h4>Round Off</h4>
+                                                                    <h5>{{ purchaseDetail?.round_off |
+                                                                        currency
+                                                                        :'INR'}}
+                                                                    </h5>
+                                                                </li>
+                                                                <li class="total">
+                                                                    <h4>Total</h4>
+                                                                    <h5>{{ purchaseDetail?.total | currency
+                                                                        :'INR'}}
+                                                                    </h5>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex mx-5">
-                                <p>Status :  <span [ngClass]="{
+                                            <div class="d-flex mx-5">
+                                                <p>Status : <span [ngClass]="{
     'bg-lightgreen': purchaseDetail?.status === 'Completed',
     'bg-lightred': purchaseDetail?.status === 'Overdue',
     'bg-lightyellow': purchaseDetail?.status === 'Pending' || purchaseDetail?.status === 'New',
@@ -379,19 +432,19 @@
     'bg-lightorange': purchaseDetail?.status === 'Received' || purchaseDetail?.status === 'Partially Received' || purchaseDetail?.status === 'Exceed',
     'bg-lightgray': purchaseDetail?.status === 'Cancel'
   }" class="badges">{{ purchaseDetail?.status }}</span></p>
-  <!-- <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': purchaseDetail?.export === true, 'bg-lightred' : purchaseDetail?.export === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span></p> -->
+                                                <!-- <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': purchaseDetail?.export === true, 'bg-lightred' : purchaseDetail?.export === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span></p> -->
+                                            </div>
+
+                                            <div class="pdf-footer">
+                                                <p>Please make cheques payable to <span>PV LTD.</span></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                  
-                                    <div class="pdf-footer">
-                                        <p>Please make cheques payable to <span>PV LTD.</span></p>
-                                    </div>
+
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
-            </div>
                 </mat-tab>
                 <mat-tab label="Logs">
                     <div class="pdf-table2 mb-4" *ngIf="purchaseDetail?.logs?.length>0">
@@ -423,7 +476,8 @@
                                     <div class="row">
                                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                             <div class="entries"> Show per page
-                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
                                                     <option value="10">10</option>
                                                     <option value="20">20</option>
                                                     <option value="30">30</option>
@@ -435,8 +489,7 @@
                                         </div>
                                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                                             <div class="f-right">
-                                                <pagination-controls
-                                                    (pageChange)="p = $event"></pagination-controls>
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
                                                 <div class="entries f-right">Showing {{itemsPerPage}} to
                                                     {{purchaseDetail?.logs?.length}} of {{p}} entries</div>
                                             </div>

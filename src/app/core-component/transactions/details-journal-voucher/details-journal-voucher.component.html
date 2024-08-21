@@ -9,73 +9,143 @@
                     <h4>Journal Voucher Details</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//transaction/updatejournalvoucher/{{journelVoucherDetail ?.id}}" class="btn btn-added">
+                    <a routerLink="//transaction/updatejournalvoucher/{{journelVoucherDetail ?.id}}"
+                        class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Journal Voucher
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="journelVoucherDetail">
+            <div class="journal-voucher-wrapper company-details-card card" *ngIf="journelVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">Journal Voucher No.</td>
-                                            <td class="td">{{journelVoucherDetail?.journal_voucher_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Date</td>
-                                            <td class="td">{{journelVoucherDetail?.date}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Total Debit</td>
-                                            <td class="td">{{journelVoucherDetail?.total_debit}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Total Credit</td>
-                                            <td class="td">{{journelVoucherDetail?.total_credit}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Description</td>
-                                            <td class="td">{{journelVoucherDetail?.description}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="py-3">
+                                <div class="d-flex justify-content-end align-items-center container mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                            title="print" (click)="printForm()"><img src="assets/img/icons/printer.svg"
+                                                class="print-icon-wrapper" alt="img"></button>
+
+                                        <button class="chat-attach-download border-0 bg-white" (click)="generatePdf()">
+                                            <i class="fas fa-download download-icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center my-3 mx-3">
-                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                <span [ngClass]="{'bg-lightgreen': journelVoucherDetail?.is_active === true, 'bg-lightred' : journelVoucherDetail?.is_active === false,'bg-lightyellow' : journelVoucherDetail?.is_active === 'Partial' }"
-                                    class="badges">{{journelVoucherDetail?.is_active}}</span>
-                            </div>
-                        </mat-tab>
-                        <mat-tab label="Cart">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <td class="th">Sr.No.</td>
-                                            <td class="th">From Account</td>
-                                            <td class="th">Amount Type</td>
-                                            <td class="th">Amount</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let cart of journelVoucherDetail?.cart; index as i">
-                                            <td class="td">{{i+1}}</td>
-                                            <td class="td">{{cart?.from_account?.company_name ? cart?.from_account?.company_name : cart?.from_account?.account_id}}</td>
-                                            <td class="td">{{cart?.amount_type}}</td>
-                                            <td class="td">{{cart?.amount}}</td>
-                                        </tr>
-                                        <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                            <td></td>
-                                            <td class="text-start"><strong>Total</strong></td>
-                                            <td class="text-start">{{'Total Credit '+ journelVoucherDetail?.total_credit }}</td>
-                                            <td class="text-start">{{'Total Debit '+ journelVoucherDetail?.total_debit}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                            <div id="debitNote">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pdf-table2 my-4">
+                                    <div class="container">
+                                        <div class="col-sm-12">
+                                            <h4 class="table-title-wrapper mb-2">Journal Voucher Details</h4>
+                                            <div class="table-responsive">
+                                                <table class="table datanew">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Journal Voucher No. </th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Date</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Total Debit</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Total Credit</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Description</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="color:black">
+                                                                {{journelVoucherDetail?.journal_voucher_no}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{journelVoucherDetail?.date}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{journelVoucherDetail?.total_debit}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{journelVoucherDetail?.total_credit}}</td>
+                                                            <td style="color:black">
+                                                                {{journelVoucherDetail?.description}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="journelVoucherDetail?.cart.length > 0"
+                                            class="pdf-table1 table-responsive mt-4 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="thone">Sr.No.</th>
+                                                        <th class="thone">From Account</th>
+                                                        <th class="thone">Amount Type</th>
+                                                        <th class="thone">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let cart of journelVoucherDetail?.cart; index as i">
+                                                        <td class="td">{{i+1}}</td>
+                                                        <td class="td">{{cart?.from_account?.company_name ?
+                                                            cart?.from_account?.company_name :
+                                                            cart?.from_account?.account_id}}</td>
+                                                        <td class="td">{{cart?.amount_type}}</td>
+                                                        <td class="td">{{cart?.amount}}</td>
+                                                    </tr>
+                                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                                        <td></td>
+                                                        <td class="text-start"><strong>Total</strong></td>
+                                                        <td class="text-start">{{'Total Credit '+
+                                                            journelVoucherDetail?.total_credit
+                                                            }}</td>
+                                                        <td class="text-start">{{'Total Debit '+
+                                                            journelVoucherDetail?.total_debit}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="d-flex align-items-center my-3 pt-3">
+                                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                            <span
+                                                [ngClass]="{'bg-lightgreen': journelVoucherDetail?.is_active === true, 'bg-lightred' : journelVoucherDetail?.is_active === false,'bg-lightyellow' : journelVoucherDetail?.is_active === 'Partial' }"
+                                                class="badges">{{journelVoucherDetail?.is_active}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="journelVoucherDetail?.logs?.length>0">
@@ -112,60 +182,67 @@
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table datanew">
-                                    <thead>
-                                        <tr>
-                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                                        <tr>
-                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                                        </tr> 
-                                    </ng-container>
-                                    </tbody>
-                                    <tbody *ngIf="filteredData?.length==0">
-                                        <tr>
-                                            <td colspan="10">
-                                                <p class="center-textt">Data not available</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="progressbar">
-                                    <mat-progress-bar mode="indeterminate" class="progressbar"
-                                        *ngIf="loader"></mat-progress-bar>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                                        <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="-1">All</option>
-                                            </select>
+                                            <thead>
+                                                <tr>
+                                                    <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">Operation Type <i
+                                                            class="fa fa-sort"></i></th>
+                                                    <th class="th" (click)="sort('id')">Date Time <i
+                                                            class="fa fa-sort"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                    <tr>
+                                                        <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.date_time |
+                                                            date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                            <tbody *ngIf="filteredData?.length==0">
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <p class="center-textt">Data not available</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="progressbar">
+                                            <mat-progress-bar mode="indeterminate" class="progressbar"
+                                                *ngIf="loader"></mat-progress-bar>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                                <div class="entries"> Show per page
+                                                    <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                        (change)="changePg(v.value)">
+                                                        <option value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="30">30</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="-1">All</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                                <div class="f-right">
+                                                    <pagination-controls
+                                                        (pageChange)="p = $event"></pagination-controls>
+                                                    <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                        {{filteredData?.length}} of {{p}} entries</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                                        <div class="f-right">
-                                            <pagination-controls
-                                                (pageChange)="p = $event"></pagination-controls>
-                                                <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                    {{filteredData?.length}} of {{p}} entries</div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </div>
-                            </div>
                             </div>
                         </mat-tab>
                     </mat-tab-group>

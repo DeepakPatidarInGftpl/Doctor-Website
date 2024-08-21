@@ -1,11 +1,11 @@
-
 <!-- /add -->
 <div class="row bg">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon  style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Debit Note</h6>
                     <h4>Debit Note Details</h4>
                 </div>
@@ -15,55 +15,119 @@
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="debitnoteDetails">
+            <div class="debit-note-voucher-wrapper company-details-card card" *ngIf="debitnoteDetails">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">Party Name</td>
-                                            <td class="td">{{debitnoteDetails?.party?.company_name}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Debit Note Date</td>
-                                            <td class="td">{{debitnoteDetails?.date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Purchase Bill</td>
-                                            <td class="td">{{debitnoteDetails?.purchase_bill?.refrence_bill_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Reason</td>
-                                            <td class="td">{{debitnoteDetails?.reason}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Debit Note No.</td>
-                                            <td class="td">{{debitnoteDetails?.debit_note_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Amount</td>
-                                            <td class="td">{{debitnoteDetails?.amount | currency:'INR'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Tax </td>
-                                            <td class="td">{{debitnoteDetails?.tax +'%'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Total</td>
-                                            <td class="td">{{debitnoteDetails?.total | currency:'INR'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Note</td>
-                                            <td class="td">{{debitnoteDetails?.note}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="py-3">
+                                <div class="d-flex justify-content-end align-items-center container mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                            title="print" (click)="printForm()"><img src="assets/img/icons/printer.svg"
+                                                class="print-icon-wrapper" alt="img"></button>
+
+                                        <button class="chat-attach-download border-0 bg-white" (click)="generatePdf()">
+                                            <i class="fas fa-download download-icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center mx-4">
-                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                <span [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false }" class="badges">{{debitnoteDetails?.is_active}}</span>
+
+                            <div id="debitNote">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pdf-table2 my-4">
+                                    <div class="container">
+                                        <div class="col-sm-12">
+                                            <h4 class="table-title-wrapper mb-2">DebitNote Voucher Details</h4>
+                                            <div class="table-responsive">
+                                                <table class="table datanew">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Party Name </th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Debit Note Date</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Purchase Bill</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Reason</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Debit Note No.</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Amount</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Tax</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Total</th>
+                                                            <th class="thone" style="white-space: normal !important;">
+                                                                Note</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.party?.company_name}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.date | date: 'yyyy-MM-dd hh:mm:ss
+                                                                a'}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.purchase_bill?.supplier_bill_no}}
+                                                            </td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.reason}}</td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.debit_note_no}}</td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.amount | currency:'INR'}}</td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.tax +'%'}}</td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.total | currency:'INR'}}</td>
+                                                            <td style="color:black">
+                                                                {{debitnoteDetails?.note}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-center my-3 pt-3">
+                                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                            <span
+                                                [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false,'bg-lightyellow' : debitnoteDetails?.is_active === 'Partial' }"
+                                                class="badges">{{debitnoteDetails?.is_active}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="debitnoteDetails?.logs?.length>0">
@@ -100,67 +164,74 @@
                                     </div> -->
                                     <div class="table-responsive">
                                         <table class="table datanew">
-                                    <thead>
-                                        <tr>
-                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                                        <tr>
-                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                                        </tr> 
-                                    </ng-container>
-                                    </tbody>
-                                    <tbody *ngIf="filteredData?.length==0">
-                                        <tr>
-                                            <td colspan="10">
-                                                <p class="center-textt">Data not available</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="progressbar">
-                                    <mat-progress-bar mode="indeterminate" class="progressbar"
-                                        *ngIf="loader"></mat-progress-bar>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                                        <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="-1">All</option>
-                                            </select>
+                                            <thead>
+                                                <tr>
+                                                    <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">Operation Type <i
+                                                            class="fa fa-sort"></i></th>
+                                                    <th class="th" (click)="sort('id')">Date Time <i
+                                                            class="fa fa-sort"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                    <tr>
+                                                        <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.date_time |
+                                                            date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                            <tbody *ngIf="filteredData?.length==0">
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <p class="center-textt">Data not available</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="progressbar">
+                                            <mat-progress-bar mode="indeterminate" class="progressbar"
+                                                *ngIf="loader"></mat-progress-bar>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                                <div class="entries"> Show per page
+                                                    <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                        (change)="changePg(v.value)">
+                                                        <option value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="30">30</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="-1">All</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                                <div class="f-right">
+                                                    <pagination-controls
+                                                        (pageChange)="p = $event"></pagination-controls>
+                                                    <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                        {{filteredData?.length}} of {{p}} entries</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                                        <div class="f-right">
-                                            <pagination-controls
-                                                (pageChange)="p = $event"></pagination-controls>
-                                                <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                    {{filteredData?.length}} of {{p}} entries</div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </div>
-                            </div>
                             </div>
                         </mat-tab>
                     </mat-tab-group>
                 </div>
             </div>
         </div>
-      
+
     </div>
 </div>
 <!-- /add -->

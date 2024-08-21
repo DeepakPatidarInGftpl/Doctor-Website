@@ -33,81 +33,96 @@
                                                 data-bs-target="#approval_modal">
                                                 Approve
                                             </button>
-                                            <button class="btn reject-status-badge" data-bs-toggle="modal"
+                                            <button class="btn reject-status-badge me-3" data-bs-toggle="modal"
                                                 data-bs-target="#reject_modal">
                                                 Reject
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                title="print" (click)="printForm()"><img
+                                                    src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                    alt="img"></button>
+
+                                            <button class="chat-attach-download border-0 bg-white"
+                                                (click)="generatePdf()">
+                                                <i class="fas fa-download download-icon"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="container">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <div class="d-flex justify-content-between align-items-center top-div"
-                                                style="float: inline-start;">
-                                                <div class="left-top">
-                                                    <img src="assets/dummy/pos.png" alt="">
-                                                    <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                    <p>Company Name: {{companyDetails?.name}}</p>
-                                                    <p>Financial Year:
-                                                        {{companyDetails?.financial_year?.financial_year}}
-                                                    </p>
-                                                    <p><span>Address</span> :
-                                                        {{companyDetails?.address+' ,
-                                                        '+companyDetails?.city?.city+' ,
-                                                        '+companyDetails?.state?.state+' ,
-                                                        '+companyDetails?.country?.country_name+' ,
-                                                        '+companyDetails?.pincode}}
-                                                    </p>
-                                                    <p>Phone: {{companyDetails?.phone}}</p>
+                            <div id="debitNote">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="pdf-table2 my-4">
-                                <div class="container">
-                                    <div class="table-responsive mt-4 pt-2">
-                                        <h4 class="table-title-wrapper mb-2">Material Consumption Details</h4>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="thone">User</th>
-                                                    <th class="thone">Date</th>
-                                                    <th class="thone">Product</th>
-                                                    <th class="thone">Consumption Type</th>
-                                                    <th class="thone">Consumption No.</th>
-                                                    <th class="thone">Price</th>
-                                                    <th class="thone">Tax</th>
-                                                    <th class="thone">Qty</th>
-                                                    <th class="thone">Total Action</th>
-                                                    <th class="thone">Remark</th>
-                                                    <th class="thone">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <td class="td">{{consuptionDetail?.company_name ?
-                                                    consuptionDetail?.company_name : consuptionDetail?.user?.username}}
-                                                </td>
-                                                <td class="td">{{consuptionDetail?.consumption_date | date:
-                                                    'yyyy-MM-dd'}}</td>
-                                                <td class="td">{{consuptionDetail?.barcode?.product_title}}</td>
-                                                <td class="td">{{consuptionDetail?.consumption_type}}</td>
-                                                <td class="td">{{consuptionDetail?.consumption_no}}</td>
-                                                <td class="td">{{consuptionDetail?.price | currency:'INR'}}</td>
-                                                <td class="td">{{consuptionDetail?.tax ? (consuptionDetail?.tax +'%') :
-                                                    ''}}</td>
-                                                <td class="td">{{consuptionDetail?.qty}}</td>
-                                                <td class="td">{{consuptionDetail?.total_action}}</td>
-                                                <td class="td">{{consuptionDetail?.remark}}</td>
-                                                <td class="td">{{consuptionDetail?.status}}</td>
-                                            </tbody>
-                                        </table>
+                                <div class="pdf-table2 my-4">
+                                    <div class="container">
+                                        <div class="table-responsive mt-4 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Material Consumption Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="thone">User</th>
+                                                        <th class="thone">Date</th>
+                                                        <th class="thone">Product</th>
+                                                        <th class="thone">Consumption Type</th>
+                                                        <th class="thone">Consumption No.</th>
+                                                        <th class="thone">Price</th>
+                                                        <th class="thone">Tax</th>
+                                                        <th class="thone">Qty</th>
+                                                        <th class="thone">Total Action</th>
+                                                        <th class="thone">Remark</th>
+                                                        <th class="thone">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <td class="td">{{consuptionDetail?.company_name ?
+                                                        consuptionDetail?.company_name :
+                                                        consuptionDetail?.user?.username}}
+                                                    </td>
+                                                    <td class="td">{{consuptionDetail?.consumption_date | date:
+                                                        'yyyy-MM-dd'}}</td>
+                                                    <td class="td">{{consuptionDetail?.barcode?.product_title}}</td>
+                                                    <td class="td">{{consuptionDetail?.consumption_type}}</td>
+                                                    <td class="td">{{consuptionDetail?.consumption_no}}</td>
+                                                    <td class="td">{{consuptionDetail?.price | currency:'INR'}}</td>
+                                                    <td class="td">{{consuptionDetail?.tax ? (consuptionDetail?.tax
+                                                        +'%') :
+                                                        ''}}</td>
+                                                    <td class="td">{{consuptionDetail?.qty}}</td>
+                                                    <td class="td">{{consuptionDetail?.total_action}}</td>
+                                                    <td class="td">{{consuptionDetail?.remark}}</td>
+                                                    <td class="td">{{consuptionDetail?.status}}</td>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

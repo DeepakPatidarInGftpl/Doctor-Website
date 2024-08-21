@@ -147,23 +147,7 @@ export class AccountlistComponent implements OnInit {
   isDelete: any;
   userDetails: any
   ngOnInit(): void {
-    // this.dtOptions = {
-    //   dom: 'Btlpif',
-    //   pagingType: 'numbers',
-    //   language: {
-    //     search: ' ',
-    //     searchPlaceholder: "Search...",
-    //     info: "_START_ - _END_ of _TOTAL_ items",
-    //   },
-    //   initComplete: (settings, json) => {
-    //     $('.dt-buttons').appendTo('.wordset');
-    //     $('.dataTables_filter').appendTo('.search-input');
-    //   },
-    // };
-    // this.coreService.getAccount()
-    // this.coreService.accountBehavior.subscribe( () => {
-    //   this.tableData = JSON.parse(localStorage.getItem('accountList')!);
-    // })
+    
 
     this.coreService.getAccount().subscribe(res => {
       this.tableData = res;
@@ -194,6 +178,11 @@ export class AccountlistComponent implements OnInit {
       });
     }
   }
+
+  filterActive_StatusData( event : string){
+    this.filteredData =  this.filteredData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
+}
+
 
   openModal() {
     this.fileName = '';
@@ -358,28 +347,6 @@ export class AccountlistComponent implements OnInit {
     })
   }
 
-  // search() {
-  //   if (this.titlee == "") {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res.title);
-  //       console.log(res.title.toLocaleLowerCase());
-  //       console.log(res.title.match(this.titlee));
-  //       if(res.title.match(this.titlee)){
-  //         return res.title.match(this.titlee);
-  //       }else if(res.accounts_type.match(this.titlee)){
-  //         return res.accounts_type.match(this.titlee);
-  //       }
-  //     })
-  //     // this.tableData = this.tableData.filter(res => {
-  //     //   console.log(res);
-  //     //   console.log(res.title.toLocaleLowerCase());
-  //     //   console.log(res.title.match(this.name));
-  //     //   return res.title.match(this.name);
-  //     // })
-  //   }
-  // }
 
   search() {
     if (this.titlee == "") {
@@ -412,7 +379,7 @@ export class AccountlistComponent implements OnInit {
     let filteredData = this.tableData.slice();
     if (this.selectedAccountType) {
       // console.log(this.selectedAccountType);
-      filteredData = filteredData.filter((item) => item?.accounts_type === this.selectedAccountType);
+      filteredData = filteredData.filter((item ) => item?.accounts_type === this.selectedAccountType);
     }
     if (this.selectedAccountSubType) {
       filteredData = filteredData.filter((item) => item?.account_subtype?.title === this.selectedAccountSubType);
@@ -470,25 +437,7 @@ export class AccountlistComponent implements OnInit {
       })
     doc.save('account.pdf');
 
-    //print complete data
-
-    // const doc = new jsPDF();
-    //   autoTable(doc, {
-    //     // styles: { fillColor: [255, 0, 0] },
-    //     theme: 'grid', 
-    //     headStyles: {
-    //       fillColor: [255, 159, 67] 
-    //   },
-    //     head: [['Sr No.', 'Title', 'GSTIN', 'Address', 'Is Active']], 
-    //     body: this.tableData.map((product, index) => [
-    //       index + 1,
-    //       product.title,
-    //       product.gstin,
-    //       product.address,
-    //       product.is_active ? 'Active' : 'Deactive'
-    //     ]),
-    //   });
-    //   doc.save('table.pdf');
+   
   }
   generatePDFAgain() {
     const doc = new jsPDF();

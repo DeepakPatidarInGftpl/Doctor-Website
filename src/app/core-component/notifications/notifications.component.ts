@@ -1,13 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  BehaviorSubject,
-  catchError,
-  debounceTime,
-  of,
-  Subject,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
+
 import { NotificationService } from 'src/app/Services/notification/notification.service';
 
 @Component({
@@ -21,6 +13,7 @@ export class NotificationsComponent implements OnInit {
   page: number = 1;
   itemsPerPage: number = 10;
   notificationIds: any = [];
+  notificationVel: any = [];
   selectedNotificationIds = [];
   isAllNotificationView = false;
 
@@ -54,14 +47,9 @@ export class NotificationsComponent implements OnInit {
     this.notificationService.getNotificationPanel(page).subscribe((res) => {
       this.itemsPerPage = res?.notifications?.length;
       this.totalNotificationCount = res?.notifications_count;
-      console.log(res);
-      this.notificationList = res.notifications.map((notification) => {
-        return {
-          ...notification,
-          minutesAgo: this.calculateMinutesAgo(notification?.schedule_time),
-        };
-      });
-      console.log(this.notificationList);
+      // console.log(res);
+      this.notificationList = res.notifications.map((notification) =>notification.minutesAgo = this.calculateMinutesAgo(notification?.schedule_time));
+      // console.log(this.notificationList);
       let isAllNotificationView = [];
       this.notificationList.map((val)=> {
         isAllNotificationView.push(val?.is_view);
@@ -70,10 +58,18 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  chackboxChange(id: number) {
-    if (!this.selectedNotificationIds?.includes(id)) {
+  chackboxChange(id: number,index : number) {
+
+    if(this.selectedNotificationIds.length === 0){
       this.selectedNotificationIds.push(id);
+
+    }else{
+     let val = this.selectedNotificationIds.includes(id);
+    val ? this.selectedNotificationIds.splice(index , 1) : this.selectedNotificationIds.push(id)
+
+
     }
+
   }
 
   selectedNotification() {
