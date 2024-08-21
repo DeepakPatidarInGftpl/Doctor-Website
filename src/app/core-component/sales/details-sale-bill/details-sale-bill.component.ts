@@ -1,18 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 @Component({
   selector: 'app-details-sale-bill',
   templateUrl: './details-sale-bill.component.html',
-  styleUrls: ['./details-sale-bill.component.scss', '../commonDetails.scss']
+  styleUrls: ['./details-sale-bill.component.scss', '../commonDetails.scss'],
+  providers : [DatePipe, PdfgenService]
 })
 export class DetailsSaleBillComponent implements OnInit {
 
-  constructor(private companyService: CompanyService, private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
+  constructor(private companyService: CompanyService,
+    private Arout: ActivatedRoute,
+    private saleService: SalesService,
+    private location: Location,
+    public _pdf : PdfgenService
+      ) { }
+  
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
   id: any;
   companyDetails: any;
   supplierAddress: any;
@@ -49,14 +60,16 @@ totalAdditionalDiscou=0;
     this.saleService.getSalesBillById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.BillDetail = res
-        // console.log(res);
+        console.log(res);
         this.BillDetail?.cart?.forEach((item: any) => {
           // discount
-          let d: any = (item.price.toFixed(2) * item.discount) / 100;
-          console.log(item.price.toFixed(2) - d.toFixed(2));
-          this.discountRupees = item.price.toFixed(2) - d.toFixed(2);
+          item.price = Number(item.price +'');
+          let d: any = (item.price * item.discount) / 100;
+          console.log(item.price - d.toFixed(2));
+          this.discountRupees = item.price - d.toFixed(2);
           this.totaldiscountRupees = 0;
           this.totalDiscountRupees.push(this.discount);
+          // this.totalDiscountRupees.push(item.discount);
           console.log(this.totalDiscount);
           this.totalDiscountRupees?.forEach((number: any) => {
             this.discountRupees += number;
@@ -77,6 +90,8 @@ totalAdditionalDiscou=0;
           //total additional discount
 
           this.additionalDiscoun.push(item?.additional_discount);
+          console.log('deepak',item?.additional_discount)
+          console.log('deepak',item)
           this.totalAdditionalDiscou = 0;
           this?.additionalDiscoun?.forEach((number: any) => {
             this.totalAdditionalDiscou += number;
@@ -98,8 +113,10 @@ totalAdditionalDiscou=0;
           
           let totalDiscount:any=+item?.discount+ +item.additional_discount;
           console.log(totalDiscount);
-          let taxIntoRupeesRupees=(item.price.toFixed(2) * totalDiscount) / 100;
-          let taxpriceRupees:any=item.price.toFixed(2)-taxIntoRupeesRupees;
+          let taxIntoRupeesRupees=(item.price * totalDiscount) / 100;
+          let taxpriceRupees:any=item.price-taxIntoRupeesRupees;
+console.log(taxpriceRupees)
+
           let taxPrice: any = taxpriceRupees.toFixed(2) - (taxpriceRupees.toFixed(2) * (100 / (100 + item?.tax)));
           console.log(taxPrice, 'taxprice');
           this.totalTax.push(taxPrice || 0);
@@ -114,7 +131,7 @@ totalAdditionalDiscou=0;
         this.supplierAddress?.customer?.detail?.address.map((res: any) => {
           if (res?.address_type == 'Billing') {
             this.selectedAddressBilling = res;
-            console.log(this.selectedAddressBilling);
+            console.log('bii',this.selectedAddressBilling);
           } else if (res.address_type == 'Shipping') {
             this.selectedAddressShipping = res;
             console.log(this.selectedAddressShipping);
@@ -127,21 +144,179 @@ totalAdditionalDiscou=0;
     this.location.back();
   }
 
-  loaderPdf = false;
   generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('salesBill.pdf');
-      });
-    }
+let p : number = parseFloat(this.totalMrp +'')
+    let arr2 = new Array() ;
+    this.BillDetail?.cart.forEach((cart : any,n : number) => {
+     arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.item_name}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`,`${cart?.tax ?? ''}`,`${cart?.total}`])
+   });
+   const obj = {
+   'Type' : 'Invoice',
+   'Fist_date' : this.BillDetail?.bill_date,
+   'Secouand_date' : this.BillDetail?.bill_date ,
+   'thead1' : ['Sale Bill No.','Party Name','Payment Terms','Sales Order','Sales Man','Sale Bill Date','Due date'],
+   'tbody1' : [`${this.BillDetail?.customer_bill_no}`,`${this.BillDetail?.customer?.name+ ' (' + this.BillDetail?.customer?.user_type + ')'}`,`${this.BillDetail?.payment_terms?.title}`,`${this.BillDetail?.sale_order?.sale_order_no ?? ''}`,`${this.BillDetail?.sales_man?.name}`, `${this.BillDetail?.bill_date}`,`${this.BillDetail?.due_date}`],
+   'table2head' : ['#','Barcode/SKU','Product Name','Price','QTY','Discount(%)','Tax(%)','Total'],
+   'foot2' : [
+     [
+       {
+         content : 'Total',
+         colSpan:3,
+         styles: { halign: 'center' }
+       },
+       {
+         content : `${p.toFixed(2)}`,
+         styles: { halign: 'center' }
+       },
+       {
+         content : `${this.BillDetail?.total_qty}`,
+         styles: { halign: 'center' }
+         
+       },
+       {
+         content : `${this.totalDiscount}%`,
+         styles: { halign: 'center' }
+         
+       },
+       {
+         content : `${this.totalAdditionalDiscou}%`,
+         styles: { halign: 'center' }
+         
+       },
+       {
+         content : `${this.BillDetail?.total_tax}`,
+         styles: { halign: 'center' }
+         
+       },
+       {
+         content : `${this.BillDetail?.total}`,
+         styles: { halign: 'center' }
+         
+       },
+      
+     ],
+     [
+       {
+         content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+         colSpan : 8,
+         styles : {halign : 'left'}
+       }
+       
+     ],
+     [
+       {
+         content : ``,
+         colSpan : 5,
+       },
+       {
+         content : `Sub Total `,
+         colSpan : 2,
+         styles : {halign : 'right'}
+       },
+       {
+         content : `${this.BillDetail?.subtotal}`,
+         colSpan : 1,
+         styles : {halign : 'left'}
+       }
+   
+     ],
+     [
+       {
+         content : '',
+         colSpan : 5,
+         // styles : {halign : 'left'}
+       },
+      { content : 'Additional Charges ',
+       colSpan : 2,
+       styles : {halign : 'right'}
+     },
+      { content : `${this.BillDetail?.additional_charges}`,
+       colSpan : 1,
+       styles : {halign : 'left'}
+     },
+     ],
+     [
+       {
+         content : '',
+         colSpan : 5,
+         styles : {halign : 'left'}
+       },
+      { content : 'Additional Discount(%)',
+       colSpan : 2,
+       styles : {halign : 'right'}
+     },
+      { content : `${this.BillDetail?.total_discount}`,
+       colSpan : 1,
+       styles : {halign : 'left'}
+     },
+     ],
+     [
+       {
+         content : '',
+         colSpan : 5,
+         styles : {halign : 'left'}
+       },
+      { content : 'Round Off',
+       colSpan : 2,
+       styles : {halign : 'right'}
+     },
+      { content : `${this.BillDetail?.roundoff}`,
+       colSpan : 1,
+       styles : {halign : 'left'}
+     },
+     ],
+     [
+       {
+         content : '',
+         colSpan : 5,
+         styles : {halign : 'left'}
+       },
+      { content : 'Total',
+       colSpan : 2,
+       styles : {halign : 'right'}
+     },
+      { content : `${this.BillDetail?.total}`,
+       colSpan : 1,
+       styles : {halign : 'left'}
+     },
+     ],
+     [
+       {
+         content : '',
+       colSpan : 5,
+       },
+       {
+         content : '',
+       colSpan : 3,
+       },
+     ]
+   ],
+   'company_name' : this.companyDetails?.name,
+   'company_gst' : this.companyDetails?.gst,
+   'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+   'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+   'top_left_phone' : this.companyDetails?.phone,
+   'top_left_email' : this.companyDetails?.email,
+   'BILLING_ADDRESS' : {
+     'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+     'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null || undefined) ? '' : this.selectedAddressShipping?.city?.city,
+     'address_line_3' : (this.selectedAddressBilling?.state?.state == null || undefined) ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + (this.selectedAddressBilling?.country?.country_name == null || undefined) ? '' : this.selectedAddressBilling?.country?.country_name ,
+     'phone' : this.BillDetail?.customer?.phone_number ?? '',
+     'email' : this.BillDetail?.customer?.email ?? ''
+   },
+   'SHIPPING_ADDRESS' : {
+     'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+     'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null || undefined) ? '' : this.selectedAddressShipping?.city?.city,
+    'address_line_3' : (this.selectedAddressBilling?.state?.state == null || undefined) ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + (this.selectedAddressBilling?.country?.country_name == null || undefined) ? '' : this.selectedAddressBilling?.country?.country_name ,
+    'phone' : this.BillDetail?.customer?.phone_number ?? '',
+     'email' : this.BillDetail?.customer?.emails ?? '',
+   },
+   'table2body' : arr2,
+   'order_no' : this.BillDetail?.customer_bill_no,
+   }
+   
+    this._pdf.generatePdf(obj);
+   
   }
 
   printForm(): void {
@@ -152,11 +327,6 @@ totalAdditionalDiscou=0;
     document.body.innerHTML = originalContents;
   }
 
-  p: number = 1
-  pageSize: number = 10;
-  itemsPerPage = 10;
-  key = 'id';
-  reverse: boolean = false;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

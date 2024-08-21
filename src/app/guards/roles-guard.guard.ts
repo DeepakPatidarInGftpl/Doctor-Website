@@ -28,18 +28,20 @@ export class RolesGuardGuard  {
 // from localstorage
     if (auth) {
       const allowedRoles = route.data['allowedRoles'] as string[];
-      console.log(allowedRoles, 'allowedRoles');
+      // console.log(allowedRoles, 'allowedRoles');
 
       const hasPermission = auth.some((permission: Permission) =>
         allowedRoles.includes(permission.codename)
       );
-      console.log(hasPermission);
+      // console.log(hasPermission);
       
 
       // call profile api
       this.coreService.getProfile().subscribe((res:any) => {
         this.userDetails = res;
         this.profileService.setUserDetails(this.userDetails); 
+        this.profileService.ProfileData$.next(res)
+
         // permission lenghth increase or decrease then localstorage store data 
         const userDetails = res?.permission;
         const storedUserDetails = this.profileService.getUserDetails();

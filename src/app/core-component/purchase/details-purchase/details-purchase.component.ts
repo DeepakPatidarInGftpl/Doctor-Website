@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { Location ,DatePipe} from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
+
 type address_type = {
   address_type : 'Billing' | 'Shipping'
 }

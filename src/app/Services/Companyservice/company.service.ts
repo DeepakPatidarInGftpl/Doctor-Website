@@ -1,14 +1,17 @@
+import { company } from './../../interfaces/company';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { company } from 'src/app/interfaces/company';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+// import { company } from 'src/app/interfaces/company';
 import { environment } from 'src/environments/environment';
-import { HttpClientService } from '../http-client.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
+public ProfileData$ = new Subject()
+
   //get profile function store data into localstorage when permission length increase or decrease then update localstorage
   private readonly userDetailsKey = 'auth';
   getUserDetails(): any {
@@ -45,7 +48,7 @@ export class CompanyService {
     this.checkDaySubject.next(CheckDay);
   }
   //end
-  constructor(private http: HttpClient, private HttpService: HttpClientService) { }
+  constructor(private http: HttpClient) { }
   edit = new BehaviorSubject<any>('')
 
   companyBehaviour = new BehaviorSubject(null)
@@ -158,4 +161,24 @@ export class CompanyService {
     let url = this.apiUrl + '/pv-api/day_closing_check/';
     return this.http.get(url)
   }
+
+  async loadImage(){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = 'assets/logo/pdfLogo.png';
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+    });
+  }
+
+
+ 
+
+
+
+
+
+
+
+
 }
