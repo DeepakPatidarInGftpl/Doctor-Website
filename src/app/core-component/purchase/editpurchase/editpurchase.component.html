@@ -42,7 +42,7 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase Date</label>
+                        <label>Po Date</label>
                         <input type="datetime-local" formControlName="order_date" [attr.min]="minDate"
                             [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['order_date'].touched && f['order_date'].invalid}">
@@ -393,7 +393,7 @@
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <div class="d-flex mt-4">
-                        <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                        <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'">
                         <label [for]="'checkboxMeasure-'" class="d_flex"
                             style="margin-bottom: 0; margin-left: 5px;">Export</label>
                     </div>
@@ -466,7 +466,7 @@
                                 <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
                                 <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
                                 <th class="space-text" style="width: 10%;">Total Cost With Tax</th>
-                                <th></th>
+                                <!-- <th></th> -->
                             </tr>
                             <tr>
                                 <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add
@@ -499,14 +499,13 @@
                                                 </svg>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="p-1">
                                             <input class="input" type="text" placeholder="Search Barcode"
-                                                [attr.data-index]="i"
-                                                [ngClass]="{'error-border': isFormCartInvalid}"
+                                                [attr.data-index]="i" [ngClass]="{'error-border': isFormCartInvalid}"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                 (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
                                         </td>
-                                        <td colspan="1">
+                                        <td class="p-1" colspan="1">
                                             <div class="form-group" style="margin-bottom: 0;">
                                                 <mat-form-field class="w-100"
                                                     style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
@@ -543,9 +542,15 @@
                                                 </mat-form-field>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="qty" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
-                                        <td><input type="text" formControlName="purchase_rate" [ngClass]="{'error-border': isFormCartInvalid}" class="input"
-                                               >
+                                        <td class="p-1"><input type="number"
+                                                [ngClass]="{'error-border': (isFormCartInvalid || isCartQtyInvalid(i))}"
+                                                formControlName="qty" class="input" min="1">
+                                            <div *ngIf="isCartQtyInvalid(i)" class="error-message">
+                                                Quantity must be a positive number.
+                                            </div>
+                                        </td>
+                                        <td><input type="text" formControlName="purchase_rate"
+                                                [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                             <i class="ion-information circle" data-bs-toggle="tooltip"
                                                 title="ion-information" (click)="openModalBatch(i)"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -614,27 +619,33 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="mrp" [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
-                                        <td><input type="text" formControlName="discount" [ngClass]="{'error-border': isFormCartInvalid}" class="input"
+                                        <td><input type="text" formControlName="mrp"
+                                                [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
+                                        <td class="p-1"><input type="text" formControlName="discount"
+                                                [ngClass]="{'error-border': isFormCartInvalid}" class="input"
                                                 (blur)="purchase(i)">
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                 Discount ex: 1-100 % </span>
                                         </td>
-                                        <td>
+                                        <td class="p-1">
                                             <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' ('
                                                 + tax[i] + '%)' }}</span>
                                             <br>
                                             <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                         </td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" [ngClass]="{'error-border': isFormCartInvalid}" readonly
-                                                (change)="priceValidation()" class="input"></td>
-                                        <td class="text-end">
-                                            <input type="text" class="input" readonly [ngClass]="{'error-border': isFormCartInvalid}"
-                                                [value]="TotalWithoutTax[i] | number:'1.2-2'">
+                                        <td class="text-end p-1"><input type="text" formControlName="landing_cost"
+                                                [ngClass]="{'error-border': isFormCartInvalid}" readonly
+                                                (change)="priceValidation()" class="input p-1"></td>
+                                        <td class="text-end p-1">
+                                            <input type="text" class="input p-1" readonly
+                                                [ngClass]="{'error-border': isFormCartInvalid}"
+                                                [value]="TotalWithoutTax[i]">
                                         </td>
-                                        <td class="text-end">
-                                            <input type="text" formControlName="total" [ngClass]="{'error-border': isFormCartInvalid}" class="input" readonly>
+                                        <td class="text-end p-1">
+                                            <input type="text" formControlName="total"
+                                                [ngClass]="{'error-border': isFormCartInvalid}" class="input p-1"
+                                                readonly>
                                         </td>
                                     </tr>
                                 </ng-container>
@@ -643,11 +654,18 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-start"><strong>Total</strong></td>
-                                <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
+                                <td class="text-start">{{calculateTotalQty()}}
                                     <input type="text" formControlName="total_qty" class="input"
-                                        [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                        [ngModel]="calculateTotalQty()" style="display: none;">
                                 </td>
-                                <td class="text-start">{{calculateTotalPurchase()?.toFixed(2)}}
+                                <td class="text-start">
+                                </td>
+                                <td class="text-start"></td>
+                                <td class="text-start"></td>
+                                <td class="text-start"></td>
+                                <td class="text-start"></td>
+                                <td class="text-start"></td>
+                                <!-- <td class="text-start">{{calculateTotalPurchase()?.toFixed(2)}}
                                 </td>
                                 <td class="text-start">{{calculateTotalMrp()?.toFixed(2)}}</td>
                                 <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
@@ -660,8 +678,7 @@
                                         [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
                                 </td>
                                 <td class="text-start">{{calculateTotalLandingCost()?.toFixed(2)}}</td>
-                                <!-- <td>{{calculateTotal()?.toFixed(2)}}</td> -->
-                                <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td> -->
                                 <td>{{calculateTotal()?.toFixed(2)}}</td>
                             </tr>
                         </tbody>
@@ -684,9 +701,9 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
+                                        {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="sub_total" class="input"
-                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                            [ngModel]="calculateTotalWithoutTax()" style=" display: none;">
                                     </h5>
                                 </li>
                                 <li>

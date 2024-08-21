@@ -95,16 +95,16 @@
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Purchase Order Date</label>
+                                    <label>Po Date</label>
                                     <input type="date" [formControl]="purchaseOrderDate" [attr.min]="dueMinDate"
                                         [attr.max]="dueMaxDate" (change)="filterData()">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Purchase No.</label>
+                                    <label>Po No.</label>
                                     <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()"
-                                        class="search" placeholder="Search Purchase No.">
+                                        class="search" placeholder="Search Purchase Order No.">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -145,11 +145,11 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase Number<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Po Number<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase Date <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Po Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Shipping Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Shipping Note <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Po Qty <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
@@ -173,7 +173,7 @@
                         </td>
                         <td>{{products?.order_date | date: 'dd-MMMM-yyyy'}}</td>
                         <td>{{products?.shipping_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.shipping_note}}</td>
+                        <td>{{products?.total_qty}}</td>
                         <td>{{products?.total}}</td>
                         <td>
                             <!-- <span [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span> -->

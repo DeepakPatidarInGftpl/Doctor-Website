@@ -329,7 +329,8 @@
                                                                         <td>{{cart?.qty}}</td>
                                                                         <td>{{cart?.purchase_rate}}</td>
                                                                         <td>{{cart?.mrp}}</td>
-                                                                        <td>{{cart?.discount}}</td>
+                                                                        <td>{{cart?.discount ? cart?.discount : '0'}}
+                                                                        </td>
                                                                         <td>{{cart?.tax}}</td>
                                                                         <td>{{cart?.landing_cost}}</td>
                                                                         <td>{{cart?.total}}</td>

@@ -419,7 +419,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'">
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
@@ -617,6 +617,7 @@
                                         <th></th>
                                         <th>Barcode/SKU</th>
                                         <th style="width: 25%;">Product Name</th>
+                                        <th>Variant Name</th>
                                         <th>QTY</th>
                                         <th>PO QTY</th>
                                         <!-- <th>Unit Cost</th> -->
@@ -706,6 +707,9 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
+                                                <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
+                                                        formControlName="variant_name" placeholder="Variant Name"
+                                                        class="input"></td>
                                                 <td><input type="text" formControlName="qty"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                 </td>
@@ -811,11 +815,13 @@
                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td class="text-start"><strong>Total</strong></td>
                                         <td class="text-start">{{ calculateTotalQty()}}</td>
                                         <td class="text-start">{{calculateTotalPOQty()}}</td>
                                         <!-- <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td> -->
-                                        <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
+                                        <!-- <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td> -->
+                                        <td class="text-start"></td>
                                         <!-- <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td> -->
 
                                     </tr>
