@@ -490,7 +490,7 @@ getPurchase(fy:any){
     }
   }
        //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
-       statusFilter:any;
+       statusFilter:any = "";
        filterData() {
         let filteredData = this.tableData.slice(); 
         if (this.shippingDate.value) {

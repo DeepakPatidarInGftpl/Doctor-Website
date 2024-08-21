@@ -230,6 +230,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   material_inward_cart(): FormGroup {
     return this.fb.group({
       barcode: (''),
+      variant_name: (''),
       qty: (1),
       po_qty: (1),
       // unit_cost: (''),
@@ -378,7 +379,8 @@ export class UpdatematerialInwardComponent implements OnInit {
       const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 1,
+        qty: 1 || 0,
+        variant_name: event?.variant_name,
         po_qty: 1,
         // unit_cost: event.batch[0]?.cost_price || 0,
       });
@@ -389,8 +391,9 @@ export class UpdatematerialInwardComponent implements OnInit {
       const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 0,
-        po_qty: 0,
+        qty: 1 || 0,
+        variant_name: event?.variant_name,
+        po_qty: 1,
         // unit_cost: event.batch[0]?.cost_price || 0,
       });
     }
