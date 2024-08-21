@@ -7,20 +7,18 @@ import { SettingsService } from './shared/settings/settings.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit{
-  title = 'template';
   public darkTheme: boolean = false;
 
   constructor(private settings: SettingsService,) { }
 
   ngOnInit(): void {
     this.settings.changeTheme.subscribe((res: any) => {
-      if (res == 'Dark') this.darkTheme = true;
-      else this.darkTheme = false;
+      (res == 'Dark') ? this.darkTheme = true : this.darkTheme = false
+
     });
-    // console.log(!!localStorage.getItem('token'));
   }
-    login() {
-    return !!localStorage.getItem('token');
-  }
+  // login() {
+  //   return !!localStorage.getItem('token');
+  // }
 
 }

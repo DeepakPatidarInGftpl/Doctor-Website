@@ -1,6 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -9,11 +12,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./details-credit-note.component.scss']
 })
 export class DetailsCreditNoteComponent implements OnInit {
-  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location) { }
- creditnoteDetails: any
+  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location, private companyService: CompanyService) { }
+ creditnoteDetails: any;
+ companyDetails:any;
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
+    this.companyService.getCompany().subscribe(res=>{
+      this.companyDetails=res[0];
+    })
     this.transactionService.getCreditNoteById(this.id).subscribe(res=>{
       this.creditnoteDetails=res;
       this.filteredData = this.creditnoteDetails?.logs.slice(); // Initialize filteredData with the original data
@@ -23,6 +30,31 @@ export class DetailsCreditNoteComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+  
+  loaderPdf = false;
+  async generatePdf() {
+    this.loaderPdf = true;
+    const elementToCapture = document.getElementById('debitNote');
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas) => {
+        this.loaderPdf = false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('creditNoteVoucher.pdf');
+      });
+    }
+  }
+
+  printForm() {
+    const printContents = document.getElementById('debitNote').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   }
 
   p: number = 1

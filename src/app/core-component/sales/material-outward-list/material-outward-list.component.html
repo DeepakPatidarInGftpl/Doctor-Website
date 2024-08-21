@@ -166,7 +166,7 @@
                         <td>{{products?.note}}</td>
                         <td>
                             <span
-                                [ngClass]="{'bg-lightgreen': products?.status === 'Received', 'bg-lightred' : products?.status === 'Pending','bg-lightyellow' : products?.status === 'Draft'}"
+                                [ngClass]="{'bg-lightgreen': products?.status === 'Received', 'bg-lightred' : products?.status === 'Pending' || products?.status === 'New','bg-lightyellow' : products?.status === 'Draft'}"
                                 class="badges">{{products?.status}}</span>
                         </td>
                         <!-- <td>
