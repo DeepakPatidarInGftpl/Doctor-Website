@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { Location } from '@angular/common';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
+import { DatePipe, Location } from '@angular/common';
+
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 
 @Component({
   selector: 'app-details-material-inward',
   templateUrl: './details-material-inward.component.html',
-  styleUrls: ['./details-material-inward.component.scss','../commonDetails.scss']
+  styleUrls: ['./details-material-inward.component.scss','../commonDetails.scss'],
+  providers : [DatePipe, PdfgenService]
 })
 export class DetailsMaterialInwardComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location,
+  constructor(private Arout: ActivatedRoute,private _dpipe : DatePipe,public _pdf : PdfgenService ,private purchaseService: PurchaseServiceService, private location: Location,
     private companyService:CompanyService) { }
 
   id: any;
@@ -83,22 +84,159 @@ export class DetailsMaterialInwardComponent implements OnInit {
     this.location.back();
   }
 
-  loaderPdf = false;
+  
+
+
   generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('MaterialInward.pdf');
-      });
-    }
-  }
+
+    let mi_date = this._dpipe.transform(this.materialDetail?.material_inward_date , 'dd-MMMM-yyyy')
+
+        let arr2 = new Array() ;
+        this.materialDetail?.cart.forEach((cart : any,n : number) => {
+         arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.barcode?.product_title}`,`${cart?.qty}`, `${cart?.po_qty}`,`${cart?.mrp ?? '' }`])
+       });
+       const obj = {
+       'Type' : 'Material Inward',
+       'Fist_date' : this.materialDetail?.material_inward_date,
+      //  'Secouand_date' : this.materialDetail?.po_date,
+       'thead1' : ['Order No.','Supplier Name','Purchase Order','MI Date','Recieved By','Shipping Note','Product Type'],
+       'tbody1' : [
+        `${this.materialDetail?.material_inward_no}`,
+        `${this.materialDetail?.party?.company_name}`,
+        `${this.materialDetail?.purchase_order?.order_no ?? ''}`,
+        `${ mi_date ?? ''}`,
+        `${this.materialDetail?.recieved_by ?? ''}`,
+        `${this.materialDetail?.shipping_note ?? '' }`,
+        `${this.materialDetail?.product_type ?? ''}`
+      ],
+       'table2head' : ['#','Barcode/SKU','Product Name','QTY','PO QTY','Mrp'],
+       'foot2' : [
+         [
+           {
+             content : 'Total',
+             colSpan:3,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.totalPurchaseRate.toFixed(2)}`,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.totalLandingCost}`,
+             styles: { halign: 'center' }
+             
+           },
+          //  {
+          //    content : `${this.returnBillDetail?.total_discount}%`,
+          //    styles: { halign: 'center' }
+             
+          //  },
+          //  {
+          //    content : `${this.returnBillDetail?.total_tax}%`,
+          //    styles: { halign: 'center' }
+             
+          //  },
+          //  {
+          //    content : `${this.returnBillDetail?.total}`,
+          //    styles: { halign: 'center' }
+             
+          //  }
+          
+         ],
+         [
+           {
+             content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+             colSpan : 6,
+             styles : {halign : 'left'}
+           }
+           
+         ],
+         [
+           {
+             content : ``,
+             colSpan : 4,
+           },
+           {
+             content : ``,
+             colSpan : 1,
+             styles : {halign : 'right'}
+           },
+           {
+             content : '',
+             colSpan : 1,
+             styles : {halign : 'left'}
+           }
+       
+         ],
+         [
+           {
+             content : '',
+             colSpan : 4,
+             // styles : {halign : 'left'}
+           },
+          { content : '',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : '',
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+         [
+           {
+             content : '',
+             colSpan : 4,
+             styles : {halign : 'left'}
+           },
+          { content : 'Total ',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : `${this.materialDetail?.total}`,
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+         [
+           {
+             content : '',
+           colSpan :4,
+           },
+           {
+             content : '',
+           colSpan : 2,
+           },
+         ]
+       ],
+       'company_name' : this.companyDetails?.name,
+       'company_gst' : this.companyDetails?.gst,
+       'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+       'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+       'top_left_phone' : this.companyDetails?.phone,
+       'top_left_email' : this.companyDetails?.email,
+       'BILLING_ADDRESS' : {
+         'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city,
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' :this.selectedAddressBilling?.country?.country_name ,
+         'phone' : this.materialDetail?.party?.mobile_no ?? '',
+         'email' : this.materialDetail?.party?.email ?? ''
+       },
+       'SHIPPING_ADDRESS' : {
+         'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +this.selectedAddressShipping?.city?.city ?? '',
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' : this.selectedAddressBilling?.country?.country_name  ,
+         'phone' : this.materialDetail?.party?.mobile_no ?? '',
+         'email' : this.materialDetail?.party?.email ?? '',
+       },
+       'table2body' : arr2,
+       'order_no' : this.materialDetail?.material_inward_no,
+       }
+       
+        this._pdf.generatePdf(obj);
+       
+      }
+
    
   // generatePdf() {
   //   this.loaderPdf = true;

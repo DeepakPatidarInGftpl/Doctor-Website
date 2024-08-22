@@ -1,20 +1,22 @@
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
+// import html2canvas from 'html2canvas';
+// import { jsPDF } from 'jspdf';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-details-debitnotes',
   templateUrl: './details-debitnotes.component.html',
-  styleUrls: ['./details-debitnotes.component.scss','../commonDetails.scss']
+  styleUrls: ['./details-debitnotes.component.scss','../commonDetails.scss'],
+  providers : [DatePipe , PdfgenService]
 })
 export class DetailsDebitnotesComponent implements OnInit {
 
-  constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location, private coreService: CoreService) { }
+  constructor(private companyService:CompanyService,private _dpipe : DatePipe,private _pdf : PdfgenService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location, private coreService: CoreService) { }
   id: any;
   companyDetails:any;
   printDetails: any;
@@ -148,22 +150,221 @@ export class DetailsDebitnotesComponent implements OnInit {
     })
   }
 
-  loaderPdf = false;
+  
+
   generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('purchaseReturn.pdf');
-      });
-    }
-  }
+
+    let mi_date = this._dpipe.transform(this.purchaseBillDetail?.purchase_return_date , 'dd-MMMM-yyyy')
+
+        let arr2 = new Array() ;
+        this.purchaseBillDetail?.cart.forEach((cart : any,n : number) => {
+         arr2.push([`${n+1}`,`${cart?.barcode?.sku ?? ''}`,`${cart?.qty ?? ''}`, `${cart?.unit_cost ?? ''}`,`${cart?.mrp ?? '' }`,`${cart?.deduction ?? ''}`, `${cart?.tax ?? ''}`,`${cart?.landing_cost ?? ''}`,`${cart?.total ?? ''}`])
+       });
+       const obj = {
+       'Type' : 'Purchase Return',
+       'Fist_date' : this.purchaseBillDetail?.purchase_return_date,
+       'Secouand_date' : this.purchaseBillDetail?.purchase_return_date,
+       'thead1' : ['Return No.','Supplier Name','Refrensh Bill No.','Return Date','Reverse Charge','Purchase Bill','Reason'],
+       'tbody1' : [
+        `${this.purchaseBillDetail?.purchase_return_no}`,
+        `${this.purchaseBillDetail?.party?.company_name}`,
+        `${this.purchaseBillDetail?.refrence_bill_no ?? ''}`,
+        `${ mi_date ?? ''}`,
+        `${this.purchaseBillDetail?.reverse_charge ?? ''}`,
+        `${this.purchaseBillDetail?.purchase_bill?.refrence_bill_no ?? '' }`,
+        `${this.purchaseBillDetail?.reason ?? ''}`
+      ],
+       'table2head' : ['#','Barcode/SKU','Product Name','QTY','Cost Price','Mrp','Deduction','Tax','Landing Cost','Total'],
+       'foot2' : [
+         [
+           {
+             content : 'Total',
+             colSpan:3,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.purchaseBillDetail?.total_qty}`,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.totalPurchaseRate}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalMrp}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.purchaseBillDetail?.total_deduction}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.purchaseBillDetail?.total_tax}%`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalLandingCost}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.purchaseBillDetail?.total}`,
+             styles: { halign: 'center' }
+             
+           },
+          
+         ],
+         [
+           {
+             content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+             colSpan : 10,
+             styles : {halign : 'left'}
+           }
+           
+         ],
+         
+         [
+           {
+             content : '',
+             colSpan : 8,
+             // styles : {halign : 'left'}
+           },
+          { content : 'Sub Total',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : `${this.purchaseBillDetail?.sub_total}`,
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+         [
+          {
+            content : '',
+            colSpan : 8,
+          },
+          {
+            content : 'Total QTY',
+            colSpan : 1,
+            styles : {halign : 'right'}
+          },
+          {
+            content : `${this.purchaseBillDetail?.total_qty}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          }
+      
+        ],
+         [
+          {
+            content : '',
+            colSpan : 8,
+          },
+          {
+            content : 'Total Tax',
+            colSpan : 1,
+            styles : {halign : 'right'}
+          },
+          {
+            content : `${this.purchaseBillDetail?.total_tax}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          }
+      
+        ],
+         [
+          {
+            content : '',
+            colSpan : 8,
+          },
+          {
+            content : 'Total Discount',
+            colSpan : 1,
+            styles : {halign : 'right'}
+          },
+          {
+            content : `${this.purchaseBillDetail?.total_discount}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          }
+      
+        ],
+         [
+          {
+            content : '',
+            colSpan : 8,
+          },
+          {
+            content : 'Round Off',
+            colSpan : 1,
+            styles : {halign : 'right'}
+          },
+          {
+            content : `${this.purchaseBillDetail?.round_off}`,
+            colSpan : 1,
+            styles : {halign : 'left'}
+          }
+      
+        ],
+    
+  [
+           {
+             content : '',
+             colSpan : 8,
+             styles : {halign : 'left'}
+           },
+          { content : 'Total ',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : `${this.purchaseBillDetail?.total}`,
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+         [
+           {
+             content : '',
+           colSpan :8,
+           },
+           {
+             content : '',
+           colSpan : 2,
+           },
+         ]
+       ],
+       'company_name' : this.companyDetails?.name,
+       'company_gst' : this.companyDetails?.gst,
+       'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+       'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+       'top_left_phone' : this.companyDetails?.phone,
+       'top_left_email' : this.companyDetails?.email,
+       'BILLING_ADDRESS' : {
+         'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city,
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' :this.selectedAddressBilling?.country?.country_name ,
+         'phone' : this.purchaseBillDetail?.party?.mobile_no ?? '',
+         'email' : this.purchaseBillDetail?.party?.email ?? ''
+       },
+       'SHIPPING_ADDRESS' : {
+         'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +this.selectedAddressShipping?.city?.city ?? '',
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' : this.selectedAddressBilling?.country?.country_name  ,
+         'phone' : this.purchaseBillDetail?.party?.mobile_no ?? '',
+         'email' : this.purchaseBillDetail?.party?.email ?? '',
+       },
+       'table2body' : arr2,
+       'order_no' : this.purchaseBillDetail?.purchase_return_no,
+       }
+       
+        this._pdf.generatePdf(obj);
+       
+      }
+
 
   printForm(): void {
     const printContents = document.getElementById('debitNote').outerHTML;

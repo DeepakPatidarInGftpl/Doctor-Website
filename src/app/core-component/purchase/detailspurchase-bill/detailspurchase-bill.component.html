@@ -6,7 +6,7 @@
                     <h6 class="subhead-color" (click)="goBack()"><mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
                             Back to Goods Received Note  </h6>
-                    <h4>New Goods Received Note </h4>
+                    <h4>New Goods Received Note</h4>
                 </div>
                 <div class="page-btn">
                     <a routerLink="//purchase/edit-goodsReceivedNote/{{purchaseBillDetail ?.id}}" class="btn btn-added">
@@ -175,8 +175,8 @@
                         <div class="container py-10">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download Invoice</button>
-                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
+                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!(_pdf.loaderPdf | async)">Download Invoice</button>
+                                <button class="btn btn-primary" *ngIf="_pdf.loaderPdf | async" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Download Invoice</button>
                             </div>
                             <p style="margin-bottom: 0;">
@@ -444,7 +444,7 @@
                                                         </li>
                                                         <li class="total">
                                                             <h4>Total</h4>
-                                                            <h5>{{ purchaseBillDetail?.total| number:'1.2-2' | currency :'INR'}}</h5>
+                                                            <h5>{{ purchaseBillDetail?.total | currency :'INR'}}</h5>
                                                         </li>
                                                     </ul>
                                                 </div>

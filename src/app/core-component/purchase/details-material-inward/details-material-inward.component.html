@@ -126,9 +126,9 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h3>Invoice</h3>
                                         <button class="btn btn-primary" (click)="generatePdf()"
-                                            *ngIf="!loaderPdf">Download
+                                            *ngIf="!(_pdf.loaderPdf | async)">Download
                                             Invoice</button>
-                                        <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
+                                        <button class="btn btn-primary" *ngIf="_pdf.loaderPdf | async" disabled>
                                             <span class="spinner-border spinner-border-sm" role="status"
                                                 aria-hidden="true"></span>&nbsp; Download Invoice</button>
                                     </div>
@@ -264,8 +264,8 @@
                                                                             Purchase
                                                                             Order</th>
                                                                         <th class="thone"
-                                                                            style="white-space: normal !important;">MI
-                                                                            Date
+                                                                            style="white-space: normal !important;">
+                                                                            MI Date
                                                                         </th>
                                                                         <th class="thone"
                                                                             style="white-space: normal !important;">
@@ -273,8 +273,8 @@
                                                                         </th>
                                                                         <th class="thone"
                                                                             style="white-space: normal !important;">
-                                                                            Shipping
-                                                                            Note</th>
+                                                                            Shipping Note
+                                                                        </th>
                                                                         <th class="thone"
                                                                             style="white-space: normal !important;">
                                                                             Product Type

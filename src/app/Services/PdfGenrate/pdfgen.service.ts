@@ -45,23 +45,41 @@ this.loaderPdf.next(true)
       const table2head = [obj.table2head];
       const foot2 = obj.foot2 ;
 let row : number = 21;
-
-
 let len = foot2.length;
 let lenArr = obj.table2body.length;
+if(obj.Type === 'Goods Received'){
+  // row  = 13;
+  
 
-if (obj.Type === 'Invoice') {
-      row  = 18;
+}else if(obj.Type === 'Invoice'){
+  row  = 18;
+
+}else if(obj.Type === 'Purchase Return'){
+  row  = 18;
+
+  let loop = (lenArr % row);
+  let newval = (row - loop);
+  if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
 
 }
-let loop = (lenArr % row);
-let newval = (row - loop);
-if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
- (pdf as any).autoTable({
+
+
+else{
+
+
+  let loop = (lenArr % row);
+  let newval = (row - loop);
+  if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
+}
+
+
+let tableHeight : number = 0;
+(pdf as any).autoTable({
       head : table2head,
       body : obj.table2body,
       foot : foot2,
-      startY: 92,
+       
+      startY:   obj.Type === 'Goods Received'? 99 :  92,
       
       headStyles:{
         fontSize : 7,
@@ -80,13 +98,18 @@ if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
           fontSize : 7,
           halign :'left',
         },
-      margin : {top :92},
+      margin : {top :obj.Type === 'Goods Received'? 99 :  92},
       alternateRowStyles:{ fillColor :[255, 255, 255] },
+
+
+
     didDrawCell: (data : any)=>{
+// console.log('deepak', data)
+        tableHeight += data.row.height;
+
       const {cell,table} = data;
       const {x,y,width,height} = cell;
-
-          if (data.column.index == table.columns.length -1) {
+   if (data.column.index == table.columns.length -1) {
             pdf.setDrawColor(0,0,0);
             pdf.setLineWidth(0.2);
             pdf.line(cell.x+cell.width,cell.y,cell.x+cell.width,cell.y+cell.height)
@@ -117,14 +140,14 @@ if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
         }
   
       if( data.section === 'foot'){
-        if(data.row.index === 0 || data.row.index === 1 || data.row.index === len-1 ){
+        if(data.row.index === 0 || data.row.index === 1 || (data.row.index === len-1) ){
           pdf.setDrawColor(0,0,0);
           pdf.setLineWidth(0.2);
           pdf.line(x,y,x+width,y);
           pdf.line(x,y+height,x+width,y+height);
-  
-        }
-        if (obj.Type === 'Invoice' && data.row.index === 2) {
+         }
+         
+        if (obj.Type === 'Invoice' || obj.Type === 'Goods Received'  && data.row.index === 2) {
           pdf.setDrawColor(0,0,0);
           pdf.setLineWidth(0.2);
           pdf.line(x,y,x+width,y);
@@ -142,6 +165,114 @@ if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
       }
   }
   });
+
+
+  
+  if (obj.Type === 'Goods Received' && obj.show) {
+  // console.log('deepak',tableHeight)
+let tote = Math.floor(tableHeight) -105;
+  
+ (pdf as any).autoTable({
+    head : obj.Thead3,
+    body : obj.Tbody3,
+    foot : obj.Tfoot3,
+    startY:  tote ,
+    headStyles:{
+      fontSize : 7,
+      textColor :[0,0,0],
+      fillColor :[255, 202, 153],
+
+     },
+    bodyStyles:{
+      fillColor :[255, 255, 255],
+      fontSize : 8,
+  
+     },
+    footStyles:{
+        fillColor :[255, 255, 255],
+        textColor :[0,0,0],
+        fontSize : 7,
+        halign :'left',
+      },
+    margin : {top :tote},
+    alternateRowStyles:{ fillColor :[255, 255, 255] },
+  didDrawCell: (data : any)=>{
+    const {cell,table} = data;
+    const {x,y,width,height} = cell;
+
+        if (data.column.index == table.columns.length -1) {
+          pdf.setDrawColor(0,0,0);
+          pdf.setLineWidth(0.2);
+          pdf.line(cell.x+cell.width,cell.y,cell.x+cell.width,cell.y+cell.height)
+        }else{
+          pdf.setDrawColor(0,0,0);
+          pdf.setLineWidth(0.4);
+          pdf.line(cell.x + cell.width ,cell.y,cell.x + cell.width, cell.y + cell.height);
+        }
+
+    if( data.section === 'head' ){
+        // top
+      if (data.row.index == 0 || data.row.index == 1) {
+        pdf.setDrawColor(0,0,0);
+        pdf.setLineWidth(0.2);
+        pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
+      }
+      if (data.row.index == 2) {
+        pdf.setDrawColor(0,0,0);
+        pdf.setLineWidth(0.2);
+        pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
+      }
+      if(data.column.index === 4){
+          pdf.setDrawColor(0,0,0);
+          pdf.setLineWidth(0);
+          pdf.line(cell.x + cell.width ,cell.y,cell.x + cell.width, cell.y + cell.height);
+      
+        }
+      }
+
+    if( data.section === 'foot'){
+      if(data.row.index === 0 || data.row.index === 1 || data.row.index === len-1 ){
+        pdf.setDrawColor(0,0,0);
+        pdf.setLineWidth(0.2);
+        pdf.line(x,y,x+width,y);
+        pdf.line(x,y+height,x+width,y+height);
+
+      }
+      if (obj.Type === 'Invoice' || obj.Type === 'Goods Received'  && data.row.index === 2) {
+        pdf.setDrawColor(0,0,0);
+        pdf.setLineWidth(0.2);
+        pdf.line(x,y,x+width,y);
+        pdf.line(x,y+height,x+width,y+height); 
+      }
+
+
+
+    }
+      // lift  
+    if (data.column.index == 0) {
+      pdf.setDrawColor(0,0,0);
+      pdf.setLineWidth(0.2);
+      pdf.line(cell.x,cell.y,cell.x,cell.y+cell.height)
+    }
+}
+});
+
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  const pageCount = pdf.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i)
@@ -267,10 +398,11 @@ if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
     body : tbody1,
     startY: 75,
     headStyles:{
-    fontSize : 9,
+    fontSize : obj.Type === 'Goods Received'? 8 :  9,
     textColor :[0,0,0],
     fillColor :[255, 202, 153],
     },
+    
     alternateRowStyles:{
       fillColor :[255, 255, 255],
     },
@@ -306,9 +438,24 @@ if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
     pdf.setLineWidth(0.2);
     pdf.line(cell.x+cell.width,cell.y,cell.x+cell.width,cell.y+cell.height)
     }}}})
+
+
+if(obj.Type=== 'Goods Received'){
+
+  
     pdf.setDrawColor(0, 0, 0)
     pdf.setLineWidth(0.2);
-    pdf.line(14,98.5,196,98.5)
+    pdf.line(14,105.5,196,105.5)
+}else{
+
+  pdf.setDrawColor(0, 0, 0)
+  pdf.setLineWidth(0.2);
+  pdf.line(14,98.5,196,98.5)
+
+
+}
+
+
     }
     pdf.save(`${obj.Type}.pdf`,{returnPromise : true}).then(()=>{
         setTimeout(() => {
