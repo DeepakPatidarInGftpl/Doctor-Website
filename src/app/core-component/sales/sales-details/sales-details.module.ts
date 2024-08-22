@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { SalesDetailsRoutingModule } from './sales-details-routing.module';
 import { SalesDetailsComponent } from './sales-details.component';
@@ -27,6 +27,7 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     MatSlideToggleModule,
     FormsModule,
     SharedModuleModule
-  ]
+  ],
+  providers : [DatePipe]
 })
 export class SalesDetailsModule { }

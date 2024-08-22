@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
+
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 
 @Component({
   selector: 'app-detailspurchase-bill',
   templateUrl: './detailspurchase-bill.component.html',
-  styleUrls: ['./detailspurchase-bill.component.scss', '../commonDetails.scss']
+  styleUrls: ['./detailspurchase-bill.component.scss', '../commonDetails.scss'],
+  providers : [DatePipe,PdfgenService]
 })
 export class DetailspurchaseBillComponent implements OnInit {
 
-  constructor(private companyService: CompanyService, private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location) { }
+  constructor(private companyService: CompanyService,private _dpipe : DatePipe,public _pdf : PdfgenService ,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location) { }
   id: any;
   companyDetails: any;
   printDetails: any;
@@ -199,22 +200,279 @@ export class DetailspurchaseBillComponent implements OnInit {
     this.location.back();
   }
 
-  loaderPdf = false;
+  // loaderPdf = false;
+  // generatePdf() {
+  //   this.loaderPdf = true;
+  //   const elementToCapture = document.getElementById('debitNote');
+  //   if (elementToCapture) {
+  //     html2canvas(elementToCapture).then((canvas) => {
+  //       this.loaderPdf = false;
+  //       const imgData = canvas.toDataURL('image/png');
+  //       const pdf = new jsPDF('p', 'mm', 'a4');
+  //       const width = pdf.internal.pageSize.getWidth();
+  //       const height = pdf.internal.pageSize.getHeight();
+  //       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+  //       pdf.save('goodsRecievedNotes.pdf');
+  //     });
+  //   }
+  // }
+
   generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('goodsRecievedNotes.pdf');
-      });
-    }
-  }
+
+    let mi_date = this._dpipe.transform(this.purchaseBillDetail?.supplier_bill_date, 'dd-MMMM-yyyy');
+    let due_date = this._dpipe.transform(this.purchaseBillDetail?.due_date , 'dd-MMMM-yyyy');
+    let shipping_date = this._dpipe.transform(this.purchaseBillDetail?.shipping_date , 'dd-MMMM-yyyy');
+
+        let arr2 = new Array() ;
+        this.purchaseBillDetail?.cart.forEach((cart : any,n : number) => {
+         arr2.push([`${n+1}`,`${cart?.barcode?.sku ?? ''}`,`${cart?.barcode?.product_title ?? '' }`,`${cart?.qty}`, `${cart?.unit_cost}`,`${cart?.mrp ?? '' }`,`${cart?.discount ?? ''}` ,`${cart?.additional_discount ?? ''}`,`${cart?.tax ?? ''}`,`${cart?.landing_cost ?? ""}`,`${cart?.total ?? ''}`])
+       });
+
+
+
+
+       // table 3 data set 
+        let arr3 = new Array() ;
+        this.purchaseBillDetail?.tax_rate.forEach((tax : any,n : number) => {
+         arr3.push([`${n+1}`,`${tax?.tax_rate ?? ''}`,`${tax?.taxable_amount ?? '' }`,`${tax?.igst_amount ?? ''}`, `${tax?.cgst_amount ?? ''}`,`${tax?.sgst_amount ?? '' }`,`${tax?.total_tax ?? ''}`])
+       });
+
+
+let shows : boolean = false;
+if(this.purchaseBillDetail?.tax_rate?.length>0){
+shows = true;
+}else{
+  shows = false;
+
+}
+
+
+       const obj = {
+        "show" : shows,
+       'Type' : 'Goods Received',
+       'Fist_date' : (this.purchaseBillDetail?.purchase_return_date == null) ? '' : this.purchaseBillDetail?.purchase_return_date,
+       'Secouand_date' : this.purchaseBillDetail?.shipping_date ?? '',
+       'thead1' : ['Return No.','Supplier Name','Refrensh Bill No.','Material Inward No.','Payment Term','Reverse Charge','Bill Date','Due Date','Shipping Date'],
+       'tbody1' : [
+        `${this.purchaseBillDetail?.supplier_bill_no}`,
+        `${this.purchaseBillDetail?.party?.company_name}`,
+        `${this.purchaseBillDetail?.refrence_bill_no ?? ''}`,
+        `${ this.purchaseBillDetail?.material_inward_no?.material_inward_no ?? ''}`,
+        `${this.purchaseBillDetail?.payment_term?.title ?? ''}`,
+        `${this.purchaseBillDetail?.reverse_charge ?? '' }`,
+        `${ mi_date ?? ''}`,
+        `${due_date  ?? ''}`,
+        `${shipping_date ?? ''}`,
+      ],
+
+      
+      'Thead3' : [['Sr. No.','Tax Rate %','Taxable Amt','IGST Amount','CGST Amount','SGST amount','Total Tax']],
+      'Tbody3' : arr3,
+      'Tfoot3' : [
+        [
+          {
+            content : 'Total',
+            colSpan:3,
+            styles: { halign: 'center' }
+          },
+          {
+            content : `${this.totaltaxrate}`,
+            styles: { halign: 'center' }
+          },
+          {
+            content : `${this.totalTaxableAmount}`,
+            styles: { halign: 'center' }
+            
+          },
+          {
+            content : `${this.totalIgstAmount}%`,
+            styles: { halign: 'center' }
+            
+          },
+          {
+            content : `${this.totalCgstAmount}%`,
+            styles: { halign: 'center' }
+            
+          },
+          {
+            content : `${this.totalSgstAmount}%`,
+            styles: { halign: 'center' }
+            
+          },
+          {
+            content : `${this.totalTaxAmount}`,
+            styles: { halign: 'center' }
+            
+          }
+        ],
+      ],
+
+
+
+       'table2head' : ['#','Barcode/SKU','Product Name','QTY','Cost Price','Mrp','Discount','Additional Discount','Tax','Landing Cost','Total'],
+     
+      'foot2' : [
+         [
+           {
+             content : 'Total',
+             colSpan:3,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.totalQTY}`,
+             styles: { halign: 'center' }
+           },
+           {
+             content : `${this.totalPurchaseRate}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalMrp}%`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalDiscountt}%`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalAdditionalDiscount}%`,
+             styles: { halign: 'center' }
+             
+           },
+          //  {
+          //    content : `${this.totalOnlinePrice}`,
+          //    styles: { halign: 'center' }
+             
+          //  },
+          //  {
+          //    content : `${this.totalOfflinePrice}`,
+          //    styles: { halign: 'center' }
+             
+          //  },
+          //  {
+          //    content : `${this.totalEmployeePrice}`,
+          //    styles: { halign: 'center' }
+             
+          //  },
+           {
+             content : `${this.totalTax}%`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.totalLandingCost}`,
+             styles: { halign: 'center' }
+             
+           },
+           {
+             content : `${this.purchaseBillDetail?.total}`,
+             styles: { halign: 'center' }
+             
+           },
+          
+         ],
+         [
+           {
+             content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+             colSpan : 15,
+             styles : {halign : 'left'}
+           }
+           
+         ],
+        //  [
+        //    {
+        //      content : ``,
+        //      colSpan : 9,
+        //    },
+        //    {
+        //      content : ``,
+        //      colSpan : 1,
+        //      styles : {halign : 'right'}
+        //    },
+        //    {
+        //      content : '',
+        //      colSpan : 1,
+        //      styles : {halign : 'left'}
+        //    }
+       
+        //  ],
+         [
+           {
+             content : '',
+             colSpan : 9,
+             // styles : {halign : 'left'}
+           },
+          { content : 'Round Off',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : `${this.purchaseBillDetail?.round_off}`,
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+         [
+           {
+             content : '',
+             colSpan : 9,
+             styles : {halign : 'left'}
+           },
+          { content : 'Total ',
+           colSpan : 1,
+           styles : {halign : 'right'}
+         },
+          { content : `${this.purchaseBillDetail?.total}`,
+           colSpan : 1,
+           styles : {halign : 'left'}
+         },
+         ],
+        //  [
+        //    {
+        //      content : '',
+        //    colSpan :4,
+        //    },
+        //    {
+        //      content : '',
+        //    colSpan : 2,
+        //    },
+        //  ]
+       ],
+       'company_name' : this.companyDetails?.name,
+       'company_gst' : this.companyDetails?.gst,
+       'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+       'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+       'top_left_phone' : this.companyDetails?.phone,
+       'top_left_email' : this.companyDetails?.email,
+       'BILLING_ADDRESS' : {
+         'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city,
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' :this.selectedAddressBilling?.country?.country_name ,
+         'phone' : this.purchaseBillDetail?.party?.mobile_no ?? '',
+         'email' : this.purchaseBillDetail?.party?.email ?? ''
+       },
+       'SHIPPING_ADDRESS' : {
+         'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+         'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +this.selectedAddressShipping?.city?.city ?? '',
+         'address_line_3' : this.selectedAddressBilling?.state?.state == null ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + this.selectedAddressBilling?.country?.country_name == null ? '' : this.selectedAddressBilling?.country?.country_name  ,
+         'phone' : this.purchaseBillDetail?.party?.mobile_no ?? '',
+         'email' : this.purchaseBillDetail?.party?.email ?? '',
+       },
+       'table2body' : arr2,
+       'order_no' : this.purchaseBillDetail?.refrence_bill_no,
+       }
+       
+        this._pdf.generatePdf(obj);
+       
+      }
+
+
+
+
+
+
 
   loaderPrint=false;
   printForm(): void {
