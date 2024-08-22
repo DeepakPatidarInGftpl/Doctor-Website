@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
@@ -30,12 +30,20 @@ export class PurchaseBillComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
-  minDate: string = '';
-  maxDate: string = '';
+  // minDate: string = '';
+  // maxDate: string = '';
   dueMinDate: string = '';
   dueMaxDate: string = '';
   supplierDate = new FormControl('');
   dueDate = new FormControl('');
+  supplierBillDateForm!: FormGroup;
+  dueDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
+  startDate: any;
+  endDate: any;
+  totalTaxAmount: any;
   
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
     private contactService:ContactService,
@@ -159,6 +167,20 @@ export class PurchaseBillComponent implements OnInit {
     // })
 
     //18-5
+    this.financialYear = localStorage.getItem('financialYear');
+    this.supplierBillDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.dueDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.supplierBillDateForm, this.minDate, this.maxDate);
+    this.commonService.validateAndClearDates(this.dueDateForm, this.minDate, this.maxDate);
+
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
@@ -166,7 +188,7 @@ export class PurchaseBillComponent implements OnInit {
       this.getPurchaseBill(fyId);
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -212,22 +234,23 @@ export class PurchaseBillComponent implements OnInit {
 
       this.getPaymentTerms();
       this.getMaterial();
-
-    const financialYear = localStorage.getItem('financialYear');
-    this.purchasesupplierDateValidation(financialYear);
-    this.dueDateValidation(financialYear);
   }
   getPurchaseBill(fy:any){
     console.log(fy);
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
     console.log(idString?.length);
-    this.purchaseService.getPurchaseBillFY(fy,this.selectData).subscribe(res => {
+    this.purchaseService.getPurchaseBillFY(fy,this.selectData).subscribe((res:any) => {
       // console.log(res);get
       this.tableData = res;
+      res?.tax_rate.forEach(val => {
+        this.totalTaxAmount += val?.taxable_amount;
+      });
+      
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filteredData = this.tableData.slice(); 
+      // Initialize filteredData with the original data
       this.filterData();
     })
   }
@@ -271,20 +294,6 @@ materialList: any;
         // this.getcompanyList()
       }
     })
-  }
-
-  purchasesupplierDateValidation(financialYear) {
-    const dateControl = this.supplierDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.minDate = formattedMinDate;
-    this.maxDate = formattedMaxDate;
-  }
-
-  dueDateValidation(financialYear) {
-    const dateControl = this.dueDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.dueMinDate = formattedMinDate;
-    this.dueMaxDate = formattedMaxDate;
   }
 
   // search() {
@@ -523,18 +532,21 @@ materialList: any;
        reverseChargeFilter:any;
          filterData() {
           let filteredData = this.tableData.slice(); 
-          if (this.supplierDate.value) {
-            const selectedDate = new Date(this.supplierDate.value).toISOString().split('T')[0];
+          if (this.supplierBillDateForm.get('start').value && this.supplierBillDateForm.get('end').value) {
+            const startDate = new Date(this.supplierBillDateForm.get('start').value);
+            const endDate = new Date(this.supplierBillDateForm.get('end').value);
             filteredData = filteredData.filter((item) => {
-              const receiptDate = new Date(item?.supplier_bill_date).toISOString().split('T')[0];
-              return receiptDate === selectedDate;
+              const supplierBillDate = new Date(item?.supplier_bill_date);
+              return supplierBillDate >= startDate && supplierBillDate <= endDate;
             });
           }
-          if (this.dueDate.value) {
-            const selectedDate = new Date(this.dueDate.value).toISOString().split('T')[0];
+
+          if (this.dueDateForm.get('start').value && this.dueDateForm.get('end').value) {
+            const startDate = new Date(this.dueDateForm.get('start').value);
+            const endDate = new Date(this.dueDateForm.get('end').value);
             filteredData = filteredData.filter((item) => {
-              const receiptDate = new Date(item?.due_date).toISOString().split('T')[0];
-              return receiptDate === selectedDate;
+              const supplierBillDate = new Date(item?.due_date);
+              return supplierBillDate >= startDate && supplierBillDate <= endDate;
             });
           }
           if (this.selectedPurchaseNo) {
@@ -562,6 +574,8 @@ materialList: any;
           this.selectedPurchaseNo = null;
           this.supplierDate.setValue('');
           this.dueDate.setValue('');
+          this.supplierBillDateForm.reset();
+          this.dueDateForm.reset();
           this.filterPaymentTerms=null;
           this.filterMaterial=null
           this.statusFilter=null;

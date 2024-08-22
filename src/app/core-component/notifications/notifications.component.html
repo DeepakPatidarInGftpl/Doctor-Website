@@ -5,16 +5,16 @@
       <p class="notification-description-wrapper">View your all activities</p>
     </div>
     <div>
-      <button class="btn btn-primary me-3" (click)="selectedNotification()">View
+      <button class="btn btn-primary ms-3 ms-md-0 me-md-3" (click)="selectedNotification()">View
         Selected({{selectedNotificationIds?.length}})</button>
-      <button class="btn btn-primary" (click)="viewAllNotification()">View All</button>
+      <button class="btn btn-primary ms-3 ms-md-0 mt-3 mt-md-0" (click)="viewAllNotification()">View All</button>
     </div>
   </div>
 
   <div class="row m-0">
     <div class="col-12 p-0" *ngFor="let item of notificationList ;let n = index;">
       <div class="d-flex align-items-center mb-4">
-        <input *ngIf="!item?.is_view" type="checkbox" [(ngModel)]="notificationVel[n]" (change)="chackboxChange(item?.id,n)"
+        <input *ngIf="!item?.is_view" type="checkbox" (change)="chackboxChange(item?.id,n)"
           class="me-3 checkbox-wrapper" />
         <div class="card card-wrapper w-100 mb-0"
           [ngClass]="item?.is_view && !isAllNotificationView ? 'notification-spacing-wrapper' : ''"

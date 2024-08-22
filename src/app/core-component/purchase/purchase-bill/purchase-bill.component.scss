@@ -1,101 +1,104 @@
 .loading {
-    --speed-of-animation: 0.9s;
-    --gap: 6px;
-    --first-color: #4c86f9;
-    --second-color: #49a84c;
-    --third-color: #f6bb02;
-    --fourth-color: #f6bb02;
-    --fifth-color: #2196f3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-    gap: 6px;
-    height: 100px;
-   }
-   
-   .loading span {
-    width: 4px;
-    height: 50px;
-    background: var(--first-color);
-    animation: scale var(--speed-of-animation) ease-in-out infinite;
-   }
-   
-   .loading span:nth-child(2) {
-    background: var(--second-color);
-    animation-delay: -0.8s;
-   }
-   
-   .loading span:nth-child(3) {
-    background: var(--third-color);
-    animation-delay: -0.7s;
-   }
-   
-   .loading span:nth-child(4) {
-    background: var(--fourth-color);
-    animation-delay: -0.6s;
-   }
-   
-   .loading span:nth-child(5) {
-    background: var(--fifth-color);
-    animation-delay: -0.5s;
-   }
-   
-   @keyframes scale {
-    0%, 40%, 100% {
-     transform: scaleY(0.05);
-    }
-   
-    20% {
-     transform: scaleY(1);
-    }
-   }
+  --speed-of-animation: 0.9s;
+  --gap: 6px;
+  --first-color: #4c86f9;
+  --second-color: #49a84c;
+  --third-color: #f6bb02;
+  --fourth-color: #f6bb02;
+  --fifth-color: #2196f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  gap: 6px;
+  height: 100px;
+}
 
+.loading span {
+  width: 4px;
+  height: 50px;
+  background: var(--first-color);
+  animation: scale var(--speed-of-animation) ease-in-out infinite;
+}
 
-   @keyframes dotAnimation {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: 20px 0;
-    }
+.loading span:nth-child(2) {
+  background: var(--second-color);
+  animation-delay: -0.8s;
+}
+
+.loading span:nth-child(3) {
+  background: var(--third-color);
+  animation-delay: -0.7s;
+}
+
+.loading span:nth-child(4) {
+  background: var(--fourth-color);
+  animation-delay: -0.6s;
+}
+
+.loading span:nth-child(5) {
+  background: var(--fifth-color);
+  animation-delay: -0.5s;
+}
+
+@keyframes scale {
+
+  0%,
+  40%,
+  100% {
+    transform: scaleY(0.05);
   }
-  
-  .dot-animation::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 4px;
-    background-image: repeating-linear-gradient(
-      to right,
+
+  20% {
+    transform: scaleY(1);
+  }
+}
+
+
+@keyframes dotAnimation {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 20px 0;
+  }
+}
+
+.dot-animation::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 4px;
+  background-image: repeating-linear-gradient(to right,
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.5) 4px,
       transparent 4px,
-      transparent 8px
-    );
-    animation: dotAnimation 1s linear infinite;
-  }
-  
-
-  .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  input[type="date"]{
-    border: 1px solid rgba(145, 158, 171, 0.32);
-    height: 40px;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 500;
-    color: #637381;
-    padding: 10px 15px;
-    border-radius: 5px;
+      transparent 8px);
+  animation: dotAnimation 1s linear infinite;
 }
-.button{
+
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="date"] {
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  height: 40px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #637381;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.button {
   border: 1px solid rgba(145, 158, 171, 0.32);
   height: 40px;
   width: 421%;
@@ -108,4 +111,28 @@
   justify-content: space-between;
   align-items: center;
   background: white;
+}
+
+.mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+  width: 200px;
+}
+
+.mat-form-field-prefix,
+.mat-form-field-suffix {
+  font-size: x-large;
+  white-space: nowrap;
+  flex: none;
+  position: relative;
+}
+
+.mat-form-field-suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-form-field {
+  padding-left: 20px;
+  height: 40px;
+  border-radius: 6px;
 }

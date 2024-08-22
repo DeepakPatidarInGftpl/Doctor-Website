@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
@@ -30,12 +30,17 @@ export class MaterialInwardComponent implements OnInit {
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
   // date:any
-  minDate: string = '';
-  maxDate: string = '';
+  // minDate: string = '';
+  // maxDate: string = '';
   dueMinDate: string = '';
   dueMaxDate: string = '';
   materialDate = new FormControl('');
   poDate = new FormControl('');
+  materialInwardDateForm!: FormGroup;
+  poDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
 
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,private datepipe:DatePipe,  private dashboardservice : DashboardService,
@@ -164,20 +169,27 @@ export class MaterialInwardComponent implements OnInit {
       this.getPurchaseMaterial(fyId);
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
       }
     });
-  //18-5
-     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    this.materialInwardDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
     });
+
+    this.poDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.materialInwardDateForm, this.minDate, this.maxDate);
+    this.commonService.validateAndClearDates(this.poDateForm, this.minDate, this.maxDate);
+
 //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -214,10 +226,6 @@ export class MaterialInwardComponent implements OnInit {
       });
     });
     this.getBranch();
-
-    const financialYear = localStorage.getItem('financialYear');
-    this.purchasematerialDateValidation(financialYear);
-    this.poDateValidation(financialYear);
   }
   getPurchaseMaterial(fy:any){
     console.log(fy);
@@ -283,20 +291,6 @@ export class MaterialInwardComponent implements OnInit {
         return nameLower.includes(searchTerm); 
       });
     }
-  }
-
-  purchasematerialDateValidation(financialYear) {
-    const dateControl = this.materialDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.minDate = formattedMinDate;
-    this.maxDate = formattedMaxDate;
-  }
-
-  poDateValidation(financialYear) {
-    const dateControl = this.poDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.dueMinDate = formattedMinDate;
-    this.dueMaxDate = formattedMaxDate;
   }
 
   key = 'id'
@@ -511,18 +505,21 @@ export class MaterialInwardComponent implements OnInit {
       //  poDate:any;
        filterData() {
         let filteredData = this.tableData.slice(); 
-        if (this.materialDate.value) {
-          const selectedDate = new Date(this.materialDate.value).toISOString().split('T')[0];
+        if (this.materialInwardDateForm.get('start').value && this.materialInwardDateForm.get('end').value) {
+          const startDate = new Date(this.materialInwardDateForm.get('start').value);
+          const endDate = new Date(this.materialInwardDateForm.get('end').value);
           filteredData = filteredData.filter((item) => {
-            const receiptDate = new Date(item?.material_inward_date).toISOString().split('T')[0];
-            return receiptDate === selectedDate;
+            const supplierBillDate = new Date(item?.material_inward_date);
+            return supplierBillDate >= startDate && supplierBillDate <= endDate;
           });
         }
-        if (this.poDate.value) {
-          const selectedDate = new Date(this.poDate.value).toISOString().split('T')[0];
+
+        if (this.poDateForm.get('start').value && this.poDateForm.get('end').value) {
+          const startDate = new Date(this.poDateForm.get('start').value);
+          const endDate = new Date(this.poDateForm.get('end').value);
           filteredData = filteredData.filter((item) => {
-            const receiptDate = new Date(item?.po_date).toISOString().split('T')[0];
-            return receiptDate === selectedDate;
+            const supplierBillDate = new Date(item?.po_date);
+            return supplierBillDate >= startDate && supplierBillDate <= endDate;
           });
         }
         if (this.selectedPurchaseNo) {
@@ -543,6 +540,8 @@ export class MaterialInwardComponent implements OnInit {
         this.materialDate.setValue('');
         this.statusFilter=null;
         this.poDate.setValue('');
+        this.materialInwardDateForm.reset();
+        this.poDateForm.reset();
         this.filterData();
       }
       changePg(val: any) {
