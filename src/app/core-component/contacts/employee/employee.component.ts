@@ -241,9 +241,12 @@ export class EmployeeComponent implements OnInit {
       this.filteredData = this.tableData.filter(res => {
         const nameLower = res.name.toLocaleLowerCase();
         const mobileNo = res?.mobile_no.toLocaleLowerCase();
+        const city = res?.address[0]?.city?.city?.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (mobileNo.match(searchTerm)) {
+          return true;
+        } else if (city.match(searchTerm)) {
           return true;
         } else {
           return false;

@@ -1,4 +1,4 @@
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
@@ -33,161 +33,181 @@
                                                 Paid
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div class="d-flex align-items-center">
+                                            <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                title="print" (click)="printForm()"><img
+                                                    src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                    alt="img"></button>
 
-                            <div class="container">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <div class="d-flex justify-content-between align-items-center top-div"
-                                                style="float: inline-start;">
-                                                <div class="left-top">
-                                                    <img src="assets/dummy/pos.png" alt="">
-                                                    <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                    <p>Company Name: {{companyDetails?.name}}</p>
-                                                    <p>Financial Year:
-                                                        {{companyDetails?.financial_year?.financial_year}}
-                                                    </p>
-                                                    <p><span>Address</span> :
-                                                        {{companyDetails?.address+' ,
-                                                        '+companyDetails?.city?.city+' ,
-                                                        '+companyDetails?.state?.state+' ,
-                                                        '+companyDetails?.country?.country_name+' ,
-                                                        '+companyDetails?.pincode}}
-                                                    </p>
-                                                    <p>Phone: {{companyDetails?.phone}}</p>
-                                                </div>
-                                            </div>
+                                            <button class="chat-attach-download border-0 bg-white"
+                                                (click)="generatePdf()">
+                                                <i class="fas fa-download download-icon"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="pdf-table1 my-4">
+                            <div id="debitNote">
                                 <div class="container">
-                                    <div class="table-responsive mt-4 pt-2">
-                                        <h4 class="table-title-wrapper mb-2">Payment Voucher Details</h4>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="thone">Supplier</th>
-                                                    <th class="thone">Payment Type</th>
-                                                    <th class="thone">Mode Type</th>
-                                                    <th class="thone">Payment Account</th>
-                                                    <th class="thone">Payment Voucher No</th>
-                                                    <th class="thone">Amount</th>
-                                                    <th class="thone">Date</th>
-                                                    <th *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
-                                                        class="thone">Transaction Date</th>
-                                                    <th *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
-                                                        class="thone">Transaction Id</th>
-                                                    <th class="thone">Bank Payment</th>
-                                                    <th class="thone">Description</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="td">{{paymentVoucherDetail?.supplier?.company_name}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.payment_type}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.mode_type}}</td>
-                                                    <td class="td">
-                                                        {{paymentVoucherDetail?.payment_account?.company_name}}
-                                                    </td>
-                                                    <td class="td">{{paymentVoucherDetail?.payment_voucher_no}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.amount}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.date}}</td>
-                                                    <td *ngIf="paymentVoucherDetail?.payment_type=='Bank'" class="td">
-                                                        {{paymentVoucherDetail?.transaction_date}}</td>
-                                                    <td *ngIf="paymentVoucherDetail?.payment_type=='Bank'" class="td">
-                                                        {{paymentVoucherDetail?.transaction_id}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.bank_payment}}</td>
-                                                    <td class="td">{{paymentVoucherDetail?.note}}</td>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    <div class="pdf-table1 table-responsive mt-4 pt-2"
-                                        *ngIf="paymentVoucherDetail?.payment_cart?.length>0">
-                                        <h4 class="table-title-wrapper mb-2">Cart Details</h4>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="th">#</th>
-                                                    <th class="th">Sale Bill</th>
-                                                    <th class="th">Original Amount</th>
-                                                    <th class="th">Paid Amount</th>
-                                                    <th class="th">Pending Amount</th>
-                                                    <th class="th">Payment</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <ng-container
-                                                    *ngFor="let cart of paymentVoucherDetail?.payment_cart; index as i">
+                                <div class="pdf-table1 my-4">
+                                    <div class="container">
+                                        <div class="table-responsive mt-4 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Payment Voucher Details</h4>
+                                            <table class="table">
+                                                <thead>
                                                     <tr>
-                                                        <td class="td">{{i+1+'.'}}</td>
-                                                        <td class="td">{{cart?.purchase_bill?.refrence_bill_no}}</td>
-                                                        <td class="td">{{cart?.original_amount}}</td>
-                                                        <td class="td">{{cart?.paid_amount}}</td>
-                                                        <td class="td">{{cart?.pending_amount}}</td>
-                                                        <td class="td">{{cart?.payment}}</td>
+                                                        <th class="thone">Supplier</th>
+                                                        <th class="thone">Payment Type</th>
+                                                        <th class="thone">Mode Type</th>
+                                                        <th class="thone">Payment Account</th>
+                                                        <th class="thone">Payment Voucher No</th>
+                                                        <th class="thone">Amount</th>
+                                                        <th class="thone">Date</th>
+                                                        <th *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
+                                                            class="thone">Transaction Date</th>
+                                                        <th *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
+                                                            class="thone">Transaction Id</th>
+                                                        <th class="thone">Bank Payment</th>
+                                                        <th class="thone">Description</th>
                                                     </tr>
-                                                    <tr *ngIf="cart?.debit_note_cart?.length>0">
-                                                        <td></td>
-                                                        <td colspan="5">
-                                                            <div class="table-responsive"
-                                                                style="border: 1px solid #FF9F43;">
-                                                                <table class="table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th class="th">#</th>
-                                                                            <th class="th">Debit Note</th>
-                                                                            <th class="th">Original Amount</th>
-                                                                            <th class="th">Redeem Amount</th>
-                                                                            <th class="th">Pending Amount</th>
-                                                                            <th class="th">Amount</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <ng-container
-                                                                            *ngFor="let cart of cart?.debit_note_cart; index as i">
-                                                                            <tr>
-                                                                                <td class="td">{{i+1+'.'}}</td>
-                                                                                <td class="td">
-                                                                                    {{cart?.debit_note?.debit_note_no}}
-                                                                                </td>
-                                                                                <td class="td">{{cart?.original_amount}}
-                                                                                </td>
-                                                                                <td class="td">{{cart?.redeem_amount}}
-                                                                                </td>
-                                                                                <td class="td">{{cart?.pending_amount}}
-                                                                                </td>
-                                                                                <td class="td">{{cart?.amount}}</td>
-                                                                            </tr>
-                                                                        </ng-container>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="td">{{paymentVoucherDetail?.supplier?.company_name}}
                                                         </td>
-                                                    </tr>
-                                                </ng-container>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="text-start mt-4 pt-2"
-                                        *ngIf="paymentVoucherDetail?.payment_cart?.length==0">
-                                        <h4 class="table-title-wrapper mb-2">Cart Details</h4>
-                                        <span class="text-danger">Data Not Available</span>
-                                    </div>
+                                                        <td class="td">{{paymentVoucherDetail?.payment_type}}</td>
+                                                        <td class="td">{{paymentVoucherDetail?.mode_type}}</td>
+                                                        <td class="td">
+                                                            {{paymentVoucherDetail?.payment_account?.company_name}}
+                                                        </td>
+                                                        <td class="td">{{paymentVoucherDetail?.payment_voucher_no}}</td>
+                                                        <td class="td">{{paymentVoucherDetail?.amount}}</td>
+                                                        <td class="td">{{paymentVoucherDetail?.date}}</td>
+                                                        <td *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
+                                                            class="td">
+                                                            {{paymentVoucherDetail?.transaction_date}}</td>
+                                                        <td *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
+                                                            class="td">
+                                                            {{paymentVoucherDetail?.transaction_id}}</td>
+                                                        <td class="td">{{paymentVoucherDetail?.bank_payment}}</td>
+                                                        <td class="td">{{paymentVoucherDetail?.note}}</td>
 
-                                    <div class="d-flex align-items-center my-3 pt-3">
-                                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                        <span
-                                            [ngClass]="{'bg-lightgreen': paymentVoucherDetail?.is_active === true, 'bg-lightred' : paymentVoucherDetail?.is_active === false,'bg-lightyellow' : paymentVoucherDetail?.is_active === 'Partial' }"
-                                            class="badges">{{paymentVoucherDetail?.is_active}}</span>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="pdf-table1 table-responsive mt-4 pt-2"
+                                            *ngIf="paymentVoucherDetail?.payment_cart?.length>0">
+                                            <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="th">#</th>
+                                                        <th class="th">Sale Bill</th>
+                                                        <th class="th">Original Amount</th>
+                                                        <th class="th">Paid Amount</th>
+                                                        <th class="th">Pending Amount</th>
+                                                        <th class="th">Payment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container
+                                                        *ngFor="let cart of paymentVoucherDetail?.payment_cart; index as i">
+                                                        <tr>
+                                                            <td class="td">{{i+1+'.'}}</td>
+                                                            <td class="td">{{cart?.purchase_bill?.refrence_bill_no}}
+                                                            </td>
+                                                            <td class="td">{{cart?.original_amount}}</td>
+                                                            <td class="td">{{cart?.paid_amount}}</td>
+                                                            <td class="td">{{cart?.pending_amount}}</td>
+                                                            <td class="td">{{cart?.payment}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="cart?.debit_note_cart?.length>0">
+                                                            <td></td>
+                                                            <td colspan="5">
+                                                                <div class="table-responsive"
+                                                                    style="border: 1px solid #FF9F43;">
+                                                                    <table class="table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="th">#</th>
+                                                                                <th class="th">Debit Note</th>
+                                                                                <th class="th">Original Amount</th>
+                                                                                <th class="th">Redeem Amount</th>
+                                                                                <th class="th">Pending Amount</th>
+                                                                                <th class="th">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <ng-container
+                                                                                *ngFor="let cart of cart?.debit_note_cart; index as i">
+                                                                                <tr>
+                                                                                    <td class="td">{{i+1+'.'}}</td>
+                                                                                    <td class="td">
+                                                                                        {{cart?.debit_note?.debit_note_no}}
+                                                                                    </td>
+                                                                                    <td class="td">
+                                                                                        {{cart?.original_amount}}
+                                                                                    </td>
+                                                                                    <td class="td">
+                                                                                        {{cart?.redeem_amount}}
+                                                                                    </td>
+                                                                                    <td class="td">
+                                                                                        {{cart?.pending_amount}}
+                                                                                    </td>
+                                                                                    <td class="td">{{cart?.amount}}</td>
+                                                                                </tr>
+                                                                            </ng-container>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-start mt-4 pt-2"
+                                            *ngIf="paymentVoucherDetail?.payment_cart?.length==0">
+                                            <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                            <span class="text-danger">Data Not Available</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center my-3 pt-3">
+                                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                            <span
+                                                [ngClass]="{'bg-lightgreen': paymentVoucherDetail?.is_active === true, 'bg-lightred' : paymentVoucherDetail?.is_active === false,'bg-lightyellow' : paymentVoucherDetail?.is_active === 'Partial' }"
+                                                class="badges">{{paymentVoucherDetail?.is_active}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -297,7 +317,7 @@
     </div>
 </div>
 
-<div id="paid_modal" class="modal custom-modal fade" role="dialog">
+<div id="paid_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">

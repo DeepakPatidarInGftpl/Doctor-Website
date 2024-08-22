@@ -1,4 +1,4 @@
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
@@ -15,12 +15,12 @@
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="recieptVoucherDetail">
+            <div class="receipt-voucher-wrapper company-details-card card" *ngIf="recieptVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
                             <div class="py-3">
-                                <div class="d-flex justify-content-between align-items-center container-fluid mb-3">
+                                <div class="d-flex justify-content-between align-items-center container mb-3">
                                     <div>
                                         <span [ngClass]="getBadgeClass(recieptVoucherDetail?.status)"
                                             class="badge p-2">{{recieptVoucherDetail?.status}}</span>
@@ -37,115 +37,131 @@
                                                 Reject
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div class="d-flex align-items-center">
+                                            <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                title="print" (click)="printForm()"><img
+                                                    src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                    alt="img"></button>
 
-                            <div class="container">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <div class="d-flex justify-content-between align-items-center top-div"
-                                                style="float: inline-start;">
-                                                <div class="left-top">
-                                                    <img src="assets/dummy/pos.png" alt="">
-                                                    <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                    <p>Company Name: {{companyDetails?.name}}</p>
-                                                    <p>Financial Year:
-                                                        {{companyDetails?.financial_year?.financial_year}}
-                                                    </p>
-                                                    <p><span>Address</span> :
-                                                        {{companyDetails?.address+' ,
-                                                        '+companyDetails?.city?.city+' ,
-                                                        '+companyDetails?.state?.state+' ,
-                                                        '+companyDetails?.country?.country_name+' ,
-                                                        '+companyDetails?.pincode}}
-                                                    </p>
-                                                    <p>Phone: {{companyDetails?.phone}}</p>
-                                                </div>
-                                            </div>
+                                            <button class="chat-attach-download border-0 bg-white"
+                                                (click)="generatePdf()">
+                                                <i class="fas fa-download download-icon"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="pdf-table2 my-4">
+                            <div id="debitNote">
                                 <div class="container">
-                                    <div class="table-responsive mt-4 pt-2">
-                                        <h4 class="table-title-wrapper mb-2">Receipt Voucher Details</h4>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="thone">Payment Account</th>
-                                                    <th class="thone">Receipt Type</th>
-                                                    <th class="thone">Mode Type</th>
-                                                    <th class="thone">Payer</th>
-                                                    <th class="thone">Reciept Voucher No.</th>
-                                                    <th class="thone">Amount</th>
-                                                    <th class="thone">Date</th>
-                                                    <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                        class="thone">Transaction Date</th>
-                                                    <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                        class="thone">Transaction Id</th>
-                                                    <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                        class="thone">Bank Payment</th>
-                                                    <th class="thone">Description</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <td class="td">{{recieptVoucherDetail?.payment_account.account_id}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.receipt_voucher_no}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.amount}}</td>
-                                                <td class="td">{{recieptVoucherDetail?.date}}</td>
-                                                <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
-                                                    <td class="td">{{recieptVoucherDetail?.transaction_date}}</td>
-                                                    <td class="td">{{recieptVoucherDetail?.transaction_id}}</td>
-                                                    <td class="td">{{recieptVoucherDetail?.bank_payment}}</td>
-                                                </ng-container>
-
-                                                <td class="td">{{recieptVoucherDetail?.note}}</td>
-                                            </tbody>
-                                        </table>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    <div class="d-flex align-items-center my-3 pt-3">
-                                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                        <span
-                                            [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
-                                            class="badges">{{recieptVoucherDetail?.is_active}}</span>
+                                <div class="pdf-table2 my-4">
+                                    <div class="container">
+                                        <div class="table-responsive mt-4 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Receipt Voucher Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="thone">Payment Account</th>
+                                                        <th class="thone">Receipt Type</th>
+                                                        <th class="thone">Mode Type</th>
+                                                        <th class="thone">Payer</th>
+                                                        <th class="thone">Reciept Voucher No.</th>
+                                                        <th class="thone">Amount</th>
+                                                        <th class="thone">Date</th>
+                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
+                                                            class="thone">Transaction Date</th>
+                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
+                                                            class="thone">Transaction Id</th>
+                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
+                                                            class="thone">Bank Payment</th>
+                                                        <th class="thone">Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <td class="td">{{recieptVoucherDetail?.payment_account}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.receipt_voucher_no}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.amount}}</td>
+                                                    <td class="td">{{recieptVoucherDetail?.date}}</td>
+                                                    <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
+                                                        <td class="td">{{recieptVoucherDetail?.transaction_date}}</td>
+                                                        <td class="td">{{recieptVoucherDetail?.transaction_id}}</td>
+                                                        <td class="td">{{recieptVoucherDetail?.bank_payment}}</td>
+                                                    </ng-container>
+
+                                                    <td class="td">{{recieptVoucherDetail?.note}}</td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'"
+                                            class="pdf-table1 table-responsive mt-5 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Cart Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="th">Sr. No.</th>
+                                                        <th class="th">Sale Bill</th>
+                                                        <th class="th">Original Amount</th>
+                                                        <th class="th">Paid Amount</th>
+                                                        <th class="th">Pending Amount</th>
+                                                        <th class="th">Payment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
+                                                        <td class="td">{{i+1}}</td>
+                                                        <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
+                                                        <td class="td">{{cart?.original_amount}}</td>
+                                                        <td class="td">{{cart?.paid_amount}}</td>
+                                                        <td class="td">{{cart?.pending_amount}}</td>
+                                                        <td class="td">{{cart?.payment}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="d-flex align-items-center my-3 pt-3">
+                                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                            <span
+                                                [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
+                                                class="badges">{{recieptVoucherDetail?.is_active}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </mat-tab>
-                        <mat-tab label="Cart" *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="th">Sr. No.</th>
-                                            <th class="th">Sale Bill</th>
-                                            <th class="th">Original Amount</th>
-                                            <th class="th">Paid Amount</th>
-                                            <th class="th">Pending Amount</th>
-                                            <th class="th">Payment</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
-                                            <td class="td">{{i+1}}</td>
-                                            <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
-                                            <td class="td">{{cart?.original_amount}}</td>
-                                            <td class="td">{{cart?.paid_amount}}</td>
-                                            <td class="td">{{cart?.pending_amount}}</td>
-                                            <td class="td">{{cart?.payment}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </mat-tab>
+
                         <mat-tab label="Logs" *ngIf="recieptVoucherDetail?.logs?.length>0">
                             <div class="card">
                                 <!-- <div class="search-set mx-3 mt-3">
@@ -251,7 +267,7 @@
     </div>
 </div>
 
-<div id="approval_modal" class="modal custom-modal fade" role="dialog">
+<div id="approval_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">
@@ -269,7 +285,7 @@
     </div>
 </div>
 
-<div id="reject_modal" class="modal custom-modal fade" role="dialog">
+<div id="reject_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header approve-modal-wrapper">

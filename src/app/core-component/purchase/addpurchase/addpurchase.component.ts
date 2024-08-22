@@ -78,7 +78,7 @@ export class AddpurchaseComponent implements OnInit {
       purchase_cart: this.fb.array([]),
       note: new FormControl(''),
       status: new FormControl(''),
-      export: new FormControl(''),
+      export: new FormControl(false),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
       total_discount: new FormControl(''),
@@ -284,9 +284,12 @@ export class AddpurchaseComponent implements OnInit {
   isCart = false;
   addCart() {
     this.getCart().push(this.purchase_cart());
-    this.taxIntoRupees = new Array(this.getCart().controls.length).fill(0);
-    this.setupValueChanges();
     this.isCart = false
+    const newIndex = this.getCart().controls.length;
+    // this.taxIntoRupees = new Array(this.getCart().controls.length).fill(0);
+    this.taxIntoRupees[newIndex - 1] = 0
+    this.TotalWithoutTax[newIndex - 1] = 0;
+    this.setupValueChanges();
     this.myControls.push(new FormControl());
   }
   removeCart(i: any) {
@@ -459,7 +462,7 @@ export class AddpurchaseComponent implements OnInit {
       console.log(getCoastPrice, 'getCoastPrice');
       this.landingCost = getCoastPrice;
       // cost price
-      let taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
+      let taxPrice = (costprice * this.apiPurchaseTax) / 100;
       console.log(taxPrice, 'taxprice');
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice - taxPrice;
@@ -472,7 +475,7 @@ export class AddpurchaseComponent implements OnInit {
       let getCoastPrice = costprice - getDiscountPrice;
       this.originalCoastPrice = getCoastPrice
       // landing cost
-      let taxPrice = (getCoastPrice * purchaseTax) / 100;
+      let taxPrice = (costprice * purchaseTax) / 100;
       this.taxIntoRupees[index] = taxPrice || 0;
       let landingcost = getCoastPrice + taxPrice;
       this.landingCost = landingcost;
@@ -487,7 +490,7 @@ export class AddpurchaseComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           purchase_rate: this.originalCoastPrice.toFixed(2),
@@ -498,7 +501,7 @@ export class AddpurchaseComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
           purchase_rate: event.batch[0]?.cost_price,
@@ -513,7 +516,7 @@ export class AddpurchaseComponent implements OnInit {
         barcode: selectedItemId,
         tax: 18,
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 0,
+        qty: 1 || 0,
         discount: event.batch[0]?.discount || 0,
         purchase_rate: event.batch[0]?.cost_price || 0,
         landing_cost: this.landingCost || 0
@@ -538,7 +541,7 @@ export class AddpurchaseComponent implements OnInit {
       console.log(getCoastPrice, 'getCoastPrice');
       this.landingCost = getCoastPrice;
       // cost price 
-      let taxprice = ((getCoastPrice * this.apiPurchaseTax) / 100) || 0
+      let taxprice = ((costprice * this.apiPurchaseTax) / 100) || 0
       this.taxIntoRupees[index] = taxprice || 0;
       let purchasePrice = getCoastPrice - taxprice;
       this.originalCoastPrice = purchasePrice;
@@ -583,7 +586,7 @@ export class AddpurchaseComponent implements OnInit {
         let getDiscountPrice = (purchaseRate * discountPercentage) / 100
         let getCoastPrice = purchaseRate - getDiscountPrice;
         // cost price 
-        let taxprice = ((getCoastPrice * taxPercentage) / 100) || 0
+        let taxprice = ((purchaseRate * taxPercentage) / 100) || 0
         this.taxIntoRupees[index] = taxprice || 0;
         let purchasePrice = getCoastPrice - taxprice;
         return purchasePrice;
@@ -634,14 +637,14 @@ export class AddpurchaseComponent implements OnInit {
         if (this.batchCostPrice[index] > 0) {
           const discountAmount = (this.batchCostPrice[index] * discountPercentage) / 100;
           const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
-          this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
+          this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
           const landingCost = afterDiscountAmount || 0
           // without tax price 
           return landingCost;
         } else {
           const discountAmount = (this.coastprice[index] * discountPercentage) / 100;
           const afterDiscountAmount = this.coastprice[index] - discountAmount;
-          this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
+          this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
           const landingCost = afterDiscountAmount || 0
           return landingCost;
         }
@@ -657,9 +660,9 @@ export class AddpurchaseComponent implements OnInit {
         let getCoastPrice = Number(purchaseRateControl?.value) - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice
         // without tax price 
-        this.TotalWithoutTax[index] = getCoastPrice * qty || 0;
+        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
         // landing cost
-        let taxPrice = ((getCoastPrice * purchaseTax) / 100) || 0
+        let taxPrice = ((purchaseRateControl?.value * purchaseTax) / 100) || 0
         this.taxIntoRupees[index] = taxPrice || 0;
         let landingCost = getCoastPrice + taxPrice || 0;
 
@@ -685,7 +688,7 @@ export class AddpurchaseComponent implements OnInit {
   calculateTotalWithoutTax(): number {
     let total = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
-      total += number;
+      total += parseFloat(number) || 0;
     })
     return total;
   }
@@ -707,6 +710,11 @@ export class AddpurchaseComponent implements OnInit {
     } else {
       this.isFormCartInvalid = false;
     }
+  }
+
+  isCartQtyInvalid(index: number): boolean {
+    const formControl = (this.getCart().controls[index] as FormGroup).get('qty');
+    return formControl?.invalid && formControl?.touched;
   }
 
   checkCartValidationSync(): boolean {

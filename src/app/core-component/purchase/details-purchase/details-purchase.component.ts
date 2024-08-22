@@ -5,7 +5,6 @@ import { Location ,DatePipe} from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
 type address_type = {
   address_type : 'Billing' | 'Shipping'
 }
@@ -43,11 +42,11 @@ export class DetailsPurchaseComponent  implements OnInit  {
   }
   purchaseDetail: any = [];
   totalPurchase:any[]=[];
-  totalPurchaseRate=0;
+  totalPurchaseRate : any = 0;
   totalmrp:any[]=[];
-  totalMrp=0;
+  totalMrp: any = 0;
   totallanding:any[]=[];
-  totalLandingCost=0;
+  totalLandingCost: any = 0;
   getdata() : void {
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       if (this.id == res.id) {
@@ -67,22 +66,25 @@ export class DetailsPurchaseComponent  implements OnInit  {
         // calculation
         this.purchaseDetail?.cart?.forEach((res:any)=>{
           this.totalPurchase.push(res?.purchase_rate);
-          this.totalPurchaseRate=0;
+          let totalPurchaseRate = 0;
           this?.totalPurchase?.forEach((number: any) => {
-            this.totalPurchaseRate += number;
+            totalPurchaseRate += Number(number) || 0;
           })
+          this.totalPurchaseRate = totalPurchaseRate.toFixed(2);
           // mrp
           this.totalmrp.push(res?.mrp);
-          this.totalMrp=0
+          let totalMrp = 0;
           this?.totalmrp?.forEach((number: any) => {
-            this.totalMrp += number;
+            totalMrp += Number(number) || 0; 
           })
+          this.totalMrp = totalMrp.toFixed(2);
           //landing cost
           this.totallanding.push(res?.landing_cost);
-          this.totalLandingCost=0;
+          let totalLandingCost=0;
           this?.totallanding?.forEach((number: any) => {
-            this.totalLandingCost += number;
+            totalLandingCost += Number(number) || 0;
           })
+          this.totalLandingCost = totalLandingCost.toFixed(2)
         })
       }
     })

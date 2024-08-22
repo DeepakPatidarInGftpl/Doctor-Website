@@ -193,6 +193,7 @@
                                         <option value="" selected disabled>Select Address Type</option>
                                         <option value="Shipping">Shipping</option>
                                         <option value="Billing">Billing</option>
+                                        <option value="Both">Both</option>
                                     </select>
                                 </div>
                             </div>
@@ -202,12 +203,14 @@
             </div>
 
             <div class="bank-details-wrapper">
-                <h4 class="address-title">Bank Details</h4>
-                <div class="w-100 text-right my-3">
-                    <button class="p-0 border-0" (click)="addBank()">
-                        <p class="addMore-btn"><span class="plus-icon">+</span> Add More Banks
-                        </p>
-                    </button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="address-title">Bank Details</h4>
+                    <div class="text-right">
+                        <button class="p-0 border-0" (click)="addBank()">
+                            <p class="addMore-btn"><span class="plus-icon">+</span> Add Banks
+                            </p>
+                        </button>
+                    </div>
                 </div>
                 <div formArrayName="bank_id" class="mb-3 pb-3">
                     <div *ngFor="let d of getBanks().controls; let i=index"
@@ -340,7 +343,7 @@
                 </div> -->
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Wages</label>
+                        <label>Monthly Wages</label>
                         <input type="text" formControlName="wages" id="wages" placeholder="Enter Wages"
                             [ngClass]="{'is-invalid': f['wages'].touched && f['wages'].invalid}">
                         <span class="text-danger" *ngIf="wages && wages.invalid && wages.touched">Enter Valid Wages
@@ -377,8 +380,12 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Incentive</label>
-                        <input type="text" formControlName="incentive" placeholder="Incentive" id="incentive"
-                            [ngClass]="{'is-invalid': f['incentive'].touched && f['incentive'].invalid}">
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="incentive-input-wrapper" formControlName="incentive"
+                                placeholder="Incentive" id="incentive"
+                                [ngClass]="{'is-invalid': f['incentive'].touched && f['incentive'].invalid}">
+                            <span class="percentage-icon-wrapper">%</span>
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">

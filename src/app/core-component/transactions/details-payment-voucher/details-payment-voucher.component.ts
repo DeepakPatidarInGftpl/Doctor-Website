@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-details-payment-voucher',
@@ -13,6 +15,7 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 export class DetailsPaymentVoucherComponent implements OnInit {
   userDetails: any;
   companyDetails:any;
+  isSyncLoading = false;
   constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService ) { }
   id: any;
   ngOnInit(): void {
@@ -53,6 +56,8 @@ export class DetailsPaymentVoucherComponent implements OnInit {
   }
 
   paidPaymentVoucher() {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
     let id: any = Number(this.id)
 
     const formData = new FormData();
@@ -61,10 +66,42 @@ export class DetailsPaymentVoucherComponent implements OnInit {
 
     this.transactionService.paymentVoucherStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
-      this.getdata();
-      let closeModal = <HTMLElement>document.querySelector('.closePaidPaymentModal');
-      closeModal.click();
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+        let closeModal = <HTMLElement>document.querySelector('.closePaidPaymentModal');
+        closeModal.click();
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
     })
+  }
+
+  loaderPdf = false;
+  generatePdf() {
+    this.loaderPdf = true;
+    const elementToCapture = document.getElementById('debitNote');
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas) => {
+        this.loaderPdf = false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('paymentVoucher.pdf');
+      });
+    }
+  }
+
+  printForm(): void {
+    const printContents = document.getElementById('debitNote').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   }
 
   p: number = 1

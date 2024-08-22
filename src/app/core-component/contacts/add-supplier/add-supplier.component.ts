@@ -47,7 +47,7 @@ export class AddSupplierComponent implements OnInit {
 
     this.getgstType();
     this.addAddress()
-    this.addBank()
+    // this.addBank()
     this.getCountry();
     this.selectState(23, 0);
     this.selectCity(28, 0);
@@ -109,7 +109,7 @@ export class AddSupplierComponent implements OnInit {
       state: new FormControl('28', [Validators.required]),
       city: new FormControl('42', [Validators.required]),
       pincode: new FormControl('841226', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
-      address_type: ('')
+      address_type: new FormControl('Shipping',[Validators.required])
     });
   }
   getAddresss(): FormArray {
@@ -187,7 +187,9 @@ export class AddSupplierComponent implements OnInit {
         res => {
           this.state[i] = res;
           const addressControl = addressArray.at(i);
-          addressControl.get('state').setValue('28');
+          setTimeout(() => {
+            addressControl.get('state').setValue('28');
+          }, 0);
           // Reset city for the current formArray item
           this.city[i] = [];
           resolve();
@@ -219,7 +221,7 @@ export class AddSupplierComponent implements OnInit {
     let formdata: any = new FormData();
     formdata.append('login_access', this.supplierForm.get('login_access')?.value);
     formdata.append('name', this.supplierForm.get('name')?.value);
-    formdata.append('company_name', this.supplierForm.get('company_name')?.value);
+    formdata.append('company_name', this.supplierForm.get('company_name')?.value.toUpperCase());
     formdata.append('mobile_no', this.supplierForm.get('mobile_no')?.value);
     formdata.append('telephone_no', this.supplierForm.get('telephone_no')?.value);
     formdata.append('whatsapp_no', this.supplierForm.get('whatsapp_no')?.value);
@@ -228,8 +230,8 @@ export class AddSupplierComponent implements OnInit {
     formdata.append('date_of_birth', this.supplierForm.get('date_of_birth')?.value);
     formdata.append('anniversary_date', this.supplierForm.get('anniversary_date')?.value);
     formdata.append('gst_type', this.supplierForm.get('gst_type')?.value);
-    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.supplierForm.get('gstin')?.value : '');
-    formdata.append('pan_no', this.supplierForm.get('pan_no')?.value);
+    formdata.append('gstin', this.selectedGstType !== 'UnRegistered' ? this.supplierForm.get('gstin')?.value.toUpperCase() : '');
+    formdata.append('pan_no', this.supplierForm.get('pan_no')?.value.toUpperCase());
     formdata.append('apply_tds', this.supplierForm.get('apply_tds')?.value);
     formdata.append('credit_limit', this.supplierForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.supplierForm.get('payment_terms')?.value);
@@ -254,7 +256,15 @@ export class AddSupplierComponent implements OnInit {
         }
       });
 
-      addressData.push(featureObj);
+      if (featureObj['address_type'] === 'Both') {
+        const shippingAddress = { ...featureObj, address_type: 'Shipping' };
+        const billingAddress = { ...featureObj, address_type: 'Billing' };
+    
+        addressData.push(shippingAddress);
+        addressData.push(billingAddress);
+      } else {
+        addressData.push(featureObj);
+      }
     });
 
     formdata.append('address', JSON.stringify(addressData));
@@ -267,7 +277,11 @@ export class AddSupplierComponent implements OnInit {
       const featureObj = {};
       Object.keys(featuresGroup.controls).forEach((key) => {
         const control = featuresGroup.controls[key];
-        featureObj[key] = control.value;
+        if (key === 'account_holder_name' || key === 'bank_ifsc_code') {
+          featureObj[key] = control.value.toUpperCase();
+        } else {
+          featureObj[key] = control.value;
+        }
       });
       bankData.push(featureObj);
     });
@@ -414,6 +428,10 @@ export class AddSupplierComponent implements OnInit {
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+
+  addressType(index: number) {
+    return this.getAddresss().controls[index].get('address_type')
   }
 
   // nested bank error

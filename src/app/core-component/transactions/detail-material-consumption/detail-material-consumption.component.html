@@ -1,75 +1,131 @@
-
 <!-- /add -->
-<div class="row bg">
+<div class="row bg" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''">
     <div class="card">
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon  style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Material Consumption</h6>
                     <h4>Material Consumption Details</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//transaction/updateMaterialConsuption/{{consuptionDetail?.id}}" class="btn btn-added">
+                    <a routerLink="//transaction/updateMaterialConsuption/{{consuptionDetail?.id}}"
+                        class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Material Consumption
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="consuptionDetail">
+            <div class="material-consumption-wrapper company-details-card card" *ngIf="consuptionDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">User</td>
-                                            <td class="td">{{consuptionDetail?.company_name ? consuptionDetail?.company_name : consuptionDetail?.user?.username}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th"> Date</td>
-                                            <td class="td">{{consuptionDetail?.consumption_date |  date: 'yyyy-MM-dd'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Product</td>
-                                            <td class="td">{{consuptionDetail?.barcode?.product_title}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Consumption Type</td>
-                                            <td class="td">{{consuptionDetail?.consumption_type}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Consumption No.</td>
-                                            <td class="td">{{consuptionDetail?.consumption_no}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Price</td>
-                                            <td class="td">{{consuptionDetail?.price | currency:'INR'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Tax </td>
-                                            <td class="td">{{consuptionDetail?.tax ? (consuptionDetail?.tax +'%') : ''}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Qty</td>
-                                            <td class="td">{{consuptionDetail?.qty }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Total Action</td>
-                                            <td class="td">{{consuptionDetail?.total_action }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Remark</td>
-                                            <td class="td">{{consuptionDetail?.remark}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Status</td>
-                                            <td class="td">{{consuptionDetail?.status}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="py-3">
+                                <div class="d-flex justify-content-between align-items-center container mb-3">
+                                    <div>
+                                        <span [ngClass]="getBadgeClass(consuptionDetail?.status)"
+                                            class="badge p-2">{{consuptionDetail?.status}}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            *ngIf="userDetails?.role === 'admin' && consuptionDetail?.status === 'Pending'">
+                                            <button class="btn approve-status-badge me-3" data-bs-toggle="modal"
+                                                data-bs-target="#approval_modal">
+                                                Approve
+                                            </button>
+                                            <button class="btn reject-status-badge me-3" data-bs-toggle="modal"
+                                                data-bs-target="#reject_modal">
+                                                Reject
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                                title="print" (click)="printForm()"><img
+                                                    src="assets/img/icons/printer.svg" class="print-icon-wrapper"
+                                                    alt="img"></button>
+
+                                            <button class="chat-attach-download border-0 bg-white"
+                                                (click)="generatePdf()">
+                                                <i class="fas fa-download download-icon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                         
+
+                            <div id="debitNote">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <div class="d-flex justify-content-between align-items-center top-div"
+                                                    style="float: inline-start;">
+                                                    <div class="left-top">
+                                                        <img src="assets/dummy/pos.png" alt="">
+                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                        <p>Company Name: {{companyDetails?.name}}</p>
+                                                        <p>Financial Year:
+                                                            {{companyDetails?.financial_year?.financial_year}}
+                                                        </p>
+                                                        <p><span>Address</span> :
+                                                            {{companyDetails?.address+' ,
+                                                            '+companyDetails?.city?.city+' ,
+                                                            '+companyDetails?.state?.state+' ,
+                                                            '+companyDetails?.country?.country_name+' ,
+                                                            '+companyDetails?.pincode}}
+                                                        </p>
+                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pdf-table2 my-4">
+                                    <div class="container">
+                                        <div class="table-responsive mt-4 pt-2">
+                                            <h4 class="table-title-wrapper mb-2">Material Consumption Details</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="thone">User</th>
+                                                        <th class="thone">Date</th>
+                                                        <th class="thone">Product</th>
+                                                        <th class="thone">Consumption Type</th>
+                                                        <th class="thone">Consumption No.</th>
+                                                        <th class="thone">Price</th>
+                                                        <th class="thone">Tax</th>
+                                                        <th class="thone">Qty</th>
+                                                        <th class="thone">Total Action</th>
+                                                        <th class="thone">Remark</th>
+                                                        <th class="thone">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <td class="td">{{consuptionDetail?.company_name ?
+                                                        consuptionDetail?.company_name :
+                                                        consuptionDetail?.user?.username}}
+                                                    </td>
+                                                    <td class="td">{{consuptionDetail?.consumption_date | date:
+                                                        'yyyy-MM-dd'}}</td>
+                                                    <td class="td">{{consuptionDetail?.barcode?.product_title}}</td>
+                                                    <td class="td">{{consuptionDetail?.consumption_type}}</td>
+                                                    <td class="td">{{consuptionDetail?.consumption_no}}</td>
+                                                    <td class="td">{{consuptionDetail?.price | currency:'INR'}}</td>
+                                                    <td class="td">{{consuptionDetail?.tax ? (consuptionDetail?.tax
+                                                        +'%') :
+                                                        ''}}</td>
+                                                    <td class="td">{{consuptionDetail?.qty}}</td>
+                                                    <td class="td">{{consuptionDetail?.total_action}}</td>
+                                                    <td class="td">{{consuptionDetail?.remark}}</td>
+                                                    <td class="td">{{consuptionDetail?.status}}</td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="consuptionDetail?.logs?.length>0">
                             <div class="card">
@@ -105,67 +161,110 @@
                                     </div> -->
                                     <div class="table-responsive">
                                         <table class="table datanew">
-                                    <thead>
-                                        <tr>
-                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
-                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                                        <tr>
-                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                                        </tr> 
-                                    </ng-container>
-                                    </tbody>
-                                    <tbody *ngIf="filteredData?.length==0">
-                                        <tr>
-                                            <td colspan="10">
-                                                <p class="center-textt">Data not available</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="progressbar">
-                                    <mat-progress-bar mode="indeterminate" class="progressbar"
-                                        *ngIf="loader"></mat-progress-bar>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                                        <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="-1">All</option>
-                                            </select>
+                                            <thead>
+                                                <tr>
+                                                    <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i>
+                                                    </th>
+                                                    <th class="th" (click)="sort('id')">Operation Type <i
+                                                            class="fa fa-sort"></i></th>
+                                                    <th class="th" (click)="sort('id')">Date Time <i
+                                                            class="fa fa-sort"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                    <tr>
+                                                        <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                                        <td class="td" (click)="sort('id')">{{log?.date_time |
+                                                            date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                            <tbody *ngIf="filteredData?.length==0">
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <p class="center-textt">Data not available</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="progressbar">
+                                            <mat-progress-bar mode="indeterminate" class="progressbar"
+                                                *ngIf="loader"></mat-progress-bar>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                                <div class="entries"> Show per page
+                                                    <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                        (change)="changePg(v.value)">
+                                                        <option value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="30">30</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="-1">All</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                                <div class="f-right">
+                                                    <pagination-controls
+                                                        (pageChange)="p = $event"></pagination-controls>
+                                                    <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                        {{filteredData?.length}} of {{p}} entries</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                                        <div class="f-right">
-                                            <pagination-controls
-                                                (pageChange)="p = $event"></pagination-controls>
-                                                <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                    {{filteredData?.length}} of {{p}} entries</div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </div>
-                            </div>
                             </div>
                         </mat-tab>
                     </mat-tab-group>
                 </div>
             </div>
         </div>
-      
+
     </div>
 </div>
 <!-- /add -->
+
+<div id="approval_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header approve-modal-wrapper">
+                <button type="button" class="btn-close closeApprovalModal close-wrapper" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h5 class="modal-title">Are you sure you want to approve this material consumption?</h5>
+            </div>
+            <div class="modal-body approve-modal-wrapper">
+                <div class="mt-2 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-primary me-3" (click)="approve()">Submit</button>
+                    <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="reject_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header approve-modal-wrapper">
+                <button type="button" class="btn-close closeRejectModal close-wrapper" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h5 class="modal-title">Are you sure you want to reject this material consumption?</h5>
+            </div>
+            <div class="modal-body approve-modal-wrapper">
+                <div class="mt-2 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-primary me-3" (click)="reject()">Submit</button>
+                    <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
