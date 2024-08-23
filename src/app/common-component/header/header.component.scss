@@ -1,76 +1,75 @@
-
-.ng-invalid.ng-dirty.is-invalid.ng-touched{
-    border: 1px solid red;
-  }
-  
-  // close modal
-  .th {
-    background: #EEF0F8;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    color: #3B3B3B;
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
-    margin: 0 auto;
-    width: 55%;
-  }
-  
-  .td {
-    background-color: #F2F4F3;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    color: #3B3B3B;
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
-    margin: 0 auto;
-    width: 45%;
-  }
-
-  ::ng-deep{
-    .badge-wrapper{
-      padding: 14px;
-      top: 0px !important;
-      right: 1px !important;
-    }
-  }
-
-  .unread-notification-wrapper{
-    height: 12px;
-    width: 20px;
-    background: #FF9F43;
-    border-radius: 50%;
+.ng-invalid.ng-dirty.is-invalid.ng-touched {
+  border: 1px solid red;
 }
 
-  .unread-card-wrapper{
-    background-color: #f3f3f3;
+// close modal
+.th {
+  background: #EEF0F8;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  color: #3B3B3B;
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  margin: 0 auto;
+  width: 55%;
+}
+
+.td {
+  background-color: #F2F4F3;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  color: #3B3B3B;
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  margin: 0 auto;
+  width: 45%;
+}
+
+::ng-deep {
+  .badge-wrapper {
+    padding: 14px;
+    top: 0px !important;
+    right: 1px !important;
   }
-  
-  // vibrate modal
-  .vibrate {
-    animation: vibrate 0.2s alternate;
+}
+
+.unread-notification-wrapper {
+  height: 12px;
+  width: 12px;
+  background: #FF9F43;
+  border-radius: 50%;
+}
+
+.unread-card-wrapper {
+  background-color: #f3f3f3;
+}
+
+// vibrate modal
+.vibrate {
+  animation: vibrate 0.2s alternate;
+}
+
+@keyframes vibrate {
+  0% {
+    transform: translateX(0);
   }
-  
-  @keyframes vibrate {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(2px);
-    }
+
+  100% {
+    transform: translateX(2px);
   }
-  .select
-  {
-     border: 1px solid rgba(145, 158, 171, 0.32);
-     height: 40px;
-     width: 100%;
-     font-size: 14px;
-     font-weight: 500;
-     color: #637381;
-     padding: 10px 8px;
-     border-radius: 5px;
-  }
-  
+}
+
+.select {
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  height: 40px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #637381;
+  padding: 10px 8px;
+  border-radius: 5px;
+}

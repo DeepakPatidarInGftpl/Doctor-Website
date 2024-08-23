@@ -42,7 +42,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill Date*</label>
-                        <input type="datetime-local" formControlName="supplier_bill_date" [attr.min]="minDate"
+                        <input type="date" formControlName="supplier_bill_date" [attr.min]="minDate"
                             [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['supplier_bill_date'].touched && f['supplier_bill_date'].invalid}"
                             readonly>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Refrence Bill No.</label>
+                        <label>Supplier Bill No.</label>
                         <input type="text" formControlName="refrence_bill_no" placeholder="Refrence Bill No."
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}"
                             readonly>
@@ -405,8 +405,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Due Date*</label>
-                        <input type="datetime-local" formControlName="due_date" [attr.min]="dueMinDate"
-                            [attr.max]="dueMaxDate"
+                        <input type="date" formControlName="due_date" [attr.min]="dueMinDate" [attr.max]="dueMaxDate"
                             [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
                     </div>
                 </div>
@@ -434,8 +433,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <div class="d-flex">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true"
-                                readonly>
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" readonly>
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
@@ -926,7 +924,7 @@
                                                 <td class="text-end">
                                                     <input type="text" class="input" readonly
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        [value]="TotalWithoutTax[i] | number:'1.2-2'">
+                                                        [value]="TotalWithoutTax[i]">
                                                 </td>
                                                 <td class="text-end">
                                                     <input type="text" formControlName="total" class="input" readonly
@@ -944,22 +942,21 @@
                                             <input type="text" formControlName="total_qty" class="input"
                                                 [ngModel]="calculateTotalQty()" style="display: none;">
                                         </td>
-                                        <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
-                                        <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
-                                        <td class="text-start">{{calculateTotalDiscount()}}
+                                        <td class="text-start"></td>
+                                        <td class="text-start"></td>
+                                        <td class="text-start">
                                             <input type="text" formControlName="total_discount" class="input"
                                                 [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
                                         </td>
-                                        <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
-                                        <td class="text-start">{{calculateTotalSellingPriceOnline().toFixed(2)}}</td>
-                                        <td class="text-start">{{calculateTotalSellingPriceOffline().toFixed(2)}}</td>
-                                        <td class="text-start">{{calculateTotalDealerPrice().toFixed(2)}}</td>
-                                        <td class="text-start">{{calculateTotalEmployeePrice().toFixed(2)}}</td>
+                                        <th class="text-start"></th>
+                                        <td class="text-start"></td>
+                                        <td class="text-start"></td>
+                                        <td class="text-start"></td>
+                                        <td class="text-start"></td>
                                         <!-- <td class="text-start">{{calculateTotalTax()}}</td> -->
-                                        <td class="text-start">{{ calculateTotalTax() + '%' + ' (' +
-                                            (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}
+                                        <td class="text-start">
                                         </td>
-                                        <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
+                                        <td class="text-start"></td>
                                         <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
                                         <td>{{calculateTotal()?.toFixed(2)}}</td>
                                     </tr>
@@ -1222,7 +1219,7 @@
                                     </h5>
                                 </li>
                                 <li>
-                                    <h4>Total Discount %</h4>
+                                    <h4>Total Discount</h4>
                                     <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount()}}</h5>
                                 </li>
                                 <li>
@@ -1249,7 +1246,7 @@
 
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5>{{ calculateTotal() }}
+                                    <h5>{{ calculateTotal().toFixed(2) }}
                                         <input type="text" formControlName="total" class="input"
                                             [ngModel]="calculateTotal().toFixed(2)" style="display: none;">
                                     </h5>

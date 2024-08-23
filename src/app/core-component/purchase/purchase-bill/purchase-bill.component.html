@@ -87,24 +87,56 @@
                     <div class="col-lg-12 col-sm-12">
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Supplier Bill Date</label>
-                                    <input type="date" [formControl]="supplierDate" [attr.min]="minDate"
-                                        [attr.max]="maxDate" (change)="filterData()">
+                                <div class="">
+                                    <label class="mb-1 pb-1">Supplier Bill Date</label>
+                                    <!-- <input type="date" [formControl]="supplierDate" [attr.min]="minDate"
+                                        [attr.max]="maxDate" (change)="filterData()"> -->
+                                    <mat-form-field style="width: 97%;" class="border">
+                                        <mat-date-range-input [formGroup]="supplierBillDateForm"
+                                            [rangePicker]="startdatePicker" [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="startdatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #startdatePicker></mat-date-range-picker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="">
+                                    <label class="mb-1 pb-1">Due Date</label>
+                                    <mat-form-field style="width: 97%;" class="border">
+                                        <mat-date-range-input [formGroup]="dueDateForm" [rangePicker]="duedatePicker"
+                                            [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="duedatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #duedatePicker></mat-date-range-picker>
+                                    </mat-form-field>
+                                    <!-- <input type="date" [formControl]="dueDate" [attr.min]="dueMinDate"
+                                        [attr.max]="dueMaxDate" (change)="filterData()"> -->
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Due Date</label>
-                                    <input type="date" [formControl]="dueDate" [attr.min]="dueMinDate"
-                                        [attr.max]="dueMaxDate" (change)="filterData()">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Supplier Bill No.</label>
+                                    <label>Invoice No.</label>
                                     <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()"
-                                        class="search" placeholder="Search Supplier Bill No.">
+                                        class="search" placeholder="Search Invoice No.">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -173,20 +205,25 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Supplier Bill Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Supplier Bill No<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Refrence Bill No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Bill date<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Invoice No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Supplier bill No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Inward No<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment Term<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Payment Term<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Due Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Shipping Date<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Shipping Date<i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone">Branch<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Bill amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Paid Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Due Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Tax Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="filteredData?.length>=0 ">
+                <tbody *ngIf="filteredData?.length >= 0">
                     <tr
                         *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
@@ -204,10 +241,15 @@
                         <td>{{products?.supplier_bill_no}}</td>
                         <td>{{products?.refrence_bill_no}}</td>
                         <td>{{products?.material_inward_no?.material_inward_no}}</td>
-                        <td>{{products?.payment_term?.title}}</td>
+                        <!-- <td>{{products?.payment_term?.title}}</td> -->
                         <td>{{products?.due_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products.reverse_charge}}</td>
-                        <td>{{products?.shipping_date}}</td>
+                        <!-- <td>{{products.reverse_charge}}</td>
+                        <td>{{products?.shipping_date | date: 'dd-MMMM-yyyy'}}</td> -->
+                        <td>{{products?.branch?.title}}</td>
+                        <td>{{products?.total}}</td>
+                        <td>{{products?.paid_amount}}</td>
+                        <td>{{products?.pending_amount}}</td>
+                        <td>{{products?.total}}</td>
 
 
                         <td>
