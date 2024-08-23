@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
@@ -30,9 +30,13 @@ export class DebitnotesComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[];
   selectedpaymentTerms: string = '';
-  minDate: string = '';
-  maxDate: string = '';
+  // minDate: string = '';
+  // maxDate: string = '';
   returnDate = new FormControl('');
+  purchaseReturnDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
   constructor(private purchaseService: PurchaseServiceService,private dashboardService:DashboardService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe,
     private commonService: CommonServiceService
@@ -183,8 +187,16 @@ export class DebitnotesComponent implements OnInit {
     });
     this.getBranch();
 
-    const financialYear = localStorage.getItem('financialYear');
-    this.purchaseReturnDateValidation(financialYear);
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+    this.purchaseReturnDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.purchaseReturnDateForm, this.minDate, this.maxDate);
   //18-5
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -269,13 +281,6 @@ export class DebitnotesComponent implements OnInit {
         // this.getcompanyList()
       }
     })
-  }
-
-  purchaseReturnDateValidation(financialYear) {
-    const dateControl = this.returnDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.minDate = formattedMinDate;
-    this.maxDate = formattedMaxDate;
   }
 
   // search() {
@@ -515,13 +520,16 @@ export class DebitnotesComponent implements OnInit {
   statusFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.returnDate.value) {
-      const selectedDate = new Date(this.returnDate.value).toISOString().split('T')[0];
+    if (this.purchaseReturnDateForm.get('start').value && this.purchaseReturnDateForm.get('end').value) {
+      debugger
+      const startDate = new Date(this.purchaseReturnDateForm.get('start').value);
+      const endDate = new Date(this.purchaseReturnDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.debit_note_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.purchase_return_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
+
     if (this.selectedpaymentTerms) {
       filteredData = filteredData.filter((item) => item?.purchase_bill?.refrence_bill_no === this.selectedpaymentTerms);
     }
@@ -538,6 +546,7 @@ export class DebitnotesComponent implements OnInit {
     this.filterReverseCharge = null;
     this.returnDate.setValue('');
     this.statusFilter = null;
+    this.purchaseReturnDateForm.reset();
     this.filterData();
   }
   changePg(val: any) {

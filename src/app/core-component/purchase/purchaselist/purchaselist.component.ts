@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-purchaselist',
@@ -30,12 +30,17 @@ export class PurchaselistComponent implements OnInit {
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
   // date:any
-  minDate: string = '';
-  maxDate: string = '';
+  // minDate: string = '';
+  // maxDate: string = '';
   dueMinDate: string = '';
   dueMaxDate: string = '';
   shippingDate = new FormControl('');
   purchaseOrderDate = new FormControl('');
+  poDateForm!: FormGroup;
+  shippingDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
     private datePipe:DatePipe , private dashboardservice : DashboardService, private commonService: CommonServiceService) { }
@@ -159,6 +164,23 @@ export class PurchaselistComponent implements OnInit {
         this.isAdmin = false;
       }
     });
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+    this.poDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.shippingDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.poDateForm, this.minDate, this.maxDate);
+    this.commonService.validateAndClearDates(this.shippingDateForm, this.minDate, this.maxDate);
   //18-5
 
    // permission from localstoarg 
@@ -197,10 +219,6 @@ export class PurchaselistComponent implements OnInit {
       });
     });
     this.getBranch();
-
-    const financialYear = localStorage.getItem('financialYear');
-    this.purchaseShippingDateValidation(financialYear);
-    this.purchaseOrderDateValidation(financialYear);
   }
   loader=true;
 getPurchase(fy:any){
@@ -244,20 +262,6 @@ getPurchase(fy:any){
         // this.getcompanyList()
       }
     })
-  }
-
-  purchaseShippingDateValidation(financialYear) {
-    const dateControl = this.shippingDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.minDate = formattedMinDate;
-    this.maxDate = formattedMaxDate;
-  }
-
-  purchaseOrderDateValidation(financialYear) {
-    const dateControl = this.purchaseOrderDate;
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
-    this.dueMinDate = formattedMinDate;
-    this.dueMaxDate = formattedMaxDate;
   }
 
   // search() {
@@ -493,18 +497,21 @@ getPurchase(fy:any){
        statusFilter:any = "";
        filterData() {
         let filteredData = this.tableData.slice(); 
-        if (this.shippingDate.value) {
-          const selectedDate = new Date(this.shippingDate.value).toISOString().split('T')[0];
+        if (this.poDateForm.get('start').value && this.poDateForm.get('end').value) {
+          const startDate = new Date(this.poDateForm.get('start').value);
+          const endDate = new Date(this.poDateForm.get('end').value);
           filteredData = filteredData.filter((item) => {
-            const receiptDate = new Date(item?.shipping_date).toISOString().split('T')[0];
-            return receiptDate === selectedDate;
+            const supplierBillDate = new Date(item?.order_date);
+            return supplierBillDate >= startDate && supplierBillDate <= endDate;
           });
         }
-        if (this.purchaseOrderDate.value) {
-          const selectedDate = new Date(this.purchaseOrderDate.value).toISOString().split('T')[0];
+
+        if (this.shippingDateForm.get('start').value && this.shippingDateForm.get('end').value) {
+          const startDate = new Date(this.shippingDateForm.get('start').value);
+          const endDate = new Date(this.shippingDateForm.get('end').value);
           filteredData = filteredData.filter((item) => {
-            const receiptDate = new Date(item?.order_date).toISOString().split('T')[0];
-            return receiptDate === selectedDate;
+            const supplierBillDate = new Date(item?.shipping_date);
+            return supplierBillDate >= startDate && supplierBillDate <= endDate;
           });
         }
         if (this.selectedPurchaseNo) {
@@ -525,6 +532,8 @@ getPurchase(fy:any){
         this.shippingDate.setValue('');
         this.statusFilter=null;
         this.purchaseOrderDate.setValue('');
+        this.poDateForm.reset();
+        this.shippingDateForm.reset();
         this.filterData();
       }
       changePg(val: any) {

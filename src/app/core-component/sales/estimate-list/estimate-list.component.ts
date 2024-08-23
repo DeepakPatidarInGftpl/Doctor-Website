@@ -9,6 +9,8 @@ import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-estimate-list',
@@ -29,8 +31,13 @@ export class EstimateListComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  estimateExpiryDateForm!: FormGroup;
+  estimateDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
-  constructor(private saleService: SalesService, private cs: CompanyService, private contactService: ContactService, private dashboardService: DashboardService, private datePipe: DatePipe) { }
+  constructor(private saleService: SalesService, private cs: CompanyService, private contactService: ContactService, private dashboardService: DashboardService, private datePipe: DatePipe, private commonService: CommonServiceService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -161,6 +168,23 @@ export class EstimateListComponent implements OnInit {
       this.getEstimate(fyId);
     
     }
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+    this.estimateExpiryDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.estimateDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.estimateExpiryDateForm, this.minDate, this.maxDate);
+    this.commonService.validateAndClearDates(this.estimateDateForm, this.minDate, this.maxDate);
 
     //permission from profile api
 
@@ -451,20 +475,24 @@ getEstimate(fy:any){
   statusFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.estimateExpiryDateForm.get('start').value && this.estimateExpiryDateForm.get('end').value) {
+      const startDate = new Date(this.estimateExpiryDateForm.get('start').value);
+      const endDate = new Date(this.estimateExpiryDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.estimate_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.estimate_expiry_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
-    if (this.espireDate) {
-      const selectedDate = new Date(this.espireDate).toISOString().split('T')[0];
+
+    if (this.estimateDateForm.get('start').value && this.estimateDateForm.get('end').value) {
+      const startDate = new Date(this.estimateDateForm.get('start').value);
+      const endDate = new Date(this.estimateDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.estimate_expiry_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.estimate_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
+
     if (this.filterPaymentTerms) {
       filteredData = filteredData.filter((item) => item?.payment_terms?.title === this.filterPaymentTerms);
     }
@@ -482,6 +510,8 @@ getEstimate(fy:any){
     this.filterPaymentTerms = null
     this.selectedAmount = null;
     this.statusFilter = null;
+    this.estimateDateForm.reset();
+    this.estimateExpiryDateForm.reset();
     this.filterData();
   }
   changePg(val: any) {

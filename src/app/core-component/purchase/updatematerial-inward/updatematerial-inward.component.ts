@@ -249,6 +249,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
+        variant_name: j?.variant_name,
         qty: j.qty,
         po_qty: j?.po_qty,
         // unit_cost: j?.unit_cost ||0,

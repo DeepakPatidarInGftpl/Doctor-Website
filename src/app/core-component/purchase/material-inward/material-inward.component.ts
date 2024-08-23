@@ -177,6 +177,9 @@ export class MaterialInwardComponent implements OnInit {
     });
 
     this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
     this.materialInwardDateForm = new FormGroup({
       start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
       end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),

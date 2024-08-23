@@ -43,7 +43,7 @@ export class PurchaseBillComponent implements OnInit {
   financialYear!: string;
   startDate: any;
   endDate: any;
-  totalTaxAmount: any;
+  totalTaxAmount: any[] = []; 
   
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
     private contactService:ContactService,
@@ -168,6 +168,9 @@ export class PurchaseBillComponent implements OnInit {
 
     //18-5
     this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
     this.supplierBillDateForm = new FormGroup({
       start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
       end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
@@ -241,12 +244,21 @@ export class PurchaseBillComponent implements OnInit {
     console.log(idString);
     console.log(idString?.length);
     this.purchaseService.getPurchaseBillFY(fy,this.selectData).subscribe((res:any) => {
-      // console.log(res);get
       this.tableData = res;
-      res?.tax_rate.forEach(val => {
-        this.totalTaxAmount += val?.taxable_amount;
+      this.tableData = this.tableData = res.map((item: any) => {
+        let totalTaxAmount = 0;
+        if (item?.tax_rate?.length > 0) {
+          item.tax_rate.forEach((tax: any) => {
+            totalTaxAmount += tax?.taxable_amount || 0;
+          });
+        } else {
+          totalTaxAmount = 0;
+        }
+        return {
+          ...item,
+          totalTaxAmount
+        };
       });
-      
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); 
