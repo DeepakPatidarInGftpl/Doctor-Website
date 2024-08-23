@@ -15,6 +15,7 @@ export class DetailCustomerComponent implements OnInit {
   constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService, private coreService: CoreService, private location: Location, private contactService: ContactService) { }
   id: any;
   profileDetails: any;
+  creditLimit: any;
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -48,12 +49,20 @@ export class DetailCustomerComponent implements OnInit {
     this.contactService.getCustomerById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.productDetail = res;
+        const userId = res?.userid;
+        this.getCreditLimit(userId);
         let words = res.name.split(" ");
         let combined = words.map(word => word.charAt(0)).join('');
         this.firstLatter = combined
         this.filteredData = this.productDetail?.logs.slice();
         this.filterData();
       }
+    })
+  }
+
+  getCreditLimit(userId) {
+    this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
+      this.creditLimit = res?.credit_Limit;
     })
   }
 

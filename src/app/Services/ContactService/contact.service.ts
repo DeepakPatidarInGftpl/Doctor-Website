@@ -329,4 +329,9 @@ export class ContactService {
     let url = this.apiUrl + '/pv-api/department/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  getCreditLimitByUserId(id: number) :Observable<any> {
+    let url = this.apiUrl + '/pv-api/get_credit_limit/?user_by_credit_id='
+    return this.http.get<any>(`${url}${id}`)
+  }
 }

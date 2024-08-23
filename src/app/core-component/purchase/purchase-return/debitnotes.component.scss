@@ -23,3 +23,33 @@ input[type="date"] {
     align-items: center;
     background: white;
 }
+
+.multi-line-text {
+    width: 10%;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+    width: 200px;
+}
+
+.mat-form-field-prefix,
+.mat-form-field-suffix {
+    font-size: x-large;
+    white-space: nowrap;
+    flex: none;
+    position: relative;
+}
+
+.mat-form-field-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mat-form-field {
+    padding-left: 20px;
+    height: 40px;
+    border-radius: 6px;
+}

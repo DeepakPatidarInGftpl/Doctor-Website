@@ -15,6 +15,7 @@ export class DetailTransportComponent implements OnInit {
 
   id: any;
   profileDetails: any;
+  creditLimit: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -43,10 +44,18 @@ export class DetailTransportComponent implements OnInit {
   getdata() {
     this.contactService.getTransportById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.transportDetail = res
+        this.transportDetail = res;
+        const userId = res?.userid;
+        this.getCreditLimit(userId);
         this.filteredData = this.transportDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
       }
+    })
+  }
+
+  getCreditLimit(userId) {
+    this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
+      this.creditLimit = res?.credit_Limit;
     })
   }
 

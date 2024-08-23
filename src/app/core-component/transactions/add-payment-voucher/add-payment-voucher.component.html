@@ -52,11 +52,11 @@
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': h['supplier'].touched && h['supplier'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let customer of filteredsupplier | async" [value]="supplier?.name + ' (' +
-                                    supplier?.detail?.company_name + ')'" (onSelectionChange)="oncheck(customer)"
+                                <mat-option *ngFor="let customer of filteredsupplier | async" [value]="customer?.name + ' (' +
+                                    customer?.company_name + ')'" (onSelectionChange)="oncheck(customer)"
                                     style="color:#FF9F43">{{
-                                    supplier?.name + ' (' +
-                                    supplier?.detail?.company_name + ')'}}</mat-option>
+                                    customer?.name + ' (' +
+                                    customer?.company_name + ')'}}</mat-option>
 
                                 <ng-container *ngIf="(filteredsupplier | async) as customers">
                                     <mat-option *ngIf="customers.length === 0" [value]="'No data found'">
@@ -510,7 +510,8 @@
                                 <mat-option *ngFor="let customer of filteredsupplier | async"
                                     [value]="customer.company_name + ' ' +customer.name"
                                     (onSelectionChange)="oncheckBank(customer)" style="color:#FF9F43">{{
-                                    customer.company_name + ' ' +customer.name}}</mat-option>
+                                    customer?.name + ' (' +
+                                    customer?.company_name + ')'}}</mat-option>
                                 <ng-container *ngIf="(filteredsupplier | async) as customers">
                                     <mat-option *ngIf="customers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>

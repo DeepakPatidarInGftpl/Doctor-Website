@@ -19,6 +19,7 @@ export class DetailSupplierComponent implements OnInit {
   filterBankData: any[];
   filterProductData: any[];
   profileDetails: any;
+  creditLimit: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -48,11 +49,19 @@ export class DetailSupplierComponent implements OnInit {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.supplierDetail = res;
+        const userId = res?.userid?.id;
+        this.getCreditLimit(userId);
         this.filterProductData = this.supplierDetail?.products.slice();
         this.filteredData = this.supplierDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
         // console.log(res); 
       }
+    })
+  }
+
+  getCreditLimit(userId) {
+    this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
+      this.creditLimit = res?.credit_Limit;
     })
   }
 
