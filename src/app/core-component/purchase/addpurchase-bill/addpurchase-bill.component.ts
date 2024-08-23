@@ -66,25 +66,22 @@ export class AddpurchaseBillComponent implements OnInit {
 
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
-    const day = now.getDate().toString().padStart(2, '0');
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const defaultDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
 
     this.purchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
-      supplier_bill_date: new FormControl(defaultDateTime, [
+      supplier_bill_date: new FormControl(defaultDate, [
         Validators.required,
       ]),
       refrence_bill_no: new FormControl(''),
       supplier_bill_no: new FormControl('', [Validators.required]),
       material_inward_no: new FormControl(''),
       payment_term: new FormControl(''),
-      due_date: new FormControl(defaultDateTime, [Validators.required]),
-      reverse_charge: new FormControl(''),
+      due_date: new FormControl(defaultDateago7, [Validators.required]),
+      reverse_charge: new FormControl('No'),
       shipping_date: new FormControl(defaultDate, [Validators.required]),
       export: new FormControl('', [Validators.required]),
       // selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
@@ -155,7 +152,7 @@ export class AddpurchaseBillComponent implements OnInit {
     if (selectedDate) {
       const minDate = new Date(selectedDate);
       const { formattedMinDate, formattedMaxDate } =
-        this.commonService.setMinMaxDatesForDateTime(
+        this.commonService.setMinMaxDates(
           dateControl,
           financialYear,
           minDate
@@ -168,7 +165,7 @@ export class AddpurchaseBillComponent implements OnInit {
   dueDateValidation(financialYear) {
     const dateControl = this.purchaseBillForm.get('due_date');
     const { formattedMinDate, formattedMaxDate } =
-      this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+      this.commonService.setMinMaxDates(dateControl, financialYear);
     this.dueMinDate = formattedMinDate;
     this.dueMaxDate = formattedMaxDate;
   }
@@ -176,7 +173,7 @@ export class AddpurchaseBillComponent implements OnInit {
   supplierBillDateValidation(financialYear) {
     const dateControl = this.purchaseBillForm.get('supplier_bill_date');
     const { formattedMinDate, formattedMaxDate } =
-      this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+      this.commonService.setMinMaxDates(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
   }
@@ -379,21 +376,21 @@ export class AddpurchaseBillComponent implements OnInit {
           ?.patchValue(this.paymentList[0]?.id);
       }
       // select auto due date with time from days fields
-      const today = new Date();
-      const sevenDaysFromToday = new Date(today);
-      sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
-      const year = sevenDaysFromToday.getFullYear();
-      const month = (sevenDaysFromToday.getMonth() + 1)
-        .toString()
-        .padStart(2, '0');
-      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-      const minutes = sevenDaysFromToday
-        .getMinutes()
-        .toString()
-        .padStart(2, '0');
-      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-      this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // const today = new Date();
+      // const sevenDaysFromToday = new Date(today);
+      // sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+      // const year = sevenDaysFromToday.getFullYear();
+      // const month = (sevenDaysFromToday.getMonth() + 1)
+      //   .toString()
+      //   .padStart(2, '0');
+      // const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      // const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      // const minutes = sevenDaysFromToday
+      //   .getMinutes()
+      //   .toString()
+      //   .padStart(2, '0');
+      // const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      // this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
     });
   }
   supplierAddress: any;
@@ -429,12 +426,12 @@ export class AddpurchaseBillComponent implements OnInit {
         .toString()
         .padStart(2, '0');
       const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-      const minutes = sevenDaysFromToday
-        .getMinutes()
-        .toString()
-        .padStart(2, '0');
-      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      // const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      // const minutes = sevenDaysFromToday
+      //   .getMinutes()
+      //   .toString()
+      //   .padStart(2, '0');
+      const defaultDateago7 = `${year}-${month}-${day}`;
       this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
 
       this.purchaseBillForm
@@ -669,7 +666,7 @@ export class AddpurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           unit_cost: this.originalCoastPrice.toFixed(2),
@@ -685,7 +682,7 @@ export class AddpurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
           unit_cost: event.batch[0]?.cost_price,
@@ -707,7 +704,7 @@ export class AddpurchaseBillComponent implements OnInit {
         barcode: selectedItemId,
         tax: 18,
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 0,
+        qty: 1 || 0,
         discount: event.batch[0]?.discount || 0,
         unit_cost: event.batch[0]?.cost_price || 0,
         landing_cost: this.landingCost || 0,
@@ -1630,9 +1627,9 @@ export class AddpurchaseBillComponent implements OnInit {
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const decimalPart = roundedTotal - Math.floor(roundedTotal);
-    setTimeout(() => {
+    // setTimeout(() => {
       this.calculateRoundoffValue();
-    }, 3000);
+    // }, 3000);
     if (decimalPart >= 0.5) {
       return Math.floor(roundedTotal) + 1;
     } else {

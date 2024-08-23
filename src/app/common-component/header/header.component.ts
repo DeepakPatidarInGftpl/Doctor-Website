@@ -7,15 +7,15 @@ import {
 } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {
-  BehaviorSubject,
-  catchError,
-  debounceTime,
-  of,
-  Subject,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
+// import {
+//   BehaviorSubject,
+//   catchError,
+//   debounceTime,
+//   of,
+//   Subject,
+//   switchMap,
+//   takeUntil,
+// } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
@@ -46,7 +46,6 @@ export class HeaderComponent implements OnInit {
     private authServ: AuthServiceService,
     private toastr: ToastrService,
     private coreService: CoreService,
-    private profileService: CompanyService,
     private companyService: CompanyService,
     private fb: FormBuilder,
     private notificationService: NotificationService
@@ -128,14 +127,14 @@ export class HeaderComponent implements OnInit {
     // blur bg when modal open
     if (this.companyService.CheckBlur$) {
       this.companyService.CheckBlur$.subscribe((res: any) => {
-        console.log(res);
+        // console.log(res);
         if (res !== null) {
           if (res) {
             this.isModalOpen = res;
-            console.log(this.isModalOpen);
+            // console.log(this.isModalOpen);
           } else if (res == false) {
             this.isModalOpen = res;
-            console.log(this.isModalOpen);
+            // console.log(this.isModalOpen);
           }
         }
       });
@@ -177,16 +176,14 @@ export class HeaderComponent implements OnInit {
   logOut() {
     // console.log(localStorage.getItem('token'));
     if (localStorage.getItem('token')) {
-      this.authServ.logout().subscribe(
-        (res) => {
-          // console.log(res);
+      this.authServ.logout().subscribe({
+      next : (res) => {
           this.toastr.success(res.status);
           localStorage.clear();
           this.Router.navigate(['/auth/signin']);
           this.authServ.doLogout();
         },
-        (err: any) => {
-          // console.log(err.error.detail);
+     error : (err: any) => {
           if (err.error.detail) {
             localStorage.removeItem('token');
             localStorage.clear();
@@ -194,6 +191,8 @@ export class HeaderComponent implements OnInit {
             this.Router.navigate(['/auth/signin']);
           }
         }
+
+      }
       );
     } else {
       localStorage.removeItem('token');
@@ -221,28 +220,30 @@ export class HeaderComponent implements OnInit {
 
   userDetails: any;
   profile() {
-    this.coreService.getProfile().subscribe(
-      (res: any) => {
+    this.companyService.ProfileData$.subscribe({
+    next : (res: any) => {
         this.userDetails = res;
         this.coreService.profileDetails.next(res);
-        this.profileService.setUserDetails(this.userDetails);
+        this.companyService.setUserDetails(this.userDetails);
         const userDetails = res?.permission;
-        const storedUserDetails = this.profileService.getUserDetails();
+        const storedUserDetails = this.companyService.getUserDetails();
         if (
           !storedUserDetails ||
           storedUserDetails.length !== userDetails.length
         ) {
-          this.profileService.setUserPermission(userDetails);
+          this.companyService.setUserPermission(userDetails);
           window.location.reload();
         }
       },
-      (err) => {
+    error : (err) => {
         // console.log(err.error.detail=='Invalid token.');
         if (err.error.detail == 'Invalid token.') {
           localStorage.clear();
           window.location.reload();
         }
       }
+    }
+
     );
   }
   LoadScript(js: string) {
@@ -281,8 +282,8 @@ export class HeaderComponent implements OnInit {
   getDayClose() {
     this.companyService.getDayClose().subscribe((res) => {
       this.dayList = res;
-      console.log(res);
-      console.warn(this.dayList?.sale_bill_payment[0]?.total_amount);
+      // console.log(res);
+      // console.warn(this.dayList?.sale_bill_payment[0]?.total_amount);
     });
   }
   get remarks() {
@@ -305,20 +306,24 @@ export class HeaderComponent implements OnInit {
         this.notificationService
           .updateNotificationPanelByIds(formData)
           .subscribe(
-            (res) => {
+            {
+
+           next: ()=> {
               this.getNotificationList();
               this.notificationIds = [];
             },
-            (err) => {
+          error : () => {
               this.notificationIds = [];
             }
+          }
+
           );
       }
     }
   }
 
   viewAllNotification() {
-    this.notificationService.viewAllNotification().subscribe((res) => {
+    this.notificationService.viewAllNotification().subscribe(() => {
       this.getNotificationList();
     })
   }
@@ -327,7 +332,7 @@ export class HeaderComponent implements OnInit {
   checkDayClose() {
     this.companyService.getDayCheck().subscribe(
       (res: any) => {
-        console.log(res);
+        // console.log(res);
         this.companyService.setCheckDay(res); // send data to service
         if (res.isSuccess) {
           if (res?.close_day && res?.old_day) {
@@ -455,7 +460,7 @@ export class HeaderComponent implements OnInit {
   endDate: string = '';
   getFinancialYear() {
     this.coreService.getFinancialYear().subscribe((res: any) => {
-      console.log(res); // Log res to check if data is received correctly
+      // console.log(res); // Log res to check if data is received correctly
       this.financialYearList = res;
 
       // const currentYear = new Date().getFullYear();
@@ -501,7 +506,7 @@ export class HeaderComponent implements OnInit {
       const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
 
       this.notificationService
-        .getNotificationPanel(lastPage)
+        .getNotificationPanel(1)
         .subscribe((lastPageRes) => {
           this.notificationList = lastPageRes.notifications
             .slice(-5)
@@ -513,7 +518,7 @@ export class HeaderComponent implements OnInit {
                 ),
               };
             });
-          console.log(this.notificationList);
+          // console.log(this.notificationList);
         });
     });
   }

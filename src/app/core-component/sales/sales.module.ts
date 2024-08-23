@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SalesRoutingModule } from './sales-routing.module';
 import { SalesComponent } from './sales.component';
 
@@ -12,6 +12,7 @@ import { SalesComponent } from './sales.component';
   imports: [
     CommonModule,
     SalesRoutingModule
-  ]
+  ],
+  providers : [DatePipe]
 })
 export class SalesModule { }

@@ -29,12 +29,19 @@
             <mat-tab label="General Details">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
-                        <h2 class="supplier-name-wrapper">{{productDetail?.name}}</h2>
                         <div class="card-body">
                             <h3 class="contact-title-wrapper ps-4 mb-3">Contact Information</h3>
                             <div class="row m-0">
                                 <div class="col-5">
                                     <div class="row m-0">
+                                        <div class="col-6 mb-2">
+                                            <label class="label-title-wrapper">Contact person Name:</label>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <h5 class="field-title-wrapper">{{ productDetail?.name ||
+                                                '--' }}
+                                            </h5>
+                                        </div>
                                         <div class="col-6 mb-2">
                                             <label class="label-title-wrapper">Mobile Number:</label>
                                         </div>
@@ -91,11 +98,18 @@
                                 </div>
                             </div>
 
-                            <h2 class="mt-4 ps-4">{{productDetail?.company_name}}</h2>
                             <h3 class="contact-title-wrapper ps-4 mb-3">Business Information</h3>
                             <div class="row m-0">
                                 <div class="col-5">
                                     <div class="row m-0">
+                                        <div class="col-6 mb-2">
+                                            <label class="label-title-wrapper">Company Name:</label>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <h5 class="field-title-wrapper">{{ productDetail?.company_name ||
+                                                '--' }}
+                                            </h5>
+                                        </div>
                                         <div class="col-6 mb-2">
                                             <label class="label-title-wrapper">GST Type:</label>
                                         </div>

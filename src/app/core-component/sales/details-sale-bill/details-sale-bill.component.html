@@ -136,9 +136,9 @@
                         <div class="container py-10">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download
+                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!(_pdf.loaderPdf  | async)">Download
                                     Invoice</button>
-                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
+                                <button class="btn btn-primary" *ngIf="_pdf.loaderPdf  | async" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>&nbsp; Download Invoice</button>
                             </div>
@@ -302,12 +302,12 @@
                                                                 <td class="text-center" colspan="3">
                                                                     <strong>Total</strong>
                                                                 </td>
-                                                                <td class="text-center">{{totalMrp.toFixed(2)}}</td>
+                                                                <td class="text-center">{{totalMrp}}</td>
                                                                 <td class="text-center">{{BillDetail?.total_qty}}</td>
                                                                 <td class="text-center">{{totalDiscount+'%'  + ' (' + '₹'+discountRupees+ ')'}}</td>
-                                                                <td class="text-center">{{totalAdditionalDiscou+'%'+ ' (' + '₹'+totalAdditionalDiscount+ ')'}}</td>
+                                                                <td class="text-center">{{(totalAdditionalDiscou  ) ? 0 :  totalAdditionalDiscou +'%'+ ' (' + '₹'+totalAdditionalDiscount+ ')'}}</td>
                                                                 <td class="text-center">{{BillDetail?.total_tax+'%'+ ' (' + '₹'+calculateTax.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{BillDetail?.total.toFixed(2)}}</td>
+                                                                <td class="text-center">{{BillDetail?.total}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -335,12 +335,12 @@
                                                     <ul>
                                                         <li class="total">
                                                             <h4>Sub Total</h4>
-                                                            <h5>{{ BillDetail?.subtotal.toFixed(2)}}
+                                                            <h5>{{ BillDetail?.subtotal}}
                                                             </h5>
                                                         </li>
                                                         <li class="total">
                                                             <h4>Additional Charges</h4>
-                                                            <h5>{{ BillDetail?.additional_charges.toFixed(2)}}
+                                                            <h5>{{ BillDetail?.additional_charges}}
                                                             </h5>
                                                         </li>
                                                         <li class="total">
@@ -350,12 +350,12 @@
                                                         </li>
                                                         <li class="total">
                                                             <h4>Round Off</h4>
-                                                            <h5>{{ BillDetail?.roundoff.toFixed(2)}}
+                                                            <h5>{{ BillDetail?.roundoff}}
                                                             </h5>
                                                         </li>
                                                         <li class="total">
                                                             <h4>Total</h4>
-                                                            <h5>{{ BillDetail?.total.toFixed(2)}}
+                                                            <h5>{{ BillDetail?.total}}
                                                             </h5>
                                                         </li>
                                                     </ul>

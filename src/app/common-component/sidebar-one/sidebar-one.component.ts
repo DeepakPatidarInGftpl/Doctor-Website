@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from 'src/app/shared/settings/settings.service';
+// import { SettingsService } from 'src/app/shared/settings/settings.service';
 import { NavigationStart, Router } from '@angular/router';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
+// import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 
@@ -155,14 +155,14 @@ isBrandSubcategoryOffer:any;
 
     if(this.websiteService.CheckBlur$){
       this.websiteService.CheckBlur$.subscribe((res:any)=>{
-        console.log(res);
+        // console.log(res);
         if(res !== null){
         if(res){
           this.isModalOpen = res;
-          console.log(this.isModalOpen);
+          // console.log(this.isModalOpen);
         }else if(res==false){
           this.isModalOpen = res;
-          console.log(this.isModalOpen);
+          // console.log(this.isModalOpen);
         }
       }
         
@@ -171,14 +171,14 @@ isBrandSubcategoryOffer:any;
 // blur bg when modal open
 if(this.profileService.CheckBlur$){
   this.profileService.CheckBlur$.subscribe((res:any)=>{
-    console.log(res);
+    // console.log(res);
     if(res !== null){
     if(res){
       this.isModalOpen = res;
-      console.log(this.isModalOpen);
+      // console.log(this.isModalOpen);
     }else if(res==false){
       this.isModalOpen = res;
-      console.log(this.isModalOpen);
+      // console.log(this.isModalOpen);
     }
   }
     
@@ -390,26 +390,26 @@ if(this.profileService.CheckBlur$){
           this.isStockTransport = res.codename;
         } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'transferrequest' && res.codename == 'view_transferrequest') {
           this.isStockTransportRequest = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'view_stockverification') {
           this.isStockVerification = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         }
         //3-1
         // hrm
         else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'attendance' && res.codename == 'view_attendance') {
           this.isAttendnace = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         }
         else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'view_target') {
           this.isTarget = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
           this.isDepartment = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
           this.isIncentive = res.codename;
-          console.log(res.codename);
+          // console.log(res.codename);
         }
         //offer
         else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename == 'view_discount') {
@@ -437,7 +437,7 @@ if(this.profileService.CheckBlur$){
     //     //contact
     //     else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'view_supplier') {
     //       this.isSupplier = res.codename;
-    console.log(this.isSupplier);
+    // console.log(this.isSupplier);
     //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
     //       this.isCustomer = res.codename
     //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'view_transport') {

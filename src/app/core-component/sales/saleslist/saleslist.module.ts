@@ -16,6 +16,7 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   providers:[
     DatePipe
   ],
-  bootstrap: [SaleslistComponent]
+  bootstrap: [SaleslistComponent],
+  
 })
 export class SaleslistModule { }

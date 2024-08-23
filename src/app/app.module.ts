@@ -64,7 +64,7 @@ const icons = {
   ],
   providers:[
     {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true},
-    FirebaseMessagingService
+    FirebaseMessagingService,
   ],
   bootstrap: [AppComponent],
 })

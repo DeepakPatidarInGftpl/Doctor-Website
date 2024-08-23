@@ -69,15 +69,22 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
     // this.myControls = new FormArray([]);
+
+    const defaultDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+
     this.puchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
-      supplier_bill_date: new FormControl('', [Validators.required]),
+      supplier_bill_date: new FormControl(defaultDate, [Validators.required]),
       refrence_bill_no: new FormControl(''),
       supplier_bill_no: new FormControl('', [Validators.required,]),
       material_inward_no: new FormControl('',),
       payment_term: new FormControl(''),
-      due_date: new FormControl('', [Validators.required]),
-      reverse_charge: new FormControl('',),
+      due_date: new FormControl(defaultDateago7, [Validators.required]),
+      reverse_charge: new FormControl('No',),
       shipping_date: new FormControl('', [Validators.required]),
       export: new FormControl('', [Validators.required]),
       // selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
@@ -490,16 +497,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.paymentList = res;
 
       // select auto due date with time from days fields
-      const today = new Date();
-      const sevenDaysFromToday = new Date(today);
-      sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
-      const year = sevenDaysFromToday.getFullYear();
-      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
-      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
-      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-      this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // const today = new Date();
+      // const sevenDaysFromToday = new Date(today);
+      // sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+      // const year = sevenDaysFromToday.getFullYear();
+      // const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      // const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      // const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      // const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      // const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      // this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   selectedAddressBilling: any;
@@ -753,7 +760,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: this.originalCoastPrice.toFixed(2),
@@ -769,7 +776,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: 18,
           discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: event.batch[0]?.cost_price,
@@ -789,7 +796,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode: selectedItemId,
         tax: 18,
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 0,
+        qty: 1 || 0,
         discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
         purchase_rate: event.batch[0]?.cost_price || 0,
         unit_cost: event.batch[0]?.cost_price || 0,
@@ -1582,9 +1589,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const decimalPart = roundedTotal - Math.floor(roundedTotal);
-    setTimeout(() => {
+    // setTimeout(() => {
       this.calculateRoundoffValue()
-    }, 3000);
+    // }, 3000);
     if (decimalPart >= 0.5) {
       this.totalAmount = Math.floor(roundedTotal) + 1;
       return Math.floor(roundedTotal) + 1;

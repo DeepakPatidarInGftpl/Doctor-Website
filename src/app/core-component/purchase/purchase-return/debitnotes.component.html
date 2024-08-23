@@ -147,8 +147,9 @@
                         <th (click)="sort('id')" class="thone">Return No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Return Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Purchase Return Bill Amount<i class="fa fa-sort"></i>
+                        </th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -170,8 +171,8 @@
                                 style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
                         <td>{{products?.purchase_return_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.reverse_charge}}</td>
                         <td>{{products?.purchase_bill?.supplier_bill_no}}</td>
+                        <td>{{products?.total}}</td>
                         <td>
                             <span [ngClass]="{
                                 'bg-lightgreen': products.status === 'Approved',
