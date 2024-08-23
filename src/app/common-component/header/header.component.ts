@@ -506,7 +506,7 @@ export class HeaderComponent implements OnInit {
       const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
 
       this.notificationService
-        .getNotificationPanel(1)
+        .getNotificationPanel(lastPage)
         .subscribe((lastPageRes) => {
           this.notificationList = lastPageRes.notifications
             .slice(-5)

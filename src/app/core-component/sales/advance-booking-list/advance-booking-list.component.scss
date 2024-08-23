@@ -1,8 +1,7 @@
 input[type="datetime-local"],
 input[type="number"],
 input[type="date"],
-.input
-{
+.input {
    border: 1px solid rgba(145, 158, 171, 0.32);
    height: 40px;
    width: 100%;
@@ -12,7 +11,8 @@ input[type="date"],
    padding: 10px 15px;
    border-radius: 5px;
 }
-.button{
+
+.button {
    border: 1px solid rgba(145, 158, 171, 0.32);
    height: 40px;
    width: 421%;
@@ -25,4 +25,29 @@ input[type="date"],
    justify-content: space-between;
    align-items: center;
    background: white;
- }
+}
+
+
+.mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+   width: 200px;
+}
+
+.mat-form-field-prefix,
+.mat-form-field-suffix {
+   font-size: x-large;
+   white-space: nowrap;
+   flex: none;
+   position: relative;
+}
+
+.mat-form-field-suffix {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.mat-form-field {
+   padding-left: 20px;
+   height: 40px;
+   border-radius: 6px;
+}

@@ -8,6 +8,8 @@ import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-sales-return-list',
@@ -27,8 +29,13 @@ export class SalesReturnListComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  dueDateForm!: FormGroup;
+  saleReturnDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
-  constructor(private saleService: SalesService, private cs: CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService) { }
+  constructor(private saleService: SalesService, private cs: CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService, private commonService: CommonServiceService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -157,6 +164,23 @@ export class SalesReturnListComponent implements OnInit {
       this.isAdmin = false;
     }
   });
+
+  this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+    this.dueDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.saleReturnDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.dueDateForm, this.minDate, this.maxDate);
+    this.commonService.validateAndClearDates(this.saleReturnDateForm, this.minDate, this.maxDate);
 //18-5
     //permission from profile api
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -440,13 +464,24 @@ export class SalesReturnListComponent implements OnInit {
   selectedAmount: any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.dueDateForm.get('start').value && this.dueDateForm.get('end').value) {
+      const startDate = new Date(this.dueDateForm.get('start').value);
+      const endDate = new Date(this.dueDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.bill_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.return_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
+
+    if (this.saleReturnDateForm.get('start').value && this.saleReturnDateForm.get('end').value) {
+      const startDate = new Date(this.saleReturnDateForm.get('start').value);
+      const endDate = new Date(this.saleReturnDateForm.get('end').value);
+      filteredData = filteredData.filter((item) => {
+        const supplierBillDate = new Date(item?.bill_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
+      });
+    }
+
     if (this.selectSellBillNo) {
       filteredData = filteredData.filter((item) => item?.sale_bill?.customer_bill_no === this.selectSellBillNo);
     }
@@ -458,7 +493,9 @@ export class SalesReturnListComponent implements OnInit {
   clearFilter() {
     this.date = null;
     this.selectedAmount = null;
-    this.selectSellBillNo = null
+    this.selectSellBillNo = null;
+    this.saleReturnDateForm.reset();
+    this.dueDateForm.reset();
     this.filterData();
   }
   changePg(val: any) {

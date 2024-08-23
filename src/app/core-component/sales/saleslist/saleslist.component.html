@@ -84,16 +84,52 @@
                     <div class="col-lg-12 col-sm-12">
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label>Sale Order Date</label>
-                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search">
+                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search"> -->
+                                <div class="">
+                                    <label class="mb-1 pb-1">Sale Order Date</label>
+                                    <mat-form-field style="width: 97%;" class="border">
+                                        <mat-date-range-input [formGroup]="saleOrderDateForm"
+                                            [rangePicker]="saleOrderDatePicker" [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="saleOrderDatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #saleOrderDatePicker></mat-date-range-picker>
+                                    </mat-form-field>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label>Due Date</label>
                                     <input type="date" [(ngModel)]="espireDate" (ngModelChange)="filterData()"
-                                        class="search">
+                                        class="search"> -->
+                                <div class="">
+                                    <label class="mb-1 pb-1">Due Date</label>
+                                    <mat-form-field style="width: 97%;" class="border">
+                                        <mat-date-range-input [formGroup]="dueDateForm" [rangePicker]="dueDatePicker"
+                                            [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="dueDatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #dueDatePicker></mat-date-range-picker>
+                                    </mat-form-field>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">

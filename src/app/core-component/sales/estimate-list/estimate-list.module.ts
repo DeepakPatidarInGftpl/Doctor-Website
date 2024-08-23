@@ -4,6 +4,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { EstimateListRoutingModule } from './estimate-list-routing.module';
 import { EstimateListComponent } from './estimate-list.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -13,7 +16,10 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   imports: [
     CommonModule,
     EstimateListRoutingModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule
   ], 
    providers:[
     DatePipe

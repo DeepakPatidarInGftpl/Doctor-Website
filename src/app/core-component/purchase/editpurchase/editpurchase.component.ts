@@ -808,12 +808,13 @@ export class EditpurchaseComponent implements OnInit {
   }
   subTotal = 0
   calculateTotalWithoutTax(): number {
-    let total = 0
+    let total = 0;
+    let totalWithoutTax:any = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
-      total += number;
       total += parseFloat(number) || 0;
     })
-    return total;
+    totalWithoutTax = total.toFixed(2);
+    return totalWithoutTax;
   }
   //when assign subtotal value fro api
   // calculateTotalWithoutTax(): number {
