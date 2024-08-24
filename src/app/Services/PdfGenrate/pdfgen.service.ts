@@ -74,7 +74,8 @@ else{
 
 
 let tableHeight : number = 0;
-(pdf as any).autoTable({
+
+if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== 'Credit Note' ) (pdf as any).autoTable({
       head : table2head,
       body : obj.table2body,
       foot : foot2,
@@ -248,8 +249,9 @@ let tote = Math.floor(tableHeight) -105;
 
 
     }
+
       // lift  
-    if (data.column.index == 0) {
+    if (data.column.index == 0 ) {
       pdf.setDrawColor(0,0,0);
       pdf.setLineWidth(0.2);
       pdf.line(cell.x,cell.y,cell.x,cell.y+cell.height)
@@ -395,10 +397,10 @@ let tote = Math.floor(tableHeight) -105;
     //add table first
     autoTable(pdf,{
     head : thead1,
-    body : tbody1,
+    body : obj.Type == 'Credit Note'? obj.tbody1 : tbody1,
     startY: 75,
     headStyles:{
-    fontSize : obj.Type === 'Goods Received'? 8 :  9,
+    fontSize : obj.Type === 'Goods Received'? 8 : obj.Type === 'Expense Voucher' ? 7 : 9,
     textColor :[0,0,0],
     fillColor :[255, 202, 153],
     },
@@ -446,14 +448,16 @@ if(obj.Type=== 'Goods Received'){
     pdf.setDrawColor(0, 0, 0)
     pdf.setLineWidth(0.2);
     pdf.line(14,105.5,196,105.5)
-}else{
+}else  if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== 'Credit Note') {
 
-  pdf.setDrawColor(0, 0, 0)
-  pdf.setLineWidth(0.2);
-  pdf.line(14,98.5,196,98.5)
+      pdf.setDrawColor(0, 0, 0)
+      pdf.setLineWidth(0.2);
+      pdf.line(14,98.5,196,98.5)
+    }
 
 
-}
+
+
 
 
     }
@@ -464,5 +468,16 @@ if(obj.Type=== 'Goods Received'){
         }, 1000);
     })
   })
+}
+
+public getBadgeClass(status: string): string {
+  switch (status) {
+    case 'Pending':
+      return 'pending-status-badge';
+    case 'Paid':
+      return 'approve-status-badge';
+    default:
+      return '';
+  }
 }
 }

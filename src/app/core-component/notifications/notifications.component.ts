@@ -43,10 +43,15 @@ export class NotificationsComponent implements OnInit {
   }
 
   getNotificationList(page) {
-    this.notificationService.getNotificationPanel(page).subscribe((res) => {
-      this.itemsPerPage = res?.notifications?.length;
-      this.totalNotificationCount = res?.notifications_count;
-      this.notificationList = res.notifications.map((notification) => {
+
+
+    let result : any =  this.notificationService.NotificationPanel.value;
+    console.log('deepak',result)
+    if (result.notifications_count) {
+
+      this.itemsPerPage = result?.notifications?.length;
+      this.totalNotificationCount = result?.notifications_count;
+      this.notificationList = result.notifications.map((notification) => {
         return {
           ...notification,
           minutesAgo: this.calculateMinutesAgo(notification?.schedule_time),
@@ -57,7 +62,34 @@ export class NotificationsComponent implements OnInit {
         isAllNotificationView.push(val?.is_view);
       })
       this.isAllNotificationView = isAllNotificationView.every(value => value === true);
-    });
+    }
+    else{
+
+      this.notificationService.getNotificationPanel(page).subscribe((res) => {
+        this.itemsPerPage = res?.notifications?.length;
+        this.totalNotificationCount = res?.notifications_count;
+        this.notificationList = res.notifications.map((notification) => {
+          return {
+            ...notification,
+            minutesAgo: this.calculateMinutesAgo(notification?.schedule_time),
+          };
+        });
+        let isAllNotificationView = [];
+        this.notificationList.map((val)=> {
+          isAllNotificationView.push(val?.is_view);
+        })
+        this.isAllNotificationView = isAllNotificationView.every(value => value === true);
+      });
+
+
+    }
+
+
+
+
+
+
+
   }
 
   chackboxChange(id: number,index : number) {

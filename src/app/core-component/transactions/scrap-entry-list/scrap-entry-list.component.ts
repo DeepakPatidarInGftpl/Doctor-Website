@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+// import Swal from 'sweetalert2/dist/sweetalert2.js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import { saveAs } from 'file-saver';
@@ -45,7 +45,8 @@ isAdmin = false;
 
     //20-5
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      console.log('deepak',res)
+      if (res && res.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
