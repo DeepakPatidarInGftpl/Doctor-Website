@@ -466,7 +466,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group my-4">
                         <div class="d-flex">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'">
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
@@ -665,10 +665,6 @@
                                                                                                 Discount %</th>
                                                                                             <th
                                                                                                 class="boder space-text">
-                                                                                                Additional Discount %
-                                                                                            </th>
-                                                                                            <th
-                                                                                                class="boder space-text">
                                                                                                 Action</th>
                                                                                         </tr>
                                                                                     </thead>
@@ -685,14 +681,10 @@
                                                                                             <td class="boder">{{
                                                                                                 batch?.discount + '%'}}
                                                                                             </td>
-                                                                                            <td class="boder">{{
-                                                                                                batch?.additional_discount
-                                                                                                + '%'}}</td>
                                                                                             <td>
                                                                                                 <button type="button"
                                                                                                     (click)="selecBatchtModel(batch,batchCartIndex)"
-                                                                                                    class="btn btn-primary btn-sm"
-                                                                                                    style="float: right;">Select</button>
+                                                                                                    class="btn btn-primary btn-sm">Select</button>
                                                                                             </td>
 
                                                                                         </tr>
@@ -733,8 +725,7 @@
                                                 <td class="text-end">
                                                     <input type="text" class="input" readonly
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        [value]="TotalWithoutTax[i] | number:'1.2-2'"
-                                                        placeholder="Total Without Tax">
+                                                        [value]="TotalWithoutTax[i]" placeholder="Total Without Tax">
                                                 </td>
                                                 <td class="text-end">
                                                     <input type="text" formControlName="total" class="input"
@@ -749,7 +740,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-start"><strong>Total</strong></td>
-                                        <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
+                                        <td class="text-start">{{calculateTotalQty()}}
                                             <input type="text" formControlName="total_qty" class="input"
                                                 [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
                                         </td>
@@ -768,7 +759,7 @@
                                         </td>
                                         <td class="text-start">{{calculateTotalLandingCost()?.toFixed(2)}}</td>
                                         <!-- <td>{{calculateTotal()?.toFixed(2)}}</td> -->
-                                        <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                        <td>{{calculateTotalWithoutTax()}}</td>
                                         <td>{{calculateTotal()?.toFixed(2)}}</td>
                                     </tr>
                                 </tbody>
@@ -786,9 +777,9 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax().toFixed(2) | currency:'INR'}}
+                                        {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="sub_total" class="input"
-                                            [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
+                                            [ngModel]="calculateTotalWithoutTax()" style="display: none;">
                                     </h5>
                                 </li>
                                 <li>

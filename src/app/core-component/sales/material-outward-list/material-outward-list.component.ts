@@ -8,6 +8,8 @@ import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-material-outward-list',
@@ -27,8 +29,12 @@ export class MaterialOutwardListComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  materialOutwardDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService, private commonService: CommonServiceService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -146,6 +152,19 @@ isAdmin = false;
     //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
     //   this.filterData();
     // })
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+   
+    this.materialOutwardDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.materialOutwardDateForm, this.minDate, this.maxDate);
+
    //18-5
    if (localStorage.getItem('financialYear')) {
     let fy = localStorage.getItem('financialYear');
@@ -154,7 +173,7 @@ isAdmin = false;
     this.getSaleMaterialOutwardFY(fyId);
   }
   this.cs.userDetails$.subscribe((res: any) => {
-    if (res.role == 'admin') {
+    if (res?.role == 'admin') {
       this.isAdmin = true;
     } else {
       this.isAdmin = false;
@@ -446,13 +465,15 @@ select=false
   statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.materialOutwardDateForm.get('start').value && this.materialOutwardDateForm.get('end').value) {
+      const startDate = new Date(this.materialOutwardDateForm.get('start').value);
+      const endDate = new Date(this.materialOutwardDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.mo_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.mo_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
+
     if (this.selectRefundStatus) {
       filteredData = filteredData.filter((item) => item?.refund_status === this.selectRefundStatus);
     }
@@ -469,6 +490,7 @@ select=false
     this.selectRefundStatus=null;
     this.selectedAmount=null;
     this.statusFilter=null;
+    this.materialOutwardDateForm.reset();
     this.filterData();
   }
   changePg(val: any) {

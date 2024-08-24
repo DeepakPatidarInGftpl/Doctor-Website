@@ -27,13 +27,20 @@
             <mat-tab label="General Details">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
-                        <h2 class="supplier-name-wrapper">{{employeeDetail?.name}}</h2>
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="contact-title-wrapper ps-4 mb-3">Contact Information</h3>
                                 <div class="row m-0">
                                     <div class="col-5">
                                         <div class="row m-0">
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Employee Name:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.name ||
+                                                    '--' }}
+                                                </h5>
+                                            </div>
                                             <div class="col-6 mb-2">
                                                 <label class="label-title-wrapper">Mobile Number:</label>
                                             </div>
@@ -90,11 +97,18 @@
                                     </div>
                                 </div>
 
-                                <h2 class="ps-4 mt-4">{{employeeDetail?.userid?.user_type}}</h2>
                                 <h3 class="contact-title-wrapper ps-4 mb-3">Advance Information</h3>
                                 <div class="row m-0">
                                     <div class="col-5">
                                         <div class="row m-0">
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">User Type:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.userid?.user_type ||
+                                                    '--' }}
+                                                </h5>
+                                            </div>
                                             <div class="col-6 mb-2">
                                                 <label class="label-title-wrapper">Branch:</label>
                                             </div>
@@ -135,9 +149,7 @@
                                                 <label class="label-title-wrapper">Credit Limit:</label>
                                             </div>
                                             <div class="col-6 mb-2">
-                                                <h5 class="field-title-wrapper">{{ employeeDetail?.credit_limit
-                                                    ||
-                                                    '--' }}</h5>
+                                                <h5 class="field-title-wrapper">{{ creditLimit || 0 }}</h5>
                                             </div>
 
                                             <div class="col-6 mb-2">

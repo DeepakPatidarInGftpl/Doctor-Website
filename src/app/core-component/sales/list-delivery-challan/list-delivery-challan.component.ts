@@ -9,6 +9,8 @@ import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-list-delivery-challan',
@@ -28,8 +30,12 @@ export class ListDeliveryChallanComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  billDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  financialYear!: string;
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe, private dashboardservice : DashboardService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe, private dashboardservice : DashboardService, private commonService: CommonServiceService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -160,6 +166,18 @@ isAdmin = false;
         this.isAdmin = false;
       }
     });
+
+    this.financialYear = localStorage.getItem('financialYear');
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+
+    this.billDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.billDateForm, this.minDate, this.maxDate);
 //18-5
     //permission from profile api
   
@@ -446,13 +464,15 @@ select=false
   statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+    if (this.billDateForm.get('start').value && this.billDateForm.get('end').value) {
+      const startDate = new Date(this.billDateForm.get('start').value);
+      const endDate = new Date(this.billDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.bill_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
+        const supplierBillDate = new Date(item?.bill_date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
       });
     }
+
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
     }
@@ -461,6 +481,7 @@ select=false
   clearFilter() {
     this.date = null;
     this.selectedAmount=null;
+    this.billDateForm.reset();
     this.filterData();
   }
   changePg(val: any) {

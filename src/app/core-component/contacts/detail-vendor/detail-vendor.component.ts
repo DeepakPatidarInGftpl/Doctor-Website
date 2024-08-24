@@ -15,6 +15,7 @@ export class DetailVendorComponent implements OnInit {
   constructor(private Arout: ActivatedRoute, private contactService: ContactService, private location: Location, private coreService: CoreService) { }
   id: any;
   profileDetails: any;
+  creditLimit: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -63,9 +64,17 @@ export class DetailVendorComponent implements OnInit {
     this.contactService.getVendorById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.vendorDetail = res;
+        const userId = res?.userid?.id;
+        this.getCreditLimit(userId);
         this.filteredData = this.vendorDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
       }
+    })
+  }
+
+  getCreditLimit(userId) {
+    this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
+      this.creditLimit = res?.credit_Limit;
     })
   }
 

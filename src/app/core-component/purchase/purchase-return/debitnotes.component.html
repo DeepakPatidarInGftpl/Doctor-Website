@@ -83,10 +83,24 @@
                     <div class="col-lg-12 col-sm-12">
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Purchase Return Date</label>
-                                    <input type="date" [formControl]="returnDate" [attr.min]="minDate"
-                                        [attr.max]="maxDate" (change)="filterData()">
+                                <div class="">
+                                    <label class="mb-1 pb-1">Purchase Return Date</label>
+                                    <mat-form-field style="width: 97%;" class="border">
+                                        <mat-date-range-input [formGroup]="purchaseReturnDateForm"
+                                            [rangePicker]="returndatePicker" [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="returndatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #returndatePicker></mat-date-range-picker>
+                                    </mat-form-field>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -147,8 +161,10 @@
                         <th (click)="sort('id')" class="thone">Return No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Return Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone multi-line-text">Purchase Return Bill Amount<i
+                                class="fa fa-sort"></i>
+                        </th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -170,8 +186,8 @@
                                 style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
                         <td>{{products?.purchase_return_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.reverse_charge}}</td>
                         <td>{{products?.purchase_bill?.supplier_bill_no}}</td>
+                        <td>{{products?.total}}</td>
                         <td>
                             <span [ngClass]="{
                                 'bg-lightgreen': products.status === 'Approved',

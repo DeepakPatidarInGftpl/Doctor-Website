@@ -123,7 +123,16 @@
                         <div class="sub-card row">
                             <div class="content-part my-3">
                                 <div class="container py-10">
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
+                                            title="print" (click)="printForm()"><img src="assets/img/icons/printer.svg"
+                                                class="print-icon-wrapper" alt="img"></button>
+
+                                        <button class="chat-attach-download border-0 bg-white" (click)="generatePdf()">
+                                            <i class="fas fa-download download-icon"></i>
+                                        </button>
+                                    </div>
+                                    <!-- <div class="d-flex justify-content-between align-items-center">
                                         <h3>Invoice</h3>
                                         <button class="btn btn-primary" (click)="generatePdf()"
                                             *ngIf="!(_pdf.loaderPdf | async)">Download
@@ -135,7 +144,7 @@
                                     <p style="margin-bottom: 0;">
                                         <button class="btn btn" (click)="printForm()"
                                             style="border: 1px solid antiquewhite;">Print Invoice</button>
-                                    </p>
+                                    </p> -->
 
                                     <div class="outer container" id="debitNote">
                                         <div class="pdf-div" id="doc-target">

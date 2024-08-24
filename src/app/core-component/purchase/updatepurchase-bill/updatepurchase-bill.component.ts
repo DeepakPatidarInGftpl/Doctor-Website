@@ -69,17 +69,24 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
     // this.myControls = new FormArray([]);
+
+    const defaultDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+
     this.puchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
-      supplier_bill_date: new FormControl('', [Validators.required]),
+      supplier_bill_date: new FormControl(defaultDate, [Validators.required]),
       refrence_bill_no: new FormControl(''),
       supplier_bill_no: new FormControl('', [Validators.required,]),
       material_inward_no: new FormControl('',),
       payment_term: new FormControl(''),
-      due_date: new FormControl('', [Validators.required]),
-      reverse_charge: new FormControl('',),
+      due_date: new FormControl(defaultDateago7, [Validators.required]),
+      reverse_charge: new FormControl('No',),
       shipping_date: new FormControl('', [Validators.required]),
-      export: new FormControl('', [Validators.required]),
+      export: new FormControl(''),
       // selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // selling_price_offline: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // dealer_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
@@ -131,15 +138,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.getVariant('', '', '')
       this.totaladditionalCharge = res.additional_charge
       //patch local-date
-      const formatteddue_date = new Date(this.getresbyId?.due_date).toISOString().slice(0, 16);
-      this.puchaseBillForm.get('due_date')?.patchValue(formatteddue_date);
+      // const formatteddue_date = new Date(this.getresbyId?.due_date).toISOString().slice(0, 16);
+      this.puchaseBillForm.get('due_date')?.patchValue(this.getresbyId?.due_date);
       this.puchaseBillForm.get('round_off')?.patchValue(this.getresbyId?.round_off)
 
       // const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
       // this.puchaseBillForm.get('shipping_date')?.patchValue(formattedshipping_date);
 
-      const formattedsupplier_bill_date = new Date(this.getresbyId?.supplier_bill_date).toISOString().slice(0, 16);
-      this.puchaseBillForm.get('supplier_bill_date')?.patchValue(formattedsupplier_bill_date);
+      // const formattedsupplier_bill_date = new Date(this.getresbyId?.supplier_bill_date).toISOString().slice(0, 16);
+      this.puchaseBillForm.get('supplier_bill_date')?.patchValue(this.getresbyId?.supplier_bill_date);
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
         // console.log(res);
@@ -218,7 +225,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const dateControl = this.puchaseBillForm.get('due_date');
     if (selectedDate) {
       const minDate = new Date(selectedDate);
-      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear, minDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
       this.dueMinDate = formattedMinDate;
       this.dueMaxDate = formattedMaxDate;
     }
@@ -226,14 +233,14 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
   dueDateValidation(financialYear) {
     const dateControl = this.puchaseBillForm.get('due_date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
     this.dueMinDate = formattedMinDate;
     this.dueMaxDate = formattedMaxDate;
   }
 
   supplierBillDateValidation(financialYear) {
     const dateControl = this.puchaseBillForm.get('supplier_bill_date');
-    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
     this.minDate = formattedMinDate;
     this.maxDate = formattedMaxDate;
   }
@@ -329,11 +336,11 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
   udateTaxRate(add: any): FormArray {
     console.log(add);
-    let formarr = new FormArray([]);
+    let formarr = this.getTaxRate();
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         tax_rate: j.tax_rate || 0,
-        taxable_amount: j.taxable_amount || 0,
+        taxable_amount: (j.taxable_amount).toFixed(2) || 0,
         igst_amount: j.igst_amount || 0,
         cgst_amount: j.cgst_amount || 0,
         sgst_amount: j.sgst_amount || 0,
@@ -490,16 +497,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.paymentList = res;
 
       // select auto due date with time from days fields
-      const today = new Date();
-      const sevenDaysFromToday = new Date(today);
-      sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
-      const year = sevenDaysFromToday.getFullYear();
-      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
-      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
-      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-      this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // const today = new Date();
+      // const sevenDaysFromToday = new Date(today);
+      // sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+      // const year = sevenDaysFromToday.getFullYear();
+      // const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      // const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      // const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      // const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      // const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      // this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   selectedAddressBilling: any;
@@ -753,7 +760,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: this.originalCoastPrice.toFixed(2),
@@ -769,7 +776,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: 18,
           discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
           unit_cost: event.batch[0]?.cost_price,
@@ -789,7 +796,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         barcode: selectedItemId,
         tax: 18,
         mrp: event.batch[0]?.mrp || 0,
-        qty: event.batch[0]?.stock || 0,
+        qty: 1 || 0,
         discount: (event.batch[0]?.discount && event.batch[0]?.discount?.length > 0) ? event.batch[0]?.discount : 0,
         purchase_rate: event.batch[0]?.cost_price || 0,
         unit_cost: event.batch[0]?.cost_price || 0,
@@ -1569,7 +1576,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const purchaseRateControl = this.getCart().controls[i].get('unit_cost');
-      const landingcost = this.getCart().controls[i].get('unit_cost');
+      const landingcost = this.getCart().controls[i].get('landing_cost');
       const qtyControl = this.getCart().controls[i].get('qty');
       if (purchaseRateControl && landingcost && qtyControl) {
         const landingCost = +landingcost.value || 0;
@@ -1582,9 +1589,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const decimalPart = roundedTotal - Math.floor(roundedTotal);
-    setTimeout(() => {
+    // setTimeout(() => {
       this.calculateRoundoffValue()
-    }, 3000);
+    // }, 3000);
     if (decimalPart >= 0.5) {
       this.totalAmount = Math.floor(roundedTotal) + 1;
       return Math.floor(roundedTotal) + 1;
@@ -1861,7 +1868,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getgst(index) {
     const variants = this.puchaseBillForm.get('tax_rate') as FormArray;
     // variants.clear();
+    const taxRate = this.getTaxRate();
+    if(!taxRate.at(index)){
     this.addTaxRate();
+    }
     const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     // patch value
     // const taxRate = (this.puchaseBillForm.get('tax_rate') as FormArray).at(index) as FormGroup;

@@ -16,6 +16,7 @@ export class DetailDealerComponent implements OnInit {
 
   id: any;
   profileDetails: any;
+  creditLimit: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -45,10 +46,18 @@ export class DetailDealerComponent implements OnInit {
   getdata() {
     this.contactService.getDealerById(this?.id).subscribe(res => {
       if (this?.id == res?.id) {
-        this.dealerDetail = res
+        this.dealerDetail = res;
+        const userId = res?.userid;
+        this.getCreditLimit(userId);
         this.filteredData = this.dealerDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
       }
+    })
+  }
+
+  getCreditLimit(userId) {
+    this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
+      this.creditLimit = res?.credit_Limit;
     })
   }
 

@@ -14,6 +14,9 @@ import { OrderModule } from 'ngx-order-pipe';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   declarations: [
     PurchaselistComponent
@@ -30,7 +33,10 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     OrderModule,
     MatSlideToggleModule,
     MatProgressBarModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule
   ],
   providers:[
     DatePipe
