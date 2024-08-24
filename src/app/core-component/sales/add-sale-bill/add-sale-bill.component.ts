@@ -446,10 +446,13 @@ export class AddSaleBillComponent implements OnInit {
       if (totalProductPrice && taxPercentage) {
         this.taxIntoRupees[index] = (totalProductPrice * taxPercentage) / 100;
       }
+      if(totalProductQty === 0) {
+        this.taxIntoRupees[index] = 0;
+      }
       this.TotalWithoutTax[index] = (getCoastPrice * value) - (getTaxPrice * value);
       barcode.patchValue({
         qty: value,
-        tax: taxPercentage,
+        tax: totalProductQty === 0 ? 0 : taxPercentage,
         additional_discount: discount
       });
     }
@@ -866,7 +869,11 @@ export class AddSaleBillComponent implements OnInit {
     this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    if(event?.batch?.length > 0) {
+      this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    } else {
+      this.apiPurchaseTax = 0;
+    }
     // this.batchDiscount = event.batch[0]?.discount || 0;
     this.batchDiscount = 0;
     this.additionalDiscount = event.batch[0]?.additional_discount || 0;
@@ -1650,16 +1657,23 @@ export class AddSaleBillComponent implements OnInit {
       console.warn(this.discountTyp[index], 'discount selected based on index');
       // console.log(this.discountTyp);
       // auto selected data of isComuplsory
-      this.compulsoryDiscounts = this.discountTyp[index].filter(element => element?.is_compulsory);
+      if(this.discountTyp[index]?.length) {
+        this.compulsoryDiscounts = this.discountTyp[index].filter(element => element?.is_compulsory);
+      }
       // this.selectedStates = this.discountTyp[index].map(discount => discount?.is_compulsory);
     });
 
-    this.compulsoryDiscounts = Array.from(
-      new Map(this.compulsoryDiscounts.map(item => [item?.id, item])).values()
-    );
-    this.discountTyp[index] = Array.from(
-      new Map(this.discountTyp[index].map(item => [item?.id, item])).values()
-    );
+    if (this.compulsoryDiscounts?.length) {
+      this.compulsoryDiscounts = Array.from(
+        new Map(this.compulsoryDiscounts.map(item => [item?.id, item])).values()
+      );
+    }
+    
+    if (this.discountTyp?.[index]?.length) {
+      this.discountTyp[index] = Array.from(
+        new Map(this.discountTyp[index].map(item => [item?.id, item])).values()
+      );
+    }
     console.log(this.discountTyp);
     // console.log(this.compulsoryDiscounts);
 

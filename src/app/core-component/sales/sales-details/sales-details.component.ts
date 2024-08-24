@@ -25,6 +25,7 @@ export class SalesDetailsComponent implements OnInit {
   supplierAddress:any;
   selectedAddressBilling:any;
   selectedAddressShipping:any;
+  totalItems = 0;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -46,13 +47,14 @@ export class SalesDetailsComponent implements OnInit {
     this.saleService.getSalesOrderById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.orderDetail = res;
-        console.log('all order',this.orderDetail)
+        console.log('all order',this.orderDetail);
+        this.totalItems = this.orderDetail?.cart?.length;
         this.orderDetail?.cart?.forEach((item:any)=>{
             // discount
             let d:any = (item.price * item.discount) / 100;
-            this.discount=item.price -d.toFixed(2);
+            // this.discount=item.price -d.toFixed(2);
             this.totaldiscount=0;
-            this.totalDiscount.push(this.discount);
+            this.totalDiscount.push(d);
             this.totalDiscount?.forEach((number:any)=>{
               this.totaldiscount +=number;
             });

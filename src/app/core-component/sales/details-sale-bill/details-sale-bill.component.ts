@@ -27,6 +27,7 @@ export class DetailsSaleBillComponent implements OnInit {
   id: any;
   companyDetails: any;
   supplierAddress: any;
+  totalItems: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   ngOnInit(): void {
@@ -61,14 +62,15 @@ totalAdditionalDiscou=0;
       if (this.id == res.id) {
         this.BillDetail = res
         console.log(res);
+        this.totalItems = this.BillDetail?.cart?.length;
         this.BillDetail?.cart?.forEach((item: any) => {
           // discount
           item.price = Number(item.price +'');
           let d: any = (item.price * item.discount) / 100;
           console.log(item.price - d.toFixed(2));
-          this.discountRupees = item.price - d.toFixed(2);
+          // this.discountRupees = item.price - d.toFixed(2);
           this.totaldiscountRupees = 0;
-          this.totalDiscountRupees.push(this.discount);
+          this.totalDiscountRupees.push(d);
           // this.totalDiscountRupees.push(item.discount);
           console.log(this.totalDiscount);
           this.totalDiscountRupees?.forEach((number: any) => {
@@ -84,18 +86,26 @@ totalAdditionalDiscou=0;
           //total discount
           this.discount.push(item?.discount);
           this.totalDiscount = 0;
+          let discount: any = 0;
           this?.discount?.forEach((number: any) => {
-            this.totalDiscount += number;
+            discount += parseFloat(number);
           });
+          this.totalDiscount = discount.toFixed(2);
           //total additional discount
 
-          this.additionalDiscoun.push(item?.additional_discount);
+          if(item?.additional_discount){
+            this.additionalDiscoun.push(item?.additional_discount);
+          }
           console.log('deepak',item?.additional_discount)
           console.log('deepak',item)
           this.totalAdditionalDiscou = 0;
-          this?.additionalDiscoun?.forEach((number: any) => {
-            this.totalAdditionalDiscou += number;
-          });
+          if(this?.additionalDiscoun?.length > 0) {
+            this?.additionalDiscoun?.forEach((number: any) => {
+              this.totalAdditionalDiscou += number;
+            });
+          } else {
+            this.totalAdditionalDiscou = 0;
+          }
 
           let ad: any = (item.price.toFixed(2) * item.additional_discount) / 100;
           console.log(item.price.toFixed(2) - ad.toFixed(2));
@@ -103,9 +113,13 @@ totalAdditionalDiscou=0;
           
           this.additional_discount.push(addDis);
           this.totalAdditionalDiscount = 0;
-          this?.additional_discount?.forEach((number: any) => {
-            this.totalAdditionalDiscount += number;
-          });
+          if(this?.additional_discount?.length > 0) {
+            this?.additional_discount?.forEach((number: any) => {
+              this.totalAdditionalDiscount += number;
+            });
+          } else {
+            this.totalAdditionalDiscount = 0;
+          }
 
           // calulating tax
           console.log(this.discountRupees);
