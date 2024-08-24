@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    <h6 class="subhead-color" (click)="location.back()"><mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Reciept Voucher</h6>
                     <h4>Reciept Voucher Details</h4>
@@ -22,7 +22,7 @@
                             <div class="py-3">
                                 <div class="d-flex justify-content-between align-items-center container mb-3">
                                     <div>
-                                        <span [ngClass]="getBadgeClass(recieptVoucherDetail?.status)"
+                                        <span [ngClass]="_pdf.getBadgeClass(recieptVoucherDetail?.status)"
                                             class="badge p-2">{{recieptVoucherDetail?.status}}</span>
                                     </div>
                                     <div class="d-flex align-items-center">
@@ -100,7 +100,8 @@
                                                         <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
                                                             class="thone">Transaction Id</th>
                                                         <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                            class="thone">Bank Payment</th>
+                                                            class="thone">Bank Payment
+                                                        </th>
                                                         <th class="thone">Description</th>
                                                     </tr>
                                                 </thead>

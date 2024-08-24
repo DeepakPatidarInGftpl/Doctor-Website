@@ -1,23 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 
+type Billing_Type = {
+  address_type : 'Billing' | 'Shipping' 
+}
 @Component({
   selector: 'app-detail-expenses',
   templateUrl: './detail-expenses.component.html',
-  styleUrls: ['./detail-expenses.component.scss']
+  styleUrls: ['./detail-expenses.component.scss'],
+  providers : [DatePipe, PdfgenService]
 })
 export class DetailExpensesComponent implements OnInit {
   userDetails: any;
-  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService) { }
   id: any;
+  supplierAddress: any;
+  selectedAddressBilling: any;
+  selectedAddressShipping: any;
   companyDetails:any;
   isSyncLoading = false;
+  constructor(private Arout: ActivatedRoute,private _pdf : PdfgenService, private transactionService: TransactionService, public location: Location, private coreService: CoreService, private companyService: CompanyService) { }
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -54,6 +60,24 @@ export class DetailExpensesComponent implements OnInit {
         })
         this.filteredData = this.journelVoucherDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData(); 
+
+
+
+        // address selected
+ this.supplierAddress = res;
+ console.log('res',res)
+
+ this.supplierAddress?.customer?.detail?.address.map((res: Billing_Type) => {
+  console.log('res',res)
+
+   if (res?.address_type == 'Billing') {
+     this.selectedAddressBilling = res;
+     console.log('bii',this.selectedAddressBilling);
+   } else if (res.address_type == 'Shipping') {
+     this.selectedAddressShipping = res;
+     console.log(this.selectedAddressShipping);
+   }
+ })
       }
     })
   }
@@ -61,22 +85,151 @@ export class DetailExpensesComponent implements OnInit {
     this.location.back();
   }
 
-  loaderPdf = false;
-  async generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('journalVoucher.pdf');
-      });
+
+  generatePdf() {
+    // let p : number = parseFloat(this.totalMrp +'')
+      
+        let arr2 = new Array() ;
+     this.journelVoucherDetail?.cart.forEach((cart : any,n : number) => {
+      arr2.push([`${n+1}`,`${cart?.account?.account_id}`,`${cart?.service_or_product}`,`${cart?.amount}`,`${cart?.discount}`,`${cart?.tax}`,`${cart?.tax_value}`,`${cart?.total}`,`${cart?.description}`])
+    });
+    const obj = {
+    'Type' : 'Expense Voucher',
+    'Fist_date' : this.journelVoucherDetail?.expense_date,
+    // 'Secouand_date' : this.estimateDetail?.estimate_expiry_date,
+    'thead1' : ['Party','Refrence Bill No.','Net Amount','Paid Amount','Roound Off','Tax Amount','Total Amount','Status','Reverse Charge','Description'],
+    'tbody1' : [`${this.journelVoucherDetail?.party?.name}`,`${this.journelVoucherDetail?.refrence_bill_no}`,`${this.journelVoucherDetail?.net_amount}`,`${this.journelVoucherDetail?.paid_amount}`,`${this.journelVoucherDetail?.round_off ?? ''}`,`${this.journelVoucherDetail?.tax_amount}`,`${this.journelVoucherDetail?.total_amount}`,`${this.journelVoucherDetail?.status}`,`${this.journelVoucherDetail?.reverse_charge}`,`${this.journelVoucherDetail?.note}`],
+    'table2head' : ['#','Account','Service/Product','Amount','Discount','Tax','Tax Value','Total','Description'],
+
+
+    'foot2' : [
+      [
+        {
+          content : 'Total',
+          colSpan:3,
+          styles: { halign: 'center' }
+        },
+        {
+          content : `${this.journelVoucherDetail?.net_amount}`,
+          styles: { halign: 'center' }
+          
+        },
+        {
+          content : `Total Debit ${this.totalDiscount}`,
+          styles: { halign: 'center' }
+          
+        },
+        {
+          content : `${this.totalTax}%`,
+          styles: { halign: 'center' }
+          
+        },
+        {
+          content : `${this.journelVoucherDetail?.tax_amount}%`,
+          styles: { halign: 'center' }
+          
+        },
+        {
+          content : `${this.journelVoucherDetail?.total_amount}`,
+          styles: { halign: 'center' }
+          
+        }
+       
+      ],
+      [
+        {
+          content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+          colSpan : 9,
+          styles : {halign : 'left'}
+        }
+        
+      ],
+      
+      [
+        {
+          content : '',
+          colSpan : 6,
+          // styles : {halign : 'left'}
+        },
+       { content : ' ',
+        colSpan : 2,
+        styles : {halign : 'right'}
+      },
+       { content : ``,
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+          colSpan : 6,
+          styles : {halign : 'left'}
+        },
+       { content : '',
+        colSpan : 2,
+        styles : {halign : 'right'}
+      },
+       { content : ``,
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+          colSpan : 6,
+          styles : {halign : 'left'}
+        },
+       { content : '',
+        colSpan : 2,
+        styles : {halign : 'right'}
+      },
+       { content : ``,
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+        colSpan : 6,
+        },
+        {
+          content : '',
+        colSpan : 3,
+        },
+      ]
+    ],
+    'company_name' : this.companyDetails?.name,
+    'company_gst' : this.companyDetails?.gst,
+    'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+    'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+    'top_left_phone' : this.companyDetails?.phone,
+    'top_left_email' : this.companyDetails?.email,
+    'BILLING_ADDRESS' : {
+      'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city  ,
+      'address_line_3' : (this.selectedAddressBilling?.state?.state == null) ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + (this.selectedAddressBilling?.country?.country_name == null) ? '' : this.selectedAddressBilling?.country?.country_name ,
+      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
+      // 'email' : this.estimateDetail?.customer?.email ?? ''
+    },
+    'SHIPPING_ADDRESS' : {
+      'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null) ? '' :this.selectedAddressShipping?.city?.city ,
+      'address_line_3' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name  ,
+      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
+      // 'email' : this.estimateDetail?.customer?.email ?? '',
+    },
+    'table2body' : arr2,
+    'order_no' : this.journelVoucherDetail?.expense_no,
     }
-  }
+    
+     this._pdf.generatePdf(obj);
+    
+    
+      }
+     
 
   printForm() {
     const printContents = document.getElementById('debitNote').outerHTML;
