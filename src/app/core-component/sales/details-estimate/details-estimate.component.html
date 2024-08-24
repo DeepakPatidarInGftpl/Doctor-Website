@@ -122,21 +122,23 @@
 
             <mat-tab-group animationDuration="0ms" #tabGroup>
                 <mat-tab label="Estimate">
-            <div class="company-details-card card" *ngIf="estimateDetail">
-                <div class="sub-card row">
-                    <div class="content-part my-3">
-                        <div class="container py-10">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!(_pdf.loaderPdf | async)">Download
-                                    Invoice</button>
-                                <button class="btn btn-primary" *ngIf="_pdf.loaderPdf | async" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>&nbsp; Download Invoice</button>
-                            </div>
-                            <p style="margin-bottom: 0;">
-                                <button class="btn btn" (click)="printForm()" style="border: 1px solid antiquewhite;">Print Invoice</button>
-                            </p>
+                    <div class="company-details-card card" *ngIf="estimateDetail">
+                        <div class="sub-card row">
+                            <div class="content-part my-3">
+                                <div class="container py-10">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h3>Invoice</h3>
+                                        <button class="btn btn-primary" (click)="generatePdf()"
+                                            *ngIf="!(_pdf.loaderPdf | async)">Download
+                                            Invoice</button>
+                                        <button class="btn btn-primary" *ngIf="_pdf.loaderPdf | async" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>&nbsp; Download Invoice</button>
+                                    </div>
+                                    <p style="margin-bottom: 0;">
+                                        <button class="btn btn" (click)="printForm()"
+                                            style="border: 1px solid antiquewhite;">Print Invoice</button>
+                                    </p>
 
                                     <div class="outer container" id="debitNote">
                                         <div class="pdf-div" id="doc-target">
@@ -321,17 +323,19 @@
                                                                     </tr>
                                                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
                                                                         <td class="text-center" colspan="3">
-                                                                            <strong>Total</strong>
+                                                                            <strong>Total: {{totalItems}}</strong>
                                                                         </td>
-                                                                        <td class="text-center">{{totalMrp}}</td>
+                                                                        <!-- <td class="text-center">{{totalMrp}}</td> -->
+                                                                        <td class="text-center"></td>
                                                                         <td class="text-center">
                                                                             {{estimateDetail?.total_qty}}</td>
                                                                         <td class="text-center">
                                                                             {{estimateDetail?.total_discount+'%' + ' ('
                                                                             + '₹'+totaldiscount+ ')'}}</td>
-                                                                        <td class="text-center">
+                                                                        <!--   <td class="text-center">
                                                                             {{estimateDetail?.total_tax+'%'+ ' (' +
-                                                                            '₹'+calculateTax+ ')'}}</td>
+                                                                            '₹'+calculateTax+ ')'}}</td> -->
+                                                                        <td></td>
                                                                         <td class="text-center">
                                                                             {{estimateDetail?.total}}</td>
                                                                     </tr>
@@ -342,7 +346,8 @@
                                                     <div class="col-sm-12">
                                                         <p>Please notify us on any disrepancies within 3 days of receipt
                                                             <br />
-                                                            Overdue invoices will be charged 24% interest.</p>
+                                                            Overdue invoices will be charged 24% interest.
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

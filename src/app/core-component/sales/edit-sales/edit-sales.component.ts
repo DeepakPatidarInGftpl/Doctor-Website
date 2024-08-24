@@ -394,75 +394,95 @@ export class EditSalesComponent implements OnInit {
     console.log(add);
     this.addCart();
     const formArr = this.saleForm.get('sale_order_cart') as FormArray;
+
     add.forEach((j: any, i) => {
-      const price = j.price || 0;
-      const taxPercentage = j.tax || 0;
-      const calculatedTax = price - (price * taxPercentage) / 100;
-      this.taxIntoRupees[i] = calculatedTax;
-      // tax including & excluding
-      if (j.tax == 18) {
-        const calculatedTax = (price * taxPercentage) / 100;
+        const price = j.price || 0;
+        const taxPercentage = j.tax || 0;
+        const calculatedTax = price - (price * taxPercentage) / 100;
         this.taxIntoRupees[i] = calculatedTax;
-        let TotalWithoutTax = (j.price * j.qty) - calculatedTax;
-        this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
-      } else {
+
+        if (j.tax === 18) {
+            const calculatedTax = (price * taxPercentage) / 100;
+            this.taxIntoRupees[i] = calculatedTax;
+            let TotalWithoutTax = (j.price * j.qty) - calculatedTax;
+            this.TotalWithoutTax[i] = TotalWithoutTax.toFixed(2);
+        } else {
+            let taxPrice = (price * taxPercentage) / 100;
+            this.taxIntoRupees[i] = taxPrice;
+            let TotalWithoutTax = (j.price * j.qty) - taxPrice;
+            this.TotalWithoutTax[i] = TotalWithoutTax.toFixed(2);
+        }
+
         let taxPrice = (price * taxPercentage) / 100;
-        this.taxIntoRupees[i] = taxPrice;
-        let TotalWithoutTax = (j.price * j.qty) - taxPrice;
-        this.TotalWithoutTax[i] = (TotalWithoutTax).toFixed(2);
-      }
-      let taxPrice = (price * taxPercentage) / 100;
-      this.totalDefaultDiscount += j?.discount;
-      if (formArr.at(i)) {
-        formArr.at(i).patchValue({
-          barcode: j?.barcode.id,
-          item_name: j?.item_name,
-          qty: j?.qty,
-          price: j.price,
-          tax: j?.tax || 0,
-          discount: j?.discount,
-          total: j?.total
-        });
+        let totalDiscount: any = 0;
+         totalDiscount += parseFloat(j?.discount);
+        this.totalDefaultDiscount = totalDiscount;
+
+        if (!formArr.at(i)) {
+            formArr.push(
+                new FormGroup({
+                    barcode: new FormControl(j?.barcode.id),
+                    item_name: new FormControl(j?.item_name),
+                    qty: new FormControl(j?.qty),
+                    price: new FormControl(j.price),
+                    tax: new FormControl(j?.tax || 0),
+                    discount: new FormControl(j?.discount),
+                    total: new FormControl(j?.total)
+                })
+            );
+        } else {
+            formArr.at(i).patchValue({
+                barcode: j?.barcode.id,
+                item_name: j?.item_name,
+                qty: j?.qty,
+                price: j.price,
+                tax: j?.tax || 0,
+                discount: j?.discount,
+                total: j?.total
+            });
+        }
 
         if (j?.barcode?.batch[0]?.discount) {
-          j.barcode.batch[0].discount.forEach((discount: any) => {
-            if (!this.discountTyp[i]) {
-              this.discountTyp[i] = [];
-            }
-            this.discountTyp[i].push(discount);
-          });
+            j.barcode.batch[0].discount.forEach((discount: any) => {
+                if (!this.discountTyp[i]) {
+                    this.discountTyp[i] = [];
+                }
+                this.discountTyp[i].push(discount);
+            });
         }
 
         this.selectedStates = this.discountTyp.map(discountList => {
-          let foundFirstCompulsory = false;
-          return discountList.map(discount => {
-            if (!!discount?.is_compulsory && !foundFirstCompulsory) {
-              foundFirstCompulsory = true;
-              return true; 
-            } else {
-              return false; 
-            }
-          });
+            let foundFirstCompulsory = false;
+            return discountList.map(discount => {
+                if (!!discount?.is_compulsory && !foundFirstCompulsory) {
+                    foundFirstCompulsory = true;
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         });
-      this.excludeDiscountIndexes.push(i);
-      this.calculateTotalForAll();
-      }
-      this.barcode[i] = j.barcode.sku;
-      this.productName[i] = j.barcode.product_title;
-      this.coastprice[i] = j.price;
-      this.tax[i] = j.tax || 0;
-      this.myControl.push(new FormControl(j?.barcode?.product_title));
-      this.priceQtyData[i] = {
-        price: Number(j?.price)?.toFixed(2),
-        qty: j?.qty,
-        additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
-        tax: j?.tax || 0,
-        coastPrice: j?.price,
-        taxPrice: taxPrice 
-      };
-    })
-    return formArr
-  }
+
+        this.excludeDiscountIndexes.push(i);
+        this.calculateTotalForAll();
+
+        this.barcode[i] = j.barcode.sku;
+        this.productName[i] = j.barcode.product_title;
+        this.coastprice[i] = j.price;
+        this.tax[i] = j.tax || 0;
+        this.myControl.push(new FormControl(j?.barcode?.product_title));
+        this.priceQtyData[i] = {
+            price: Number(j?.price)?.toFixed(2),
+            qty: j?.qty,
+            additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+            tax: j?.tax || 0,
+            coastPrice: j?.price,
+            taxPrice: taxPrice
+        };
+    });
+
+    return formArr;
+}
 
   cart(): FormGroup {
     return this.fb.group({
@@ -523,10 +543,13 @@ export class EditSalesComponent implements OnInit {
       if (totalProductPrice && taxPercentage) {
         this.taxIntoRupees[index] = (totalProductPrice * taxPercentage) / 100;
       }
+      if(totalProductQty === 0) {
+        this.taxIntoRupees[index] = 0;
+      }
       this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
       barcode.patchValue({
         qty: value,
-        tax: taxPercentage,
+        tax: totalProductQty === 0 ? 0 : taxPercentage,
         additional_discount: this.priceQtyData[0]?.additional_discount
       });
     }
@@ -740,16 +763,23 @@ export class EditSalesComponent implements OnInit {
       console.warn(this.discountTyp[index], 'discount selected based on index');
       // console.log(this.discountTyp);
       // auto selected data of isComuplsory
-      this.compulsoryDiscounts = this.discountTyp[index].filter(element => element?.is_compulsory);
+      if(this.discountTyp[index]?.length) {
+        this.compulsoryDiscounts = this.discountTyp[index].filter(element => element?.is_compulsory);
+      }
       // this.selectedStates = this.discountTyp[index].map(discount => discount?.is_compulsory);
     });
 
-    this.compulsoryDiscounts = Array.from(
-      new Map(this.compulsoryDiscounts.map(item => [item?.id, item])).values()
-    );
-    this.discountTyp[index] = Array.from(
-      new Map(this.discountTyp[index].map(item => [item?.id, item])).values()
-    );
+    if (this.compulsoryDiscounts?.length) {
+      this.compulsoryDiscounts = Array.from(
+        new Map(this.compulsoryDiscounts.map(item => [item?.id, item])).values()
+      );
+    }
+    
+    if (this.discountTyp?.[index]?.length) {
+      this.discountTyp[index] = Array.from(
+        new Map(this.discountTyp[index].map(item => [item?.id, item])).values()
+      );
+    }
     console.log(this.discountTyp);
     // console.log(this.compulsoryDiscounts);
 
@@ -1331,7 +1361,11 @@ export class EditSalesComponent implements OnInit {
     this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    if(event?.batch?.length > 0) {
+      this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    } else {
+      this.apiPurchaseTax = 0;
+    }
     this.batchDiscount = 0;
     this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
@@ -1415,7 +1449,7 @@ export class EditSalesComponent implements OnInit {
           qty: 1,
           mrp: event.batch[0]?.mrp,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          // discount: event.batch[0]?.discount || 0,
           price: Number(this.originalCoastPrice).toFixed(2),
         });
         taxValue = this.apiPurchaseTax;
@@ -1428,7 +1462,7 @@ export class EditSalesComponent implements OnInit {
           qty: 1,
           mrp: event.batch[0]?.mrp,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          // discount: event.batch[0]?.discount || 0,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
@@ -1707,10 +1741,10 @@ export class EditSalesComponent implements OnInit {
       console.log(totalAmount);
       const discount = val.get('discount').value;
       if (this.excludeDiscountIndexes.includes(index)) {
-        total = total - this.totalDefaultDiscount;
+        total = total - Number(this.totalDefaultDiscount);
         this.totalDiscountAmount = totalDiscountAmount;
       } else if(!!discount){
-        discountAmount = (totalAmount * discount) / 100;
+        discountAmount = (totalAmount * Number(discount)) / 100;
         totalDiscountAmount += discountAmount;
         total = total - discountAmount;
         this.totalDiscountAmount += totalDiscountAmount;

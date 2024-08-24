@@ -32,6 +32,7 @@ export class DetailsEstimateComponent implements OnInit {
   totalDiscount: any[] = [];
   discount = 0;
   totaldiscount = 0;
+  totalItems: any;
 
   // loaderPdf = false;
 
@@ -58,13 +59,14 @@ export class DetailsEstimateComponent implements OnInit {
       if (this.id == res.id) {
         this.estimateDetail = res;
         // calculation
+        this.totalItems = this.estimateDetail?.cart?.length;
         this.estimateDetail?.cart?.forEach((item: any) => {
           // discount
           let d: any = (item?.price * item?.discount) / 100;
           // console.log(item?.price?.toFixed(2) - d.toFixed(2));
-          this.discount = item?.price - d.toFixed(2);
+          // this.discount = item?.price - d.toFixed(2);
           this.totaldiscount = 0;
-          this.totalDiscount.push(this.discount);
+          this.totalDiscount.push(d);
           // console.log(this.totalDiscount);
           this.totalDiscount?.forEach((number: any) => {
             this.totaldiscount += number;
@@ -86,9 +88,11 @@ export class DetailsEstimateComponent implements OnInit {
           // mrp
           this.totalmrp.push(item?.price);
           this.totalMrp = 0;
+          let total:any = 0;
           this?.totalmrp?.forEach((number: any) => {
-            this.totalMrp += number;
+            total += parseFloat(number);
           })
+          this.totalMrp = total;
         });
         // address selected
         this.supplierAddress = res;
