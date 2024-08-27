@@ -25,9 +25,16 @@ public generatePdf(obj : any) {
 //   arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.barcode?.product_title}`,`${cart?.qty}`,`${cart?.purchase_rate}`,`${cart?.mrp}`,`${cart?.discount ?? '' }`,`${cart?.tax ?? ''}`,`${cart?.landing_cost}`,`${cart?.total}`])
 // });
 this.loaderPdf.next(true)
+
     
     this._com.loadImage().then((img : any)=>{
     const pdf = new jsPDF('p','mm','a4');
+
+
+
+    const t = pdf.internal.pageSize.getHeight() ;
+// console.log(t)
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const width = 200;
@@ -47,7 +54,7 @@ this.loaderPdf.next(true)
 let row : number = 21;
 let len = foot2.length;
 let lenArr = obj.table2body.length;
-if(obj.Type === 'Goods Received'){
+if(obj.Type === 'Goods Received' || obj.Type === 'New Stock Transfer'){
   // row  = 13;
   
 
@@ -71,16 +78,13 @@ else{
   let newval = (row - loop);
   if (loop !== 0) for(let i = 0; i < newval; i++) obj.table2body.push([]);
 }
-
-
-let tableHeight : number = 0;
-
 if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== 'Credit Note' ) (pdf as any).autoTable({
       head : table2head,
       body : obj.table2body,
       foot : foot2,
        
-      startY:   obj.Type === 'Goods Received'? 99 :  92,
+      startY:   obj.Type === 'Goods Received'  ? 99 :  92,
+      // startY:   (pdf as any).lastAutoTable.finalY + 5,
       
       headStyles:{
         fontSize : 7,
@@ -99,14 +103,13 @@ if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== '
           fontSize : 7,
           halign :'left',
         },
-      margin : {top :obj.Type === 'Goods Received'? 99 :  92},
+      margin : {top :obj.Type === 'Goods Received' ? 99 :  92},
+      // margin : {top :(pdf as any).lastAutoTable.finalY + 5},
       alternateRowStyles:{ fillColor :[255, 255, 255] },
 
 
 
     didDrawCell: (data : any)=>{
-// console.log('deepak', data)
-        tableHeight += data.row.height;
 
       const {cell,table} = data;
       const {x,y,width,height} = cell;
@@ -148,7 +151,7 @@ if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== '
           pdf.line(x,y+height,x+width,y+height);
          }
          
-        if (obj.Type === 'Invoice' || obj.Type === 'Goods Received'  && data.row.index === 2) {
+        if (obj.Type === 'Invoice' || obj.Type === 'Goods Received' || obj.Type === 'New Stock Transfer' && data.row.index === 2) {
           pdf.setDrawColor(0,0,0);
           pdf.setLineWidth(0.2);
           pdf.line(x,y,x+width,y);
@@ -168,16 +171,15 @@ if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== '
   });
 
 
-  
-  if (obj.Type === 'Goods Received' && obj.show) {
-  // console.log('deepak',tableHeight)
-let tote = Math.floor(tableHeight) -105;
+  // new table
+  if (obj.Type === 'Goods Received' || obj.Type === 'New Stock Transfer' && obj.show) {
+
   
  (pdf as any).autoTable({
     head : obj.Thead3,
     body : obj.Tbody3,
     foot : obj.Tfoot3,
-    startY:  tote ,
+    startY:  (pdf as any).lastAutoTable.finalY + 5 ,
     headStyles:{
       fontSize : 7,
       textColor :[0,0,0],
@@ -195,7 +197,7 @@ let tote = Math.floor(tableHeight) -105;
         fontSize : 7,
         halign :'left',
       },
-    margin : {top :tote},
+    margin : {top :(pdf as any).lastAutoTable.finalY + 5},
     alternateRowStyles:{ fillColor :[255, 255, 255] },
   didDrawCell: (data : any)=>{
     const {cell,table} = data;
@@ -447,7 +449,9 @@ if(obj.Type=== 'Goods Received'){
   
     pdf.setDrawColor(0, 0, 0)
     pdf.setLineWidth(0.2);
-    pdf.line(14,105.5,196,105.5)
+    pdf.line(14,108.3,196,108.3)
+
+    
 }else  if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== 'Credit Note') {
 
       pdf.setDrawColor(0, 0, 0)
