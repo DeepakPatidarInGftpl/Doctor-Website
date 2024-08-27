@@ -296,31 +296,32 @@ export class HeaderComponent implements OnInit {
   // condition for day close or not
 
   notificationRead(id: number, isView: boolean) {
-    if (!isView) {
-      if (!this.notificationIds.includes(id)) {
+      if (!isView && !this.notificationIds.includes(id)) {
         this.notificationIds.push(id);
-        let formData = new FormData();
+        let formData : FormData = new FormData();
         formData.append(
           'notification_id',
-          JSON.stringify(this.notificationIds)
+           JSON.stringify(this.notificationIds)
         );
         this.notificationService
           .updateNotificationPanelByIds(formData)
           .subscribe(
             {
-
-           next: ()=> {
-              this.getNotificationList();
+           next: (res : {isSuccess : boolean,msg : string;})=> {
+            if(res.isSuccess){
+              this.notificationList.find((notfi: { id: number; }) => notfi.id == id).is_view = true;
               this.notificationIds = [];
+            }else{
+              throw new Error('Allreday Read Notification')
+            }
             },
-          error : () => {
+           error : () => {
               this.notificationIds = [];
             }
           }
 
           );
       }
-    }
   }
 
   viewAllNotification() {

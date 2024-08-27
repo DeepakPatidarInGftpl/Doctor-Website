@@ -2,18 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexPlotOptions,
-  ApexResponsive,
-  ApexXAxis,
-  ApexLegend,
-  ApexFill,
-  ApexNonAxisChartSeries
-} from "ng-apexcharts";
+import {ChartComponent,ApexPlotOptions,ApexNonAxisChartSeries} from "ng-apexcharts";
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -96,7 +85,7 @@ if(this.companyService.CheckBlur$){
 }
 //end
     this.companyService.userDetails$.subscribe((res: any) => {
-      if (res.role=='admin'){
+      if (res && res.role=='admin'){
 this.isAdmin=true;
       }else{
         this.isAdmin=false;
