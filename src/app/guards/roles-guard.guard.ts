@@ -33,9 +33,25 @@ export class RolesGuardGuard  {
       const hasPermission = auth.some((permission: Permission) =>
         allowedRoles.includes(permission.codename)
       );
-      // console.log(hasPermission);
-      
 
+
+      // get  profile data from a services store 
+
+    let result : any =  this.coreService.profileData$.value;
+ if (result && result.username) {
+      this.userDetails = result;
+      this.profileService.setUserDetails(this.userDetails); 
+      this.profileService.ProfileData$.next(result)
+
+      // permission lenghth increase or decrease then localstorage store data 
+      const userDetails = result?.permission;
+      const storedUserDetails = this.profileService.getUserDetails();
+      if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
+        this.profileService.setUserPermission(userDetails);
+        window.location.reload();
+      }
+      //end
+    }else{
       // call profile api
       this.coreService.getProfile().subscribe((res:any) => {
         this.userDetails = res;
@@ -51,6 +67,8 @@ export class RolesGuardGuard  {
         }
         //end
       })
+
+    }
 
       //end
       // console.log(hasPermission);

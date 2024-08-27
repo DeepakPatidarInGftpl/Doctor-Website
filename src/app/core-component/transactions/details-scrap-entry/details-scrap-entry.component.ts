@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 @Component({
   selector: 'app-details-scrap-entry',
   templateUrl: './details-scrap-entry.component.html',
-  styleUrls: ['./details-scrap-entry.component.scss']
+  styleUrls: ['./details-scrap-entry.component.scss'],
+  providers : [DatePipe, PdfgenService]
 })
-export class DetailsScrapEntryComponent implements OnInit {
-  userDetails: any;
-  companyDetails:any;
-  isSyncLoading = false;
-  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService, private location: Location, private coreService: CoreService, private companyService: CompanyService) { }
-  id: any;
+export class DetailsScrapEntryComponent implements OnInit,AfterViewInit {
+  public userDetails: any;
+  public companyDetails:any;
+  public isSyncLoading = false;
+  public supplierAddress: any;
+  public selectedAddressBilling: any;
+  public selectedAddressShipping: any;
+  public id: any;
+  constructor(private Arout: ActivatedRoute, private transactionService: TransactionService,public _pdf : PdfgenService ,public location: Location, private coreService: CoreService, private companyService: CompanyService) { }
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -27,14 +30,27 @@ export class DetailsScrapEntryComponent implements OnInit {
       this.companyDetails=res[0];
     })
   }
+
+ngAfterViewInit(): void {
+  this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+
+    if (res?.address_type == 'Billing') {
+      this.selectedAddressBilling = res;
+      console.log('bii',this.selectedAddressBilling);
+    } else if (res.address_type == 'Shipping') {
+      this.selectedAddressShipping = res;
+      console.log(this.selectedAddressShipping);
+    }
+   })
+}
   recieptVoucherDetail: any
   getdata() {
     this.transactionService.getScrapEntryById(this.id).subscribe((res:any) => {
+      console.log('res',res)
       res.map((res:any)=>{
         if (this.id == res.id) {
           this.recieptVoucherDetail = res;
-          console.log(this.recieptVoucherDetail);
-          
+          this.supplierAddress = res;
           this.filteredData = this.recieptVoucherDetail?.logs.slice(); // Initialize filteredData with the original data
           this.filterData(); 
         }
@@ -42,9 +58,7 @@ export class DetailsScrapEntryComponent implements OnInit {
      
     })
   }
-  goBack() {
-    this.location.back();
-  }
+  
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
@@ -55,24 +69,151 @@ export class DetailsScrapEntryComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  loaderPdf = false;
-  async generatePdf() {
-    console.log('generatePdf called');
-    debugger
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('receiptVoucher.pdf');
-      });
+
+  generatePdf() {
+      
+    
+        let arr3 = new Array() ;
+        let qut : number = 0;
+     this.recieptVoucherDetail?.cart.forEach((cart : any,n : number) => {
+      arr3.push([`${n+1}`,`${cart?.item_code}`,`${cart?.item_name}`,`${cart?.qty}`,`${cart?.unit}`,`${cart?.reason}`])
+   qut += cart?.qty;
+    });
+    const obj = {
+    'Type' : 'Scrap Entry',
+    'Fist_date' : this.recieptVoucherDetail?.date,
+    'thead1' : [],
+    'tbody1' :  new Array() ?? '',
+    'foot2' : [
+      [
+        {
+          content : 'Total',
+          colSpan:3,
+          styles: { halign: 'center' }
+        },
+        {
+          content : `${qut}`,
+          styles: { halign: 'center' }
+        },
+        // {
+        //   content : `${this.totalLandingCost}`,
+        //   styles: { halign: 'center' }
+          
+        // },
+       //  {
+       //    content : `${this.returnBillDetail?.total_discount}%`,
+       //    styles: { halign: 'center' }
+          
+       //  },
+       //  {
+       //    content : `${this.returnBillDetail?.total_tax}%`,
+       //    styles: { halign: 'center' }
+          
+       //  },
+       //  {
+       //    content : `${this.returnBillDetail?.total}`,
+       //    styles: { halign: 'center' }
+          
+       //  }
+       
+      ],
+      [
+        {
+          content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+          colSpan : 6,
+          styles : {halign : 'left'}
+        }
+        
+      ],
+      [
+        {
+          content : ``,
+          colSpan : 4,
+        },
+        {
+          content : ``,
+          colSpan : 1,
+          styles : {halign : 'right'}
+        },
+        {
+          content : '',
+          colSpan : 1,
+          styles : {halign : 'left'}
+        }
+    
+      ],
+      [
+        {
+          content : '',
+          colSpan : 4,
+          // styles : {halign : 'left'}
+        },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'right'}
+      },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+          colSpan : 4,
+          styles : {halign : 'left'}
+        },
+       { content : ' ',
+        colSpan : 1,
+        styles : {halign : 'right'}
+      },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+        colSpan :3,
+        },
+        {
+          content : '',
+        colSpan : 3,
+        },
+      ]
+    ],
+
+    'table2head' : ['#','SKU','Name','Quantity','Unit','Reason'],
+    'table2body' :arr3 ?? '',
+    'company_name' : this.companyDetails?.name,
+    'company_gst' : this.companyDetails?.gst,
+    'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+    'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+    'top_left_phone' : this.companyDetails?.phone,
+    'top_left_email' : this.companyDetails?.email,
+    'BILLING_ADDRESS' : {
+      'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city  ,
+      'address_line_3' : (this.selectedAddressBilling?.state?.state == null) ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + (this.selectedAddressBilling?.country?.country_name == null) ? '' : this.selectedAddressBilling?.country?.country_name ,
+      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
+      // 'email' : this.estimateDetail?.customer?.email ?? ''
+    },
+    'SHIPPING_ADDRESS' : {
+      'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null) ? '' :this.selectedAddressShipping?.city?.city ,
+      'address_line_3' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name  ,
+      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
+      // 'email' : this.estimateDetail?.customer?.email ?? '',
+    },
+    'order_no' : this.recieptVoucherDetail?.voucher_no,
     }
-  }
+    
+     this._pdf.generatePdf(obj);
+    
+    
+      }
+
 
   printForm() {
     const printContents = document.getElementById('debitNote').outerHTML;
@@ -82,18 +223,7 @@ export class DetailsScrapEntryComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
 
-  getBadgeClass(status: string): string {
-    switch (status) {
-      case 'Pending':
-        return 'pending-status-badge';
-      case 'Approved':
-        return 'approve-status-badge';
-      case 'Rejected':
-        return 'reject-status-badge';
-      default:
-        return '';
-    }
-  }
+  
 
   approve() {
     this.isSyncLoading = true;

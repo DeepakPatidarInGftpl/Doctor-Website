@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="page-header">
                 <div class="page-title">
-                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    <h6 class="subhead-color" (click)="location.back()"><mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Reciept Voucher</h6>
                     <h4>Reciept Voucher Details</h4>
@@ -22,7 +22,7 @@
                             <div class="py-3">
                                 <div class="d-flex justify-content-between align-items-center container mb-3">
                                     <div>
-                                        <span [ngClass]="getBadgeClass(recieptVoucherDetail?.status)"
+                                        <span [ngClass]="_pdf.getBadgeClass(recieptVoucherDetail?.status)"
                                             class="badge p-2">{{recieptVoucherDetail?.status}}</span>
                                     </div>
                                     <div class="d-flex align-items-center">
@@ -77,6 +77,20 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="col-sm-5">
+                                                <p class="text-end pe-3 mt-5 h3">Reciept Voucher </p>
+                                                <p class="text-end pe-3 m-0">Reciept Voucher Number : <span>{{recieptVoucherDetail?.receipt_voucher_no}}</span></p>
+                                                <p class="text-end pe-3 m-0">Reciept Voucher Date : <span>{{recieptVoucherDetail?.date}}</span></p>
+                                           
+                                                <div class="d-flex align-items-center justify-content-end ">
+                                                    <p class="mb-0 d-inline f-400  me-2">Is Active : </p>
+                                                    <span
+                                                        [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
+                                                        class="badges">{{recieptVoucherDetail?.is_active}}</span>
+                                                </div>
+                                           
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -92,15 +106,14 @@
                                                         <th class="thone">Receipt Type</th>
                                                         <th class="thone">Mode Type</th>
                                                         <th class="thone">Payer</th>
-                                                        <th class="thone">Reciept Voucher No.</th>
                                                         <th class="thone">Amount</th>
-                                                        <th class="thone">Date</th>
-                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                            class="thone">Transaction Date</th>
-                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                            class="thone">Transaction Id</th>
-                                                        <th *ngIf="recieptVoucherDetail?.payment_type=='Bank'"
-                                                            class="thone">Bank Payment</th>
+                                                        <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
+
+                                                            <th class="thone">Transaction Date</th>
+                                                            <th class="thone">Transaction Id</th>
+                                                            <th class="thone">Bank Payment
+                                                            </th>
+                                                        </ng-container>
                                                         <th class="thone">Description</th>
                                                     </tr>
                                                 </thead>
@@ -109,9 +122,7 @@
                                                     <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
                                                     <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
                                                     <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
-                                                    <td class="td">{{recieptVoucherDetail?.receipt_voucher_no}}</td>
                                                     <td class="td">{{recieptVoucherDetail?.amount}}</td>
-                                                    <td class="td">{{recieptVoucherDetail?.date}}</td>
                                                     <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
                                                         <td class="td">{{recieptVoucherDetail?.transaction_date}}</td>
                                                         <td class="td">{{recieptVoucherDetail?.transaction_id}}</td>
@@ -151,12 +162,7 @@
                                             </table>
                                         </div>
 
-                                        <div class="d-flex align-items-center my-3 pt-3">
-                                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                            <span
-                                                [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
-                                                class="badges">{{recieptVoucherDetail?.is_active}}</span>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>

@@ -1,21 +1,24 @@
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
   selector: 'app-details-credit-note',
   templateUrl: './details-credit-note.component.html',
-  styleUrls: ['./details-credit-note.component.scss']
+  styleUrls: ['./details-credit-note.component.scss'],
+  providers :[DatePipe,PdfgenService]
 })
 export class DetailsCreditNoteComponent implements OnInit {
-  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location, private companyService: CompanyService) { }
+  constructor(private transactionService: TransactionService,private _pdf : PdfgenService ,private Arout: ActivatedRoute,public location:Location, private companyService: CompanyService) { }
  creditnoteDetails: any;
  companyDetails:any;
-  id: any
+  id: any;
+  public supplierAddress: any;
+ public selectedAddressBilling: any;
+ public selectedAddressShipping: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.companyService.getCompany().subscribe(res=>{
@@ -25,29 +28,68 @@ export class DetailsCreditNoteComponent implements OnInit {
       this.creditnoteDetails=res;
       this.filteredData = this.creditnoteDetails?.logs.slice(); // Initialize filteredData with the original data
       this.filterData(); 
+      this.supplierAddress = res;
+    this.Set_Address()
     })
   }
 
-  goBack() {
-    this.location.back();
-  }
-  
-  loaderPdf = false;
-  async generatePdf() {
-    this.loaderPdf = true;
-    const elementToCapture = document.getElementById('debitNote');
-    if (elementToCapture) {
-      html2canvas(elementToCapture).then((canvas) => {
-        this.loaderPdf = false;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('creditNoteVoucher.pdf');
-      });
+Set_Address(): void {
+  this.supplierAddress?.sale_bill_no?.customer?.detail?.address.map((res: any) => {
+
+    if (res?.address_type == 'Billing') {
+      this.selectedAddressBilling = res;
+      console.log('bii',this.selectedAddressBilling);
+    } else if (res.address_type == 'Shipping') {
+      this.selectedAddressShipping = res;
+      console.log(this.selectedAddressShipping);
     }
-  }
+   })
+}
+
+  generatePdf() {
+    // let p : number = parseFloat(this.totalMrp +'')
+      
+        let arr2 = new Array() ;
+    //  this.journelVoucherDetail?.cart.forEach((cart : any,n : number) => {
+    //   arr2.push([`${n+1}`,`${cart?.from_account?.company_name ?  cart?.from_account?.company_name :  cart?.from_account?.account_id}`,`${cart?.amount_type}`,`${cart?.amount}`])
+    // });
+    const obj = {
+    'Type' : 'Credit Note',
+    'Fist_date' : this.creditnoteDetails?.date,
+    // 'Secouand_date' : this.estimateDetail?.estimate_expiry_date,
+    'thead1' : ['Account','Sale Bill','Reason','Round Off','Tax','Total','Note'],
+    'tbody1' : [`${this.creditnoteDetails?.account?.account_id}`,`${this.creditnoteDetails?.sale_bill_no?.customer_bill_no}`,`${this.creditnoteDetails?.reason}`,`${this.creditnoteDetails?.roundoff}`,`${this.creditnoteDetails?.tax }%`,`${this.creditnoteDetails?.total}`,`${this.creditnoteDetails?.note}`],
+    'table2head' : [],
+    'foot2' : [],
+    'company_name' : this.companyDetails?.name,
+    'company_gst' : this.companyDetails?.gst,
+    'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+    'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+    'top_left_phone' : this.companyDetails?.phone,
+    'top_left_email' : this.companyDetails?.email,
+    'BILLING_ADDRESS' : {
+      'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressBilling?.address_line_2  +' , ' + this.selectedAddressBilling?.city?.city  ,
+      'address_line_3' : this.selectedAddressBilling?.state?.state  + ' , ' +  this.selectedAddressBilling?.country?.country_name ,
+      'phone' : this.supplierAddress?.sale_bill_no?.customer?.phone_number ?? '',
+      'email' : this.supplierAddress?.sale_bill_no?.customer?.username
+    },
+    'SHIPPING_ADDRESS' : {
+      'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
+      'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null) ? '' :this.selectedAddressShipping?.city?.city ,
+      'address_line_3' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name  ,
+      'phone' : this.supplierAddress?.sale_bill_no?.customer?.phone_number ?? '',
+      'email' : this.supplierAddress?.sale_bill_no?.customer?.username ?? '',
+    },
+    'table2body' : arr2 ?? '',
+    'order_no' : this.creditnoteDetails?.credit_note_no,
+    }
+    
+     this._pdf.generatePdf(obj);
+    
+    
+      }
+
 
   printForm() {
     const printContents = document.getElementById('debitNote').outerHTML;

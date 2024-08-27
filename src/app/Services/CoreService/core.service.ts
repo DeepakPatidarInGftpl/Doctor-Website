@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { employee } from 'src/app/interfaces/employee';
 import { Warehouse } from 'src/app/interfaces/warehouse';
@@ -1610,10 +1610,12 @@ export class CoreService {
     return this.http.patch(`${url}${id}`, data);
   }
 
+
+  public profileData$ = new BehaviorSubject([]);
   // profile
   getProfile() {
     let url = this.apiUrl + '/pv-api/profile/';
-    return this.http.get(url);
+    return this.http.get(url).pipe(tap((res : any)=>this.profileData$.next(res)));
   }
 
   subcategoryGroupIsActive(id: number, data) {

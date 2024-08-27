@@ -728,9 +728,9 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-start"><strong>Total</strong></td>
-                                        <td class="text-start">{{calculateTotalQty() | number:'1.2-2'}}
+                                        <td class="text-start">{{calculateTotalQty()}}
                                             <input type="text" formControlName="total_qty" class="input"
-                                                [ngModel]="calculateTotalQty() | number:'1.2-2'" style="display: none;">
+                                                [ngModel]="calculateTotalQty()" style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice() | number:'1.2-2'}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount() |  number:'1.2-2'}}</td> -->
@@ -792,7 +792,9 @@
                                 <li class="total">
                                     <h4>Total</h4>
                                     <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
-                                            formControlName="total" class="input" style="display: none;"></h5>
+                                            formControlName="total"
+                                            [value]="calculateTotalForAll().toFixed(2) | currency:'INR'" class="input"
+                                            style="display: none;"></h5>
                                 </li>
                             </ul>
                         </div>

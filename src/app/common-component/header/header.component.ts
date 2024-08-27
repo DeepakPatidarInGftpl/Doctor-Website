@@ -97,6 +97,8 @@ export class HeaderComponent implements OnInit {
     //     this.notificationIds = [];
     //   }
     // });
+    this.getNotificationList();
+
   }
 
   dayCloseForm!: FormGroup;
@@ -122,7 +124,6 @@ export class HeaderComponent implements OnInit {
     });
     this.checkDayClose();
     this.getDayClose();
-    this.getNotificationList();
 
     // blur bg when modal open
     if (this.companyService.CheckBlur$) {
@@ -295,31 +296,32 @@ export class HeaderComponent implements OnInit {
   // condition for day close or not
 
   notificationRead(id: number, isView: boolean) {
-    if (!isView) {
-      if (!this.notificationIds.includes(id)) {
+      if (!isView && !this.notificationIds.includes(id)) {
         this.notificationIds.push(id);
-        let formData = new FormData();
+        let formData : FormData = new FormData();
         formData.append(
           'notification_id',
-          JSON.stringify(this.notificationIds)
+           JSON.stringify(this.notificationIds)
         );
         this.notificationService
           .updateNotificationPanelByIds(formData)
           .subscribe(
             {
-
-           next: ()=> {
-              this.getNotificationList();
+           next: (res : {isSuccess : boolean,msg : string;})=> {
+            if(res.isSuccess){
+              this.notificationList.find((notfi: { id: number; }) => notfi.id == id).is_view = true;
               this.notificationIds = [];
+            }else{
+              throw new Error('Allreday Read Notification')
+            }
             },
-          error : () => {
+           error : () => {
               this.notificationIds = [];
             }
           }
 
           );
       }
-    }
   }
 
   viewAllNotification() {
@@ -499,27 +501,60 @@ export class HeaderComponent implements OnInit {
   }
 
   getNotificationList() {
-    this.notificationService.getNotificationPanel(1).subscribe((res) => {
-      const notificationsPerPage = res?.notifications.length;
-      const totalNotifications = res?.notifications_count;
-      this.totalNotificationCount = res?.notifications_count;
-      const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
 
-      this.notificationService
-        .getNotificationPanel(lastPage)
-        .subscribe((lastPageRes) => {
-          this.notificationList = lastPageRes.notifications
-            .slice(-5)
-            .map((notification) => {
-              return {
-                ...notification,
-                minutesAgo: this.calculateMinutesAgo(
-                  notification.schedule_time
-                ),
-              };
-            });
-          // console.log(this.notificationList);
-        });
-    });
+   let result : any =  this.notificationService.NotificationPanel.value
+    
+    
+   if (result.length > 0) {
+    const notificationsPerPage = result?.notifications.length;
+    const totalNotifications = result?.notifications_count;
+    this.totalNotificationCount = result?.notifications_count;
+    const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
+
+    this.notificationService
+      .getNotificationPanel(lastPage)
+      .subscribe((lastPageRes) => {
+        this.notificationList = lastPageRes.notifications
+          .slice(-5)
+          .map((notification) => {
+            return {
+              ...notification,
+              minutesAgo: this.calculateMinutesAgo(
+                notification.schedule_time
+              ),
+            };
+          });
+      });
+   }else{
+    
+     this.notificationService.getNotificationPanel(1).subscribe((res) => {
+       const notificationsPerPage = res?.notifications.length;
+       const totalNotifications = res?.notifications_count;
+       this.totalNotificationCount = res?.notifications_count;
+       const lastPage = Math.ceil(totalNotifications / notificationsPerPage);
+  
+       this.notificationService
+         .getNotificationPanel(lastPage)
+         .subscribe((lastPageRes) => {
+           this.notificationList = lastPageRes.notifications
+             .slice(-5)
+             .map((notification) => {
+               return {
+                 ...notification,
+                 minutesAgo: this.calculateMinutesAgo(
+                   notification.schedule_time
+                 ),
+               };
+             });
+           // console.log(this.notificationList);
+         });
+     });
+   }
+
+
+
+
+
+
   }
 }

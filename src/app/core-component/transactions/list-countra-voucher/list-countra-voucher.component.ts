@@ -14,7 +14,7 @@ import { CommonServiceService } from 'src/app/Services/commonService/common-serv
 @Component({
   selector: 'app-list-countra-voucher',
   templateUrl: './list-countra-voucher.component.html',
-  styleUrls: ['./list-countra-voucher.component.scss']
+  styleUrls: ['./list-countra-voucher.component.scss'],
 })
 export class ListCountraVoucherComponent implements OnInit {
 
