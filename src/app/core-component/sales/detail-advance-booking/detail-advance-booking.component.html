@@ -165,21 +165,20 @@
                                                                     style="float: inline-start;">
                                                                     <div class="left-top">
                                                                         <img src="assets/dummy/pos.png" alt="">
-                                                                        <p class="gst"><span>GST</span>
+                                                                        <p class="gst">
                                                                             {{companyDetails?.gst}}</p>
-                                                                        <p><span>Company Name </span>:
+                                                                        <p>
                                                                             {{companyDetails?.name}}</p>
-                                                                        <p><span>Financial Year</span> :
-                                                                            {{companyDetails?.financial_year?.financial_year}}
-                                                                        </p>
-                                                                        <p><span>Address</span> :
+                                                                        <p>
                                                                             {{companyDetails?.address+' ,
                                                                             '+companyDetails?.city?.city+' ,
                                                                             '+companyDetails?.state?.state+' ,
                                                                             '+companyDetails?.country?.country_name+' ,
                                                                             '+companyDetails?.pincode}}
                                                                         </p>
-                                                                        <p><span>Phone</span> :
+                                                                        <p>
+                                                                            {{companyDetails?.email}}</p>
+                                                                        <p>
                                                                             {{companyDetails?.phone}}</p>
                                                                     </div>
                                                                 </div>
@@ -384,9 +383,10 @@
                                             </div>
 
                                             <div class="d-flex mx-5">
-                                                <p><strong>Status : </strong><span
-                                                        [ngClass]="{'bg-lightgreen': estimateDetail?.status === 'Complete', 'bg-lightred' : estimateDetail?.status === 'Pending','bg-lightyellow' : estimateDetail?.status === 'Draft'}"
-                                                        class="badges">{{estimateDetail?.status}}</span></p>
+                                                <p><strong>Status : </strong><span [ngClass]="{
+                                'bg-lightgreen': estimateDetail.status === 'Booked',
+                                'bg-lightyellow': ['Pending', 'Converted to order', 'Expired', 'Draft'].includes(estimateDetail.status)
+                              }" class="badges">{{estimateDetail?.status}}</span></p>
                                                 <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': estimateDetail?.is_active === true, 'bg-lightred' : estimateDetail?.is_active === false,'bg-lightyellow' : estimateDetail?.is_active === 'Partial' }"
                                             class="badges">{{estimateDetail?.is_active}}</span> </p> -->
                                             </div>

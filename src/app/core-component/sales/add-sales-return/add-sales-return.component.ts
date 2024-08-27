@@ -626,7 +626,7 @@ export class AddSalesReturnComponent implements OnInit {
   //     barcode.patchValue({
   //       barcode: selectedItemId,
   //       mrp: event.batch[0]?.mrp,
-  //       qty: event.batch[0]?.stock,
+  //       qty: 1,
   //       tax: event.batch[0]?.sale_tax,
   //       discount: event.batch[0]?.discount,
   //       price: event.batch[0]?.cost_price,
@@ -667,7 +667,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
       } else if (this.userType == 'Dealer') {
@@ -682,7 +682,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
@@ -700,7 +700,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
@@ -721,7 +721,7 @@ export class AddSalesReturnComponent implements OnInit {
       console.log(this.TotalWithoutTax[index]);
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
-      this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 0;
+      this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 0;
       // this.originalCoastPrice = getCoastPrice
     }
     if (event.batch.length > 0) {
@@ -735,7 +735,7 @@ export class AddSalesReturnComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           amount: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           price: Number(this.originalCoastPrice).toFixed(2),
         });
@@ -746,7 +746,7 @@ export class AddSalesReturnComponent implements OnInit {
           mrp: event.batch[0]?.mrp,
           barcode: selectedItemId,
           item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
@@ -755,7 +755,7 @@ export class AddSalesReturnComponent implements OnInit {
       }
       this.priceQtyData[index] = {
         price: this.originalCoastPrice.toFixed(2),
-        qty: event.batch[0]?.stock,
+        qty: 1,
         additional_discount: event.batch[0]?.additional_discount || 0,
         tax: taxValue,
         coastPrice: this.getCoastPrice,
@@ -1126,7 +1126,7 @@ export class AddSalesReturnComponent implements OnInit {
       formdata.append('total_discount', this.saleReturnForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleReturnForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleReturnForm.get('subtotal')?.value);
-      formdata.append('total', this.saleReturnForm.get('total')?.value);
+      formdata.append('total', this.calculateTotalForAll());
 
       // 22-1
       formdata.append('return_date', this.saleReturnForm.get('return_date')?.value)
