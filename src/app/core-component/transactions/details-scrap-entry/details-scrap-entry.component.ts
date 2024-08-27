@@ -51,8 +51,6 @@ ngAfterViewInit(): void {
         if (this.id == res.id) {
           this.recieptVoucherDetail = res;
           this.supplierAddress = res;
-          console.log(this.recieptVoucherDetail);
-          
           this.filteredData = this.recieptVoucherDetail?.logs.slice(); // Initialize filteredData with the original data
           this.filterData(); 
         }
@@ -73,122 +71,121 @@ ngAfterViewInit(): void {
 
 
   generatePdf() {
-    // let p : number = parseFloat(this.totalMrp +'')
       
-        let arr2 = new Array() ;
-    //  this.journelVoucherDetail?.cart.forEach((cart : any,n : number) => {
-    //   arr2.push([`${n+1}`,`${cart?.from_account?.company_name ?  cart?.from_account?.company_name :  cart?.from_account?.account_id}`,`${cart?.amount_type}`,`${cart?.amount}`])
-    // });
+    
         let arr3 = new Array() ;
+        let qut : number = 0;
      this.recieptVoucherDetail?.cart.forEach((cart : any,n : number) => {
       arr3.push([`${n+1}`,`${cart?.item_code}`,`${cart?.item_name}`,`${cart?.qty}`,`${cart?.unit}`,`${cart?.reason}`])
+   qut += cart?.qty;
     });
     const obj = {
-    'Type' : 'Credit Note',
+    'Type' : 'Scrap Entry',
     'Fist_date' : this.recieptVoucherDetail?.date,
-    // 'Secouand_date' : this.estimateDetail?.estimate_expiry_date,
-    'thead1' : ['#','SKU','Name','QTY','Unit','Reason'],
-    'tbody1' : arr3,
-    'table2head' : [],
+    'thead1' : [],
+    'tbody1' :  new Array() ?? '',
     'foot2' : [
-      // [
-      //   {
-      //     content : 'Total',
-      //     colSpan:2,
-      //     styles: { halign: 'center' }
-      //   },
-      //   {
-      //     content : ``,
-      //     styles: { halign: 'center' }
+      [
+        {
+          content : 'Total',
+          colSpan:3,
+          styles: { halign: 'center' }
+        },
+        {
+          content : `${qut}`,
+          styles: { halign: 'center' }
+        },
+        // {
+        //   content : `${this.totalLandingCost}`,
+        //   styles: { halign: 'center' }
           
-      //   },
-      //   {
-      //     content : ``,
-      //     styles: { halign: 'center' }
+        // },
+       //  {
+       //    content : `${this.returnBillDetail?.total_discount}%`,
+       //    styles: { halign: 'center' }
           
-      //   },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total_discount}%`,
-      //   //   styles: { halign: 'center' }
+       //  },
+       //  {
+       //    content : `${this.returnBillDetail?.total_tax}%`,
+       //    styles: { halign: 'center' }
           
-      //   // },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total_tax}%`,
-      //   //   styles: { halign: 'center' }
+       //  },
+       //  {
+       //    content : `${this.returnBillDetail?.total}`,
+       //    styles: { halign: 'center' }
           
-      //   // },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total}`,
-      //   //   styles: { halign: 'center' }
-          
-      //   // }
+       //  }
        
-      // ],
-      // [
-      //   {
-      //     content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
-      //     colSpan : 6,
-      //     styles : {halign : 'left'}
-      //   }
+      ],
+      [
+        {
+          content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
+          colSpan : 6,
+          styles : {halign : 'left'}
+        }
         
-      // ],
-      
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     // styles : {halign : 'left'}
-      //   },
-      //  { content : ' ',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     styles : {halign : 'left'}
-      //   },
-      //  { content : '',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     styles : {halign : 'left'}
-      //   },
-      //  { content : '',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //   colSpan : 4,
-      //   },
-      //   {
-      //     content : '',
-      //   colSpan : 2,
-      //   },
-      // ]
+      ],
+      [
+        {
+          content : ``,
+          colSpan : 4,
+        },
+        {
+          content : ``,
+          colSpan : 1,
+          styles : {halign : 'right'}
+        },
+        {
+          content : '',
+          colSpan : 1,
+          styles : {halign : 'left'}
+        }
+    
+      ],
+      [
+        {
+          content : '',
+          colSpan : 4,
+          // styles : {halign : 'left'}
+        },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'right'}
+      },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+          colSpan : 4,
+          styles : {halign : 'left'}
+        },
+       { content : ' ',
+        colSpan : 1,
+        styles : {halign : 'right'}
+      },
+       { content : '',
+        colSpan : 1,
+        styles : {halign : 'left'}
+      },
+      ],
+      [
+        {
+          content : '',
+        colSpan :3,
+        },
+        {
+          content : '',
+        colSpan : 3,
+        },
+      ]
     ],
+
+    'table2head' : ['#','SKU','Name','Quantity','Unit','Reason'],
+    'table2body' :arr3 ?? '',
     'company_name' : this.companyDetails?.name,
     'company_gst' : this.companyDetails?.gst,
     'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
@@ -209,7 +206,6 @@ ngAfterViewInit(): void {
       // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
       // 'email' : this.estimateDetail?.customer?.email ?? '',
     },
-    'table2body' : arr2 ?? '',
     'order_no' : this.recieptVoucherDetail?.voucher_no,
     }
     

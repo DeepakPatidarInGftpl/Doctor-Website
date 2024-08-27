@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
@@ -11,7 +11,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./details-credit-note.component.scss'],
   providers :[DatePipe,PdfgenService]
 })
-export class DetailsCreditNoteComponent implements OnInit,AfterViewInit {
+export class DetailsCreditNoteComponent implements OnInit {
   constructor(private transactionService: TransactionService,private _pdf : PdfgenService ,private Arout: ActivatedRoute,public location:Location, private companyService: CompanyService) { }
  creditnoteDetails: any;
  companyDetails:any;
@@ -29,12 +29,12 @@ export class DetailsCreditNoteComponent implements OnInit,AfterViewInit {
       this.filteredData = this.creditnoteDetails?.logs.slice(); // Initialize filteredData with the original data
       this.filterData(); 
       this.supplierAddress = res;
-
+    this.Set_Address()
     })
   }
 
-ngAfterViewInit(): void {
-  this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+Set_Address(): void {
+  this.supplierAddress?.sale_bill_no?.customer?.detail?.address.map((res: any) => {
 
     if (res?.address_type == 'Billing') {
       this.selectedAddressBilling = res;
@@ -57,108 +57,10 @@ ngAfterViewInit(): void {
     'Type' : 'Credit Note',
     'Fist_date' : this.creditnoteDetails?.date,
     // 'Secouand_date' : this.estimateDetail?.estimate_expiry_date,
-    'thead1' : ['Account','Sale Bill','Round Off','Tax','Total','Note'],
-    'tbody1' : [`${this.creditnoteDetails?.account?.account_id}`,`${this.creditnoteDetails?.sale_bill_no?.customer_bill_no}`,`${this.creditnoteDetails?.reason}`,`${this.creditnoteDetails?.roundoff}`,`${ (this.creditnoteDetails?.tax == null) ? '' :this.creditnoteDetails?.tax }%`,`${this.creditnoteDetails?.total}`,`${(this.creditnoteDetails?.note == null ) ? '' : this.creditnoteDetails?.note}`],
+    'thead1' : ['Account','Sale Bill','Reason','Round Off','Tax','Total','Note'],
+    'tbody1' : [`${this.creditnoteDetails?.account?.account_id}`,`${this.creditnoteDetails?.sale_bill_no?.customer_bill_no}`,`${this.creditnoteDetails?.reason}`,`${this.creditnoteDetails?.roundoff}`,`${this.creditnoteDetails?.tax }%`,`${this.creditnoteDetails?.total}`,`${this.creditnoteDetails?.note}`],
     'table2head' : [],
-    'foot2' : [
-      // [
-      //   {
-      //     content : 'Total',
-      //     colSpan:2,
-      //     styles: { halign: 'center' }
-      //   },
-      //   {
-      //     content : ``,
-      //     styles: { halign: 'center' }
-          
-      //   },
-      //   {
-      //     content : ``,
-      //     styles: { halign: 'center' }
-          
-      //   },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total_discount}%`,
-      //   //   styles: { halign: 'center' }
-          
-      //   // },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total_tax}%`,
-      //   //   styles: { halign: 'center' }
-          
-      //   // },
-      //   // {
-      //   //   content : `${this.estimateDetail?.total}`,
-      //   //   styles: { halign: 'center' }
-          
-      //   // }
-       
-      // ],
-      // [
-      //   {
-      //     content : `Please notify us on any disrepancies within 3 days of receipt Overdue invoices will be charged 24% interest.`,
-      //     colSpan : 6,
-      //     styles : {halign : 'left'}
-      //   }
-        
-      // ],
-      
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     // styles : {halign : 'left'}
-      //   },
-      //  { content : ' ',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     styles : {halign : 'left'}
-      //   },
-      //  { content : '',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //     colSpan : 4,
-      //     styles : {halign : 'left'}
-      //   },
-      //  { content : '',
-      //   colSpan : 1,
-      //   styles : {halign : 'right'}
-      // },
-      //  { content : ``,
-      //   colSpan : 1,
-      //   styles : {halign : 'left'}
-      // },
-      // ],
-      // [
-      //   {
-      //     content : '',
-      //   colSpan : 4,
-      //   },
-      //   {
-      //     content : '',
-      //   colSpan : 2,
-      //   },
-      // ]
-    ],
+    'foot2' : [],
     'company_name' : this.companyDetails?.name,
     'company_gst' : this.companyDetails?.gst,
     'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
@@ -167,17 +69,17 @@ ngAfterViewInit(): void {
     'top_left_email' : this.companyDetails?.email,
     'BILLING_ADDRESS' : {
       'address_line_1' : this.selectedAddressBilling?.address_line_1 ?? '',
-      'address_line_2' : this.selectedAddressBilling?.address_line_2 ?? '' +' , ' +(this.selectedAddressBilling?.city?.city == null) ? '' : this.selectedAddressBilling?.city?.city  ,
-      'address_line_3' : (this.selectedAddressBilling?.state?.state == null) ? '' : this.selectedAddressBilling?.state?.state  + ' , ' + (this.selectedAddressBilling?.country?.country_name == null) ? '' : this.selectedAddressBilling?.country?.country_name ,
-      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
-      // 'email' : this.estimateDetail?.customer?.email ?? ''
+      'address_line_2' : this.selectedAddressBilling?.address_line_2  +' , ' + this.selectedAddressBilling?.city?.city  ,
+      'address_line_3' : this.selectedAddressBilling?.state?.state  + ' , ' +  this.selectedAddressBilling?.country?.country_name ,
+      'phone' : this.supplierAddress?.sale_bill_no?.customer?.phone_number ?? '',
+      'email' : this.supplierAddress?.sale_bill_no?.customer?.username
     },
     'SHIPPING_ADDRESS' : {
       'address_line_1':  this.selectedAddressShipping?.address_line_1 ?? '',
       'address_line_2' : this.selectedAddressShipping?.address_line_2 ?? '' +' , ' +(this.selectedAddressShipping?.city?.city == null) ? '' :this.selectedAddressShipping?.city?.city ,
       'address_line_3' : this.selectedAddressBilling?.state?.state + ' , ' + this.selectedAddressBilling?.country?.country_name  ,
-      // 'phone' : this.estimateDetail?.customer?.phone_number ?? '',
-      // 'email' : this.estimateDetail?.customer?.email ?? '',
+      'phone' : this.supplierAddress?.sale_bill_no?.customer?.phone_number ?? '',
+      'email' : this.supplierAddress?.sale_bill_no?.customer?.username ?? '',
     },
     'table2body' : arr2 ?? '',
     'order_no' : this.creditnoteDetails?.credit_note_no,

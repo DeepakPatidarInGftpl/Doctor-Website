@@ -59,60 +59,30 @@ export class StockTransferDetailsComponent implements OnInit {
   
 
 
-  // loaderPdf = false;
-  // generatePdf() {
-  //   this.loaderPdf = true;
-  //   const elementToCapture = document.getElementById('debitNote');
-  //   if (elementToCapture) {
-  //     html2canvas(elementToCapture).then((canvas) => {
-  //       this.loaderPdf = false;
-  //       const imgData = canvas.toDataURL('image/png');
-  //       const pdf = new jsPDF('p', 'mm', 'a4');
-  //       const width = pdf.internal.pageSize.getWidth();
-  //       const height = pdf.internal.pageSize.getHeight();
-  //       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-  //       pdf.save('stockTransfer.pdf');
-  //     });
-  //   }
-  // }
 
 
 
   generatePdf() {
-
-    // let mi_date = this._dpipe.transform(this.purchaseBillDetail?.supplier_bill_date, 'dd-MMMM-yyyy');
-    // let due_date = this._dpipe.transform(this.purchaseBillDetail?.due_date , 'dd-MMMM-yyyy');
-
+      // table 2 data set
         let arr2 = new Array() ;
         this.stockTransferDetail?.cart.forEach((cart : any,n : number) => {
          arr2.push([`${n+1}`,`${cart?.barcode?.sku ?? ''}`,`${cart?.barcode?.product_title ?? '' }`,`${cart?.quantity}`])
        });
-
-
-
-
        // table 3 data set 
         let arr3 = new Array() ;
         this.stockTransferDetail?.logs.forEach((log : any,n : number) => {
-    // let shipping_date = this._dpipe.transform(log?.date_time , 'dd-MM-yyyy hh:mm:ss a');
-
          arr3.push([`${n+1}`,`${log?.userid ?? ''}`,`${log?.operation_type ?? '' }`,`${this._dpipe.transform(log?.date_time , 'dd-MM-yyyy hh:mm:ss a') ?? ''}`])
        });
 
-
-let shows : boolean = false;
-if(this.stockTransferDetail?.logs?.length>0){
-shows = true;
-}
-
-
-
-
+       // table 3 show and hide 
+      let shows : boolean = false;
+      if(this.stockTransferDetail?.logs?.length>0){
+      shows = true;
+      }
        const obj = {
         "show" : shows,
        'Type' : 'New Stock Transfer',
        'Fist_date' : (this.stockTransferDetail?.transfer_date == null) ? '' : this.stockTransferDetail?.transfer_date,
-      //  'Secouand_date' : this.purchaseBillDetail?.shipping_date ?? '',
        'thead1' : ['S.No.','Transfer Number No.','Transfer Date','From Branch','To Branch','Status'],
        'tbody1' : [
         '1',
@@ -122,16 +92,10 @@ shows = true;
         `${this.stockTransferDetail?.to_branch?.title ?? ''}`,
         `${this.stockTransferDetail?.status ?? '' }`
       ],
-
-      
       'Thead3' : [['Sr. No.','User','Operation Type','Date Time']],
       'Tbody3' : arr3,
       'Tfoot3' : [[]],
-
-
-
-       'table2head' : ['#','Barcode/SKU','Product Name','QTY','Cost Price','Mrp','Discount','Additional Discount','Tax','Landing Cost','Total'],
-     
+       'table2head' : ['#','Barcode/SKU','Product Name','QTY'],
       'foot2' : [
          [
            {
@@ -143,7 +107,6 @@ shows = true;
              content : `${this.stockTransferDetail?.total_qty}`,
              styles: { halign: 'center' }
            }
-          
          ],
          [
            {
@@ -151,16 +114,10 @@ shows = true;
              colSpan : 15,
              styles : {halign : 'left'}
            }
-           
          ],
-       
          [
-           {
-             content : '',
-             colSpan : 9,
-           },
           { content : 'Total Product',
-           colSpan : 1,
+           colSpan : 3,
            styles : {halign : 'right'}
          },
           { content : `${this.stockTransferDetail?.total_product}`,
@@ -169,13 +126,8 @@ shows = true;
          },
          ],
          [
-           {
-             content : '',
-             colSpan : 9,
-             styles : {halign : 'left'}
-           },
           { content : 'Total QTY ',
-           colSpan : 1,
+           colSpan : 3,
            styles : {halign : 'right'}
          },
           { content : `${this.stockTransferDetail?.total_qty}`,
@@ -183,7 +135,6 @@ shows = true;
            styles : {halign : 'left'}
          },
          ],
-        
        ],
        'company_name' : this.companyDetails?.name,
        'company_gst' : this.companyDetails?.gst,
@@ -212,27 +163,15 @@ shows = true;
         this._pdf.generatePdf(obj);
        
       }
-
-
-
-
-
-
-
-
-
-
-  printForm(): void {
+ printForm(): void {
     const printContents = document.getElementById('debitNote').outerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
     window.print();
     document.body.innerHTML = originalContents;
   }
-
-  changeStatus() {
+ changeStatus() {
     this.stockService.stockTransferrecieved(this.id).subscribe(res => {
-      console.log(res);
       if(res.success){
         this.toastr.success(res.msg);
         this.ngOnInit();
