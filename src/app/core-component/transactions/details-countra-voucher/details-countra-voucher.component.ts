@@ -25,6 +25,7 @@ export class DetailsCountraVoucherComponent implements OnInit {
     this.companyService.getCompany().subscribe(res=>{
       this.companyDetails=res[0];
     })
+    // this.getAccount();
     this.transactionService.getCountraVoucherById(this.id).subscribe(res=>{
       this.countraVooucherDetails=res;
       this.filteredData = this.countraVooucherDetails?.logs.slice(); // Initialize filteredData with the original data
@@ -65,7 +66,6 @@ export class DetailsCountraVoucherComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-
 
 
   generatePdf() {

@@ -122,11 +122,11 @@
                                                     <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
                                                     <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
                                                     <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
-                                                    <td class="td">{{recieptVoucherDetail?.amount}}</td>
+                                                    <td class="td">&#8377;{{recieptVoucherDetail?.amount}}</td>
                                                     <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
                                                         <td class="td">{{recieptVoucherDetail?.transaction_date}}</td>
                                                         <td class="td">{{recieptVoucherDetail?.transaction_id}}</td>
-                                                        <td class="td">{{recieptVoucherDetail?.bank_payment}}</td>
+                                                        <td class="td">&#8377;{{recieptVoucherDetail?.bank_payment}}</td>
                                                     </ng-container>
 
                                                     <td class="td">{{recieptVoucherDetail?.note}}</td>
@@ -153,10 +153,10 @@
                                                         *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
                                                         <td class="td">{{i+1}}</td>
                                                         <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
-                                                        <td class="td">{{cart?.original_amount}}</td>
-                                                        <td class="td">{{cart?.paid_amount}}</td>
-                                                        <td class="td">{{cart?.pending_amount}}</td>
-                                                        <td class="td">{{cart?.payment}}</td>
+                                                        <td class="td">&#8377;{{cart?.original_amount }}</td>
+                                                        <td class="td">&#8377;{{cart?.paid_amount}}</td>
+                                                        <td class="td">&#8377;{{cart?.pending_amount}}</td>
+                                                        <td class="td">&#8377;{{cart?.payment}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

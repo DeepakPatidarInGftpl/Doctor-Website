@@ -8,13 +8,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-countra-voucher',
   templateUrl: './list-countra-voucher.component.html',
   styleUrls: ['./list-countra-voucher.component.scss'],
+  providers : [DatePipe]
 })
 export class ListCountraVoucherComponent implements OnInit {
 
@@ -32,8 +34,13 @@ export class ListCountraVoucherComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   countraVoucherDate = new FormControl('');
-
-  constructor( private transactionService: TransactionService,private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService,
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+  constructor( private transactionService: TransactionService,
+    private _dateP : DatePipe,
+    private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService,
     private commonService: CommonServiceService
   ) { }
 
@@ -74,6 +81,16 @@ export class ListCountraVoucherComponent implements OnInit {
 
       }
     });
+  }
+
+  accountList: any[] = [];
+  toAccountList: any[] = []
+  getAccount() {
+    this.transactionService.getAccountByAlies().subscribe((res: any) => {
+      console.log(res);
+      this.accountList = res;
+      this.toAccountList = res;
+    })
   }
 
   // active deactive
@@ -157,7 +174,7 @@ export class ListCountraVoucherComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   isAdmin = false;
-
+  fyesr : any;
   ngOnInit(): void {
     this.transactionService.getCountraVoucher().subscribe(res => {
       // console.log(res);
@@ -167,9 +184,12 @@ export class ListCountraVoucherComponent implements OnInit {
       this.filteredData = this.tableData.slice(); 
       this.filterData();
     })
+    this.getAccount();
+      // this.fyesr = fyId
+
     //20-5
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res && res.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -180,6 +200,8 @@ export class ListCountraVoucherComponent implements OnInit {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
+      this.fyesr = fyId
+
       this.getEstimate(fyId);
     
     }
@@ -453,7 +475,7 @@ export class ListCountraVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str? : string,val ?: string) {
     let filteredData = this.tableData.slice();
     if (this.countraVoucherDate.value) {
       const selectedDate = new Date(this.countraVoucherDate.value).toISOString().split('T')[0];
@@ -465,8 +487,33 @@ export class ListCountraVoucherComponent implements OnInit {
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
     }
+    if (str === 'To Account') {
+      filteredData = filteredData.filter((item) => item?.to_account?.account_id === val);
+      
+    }
+    if (str === 'From Account') {
+      filteredData = filteredData.filter((item) => item?.from_account?.account_id === val);
+      
+    }
+
+
+
+
     this.filteredData = filteredData;
   }
+
+
+  go(){
+
+    let start = this._dateP.transform(this.range.value.start , 'YYYY-MM-dd')
+    let end = this._dateP.transform(this.range.value.end , 'YYYY-MM-dd');
+    
+    if (start && end) {
+      let obj = {start, end}
+      this.getEstimate(this.fyesr,obj)
+    }
+    
+      }
   clearFilters() {
     this.selectedAmount=null;
     this.selectedpaymentTerms = null;
@@ -480,12 +527,12 @@ export class ListCountraVoucherComponent implements OnInit {
     }
   }
   //20-5
-  getEstimate(fy:any){
+  getEstimate(fy:any,data?:any){
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
     console.log(idString?.length);
     
-    this.transactionService.getCountraVoucherFy(fy,this.selectData).subscribe(res => {
+    this.transactionService.getCountraVoucherFy(fy,this.selectData,data).subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);

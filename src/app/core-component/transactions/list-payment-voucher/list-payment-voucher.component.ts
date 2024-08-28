@@ -8,13 +8,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-payment-voucher',
   templateUrl: './list-payment-voucher.component.html',
   styleUrls: ['./list-payment-voucher.component.scss'],
+  providers :[DatePipe]
 })
 export class ListPaymentVoucherComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
@@ -31,13 +33,17 @@ export class ListPaymentVoucherComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   paymentVoucherDate = new FormControl('');
-
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   constructor(
     private transactionService: TransactionService,
     private cs: CompanyService,
     private dashboardservice: DashboardService,
     private contactservice: ContactService,
-    private commonService: CommonServiceService
+    private commonService: CommonServiceService,
+    private _dateP :DatePipe
   ) {}
 
   delRes: any;
@@ -160,7 +166,8 @@ export class ListPaymentVoucherComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   isAdmin = false;
-
+  date = new Date();
+  fyesr : any;
   ngOnInit(): void {
     // this.transactionService.getPaymentVoucher().subscribe(res => {
     //   // console.log(res);
@@ -171,8 +178,9 @@ export class ListPaymentVoucherComponent implements OnInit {
     //   this.filterData();
     // })
     //20-5
+   console.log('hello')
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res && res.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -183,6 +191,7 @@ export class ListPaymentVoucherComponent implements OnInit {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
+      this.fyesr = fyId
       this.getEstimate(fyId);
     }
     // permissin from api profile
@@ -388,7 +397,17 @@ export class ListPaymentVoucherComponent implements OnInit {
     const fileName = 'paymentVoucher.xlsx';
     saveAs(blob, fileName);
   }
+  go(){
 
+let start = this._dateP.transform(this.range.value.start , 'YYYY-MM-dd')
+let end = this._dateP.transform(this.range.value.end , 'YYYY-MM-dd');
+
+if (start && end) {
+  let obj = {start, end}
+  this.getEstimate(this.fyesr,obj)
+}
+
+  }
   printTable(): void {
     const tableElement = document.getElementById('mytable');
     const titleElement = document.querySelector('.titl'); 
@@ -497,7 +516,7 @@ export class ListPaymentVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str ?: string,val ?: string) {
     let filteredData = this.tableData.slice();
     if (this.paymentVoucherDate.value) {
       const selectedDate = new Date(this.paymentVoucherDate.value)
@@ -523,6 +542,19 @@ export class ListPaymentVoucherComponent implements OnInit {
         (item) => item?.amount <= this.selectedAmount
       );
     }
+
+if (str == 'Is Active') {
+  
+  filteredData = filteredData.filter((item : any) =>{
+    if (val === 'Active') {
+     return item.is_active == true;
+    }else if (val === 'InActive') {
+      return item.is_active == false;
+    }
+    return item
+  }
+  );
+}
     this.filteredData = filteredData;
   }
   clearFilters() {
@@ -530,6 +562,7 @@ export class ListPaymentVoucherComponent implements OnInit {
     this.selectedModeType = null;
     this.selectedRecieptType = null;
     this.paymentVoucherDate.setValue('');
+    this.range.reset()
     this.filterData();
   }
   changePg(val: any) {
@@ -539,13 +572,13 @@ export class ListPaymentVoucherComponent implements OnInit {
     }
   }
   //20-5
-  getEstimate(fy: any) {
+  getEstimate(fy: any,date?:any) {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
     console.log(idString?.length);
 
     this.transactionService
-      .getPaymentVoucherFy(fy, this.selectData)
+      .getPaymentVoucherFy(fy, this.selectData , date)
       .subscribe((res) => {
         this.tableData = res;
         this.loader = false;

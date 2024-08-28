@@ -90,6 +90,18 @@
                                         [attr.min]="minDate" [attr.max]="maxDate" (change)="filterData()">
                                 </div>
                             </div>
+
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select class="form-select" #val (change)="filterData('Is Active',val.value)">
+                                        <option value=""  >Select Is Active Type</option>
+                                        <option > Active</option>
+                                        <option >InActive</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Debit Amount</label>
@@ -131,9 +143,9 @@
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Expense Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Party<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Refrence Bill No.<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Refrence Bill No.<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Branch<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
@@ -154,9 +166,9 @@
                         <td class="text-center">{{products?.expense_no}}</td>
                         <td class="productimgname"><a routerLink="//transaction/detailsexpensesVoucher/{{products.id}}"
                                 style="line-height: 3;">{{products?.party?.name}}</a></td>
-                        <td class="text-center">{{products?.refrence_bill_no}}</td>
+                        <!-- <td class="text-center">{{products?.refrence_bill_no}}</td> -->
                         <td class="text-center">{{products?.expense_date}}</td>
-                        <td class="text-center">{{products?.tax_amount}}</td>
+                        <td class="text-center">{{products?.branch}}</td>
                         <td class="text-center">{{products?.total_amount}}</td>
                         <td>{{products?.reverse_charge}}</td>
                         <td>

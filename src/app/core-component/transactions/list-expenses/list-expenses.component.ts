@@ -457,7 +457,7 @@ export class ListExpensesComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str?:string,val? :string ) {
     let filteredData = this.tableData.slice();
     if (this.journalVoucherDate.value) {
       const selectedDate = new Date(this.journalVoucherDate.value).toISOString().split('T')[0];
@@ -472,6 +472,20 @@ export class ListExpensesComponent implements OnInit {
     if (this.selectedcredit) {
       filteredData = filteredData.filter((item) => item?.total_credit <= this.selectedcredit);
     }
+    if (str == 'Is Active') {
+  
+      filteredData = filteredData.filter((item : any) =>{
+        if (val === 'Active') {
+         return item.is_active == true;
+        }else if (val === 'InActive') {
+          return item.is_active == false;
+        }
+        return item
+      }
+      );
+    }
+
+
     console.log(filteredData);
     this.filteredData = filteredData;
   }

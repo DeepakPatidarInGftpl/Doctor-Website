@@ -8,13 +8,15 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-reciept-voucher',
   templateUrl: './list-reciept-voucher.component.html',
   styleUrls: ['./list-reciept-voucher.component.scss'],
+  providers : [DatePipe]
 })
 export class ListRecieptVoucherComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
@@ -31,15 +33,19 @@ export class ListRecieptVoucherComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   receiptVoucherDate = new FormControl('');
-
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   constructor(
     private transactionService: TransactionService,
     private cs: CompanyService,
     private dashboardservice: DashboardService,
     private contactservice: ContactService,
-    private commonService: CommonServiceService
+    private commonService: CommonServiceService,
+    private _dateP : DatePipe
   ) {}
-
+  fyesr : any;
   delRes: any;
   confirmText(index: any, id: any) {
     Swal.fire({
@@ -172,18 +178,14 @@ export class ListRecieptVoucherComponent implements OnInit {
     // })
 
     //20-5
-    this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
-    });
+    this.cs.userDetails$.subscribe((res: any) => ((res && res.role) ? this.isAdmin = true : this.isAdmin = false));
 
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
+      this.fyesr = fyId
+
       this.getEstimate(fyId);
     }
     // permissin from api profile
@@ -227,6 +229,19 @@ export class ListRecieptVoucherComponent implements OnInit {
     });
   }
 
+
+  go(){
+
+    let start = this._dateP.transform(this.range.value.start , 'YYYY-MM-dd')
+    let end = this._dateP.transform(this.range.value.end , 'YYYY-MM-dd');
+    
+    if (start && end) {
+      let obj = {start, end}
+      this.getEstimate(this.fyesr,obj)
+    }
+    
+      }
+
   allSelected: boolean = false;
   selectedRows: boolean[];
   selectAlll() {
@@ -247,22 +262,20 @@ export class ListRecieptVoucherComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee == '') {
+    if (!this.titlee) {
       this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter((res) => {
-        const nameLower = res?.customer?.account_id.toLocaleLowerCase();
-        const companyNameLower = res?.receipt_voucher_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
-      });
+      return;
     }
+  
+    const searchTerm = this.titlee.toLocaleLowerCase();
+    this.filteredData = this.filteredData.filter(res => {
+      const nameLower = res?.customer?.account_id?.toLocaleLowerCase() || '';
+      const companyNameLower = res?.receipt_voucher_no?.toLocaleLowerCase() || '';
+      const mobile_number = res?.payer.title?.toLocaleLowerCase() || '';
+      return nameLower.includes(searchTerm) || companyNameLower.includes(searchTerm) ||  mobile_number.includes(searchTerm);
+    });
   }
+  
 
   key = 'id';
   reverse: boolean = true;
@@ -496,7 +509,7 @@ export class ListRecieptVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str? : string,val ?: string) {
     let filteredData = this.tableData.slice();
     if (this.receiptVoucherDate.value) {
       const selectedDate = new Date(this.receiptVoucherDate.value)
@@ -522,6 +535,20 @@ export class ListRecieptVoucherComponent implements OnInit {
         (item) => item?.amount <= this.selectedAmount
       );
     }
+
+if (str == 'Is Active') {
+  
+  filteredData = filteredData.filter((item : any) =>{
+    if (val === 'Active') {
+     return item.is_active == true;
+    }else if (val === 'InActive') {
+      return item.is_active == false;
+    }
+    return item
+  }
+  );
+}
+
     this.filteredData = filteredData;
   }
   clearFilters() {
@@ -529,6 +556,10 @@ export class ListRecieptVoucherComponent implements OnInit {
     this.selectedModeType = null;
     this.selectedRecieptType = null;
     this.receiptVoucherDate.setValue('');
+    if (this.range.value.start) {
+    this.range.reset();
+    this.getEstimate(this.fyesr)
+    }
     this.filterData();
   }
   changePg(val: any) {
@@ -538,13 +569,13 @@ export class ListRecieptVoucherComponent implements OnInit {
     }
   }
   //20-5
-  getEstimate(fy: any) {
+  getEstimate(fy: any , date ?: any) {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
     console.log(idString?.length);
 
     this.transactionService
-      .getRecieptVoucherFy(fy, this.selectData)
+      .getRecieptVoucherFy(fy, this.selectData,date)
       .subscribe((res) => {
         this.tableData = res;
         this.loader = false;
