@@ -4,9 +4,9 @@
             <div class="page-header">
                 <div class="page-title">
                     <h6 class="subhead-color" (click)="goBack()">
-                        <mat-icon
-                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                        Back to Purchase Order</h6>
+                        <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                        Back to Purchase Order
+                    </h6>
                     <h4>New Purchase Order </h4>
                 </div>
                 <div class="page-btn">
@@ -155,19 +155,17 @@
                                                                     style="float: inline-start;">
                                                                     <div class="left-top">
                                                                         <img src="assets/dummy/pos.png" alt="">
-                                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                                        <p>Company Name: {{companyDetails?.name}}</p>
-                                                                        <p>Financial Year:
-                                                                            {{companyDetails?.financial_year?.financial_year}}
-                                                                        </p>
-                                                                        <p><span>Address</span> :
+                                                                        <p class="gst"> {{companyDetails?.gst}}</p>
+                                                                        <p>{{companyDetails?.name}}</p>
+                                                                        <p>
                                                                             {{companyDetails?.address+' ,
                                                                             '+companyDetails?.city?.city+' ,
                                                                             '+companyDetails?.state?.state+' ,
                                                                             '+companyDetails?.country?.country_name+' ,
                                                                             '+companyDetails?.pincode}}
                                                                         </p>
-                                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                                        <p>{{companyDetails?.email}}</p>
+                                                                        <p>{{companyDetails?.phone}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
