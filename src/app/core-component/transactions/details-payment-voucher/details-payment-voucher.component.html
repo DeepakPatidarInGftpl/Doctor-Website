@@ -102,6 +102,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
+                                                        
                                                         <td class="td">{{paymentVoucherDetail?.supplier?.company_name}}
                                                         </td>
                                                         <td class="td">{{paymentVoucherDetail?.payment_type}}</td>
@@ -110,7 +111,7 @@
                                                             {{paymentVoucherDetail?.payment_account?.company_name}}
                                                         </td>
                                                         <td class="td">{{paymentVoucherDetail?.payment_voucher_no}}</td>
-                                                        <td class="td">{{paymentVoucherDetail?.amount}}</td>
+                                                        <td class="td">&#8377;<span>{{paymentVoucherDetail?.amount}}</span></td>
                                                         <td class="td">{{paymentVoucherDetail?.date}}</td>
                                                         <td *ngIf="paymentVoucherDetail?.payment_type=='Bank'"
                                                             class="td">
@@ -147,10 +148,10 @@
                                                             <td class="td">{{i+1+'.'}}</td>
                                                             <td class="td">{{cart?.purchase_bill?.refrence_bill_no}}
                                                             </td>
-                                                            <td class="td">{{cart?.original_amount}}</td>
-                                                            <td class="td">{{cart?.paid_amount}}</td>
-                                                            <td class="td">{{cart?.pending_amount}}</td>
-                                                            <td class="td">{{cart?.payment}}</td>
+                                                            <td class="td">&#8377;{{cart?.original_amount}}</td>
+                                                            <td class="td">&#8377;{{cart?.paid_amount}}</td>
+                                                            <td class="td">&#8377;{{cart?.pending_amount}}</td>
+                                                            <td class="td">&#8377;{{cart?.payment}}</td>
                                                         </tr>
                                                         <tr *ngIf="cart?.debit_note_cart?.length>0">
                                                             <td></td>

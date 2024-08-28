@@ -155,13 +155,19 @@ export class TransactionService {
 
   // Countra voucher
   //20-5
-  getCountraVoucherFy(fy: any, branch: any) {
+  getCountraVoucherFy(fy: any, branch: any,date?:any) {
     console.log(branch, 'branch');
     console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/countra_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
+    }
+    if (date && date.start) {
+      queryParams.push(`start_date=${date.start}`);
+    }
+    if (date && date.end) {
+      queryParams.push(`end_date=${date.end}`);
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
@@ -202,13 +208,19 @@ export class TransactionService {
 
   // Reciept voucher
   //20-5
-  getRecieptVoucherFy(fy: any, branch: any) {
+  getRecieptVoucherFy(fy: any, branch: any,date?:any) {
     console.log(branch, 'branch');
     console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/receipt_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
+    }
+    if (date && date.start) {
+      queryParams.push(`start_date=${date.start}`);
+    }
+    if (date && date.end) {
+      queryParams.push(`end_date=${date.end}`);
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
@@ -249,13 +261,19 @@ export class TransactionService {
   }
 
   // payment voucher
-  getPaymentVoucherFy(fy: any, branch: any) {
+  getPaymentVoucherFy(fy: any, branch: any ,date? : any) {
     console.log(branch, 'branch');
     console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/payment_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
+    }
+    if (date && date.start) {
+      queryParams.push(`start_date=${date.start}`);
+    }
+    if (date && date.end) {
+      queryParams.push(`end_date=${date.end}`);
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
