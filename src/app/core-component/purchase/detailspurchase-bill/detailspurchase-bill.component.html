@@ -193,19 +193,17 @@
                                                                     style="float: inline-start;">
                                                                     <div class="left-top">
                                                                         <img src="assets/dummy/pos.png" alt="">
-                                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                                        <p>Company Name: {{companyDetails?.name}}</p>
-                                                                        <p>Financial Year:
-                                                                            {{companyDetails?.financial_year?.financial_year}}
-                                                                        </p>
-                                                                        <p><span>Address</span> :
+                                                                        <p class="gst"> {{companyDetails?.gst}}</p>
+                                                                        <p>{{companyDetails?.name}}</p>
+                                                                        <p>
                                                                             {{companyDetails?.address+' ,
                                                                             '+companyDetails?.city?.city+' ,
                                                                             '+companyDetails?.state?.state+' ,
                                                                             '+companyDetails?.country?.country_name+' ,
                                                                             '+companyDetails?.pincode}}
                                                                         </p>
-                                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                                        <p>{{companyDetails?.email}}</p>
+                                                                        <p>{{companyDetails?.phone}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -216,10 +214,10 @@
                                                                         <p>GST {{purchaseBillDetail?.party?.gstin}}</p>
                                                                         <h1 class="pb-4">Invoice</h1>
                                                                         <p>Invoice Date:
-                                                                            {{purchaseBillDetail?.purchase_return_date |
+                                                                            {{purchaseBillDetail?.supplier_bill_date |
                                                                             date: 'dd-MMMM-yyyy'}}</p>
                                                                         <p>Invoice NO:
-                                                                            {{purchaseBillDetail?.refrence_bill_no}}</p>
+                                                                            {{purchaseBillDetail?.supplier_bill_no}}</p>
                                                                         <p>Shipping Date:
                                                                             {{purchaseBillDetail?.shipping_date | date:
                                                                             'dd-MMMM-yyyy'}}</p>

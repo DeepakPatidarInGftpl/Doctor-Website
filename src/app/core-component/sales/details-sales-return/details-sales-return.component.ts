@@ -15,6 +15,7 @@ import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 })
 export class DetailsSalesReturnComponent implements OnInit {
 
+  totalItems: any;
   constructor(
     private companyService:CompanyService,
     private Arout: ActivatedRoute,
@@ -43,13 +44,14 @@ export class DetailsSalesReturnComponent implements OnInit {
   totaldiscount=0;
 
   // tax
-  calculateTax = 0;
+  calculateTax:any = 0;
   totalTax: any[] = [];
   getdata() {
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.returnBillDetail = res
         //calculation
+        this.totalItems = this.returnBillDetail?.cart?.length;
         this.returnBillDetail?.cart?.forEach((item:any)=>{
            // discount
            item.price = parseFloat(item.price+"")
@@ -69,11 +71,11 @@ export class DetailsSalesReturnComponent implements OnInit {
           console.log(item?.price?.toFixed(2) - dis.toFixed(2));
           this.discount = item?.price?.toFixed(2) - dis.toFixed(2);
           
-          let taxPrice: any = this.discount - (this.discount * (100 / (100 + item?.tax)));
+          let taxPrice: any = this.discount - (this.discount * item?.tax) / 100;
           console.log(taxPrice, 'taxprice');
           this.totalTax.push(taxPrice || 0);
           console.log(this.totalTax);  
-          this.calculateTax = this.totaldiscount - taxPrice;
+          this.calculateTax = (this.totaldiscount - taxPrice).toFixed(2);
           console.log(this.calculateTax);
 
           // mrp

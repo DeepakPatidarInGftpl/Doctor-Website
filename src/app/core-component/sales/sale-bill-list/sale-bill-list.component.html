@@ -188,7 +188,10 @@
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sale Order<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone">Total Unpaid Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Total Paid Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -214,7 +217,12 @@
                         <td>{{products?.payment_terms?.title}}</td>
                         <td>{{products?.sale_order?.sale_order_no}}</td>
                         <!-- <td>{{products?.subtotal}}</td> -->
+                        <td>{{products?.pending_amount}}</td>
+                        <td>{{products?.paid_amount}}</td>
                         <td>{{products?.total}}</td>
+                        <td><span
+                                [ngClass]="{'bg-lightgreen': products.status === 'Return', 'bg-lightred' : products.status === 'Expired','bg-lightyellow' : products.status === 'Draft' || products.status === 'Invoiced' || products.status === 'Partially-Return'}"
+                                class="badges">{{products.status}}</span></td>
                         <!-- <td>
                             <mat-slide-toggle (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td> -->

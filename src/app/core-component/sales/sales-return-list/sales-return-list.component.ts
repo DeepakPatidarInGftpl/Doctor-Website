@@ -245,20 +245,19 @@ export class SalesReturnListComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee == "") {
-      this.ngOnInit();
+    const searchTerm = this.titlee.toLocaleLowerCase();
+    if (!searchTerm) {
+      this.filteredData = this.tableData;
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
+      this.filteredData = this.tableData.filter(res => {
         const nameLower = res?.customer?.name.toLocaleLowerCase();
+        const status = res?.status?.toLocaleLowerCase();
         const usernameLower = res?.customer?.username.toLocaleLowerCase() || "";
         const companyNameLower = res?.sale_return_bill_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)|| usernameLower.includes(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
+        return nameLower.includes(searchTerm) || 
+                   usernameLower.includes(searchTerm) || 
+                   status.includes(searchTerm) || 
+                   companyNameLower.includes(searchTerm);
       });
     }
   }

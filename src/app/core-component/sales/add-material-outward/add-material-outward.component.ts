@@ -501,7 +501,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   //     barcode.patchValue({
   //       barcode: selectedItemId,
   //       mrp: event.batch[0]?.mrp,
-  //       qty: event.batch[0]?.stock,
+  //       qty: 1,
   //       tax: event.batch[0]?.sale_tax,
   //       discount: event.batch[0]?.discount,
   //       price: event.batch[0]?.cost_price,
@@ -547,7 +547,7 @@ export class AddMaterialOutwardComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           mrp: this.originalCoastPrice.toFixed(2),
         });
       } else {
@@ -555,7 +555,7 @@ export class AddMaterialOutwardComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           mrp: this.originalCoastPrice.toFixed(2),
         });
       }
