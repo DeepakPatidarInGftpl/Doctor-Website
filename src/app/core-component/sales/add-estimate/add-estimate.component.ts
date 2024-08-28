@@ -24,7 +24,7 @@ export class AddEstimateComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
-  priceQtyData = {};
+  priceQtyData:any = {};
   getCoastPrice: any;
   totalCartAmount: any;
   calculatingTotal: boolean = false;
@@ -354,7 +354,7 @@ export class AddEstimateComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       price: (0),
       // amount: (0),
       discount: new FormControl(''),
@@ -425,7 +425,8 @@ export class AddEstimateComponent implements OnInit {
       if(totalProductQty === 0) {
         this.taxIntoRupees[index] = 0;
       }
-      this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
+      let totalWithoutTax = getCoastPrice - getTaxPrice;
+      this.TotalWithoutTax[index] = (totalWithoutTax * value).toFixed(2);
       barcode.patchValue({
         qty: value,
         tax: totalProductQty === 0 ? 0 : taxPercentage,
@@ -694,7 +695,38 @@ export class AddEstimateComponent implements OnInit {
   oncheckVariant(event: any, index) {
     console.log(index, 'index');
     const selectedItemId = event.id;
+
+  const currentControl = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+  currentControl.controls['barcode'].setValue('');
+  const priceQtyArray:any = Object.values(this.priceQtyData);
+
+  const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+  if (existingProductIndex !== -1) {
+    priceQtyArray[existingProductIndex].qty += 1;
+
+    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(existingProductIndex) as FormGroup;
+    barcode.patchValue({
+      qty: priceQtyArray[existingProductIndex].qty
+    });
+
+    const currentControl = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+    currentControl.reset();
+    console.log(currentControl);
+    this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        item_name: '',
+        qty: 0,
+        price: 0,
+        discount: 0
+    });
+    this.calculateTotal(existingProductIndex);
+    this.calculateTotalDiscount();
+    return;
+  }
+  
     console.log(event);
+    this.barcode[index] = event.sku;
     this.selecteProduct = event?.product;
     console.log(this.selecteProduct);
 
@@ -766,7 +798,6 @@ export class AddEstimateComponent implements OnInit {
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       this.productItemPrice[index] = offlineprice;
-      let purchaseTax = 18
       // cost price 
       let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
       console.log(getDiscountPrice);
@@ -815,6 +846,7 @@ export class AddEstimateComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
         qty: 1,
         additional_discount: event.batch[0]?.additional_discount || 0,
@@ -838,6 +870,7 @@ export class AddEstimateComponent implements OnInit {
       });
 
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: 0,
         qty: 0,
         additional_discount: 0,
@@ -846,7 +879,6 @@ export class AddEstimateComponent implements OnInit {
         taxPrice: 0
       };
     }
-
   }
   handleEvent(prod, i) {
     console.log(i, 'index');
@@ -877,7 +909,7 @@ export class AddEstimateComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     } else {
       let costprice = this.coastprice[index] || 0;
-      let purchaseTax = 18;
+      let purchaseTax = this.apiPurchaseTax;
       // cost price 
       let getDiscountPrice = (costprice * this.batchDiscount) / 100
       console.log(getDiscountPrice, 'getDiscountPrice');
@@ -940,7 +972,7 @@ export class AddEstimateComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         // cost price 
         let getDiscountPrice = (this.coastprice[index] * discountPercentage) / 100
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
@@ -1017,7 +1049,7 @@ export class AddEstimateComponent implements OnInit {
       } else {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
@@ -1256,14 +1288,8 @@ export class AddEstimateComponent implements OnInit {
   //4-5
   selectedProduct: any[] = [];
   variantChanged(value: any, index) {
-    console.log(value);
-    //4-5
     this.selectedProduct.push(value);
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
+    // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const modal = document.getElementById(`productModal-${index}`);
     if (modal) {

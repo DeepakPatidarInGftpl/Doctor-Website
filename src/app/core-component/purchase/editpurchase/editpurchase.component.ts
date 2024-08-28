@@ -344,7 +344,7 @@ export class EditpurchaseComponent implements OnInit {
   purchase_cart(): FormGroup {
     return this.fb.group({
       barcode: (''),
-      qty: (1),
+      qty: (0),
       purchase_rate: (''),
       mrp: (''),
       discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -581,6 +581,37 @@ export class EditpurchaseComponent implements OnInit {
     // calculation
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
+    
+    const purchaseBillFormArray = this.getCart();
+    const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+    currentControl.controls['barcode'].setValue('');
+
+    const existingProductIndex = purchaseBillFormArray.controls.findIndex(control => control.value.barcode === selectedItemId);
+    if (existingProductIndex !== -1) {
+      const existingProduct = purchaseBillFormArray.at(existingProductIndex) as FormGroup;
+      const currentQty = existingProduct.get('qty').value || 0;
+      existingProduct.patchValue({ qty: Number(currentQty) + 1 });
+
+      const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+      currentControl.reset();
+      this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        qty: 0,
+        purchase_rate: 0,
+        mrp: 0,
+        discount: 0
+    });
+      this.myControls[index].reset();
+      this.updateTotal(existingProductIndex);
+      this.updateLandingCost(existingProductIndex);
+      return;
+    }
+
+    this.barcode[index] = event.sku;
+    this.v_id = event.id;
+    this.getVariant('', '', '');
+
     this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
@@ -749,8 +780,12 @@ export class EditpurchaseComponent implements OnInit {
         const qty = +qtyControlControl.value || 0;
         if (this.batchCostPrice[index] > 0) {
           const discountAmount = (this.batchCostPrice[index] * discountPercentage) / 100;
-          const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
-          this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
+          const afterDiscountAmount = Number(this.batchCostPrice[index]) - discountAmount;
+          if(afterDiscountAmount) {
+            this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
+          } else {
+            this.TotalWithoutTax[index] = 0;
+          }
           const landingCost = afterDiscountAmount || 0;
 
           barcode.patchValue({
@@ -779,7 +814,11 @@ export class EditpurchaseComponent implements OnInit {
         let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice
         // without tax price 
-        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+        if(getCoastPrice) {
+          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+        } else {
+          this.TotalWithoutTax[index] = 0;
+        }
         // landing cost
         let taxPrice = ((this.batchCostPrice[index] * purchaseTax) / 100 ) || 0
         this.taxIntoRupees[index] = taxPrice || 0;
@@ -1070,23 +1109,6 @@ export class EditpurchaseComponent implements OnInit {
   }
   barcode: any[] = [];
   v_id: any;
-
-  variantChanged(value: any, index) {
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
-
-    this.v_id = value.id;
-    const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
-    barcode.patchValue({
-      barcode: value.id
-    });
-    // this.searchProduct('someQuery', '');
-    this.getVariant('', '', '')
-  };
-
   searchs: any[] = [];
   Qty: any[] = []
   productName: any[] = [];
