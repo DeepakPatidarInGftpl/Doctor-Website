@@ -612,7 +612,6 @@
                                                                         <mat-option *ngIf="option.is_active==true"
                                                                             [value]="option?.product_title + ' ' + option?.variant_name"
                                                                             (onSelectionChange)="oncheckVariant(option,i)"
-                                                                            (onSelectionChange)="variantChanged(option, i)"
                                                                             style="color:#FF9F43">
                                                                             {{ option?.product_title + ' ' +
                                                                             option?.variant_name}}
@@ -855,7 +854,7 @@
                                         <td class="text-start">
                                         </td>
                                         <td class="text-start"></td>
-                                        <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                        <td>{{calculateTotalWithoutTax()}}</td>
                                         <td>{{calculateTotal()?.toFixed(2)}}</td>
                                     </tr>
                                 </tbody>
@@ -1043,7 +1042,7 @@
                                             </ng-container>
                                             <tr style=" background: rgba(145, 158, 171, 0.32);">
                                                 <td class="text-start"><strong>Total</strong></td>
-                                                <td class="text-start">{{calculateTotalTaxrate() +'%' }}</td>
+                                                <td class="text-start">{{totalTaxRate +'%' }}</td>
                                                 <td class="text-start">{{calculateTotalTaxAmount().toFixed(2) |
                                                     currency:'INR' }}</td>
                                                 <td class="text-start" *ngIf="!supplierAddress?.check_sgst_cgst">
