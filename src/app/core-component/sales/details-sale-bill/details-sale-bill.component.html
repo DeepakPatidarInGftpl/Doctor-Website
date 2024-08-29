@@ -219,7 +219,8 @@
                                                                     {{selectedAddressBilling?.state?.state + ' , ' +
                                                                     selectedAddressBilling?.country?.country_name}}
                                                                     <br />
-                                                                    Phone: {{BillDetail?.customer?.phone_number}}
+                                                                    Phone: {{BillDetail?.customer?.phone_number ||
+                                                                    '--'}}
                                                                     <br />
                                                                     {{BillDetail?.customer?.email}}
                                                                 </p>
@@ -236,7 +237,8 @@
                                                                     {{selectedAddressBilling?.state?.state + ' , ' +
                                                                     selectedAddressBilling?.country?.country_name}}
                                                                     <br />
-                                                                    Phone: {{BillDetail?.customer?.phone_number}}
+                                                                    Phone: {{BillDetail?.customer?.phone_number ||
+                                                                    '--'}}
                                                                     <br />
                                                                     {{BillDetail?.customer?.email}}
                                                                 </p>

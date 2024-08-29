@@ -59,7 +59,7 @@ export class DetailsSalesReturnComponent implements OnInit {
            console.log(item.price.toFixed(2)-d.toFixed(2));
            this.discount=item.price.toFixed(2)-d.toFixed(2);
            this.totaldiscount=0;
-           this.totalDiscount.push(this.discount);
+           this.totalDiscount.push(d);
            console.log(this.totalDiscount);
            this.totalDiscount?.forEach((number:any)=>{
              this.totaldiscount +=number;
@@ -71,11 +71,15 @@ export class DetailsSalesReturnComponent implements OnInit {
           console.log(item?.price?.toFixed(2) - dis.toFixed(2));
           this.discount = item?.price?.toFixed(2) - dis.toFixed(2);
           
-          let taxPrice: any = this.discount - (this.discount * item?.tax) / 100;
+          let taxPrice: any = (this.discount * item?.tax) / 100;
           console.log(taxPrice, 'taxprice');
-          this.totalTax.push(taxPrice || 0);
+          this.totalTax.push(taxPrice * item?.qty || 0);
           console.log(this.totalTax);  
-          this.calculateTax = (this.totaldiscount - taxPrice).toFixed(2);
+          let totalTax = 0;
+          this.totalTax.forEach((val)=> {
+            totalTax += parseFloat(val);
+          })
+          this.calculateTax = totalTax.toFixed(2);
           console.log(this.calculateTax);
 
           // mrp

@@ -24,7 +24,7 @@ export class AddSalesReturnComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
-  priceQtyData = {};
+  priceQtyData:any = {};
   getCoastPrice: any;
   totalCartAmount: any;
   calculatingTotal: boolean = false;
@@ -312,15 +312,14 @@ export class AddSalesReturnComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       price: (0),
       deduction: (0),
       mrp: (0),
       // amount: (0),
       // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      total: (0),
-
+      total: (0)
     })
   }
   getCart(): FormArray {
@@ -376,7 +375,8 @@ export class AddSalesReturnComponent implements OnInit {
       if (totalProductPrice && taxPercentage) {
         this.taxIntoRupees[index] = (totalProductPrice * taxPercentage) / 100;
       }
-      this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
+      let totalWithoutTax = getCoastPrice - getTaxPrice;
+      this.TotalWithoutTax[index] = (totalWithoutTax * value).toFixed(2);
       barcode.patchValue({
         qty: value,
         tax: taxPercentage,
@@ -646,6 +646,36 @@ export class AddSalesReturnComponent implements OnInit {
   selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+
+  const currentControl = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
+  currentControl.controls['barcode'].setValue('');
+  const priceQtyArray:any = Object.values(this.priceQtyData);
+
+  const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+  if (existingProductIndex !== -1) {
+    priceQtyArray[existingProductIndex].qty += 1;
+
+    const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(existingProductIndex) as FormGroup;
+    barcode.patchValue({
+      qty: priceQtyArray[existingProductIndex].qty
+    });
+
+    const currentControl = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
+    currentControl.reset();
+    console.log(currentControl);
+    this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        item_name: '',
+        qty: 0,
+        price: 0,
+        deduction: 0
+    });
+    this.calculateTotal(existingProductIndex);
+    return;
+  }
+
+    this.barcode[index] = event.sku;
     console.log(event);
     this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
@@ -667,7 +697,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2);
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
       } else if (this.userType == 'Dealer') {
@@ -682,7 +712,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2);
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
@@ -700,7 +730,7 @@ export class AddSalesReturnComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2);
         console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
@@ -709,7 +739,6 @@ export class AddSalesReturnComponent implements OnInit {
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       this.productItemPrice[index] = offlineprice;
-      let purchaseTax = 18
       // cost price 
       let getDiscountPrice = (offlineprice * 0) / 100
       console.log(getDiscountPrice);
@@ -754,6 +783,7 @@ export class AddSalesReturnComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
         qty: 1,
         additional_discount: event.batch[0]?.additional_discount || 0,
@@ -777,6 +807,7 @@ export class AddSalesReturnComponent implements OnInit {
       });
 
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: 0,
         qty: 0,
         additional_discount: 0,
@@ -809,7 +840,7 @@ export class AddSalesReturnComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     } else {
       let costprice = this.coastprice[index] || 0;
-      let purchaseTax = 18;
+      let purchaseTax = this.apiPurchaseTax;
       // cost price 
       let getDiscountPrice = (costprice * 0) / 100
       console.log(getDiscountPrice, 'getDiscountPrice');
@@ -895,7 +926,7 @@ export class AddSalesReturnComponent implements OnInit {
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         // cost price 
         if (this.isPercentage[index] == true) {
           let getDiscountPrice = (this.coastprice[index] * deductionPercentage) / 100
@@ -1009,7 +1040,7 @@ export class AddSalesReturnComponent implements OnInit {
       } else {
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         const qty = +QtyControl.value;
         // cost price 
         if (this.isPercentage[index] == true) {
@@ -1026,7 +1057,7 @@ export class AddSalesReturnComponent implements OnInit {
           let getCoastPrice = this.costPrice - deductionPercentage;
           this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
           console.log(this.TotalWithoutTax[index]);
-          let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+          let taxprice = (getCoastPrice * purchaseTax) / 100 || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice + taxprice;
           this.originalCoastPrice = purchasePrice;
@@ -1047,10 +1078,12 @@ export class AddSalesReturnComponent implements OnInit {
     return total;
   }
   calculateTotalWithoutTax(): number {
-    let total = 0;
+    let total:any = 0;
+    let totalWithoutTax = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
-      total += Number(number);
+      totalWithoutTax += parseFloat(number);
     })
+    total = totalWithoutTax.toFixed(2)
     return total;
   }
 
@@ -1314,11 +1347,7 @@ export class AddSalesReturnComponent implements OnInit {
     }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     console.log(value);
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
+    // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({

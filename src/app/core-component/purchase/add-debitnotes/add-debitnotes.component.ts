@@ -157,7 +157,7 @@ export class AddDebitnotesComponent implements OnInit {
   cart(): FormGroup {
     return this.fb.group({
       barcode: (0),
-      qty: (1),
+      qty: (0),
       unit_cost: (0),
       mrp: (0),
       deduction: new FormControl(0),
@@ -412,6 +412,38 @@ export class AddDebitnotesComponent implements OnInit {
     console.log(event);
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
+
+    const purchaseBillFormArray = this.getCart();
+    const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+    currentControl.controls['barcode'].setValue('');
+
+    const existingProductIndex = purchaseBillFormArray.controls.findIndex(control => control.value.barcode === selectedItemId);
+    if (existingProductIndex !== -1) {
+      const existingProduct = purchaseBillFormArray.at(existingProductIndex) as FormGroup;
+      const currentQty = existingProduct.get('qty').value || 0;
+      existingProduct.patchValue({ qty: Number(currentQty) + 1 });
+
+      const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+      currentControl.reset();
+      this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        qty: 0,
+        unit_cost: 0,
+        mrp: 0,
+        deduction: 0,
+        landing_cost: 0
+    });
+      this.myControls[index].reset();
+      this.updateTotal(existingProductIndex);
+      this.updateLandingCost(existingProductIndex);
+      return;
+    }
+
+    this.barcode[index] = event.sku;
+    this.v_id = event.id;
+    this.getVariant('', '', '');
+
     this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
@@ -710,8 +742,12 @@ export class AddDebitnotesComponent implements OnInit {
         if (this.batchCostPrice[index] > 0) {
           if (this.isPercentage[index] == true) {
             const discountAmount = (this.batchCostPrice[index] * deductionPercentage) / 100;
-            const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
+            const afterDiscountAmount = Number(this.batchCostPrice[index]) - discountAmount;
+          if(afterDiscountAmount) {
             this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
+          } else {
+            this.TotalWithoutTax[index] = 0;
+          }
             const landingCost = afterDiscountAmount || 0
             // without tax price 
             const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
@@ -733,8 +769,12 @@ export class AddDebitnotesComponent implements OnInit {
         } else {
           if (this.isPercentage[index] == true) {
             const discountAmount = (this.coastprice[index] * deductionPercentage) / 100;
-            const afterDiscountAmount = this.coastprice[index] - discountAmount;
+            const afterDiscountAmount = Number(this.coastprice[index]) - discountAmount;
+          if(afterDiscountAmount) {
             this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
+          } else {
+            this.TotalWithoutTax[index] = 0;
+          }
             const landingCost = afterDiscountAmount || 0
             const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
             barcode.patchValue({
@@ -763,7 +803,11 @@ export class AddDebitnotesComponent implements OnInit {
           let getCoastPrice = Number(purchaseRateControl?.value) - getDiscountPrice;
           this.originalCoastPrice = getCoastPrice
           // without tax price 
-          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+          if(getCoastPrice) {
+            this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+          } else {
+            this.TotalWithoutTax[index] = 0;
+          }
           // landing cost
           let taxPrice = ((getCoastPrice * purchaseTax) / 100) || 0
           this.taxIntoRupees[index] = taxPrice || 0;

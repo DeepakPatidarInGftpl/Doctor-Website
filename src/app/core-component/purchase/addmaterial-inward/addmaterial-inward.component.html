@@ -568,7 +568,6 @@
                                                                         <mat-option *ngIf="option.is_active==true"
                                                                             [value]="option?.product_title + ' ' + option?.variant_name"
                                                                             (onSelectionChange)="oncheckVariant(option,i)"
-                                                                            (onSelectionChange)="variantChanged(option, i)"
                                                                             style="color:#FF9F43">
                                                                             {{ option?.product_title + ' ' +
                                                                             option?.variant_name}}

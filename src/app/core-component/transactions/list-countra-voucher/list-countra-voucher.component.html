@@ -88,8 +88,57 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Countra Voucher Date</label>
-                                    <input type="date" [formControl]="countraVoucherDate" [attr.min]="minDate"
-                                        [attr.max]="maxDate" (change)="filterData()">
+                                    <!-- <input type="date" [formControl]="countraVoucherDate" [attr.min]="minDate"
+                                        [attr.max]="maxDate" (change)="filterData()"> -->
+
+                                        <mat-form-field style="width: 100%;" class="border">
+                                            <mat-date-range-input
+                                            [formGroup]="range"
+                                            [rangePicker]="startdatePicker"
+                                            [comparisonStart]="range.value.start"
+                                            [comparisonEnd]="range.value.end">
+                                            <input matStartDate style="border: none !important;" placeholder="Start date" 
+                                            (dateChange)="go()"
+                                            formControlName="start" class="mat-input text-r" >
+                                            <span class="mat-input-placeholder-wrapper">
+                                                    <span class="mat-input-placeholder">to</span>
+                                                </span>
+                                                <input matEndDate style="border: none !important;" placeholder="End date" formControlName="end"  class="mat-input"
+                                                    >
+                                            </mat-date-range-input>
+            
+                                            <mat-datepicker-toggle  matSuffix [for]="startdatePicker"
+                                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #startdatePicker>
+                                            <mat-date-range-picker-actions>
+                                                <button mat-button matDateRangePickerCancel>Cancel</button>
+                                                <button mat-raised-button color="primary" (click)="go()" matDateRangePickerApply>Apply</button>
+                                            </mat-date-range-picker-actions>
+                                            </mat-date-range-picker>
+                                        </mat-form-field>   
+                                      
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>From Account</label>
+                                    <select class="form-select" #From (change)="filterData('From Account',From.value)" aria-label="Default select example">
+                                        <option value="" selected>  Select From Account</option>
+                                        <option *ngFor="let account of accountList" [value]="account.account_id">{{account.account_id +"(" +account.company_name +")"}}</option>
+                                        
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>To Account</label>
+                                    <select class="form-select" #acc (change)="filterData('To Account',acc.value)" aria-label="Default select example">
+                                        <option value="" selected> Select To Account</option>
+                                        <option *ngFor="let account of accountList" [value]="account.account_id">{{account.account_id +"(" +account.company_name +")"}}</option>
+                                        
+                                    </select>
+
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">

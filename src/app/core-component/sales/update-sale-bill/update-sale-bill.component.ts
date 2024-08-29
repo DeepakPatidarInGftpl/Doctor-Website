@@ -26,7 +26,7 @@ export class UpdateSaleBillComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
-  priceQtyData = {};
+  priceQtyData:any = {};
   getCoastPrice: any;
   totalCartAmount: any;
   calculatingTotal: boolean = false;
@@ -173,7 +173,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.isCart = true;
       }
       this.saleBillForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.username);
+      this.userControl.setValue(this.editRes?.customer?.phone_number ? (this.editRes?.customer?.name + ' (' + this.editRes?.customer?.phone_number + ')') : this.editRes?.customer?.name);
       this.totalAdditionalCharges = this.editRes.additional_charges;
       console.log(this.totalAdditionalCharges);
 
@@ -215,7 +215,6 @@ export class UpdateSaleBillComponent implements OnInit {
     this.getPaymentTerms();
     // this.getSaleOrder();
     this.getEmployee();
-
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
     this.getTax();
@@ -442,20 +441,12 @@ export class UpdateSaleBillComponent implements OnInit {
         const taxPercentage = j.tax || 0;
         const calculatedTax = price - (price * taxPercentage) / 100;
         this.taxIntoRupees[i] = calculatedTax;
-
-        if (j.tax === 18) {
-            const calculatedTax = (price * taxPercentage) / 100;
-            this.taxIntoRupees[i] = calculatedTax;
-            let TotalWithoutTax = (j.price * j.qty) - calculatedTax;
-            this.TotalWithoutTax[i] = TotalWithoutTax.toFixed(2);
-        } else {
-            let taxPrice = (price * taxPercentage) / 100;
-            this.taxIntoRupees[i] = taxPrice;
-            let TotalWithoutTax = (j.price * j.qty) - taxPrice;
-            this.TotalWithoutTax[i] = TotalWithoutTax.toFixed(2);
-        }
-
+       
         let taxPrice = (price * taxPercentage) / 100;
+        this.taxIntoRupees[i] = taxPrice;
+        let TotalWithoutTaxPrice = j.price - taxPrice;
+        this.TotalWithoutTax[i] = (TotalWithoutTaxPrice * j?.qty).toFixed(2);
+        
         let totalDiscount: any = 0;
          totalDiscount += parseFloat(j?.discount);
         this.totalDefaultDiscount = totalDiscount;
@@ -523,6 +514,7 @@ export class UpdateSaleBillComponent implements OnInit {
             coastPrice: j.price,
             taxPrice: taxPrice
         };
+        this.subscribeToQtyChanges(formArr.at(i) as FormGroup, i);
     });
 
     return formArr;
@@ -532,7 +524,7 @@ export class UpdateSaleBillComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       price: (0),
       // amount: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -549,6 +541,8 @@ export class UpdateSaleBillComponent implements OnInit {
     this.getCart().push(this.cart());
     this.isCart = false;
     const cartControl = this.cart();
+    this.qtySubscriptions.forEach(subscription => subscription.unsubscribe());
+    this.qtySubscriptions = [];
     this.getCart().controls.forEach((control, index) => {
       this.subscribeToQtyChanges(control as FormGroup, index);
       this.subscribeToDiscountChanges(control as FormGroup, index);
@@ -593,7 +587,8 @@ export class UpdateSaleBillComponent implements OnInit {
       if(totalProductQty === 0) {
         this.taxIntoRupees[index] = 0;
       }
-      this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
+      let totalWithoutTax = getCoastPrice - getTaxPrice;
+      this.TotalWithoutTax[index] = (totalWithoutTax * value).toFixed(2);
       barcode.patchValue({
         qty: value,
         tax: totalProductQty === 0 ? 0 : taxPercentage,
@@ -1476,6 +1471,37 @@ export class UpdateSaleBillComponent implements OnInit {
   selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+
+    const currentControl = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+    currentControl.controls['barcode'].setValue('');
+    const priceQtyArray:any = Object.values(this.priceQtyData);
+  
+    const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+    if (existingProductIndex !== -1) {
+      priceQtyArray[existingProductIndex].qty += 1;
+  
+      const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(existingProductIndex) as FormGroup;
+      barcode.patchValue({
+        qty: priceQtyArray[existingProductIndex].qty
+      });
+  
+      const currentControl = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+      currentControl.reset();
+      console.log(currentControl);
+      this.barcode[index] = '';
+        currentControl.patchValue({
+          barcode: 0,
+          item_name: '',
+          qty: 0,
+          price: 0,
+          discount: 0
+      });
+      this.calculateTotal(existingProductIndex);
+      this.calculateTotalDiscount();
+      return;
+    }
+  
+    this.barcode[index] = event.sku;
     console.log(event);
     this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
@@ -1547,7 +1573,6 @@ export class UpdateSaleBillComponent implements OnInit {
     } else {
       let offlineprice = event?.batch[0]?.selling_price_online || 0;
       this.productItemPrice[index] = offlineprice;
-      // let purchaseTax = 18
       let getDiscountPrice = (offlineprice * this.totalDiscount) / 100
       console.log(getDiscountPrice);
       let getCoastPrice = offlineprice - getDiscountPrice;
@@ -1595,6 +1620,7 @@ export class UpdateSaleBillComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
       }
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
         qty: 1,
         additional_discount: event.batch[0]?.additional_discount || 0,
@@ -1618,6 +1644,7 @@ export class UpdateSaleBillComponent implements OnInit {
         price: 0,
       });
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: 0,
         qty: 0,
         additional_discount:  0,
@@ -1650,7 +1677,7 @@ export class UpdateSaleBillComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     } else {
       let costprice = this.coastprice[index] || 0;
-      let purchaseTax = 18;
+      let purchaseTax = this.apiPurchaseTax;
       // cost price 
       let getDiscountPrice = (costprice * this.totalDiscount) / 100
       console.log(getDiscountPrice, 'getDiscountPrice');
@@ -1709,7 +1736,7 @@ export class UpdateSaleBillComponent implements OnInit {
         let totalDiscount = discountPercentage + additionalDiscountPercentage || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         // cost price 
         let getDiscountPrice = (this.coastprice[index] * totalDiscount) / 100
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
@@ -1790,7 +1817,7 @@ export class UpdateSaleBillComponent implements OnInit {
         const additionalDiscountPercentage = +additionalDiscountPercentageControl.value || 0;
         let totalDiscount = discountPercentage + additionalDiscountPercentage || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * totalDiscount) / 100
@@ -2280,7 +2307,6 @@ export class UpdateSaleBillComponent implements OnInit {
     let totalDiscountAmount = 0;
     cartArray.controls.forEach((val, index)=> {
       const totalAmount = Number(val.get('total').value);
-      console.log(totalAmount);
       const discount = val.get('discount').value;
       if (this.excludeDiscountIndexes.includes(index)) {
         total = total - Number(this.totalDefaultDiscount);

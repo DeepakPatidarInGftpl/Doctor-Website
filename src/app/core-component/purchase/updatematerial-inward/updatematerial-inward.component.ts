@@ -231,8 +231,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     return this.fb.group({
       barcode: (''),
       variant_name: (''),
-      qty: (1),
-      po_qty: (1),
+      qty: (0),
+      po_qty: (0),
       // unit_cost: (''),
       mrp: (0),
       // discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -370,6 +370,38 @@ export class UpdatematerialInwardComponent implements OnInit {
     console.log(event);
     this.selectedProductName = event.product_title
     this.selectBatch = event.batch
+
+    const purchaseBillFormArray = this.getCart();
+    const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+    currentControl.controls['barcode'].setValue('');
+
+    const existingProductIndex = purchaseBillFormArray.controls.findIndex(control => control.value.barcode === selectedItemId);
+    if (existingProductIndex !== -1) {
+      const existingProduct = purchaseBillFormArray.at(existingProductIndex) as FormGroup;
+      const currentQty = existingProduct.get('qty').value || 0;
+      const currentPoQty = existingProduct.get('po_qty').value || 0;
+      existingProduct.patchValue({
+         qty: Number(currentQty) + 1 ,
+         po_qty: Number(currentPoQty) + 1 
+        });
+      const currentControl = purchaseBillFormArray.at(index) as FormGroup;
+      currentControl.reset();
+      this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        qty: 0,
+        variant_name: 0,
+        mrp: 0,
+        po_qty: 0
+    });
+      this.myControls[index].reset();
+      return;
+    }
+
+    this.barcode[index] = event.sku;
+    this.v_id = event.id;
+    this.getVariant('', '', '');
+
     console.log(event.batch.length);
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
@@ -725,21 +757,6 @@ export class UpdatematerialInwardComponent implements OnInit {
   }
   barcode: any[] = [];
   v_id: any;
-  variantChanged(value: any, index) {
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
-
-    this.v_id = value.id;
-    const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
-    barcode.patchValue({
-      barcode: value.id
-    });
-    // this.searchProduct('someQuery', '');
-    this.getVariant('', '', '')
-  };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
