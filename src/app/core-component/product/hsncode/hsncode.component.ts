@@ -32,6 +32,7 @@ export class HsncodeComponent implements OnInit {
   hsnCodeCtrl = new FormControl('', [Validators.required]);
   hsnCodeList: any;
   allHsnCodeData: any;
+  selectedSubCategory: any;
 
   get f() {
     return this.hsncodeForm.controls;
@@ -189,6 +190,8 @@ export class HsncodeComponent implements OnInit {
       this.allHsnCodeData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice();
+      console.log();
+      
       this.filterData();
     })
     this.getSubcategory();
@@ -261,6 +264,11 @@ export class HsncodeComponent implements OnInit {
     if (this.selectActive !== undefined && this.selectActive !== null) {
       filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
     }
+    if (this.selectedSubCategory) {
+      filteredData = filteredData.filter(item =>
+          item.subcategory?.some(sub => sub.title === this.selectedSubCategory)
+      );
+  }
     this.filteredData = filteredData;
   }
 
@@ -271,6 +279,7 @@ export class HsncodeComponent implements OnInit {
 
   clearFilter() {
     this.selectActive = undefined;
+    this.selectedSubCategory = undefined;
     this.filterData();
   }
 
@@ -442,7 +451,7 @@ export class HsncodeComponent implements OnInit {
   searchTerm: string = '';
   getSubcategory() {
     this.coreService.getSubcategory().subscribe(res => {
-      // console.log(res);
+      console.log(res);
       this.subcategoryList = res
       this.filteredFeatureList = [...this.subcategoryList];
       if (!this.addForm) {

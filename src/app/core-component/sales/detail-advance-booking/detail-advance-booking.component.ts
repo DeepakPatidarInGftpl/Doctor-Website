@@ -22,6 +22,7 @@ export class DetailAdvanceBookingComponent implements OnInit {
   selectedAddressShipping: any;
   isSyncLoading = false;
   userDetails: any;
+  totalItems: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -50,39 +51,41 @@ export class DetailAdvanceBookingComponent implements OnInit {
         // calculation
         this.estimateDetail?.cart?.forEach((item: any) => {
           // discount
-          let d: any = (item?.price?.toFixed(2) * item?.discount) / 100;
-          console.log(item?.price?.toFixed(2) - d.toFixed(2));
-          this.discount = item?.price?.toFixed(2) - d.toFixed(2);
+          this.totalItems = this.estimateDetail?.cart?.length;
+          let d: any = (item?.price * item?.discount) / 100;
+          console.log(item?.price - d.toFixed(2));
+          this.discount = item?.price - d.toFixed(2);
           this.totaldiscount = 0;
           let totaldiscount = 0;
-          this.totalDiscount.push(this.discount);
+          this.totalDiscount.push(d);
           console.log(this.totalDiscount);
           this.totalDiscount?.forEach((number: any) => {
             totaldiscount += number;
           });
           this.totaldiscount = totaldiscount;
-          console.log(this.totaldiscount?.toFixed(2));
 
           // calulating tax
-          let dis: any = (item?.price?.toFixed(2) * item?.discount) / 100;
-          console.log(item?.price?.toFixed(2) - dis.toFixed(2));
-          this.discount = item?.price?.toFixed(2) - dis.toFixed(2);
+          let dis: any = (item?.price * item?.discount) / 100;
+          this.discount = item?.price - dis.toFixed(2);
           
-          let taxPrice: any = this.discount - (this.discount * (100 / (100 + item?.tax)));
-          console.log(taxPrice, 'taxprice');
-          this.totalTax.push(taxPrice || 0);
-          console.log(this.totalTax);  
-          this.calculateTax = (this.totaldiscount - taxPrice).toFixed(2);
-          console.log(this.calculateTax);
+          let taxPrice: any = (this.discount * item?.tax) / 100;
+          this.totalTax.push(taxPrice * item?.qty || 0);
+          console.log(this.totalTax);
+          let calculatedTax:any = 0;
+          this.totalTax.forEach((val)=> {
+            calculatedTax += parseFloat(val);
+          })
+          this.calculateTax = calculatedTax.toFixed(2);
+          
           
           // mrp
           let mrp = 0;
           this.totalmrp.push(item?.price);
           this.totalMrp = 0;
           this?.totalmrp?.forEach((number: any) => {
-            mrp += number
+            mrp += parseFloat(number);
           })
-          this.totalMrp = mrp ;
+          this.totalMrp = mrp.toFixed(2) ;
         });
         // address selected
         this.supplierAddress = res;

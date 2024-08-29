@@ -75,6 +75,10 @@ export class EditcompanyComponent implements OnInit {
     })
   }
 
+  selectedFile(event) {
+    console.log(event);
+  }
+
   state: any
   selectState(val: any) {
     // console.log(val);

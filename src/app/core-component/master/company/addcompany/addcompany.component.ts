@@ -86,6 +86,10 @@ yearDetails:any
     })
   }
 
+  selectedFile(event) {
+    console.log(event);
+  }
+
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;

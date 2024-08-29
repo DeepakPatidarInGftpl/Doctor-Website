@@ -48,6 +48,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   saleMaterialOutwardForm!: FormGroup;
   minDate: string = '';
   maxDate: string = '';
+  priceQtyData: any = {};
 
   get f() {
     return this.saleMaterialOutwardForm.controls;
@@ -292,7 +293,7 @@ export class AddMaterialOutwardComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       mrp: (0)
     })
   }
@@ -523,6 +524,33 @@ export class AddMaterialOutwardComponent implements OnInit {
   selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+
+  const currentControl = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
+  currentControl.controls['barcode'].setValue('');
+  const priceQtyArray:any = Object.values(this.priceQtyData);
+
+  const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+  if (existingProductIndex !== -1) {
+    priceQtyArray[existingProductIndex].qty += 1;
+
+    const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(existingProductIndex) as FormGroup;
+    barcode.patchValue({
+      qty: priceQtyArray[existingProductIndex].qty
+    });
+
+    const currentControl = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
+    currentControl.reset();
+    console.log(currentControl);
+    this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        item_name: '',
+        qty: 0
+    });
+    return;
+  }
+  
+    this.barcode[index] = event.sku;
     console.log(event);
     this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
@@ -533,12 +561,18 @@ export class AddMaterialOutwardComponent implements OnInit {
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
 
     let offlineprice = event?.batch[0]?.selling_price_offline || 0;
-    let purchaseTax = 18
+    let purchaseTax = this.apiPurchaseTax;
     let getDiscountPrice = (offlineprice * 0) / 100
     let getCoastPrice = offlineprice - getDiscountPrice;
     let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
     this.taxIntoRupees[index] = taxPrice || 0;
     this.originalCoastPrice = getCoastPrice + taxPrice;
+
+    this.priceQtyData[index] = {
+      barcode: selectedItemId,
+      mrp: Number(this.originalCoastPrice).toFixed(2),
+      qty: 1,
+  };
 
     if (event.batch.length > 0) {
       const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
@@ -762,11 +796,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   variantChanged(value: any, index) {
 
     console.log(value);
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
+    // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const modal = document.getElementById(`productModal-${index}`);
     if (modal) {

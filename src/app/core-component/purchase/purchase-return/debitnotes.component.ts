@@ -521,7 +521,6 @@ export class DebitnotesComponent implements OnInit {
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.purchaseReturnDateForm.get('start').value && this.purchaseReturnDateForm.get('end').value) {
-      debugger
       const startDate = new Date(this.purchaseReturnDateForm.get('start').value);
       const endDate = new Date(this.purchaseReturnDateForm.get('end').value);
       filteredData = filteredData.filter((item) => {

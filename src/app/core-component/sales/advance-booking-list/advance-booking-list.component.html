@@ -220,12 +220,7 @@
                         <td>{{products.payment_terms.title}}</td>
                         <td>{{products?.due_date}}</td>
                         <td>{{products?.subtotal}}</td>
-                        <ng-container *ngFor="let item of products?.cart">
-                            <td>{{item?.total ?? ''}}</td>
-                        </ng-container>
-                        <ng-container *ngIf="!products?.cart?.length">
-                            <td>{{products?.total ?? ''}}</td>
-                        </ng-container>
+                        <td>{{products?.total}}</td>
                         <td><span [ngClass]="{
                                 'bg-lightgreen': products.status === 'Booked',
                                 'bg-lightyellow': ['Pending', 'Converted to order', 'Expired', 'Draft'].includes(products.status)
