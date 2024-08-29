@@ -8,6 +8,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-list-material-consumption',
@@ -26,7 +27,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any
+  date: any;
 
   constructor( private transactionService: TransactionService,private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService) { }
 
@@ -150,7 +151,10 @@ export class ListMaterialConsumptionComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   isAdmin = false;
-
+ public range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   ngOnInit(): void {
     this.transactionService.getMaterialConsuption().subscribe(res => {
       // console.log(res);
@@ -163,7 +167,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
 
     //20-5
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res && res.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -224,7 +228,8 @@ export class ListMaterialConsumptionComponent implements OnInit {
       })
     }
   }
-
+  Consumption_Type : any;
+  Select_Status : any;
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -444,7 +449,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   selectedAmount:any;
-  filterData() {
+  filterData(str ?: string , val ?: any) {
     let filteredData = this.tableData.slice();
     if (this.date) {
       const selectedDate = new Date(this.date).toISOString().split('T')[0];
@@ -454,13 +459,40 @@ export class ListMaterialConsumptionComponent implements OnInit {
       });
     }
     if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
+      filteredData = filteredData.filter((item : any) => item?.amount <= this.selectedAmount);
     }
+
+if (str === 'date') {
+  const s = this.range.value.start;
+  const e = this.range.value.end;
+  if (s && e) {
+    const startData = new Date(s);
+    const end = new Date(e);
+     filteredData = filteredData.filter((item : any) => {
+      const api_data  = new Date(item?.consumption_date);
+      return api_data >= startData && api_data <= end;
+    });
+    
+  }
+}
+if (str === 'Status') {
+      filteredData = filteredData.filter((item : any) => item?.status === val);
+}
+
+    if (str ===  'Types') {
+      filteredData = filteredData.filter((item : any) => item?.consumption_type === val);
+ }
+
+
+
+
     this.filteredData = filteredData;
   }
   clearFilters() {
     this.selectedAmount = null;
     this.date = null;
+    this.Consumption_Type = '';
+    this.Select_Status = '';
     this.filterData();
   }
   changePg(val: any) {
