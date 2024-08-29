@@ -42,7 +42,8 @@ export class AddCreditNoteComponent implements OnInit {
       tax: new FormControl('', [Validators.required]),
       note: new FormControl('',),
       total: new FormControl(''),
-      status: new FormControl('')
+      status: new FormControl(''),
+      amount : new FormControl('')
     })
 
     this.getAccount();
@@ -202,6 +203,7 @@ export class AddCreditNoteComponent implements OnInit {
       formdata.append('date', this.debitNoteForm.get('date')?.value);
       formdata.append('credit_note_no', this.debitNoteForm.get('credit_note_no')?.value);
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
+      formdata.append('amount', this.debitNoteForm.get('amount')?.value);
       formdata.append('roundoff', this.debitNoteForm.get('roundoff')?.value);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
       formdata.append('tax', this.selectedTaxPercentage);
@@ -255,6 +257,9 @@ export class AddCreditNoteComponent implements OnInit {
   }
   get roundoff() {
     return this.debitNoteForm.get('roundoff')
+  }
+  get Amount() {
+    return this.debitNoteForm.get('amount')
   }
 
 }

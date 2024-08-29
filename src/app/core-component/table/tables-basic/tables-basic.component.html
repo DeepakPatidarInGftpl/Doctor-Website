@@ -1,333 +1,117 @@
-<div class=" cardhead">
-    <div class=" container-fluid">
+<div class="card">
+     <div class="row w-100">
+        <div class="table-responsive">
+            <table class="table datanew" id="mytable">
+                <thead>
+                    <tr>
+                        <th (click)="sort('id')" class="thone">
+                            <label class="checkboxs mb-0 d-inline" (click)="selectAll()">
+                                <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                <span class="checkmarks"></span>
+                            </label>
+                            <i class="fa fa-sort"></i>
+                        </th>
+                        <th (click)="sort('id')" *ngFor="let header of HeaderArr" class="thone">{{header}}<i class="fa fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="filteredData?.length>=0">
+                    <tr *ngFor="let products of filteredData ; let i = index"
+                      >
+                        <td>
+                            <label class="checkboxs">
+                                <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </td>
+                        <td>{{i+1}}</td>
+                        <td *ngFor="let pro of products ; let i = index">
+                            <ng-container
+                            *ngIf="pro === 'Received' || pro === 'Pending' || pro === 'Ordered' ;else el"
+                            
+                            >
+                            <span 
+                            [ngClass]="{'bg-lightgreen': pro === 'Received', 'bg-lightred' : pro === 'Pending','bg-lightyellow' : pro === 'Ordered'}" class="badges">
 
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="row">
-                <div class="col">
-                    <h3 class="page-title">Basic Tables</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="//dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Basic Tables</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- /Page Header -->
+                                {{pro}}
 
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Basic Table</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                        <td>john&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mary</td>
-                                        <td>Moe</td>
-                                        <td>mary&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>July</td>
-                                        <td>Dooley</td>
-                                        <td>july&#64;example.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            </span>
+                            
+                            
+                            </ng-container>
+                            
+                            <ng-template #el>
+                                {{pro}}
+
+                            </ng-template>
+
+
+                        </td>
+                        <!-- <td class="productimgname">
+                            <a routerLink="//purchase/purchaseDetails/{{products?.id}}"
+                                style="line-height: 3;">{{products?.party?.name}}</a>
+                        </td>
+                        <td>{{products?.order_date | date: 'dd-MMMM-yyyy'}}</td>
+                        <td>{{products?.shipping_date | date: 'dd-MMMM-yyyy'}}</td>
+                        <td>{{products?.total_qty}}</td>
+                        <td>{{products?.total}}</td>
+                        <td> -->
+                            <!-- 
+                            <span [ngClass]="{
+                                        'bg-lightgreen': products?.status === 'Completed',
+                                        'bg-lightred': products?.status === 'Overdue',
+                                        'bg-lightyellow': products?.status === 'Pending' || products?.status === 'New'|| products?.status === 'Draft',
+                                        'bg-lightblue': products?.status === 'Inprogress' || products?.status === 'Approved',
+                                        'bg-lightorange': products?.status === 'Received' || products?.status === 'Partially Received' || products?.status === 'Exceed',
+                                        'bg-lightgray': products?.status === 'Cancel'
+                                      }" class="badges">{{ products?.status }}</span>
+    
+                        </td> -->
+                        <!-- <td>
+                                    <mat-slide-toggle (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td> -->
+                        <td >
+                            <a (click)="ViewBtn(i,products?.id)" class="me-1" >
+                                <img src="assets/img/icons/eye.svg" alt="img">
+                            </a>
+                            <a (click)="EditBtn(i,products?.id)" class="me-1"  >
+                                <img src="assets/img/icons/edit.svg" alt="img">
+                            </a>
+                            <a (click)="DeleteBtn(i,products?.id)" class="me-1 confirm-text" >
+                                <img src="assets/img/icons/delete.svg" alt="img">
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="filteredData?.length===0">
+                    <tr>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <div class="progressbar">
+                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+            </div>
+            <div class="row" *ngIf="!loader">
+                <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                    <div class="entries"> Show per page
+                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+    
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Striped Rows</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                        <td>john&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mary</td>
-                                        <td>Moe</td>
-                                        <td>mary&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>July</td>
-                                        <td>Dooley</td>
-                                        <td>july&#64;example.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Bordered Table</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                        <td>john&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mary</td>
-                                        <td>Moe</td>
-                                        <td>mary&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>July</td>
-                                        <td>Dooley</td>
-                                        <td>july&#64;example.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Hover Rows</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                        <td>john&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mary</td>
-                                        <td>Moe</td>
-                                        <td>mary&#64;example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>July</td>
-                                        <td>Dooley</td>
-                                        <td>july&#64;example.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Contextual Classes</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Default</td>
-                                        <td>Defaultson</td>
-                                        <td>def&#64;somemail.com</td>
-                                    </tr>
-                                    <tr class="table-primary">
-                                        <td>Primary</td>
-                                        <td>Doe</td>
-                                        <td>john&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-secondary">
-                                        <td>Secondary</td>
-                                        <td>Moe</td>
-                                        <td>mary&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-success">
-                                        <td>Success</td>
-                                        <td>Dooley</td>
-                                        <td>july&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-danger">
-                                        <td>Danger</td>
-                                        <td>Refs</td>
-                                        <td>bo&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>Warning</td>
-                                        <td>Activeson</td>
-                                        <td>act&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-info">
-                                        <td>Info</td>
-                                        <td>Activeson</td>
-                                        <td>act&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-light">
-                                        <td>Light</td>
-                                        <td>Activeson</td>
-                                        <td>act&#64;example.com</td>
-                                    </tr>
-                                    <tr class="table-dark">
-                                        <td>Dark</td>
-                                        <td>Activeson</td>
-                                        <td>act&#64;example.com</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Responsive Tables</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-nowrap mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Age</th>
-                                        <th>City</th>
-                                        <th>Country</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Anna</td>
-                                        <td>Pitt</td>
-                                        <td>35</td>
-                                        <td>New York</td>
-                                        <td>USA</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                    <div class="f-right">
+                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
@@ -9,7 +9,7 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { DatePipe } from '@angular/common';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class DebitNoteComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any;
-
+@ViewChild('val') Active_opction : any;
   titlee: any;
   p: number = 1
   pageSize: number = 10;
@@ -33,6 +33,10 @@ export class DebitNoteComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   debitNoteDate = new FormControl('');
+  public range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   constructor( private transactionService: TransactionService,private cs: CompanyService,private datePipe:DatePipe, private dashboardservice : DashboardService, private contactservice : ContactService,
     private commonService: CommonServiceService
   ) { }
@@ -242,14 +246,11 @@ export class DebitNoteComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party?.company_name.toLocaleLowerCase();
-        const companyNameLower = res?.debit_note_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
+        const nameLower : string = res?.party?.company_name.toLocaleLowerCase();
+        const companyNameLower : string  = res?.debit_note_no.toLocaleLowerCase();
+        const Purchase_Bill : string = String(res.purchase_bill?.supplier_bill_no).toLocaleLowerCase();
+        return nameLower.includes(searchTerm) || companyNameLower.includes(searchTerm) || Purchase_Bill.includes(searchTerm);
+
       });
     }
   }
@@ -472,7 +473,7 @@ export class DebitNoteComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str? : string, val ?:string) {
     let filteredData = this.tableData.slice();
     if (this.debitNoteDate.value) {
       const selectedDate = new Date(this.debitNoteDate.value).toISOString().split('T')[0];
@@ -484,11 +485,43 @@ export class DebitNoteComponent implements OnInit {
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
     }
+    if (str == 'Status') {
+      filteredData = filteredData.filter((item) => item?.status == val);
+    }
+    if (str == 'Is Active') {
+  
+      filteredData = filteredData.filter((item : any) =>{
+        if (val === 'Active') {
+         return item.is_active == true;
+        }else if (val === 'InActive') {
+          return item.is_active == false;
+        }
+        return item
+      }
+      );
+    }
+
+
+if (str == 'Date') {
+  const s = this.range.get('start').value;
+  const e = this.range.get('end').value;
+  if ( s && e) {
+    const startDate = new Date(s);
+    const endDate = new Date(e);
+    filteredData = filteredData.filter((item) => {
+    const supplierBillDate = new Date(item?.date);
+      return supplierBillDate >= startDate && supplierBillDate <= endDate;
+    });
+  }
+}
     this.filteredData = filteredData;
   }
   clearFilters() {
     this.selectedAmount = null;
     this.debitNoteDate.setValue('');
+    this.Active_opction.value = ''
+    console.log('call',this.Active_opction.value)
+  
     this.filterData();
   }
   changePg(val: any) {

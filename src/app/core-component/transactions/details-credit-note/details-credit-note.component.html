@@ -81,6 +81,8 @@
                                                             <th class="thone" style="white-space: normal !important;">
                                                                 Credit Note No.</th>
                                                             <th class="thone" style="white-space: normal !important;">
+                                                                Amount</th>
+                                                            <th class="thone" style="white-space: normal !important;">
                                                                 Round Off</th>
                                                             <th class="thone" style="white-space: normal !important;">
                                                                 Tax</th>
@@ -106,6 +108,8 @@
                                                                 {{creditnoteDetails?.reason}}</td>
                                                             <td style="color:black">
                                                                 {{creditnoteDetails?.credit_note_no}}</td>
+                                                            <td style="color:black">
+                                                                {{creditnoteDetails?.amount | currency:'INR'}}</td>
                                                             <td style="color:black">
                                                                 {{creditnoteDetails?.roundoff | currency:'INR'}}</td>
                                                             <td style="color:black">

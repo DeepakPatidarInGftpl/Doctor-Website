@@ -86,8 +86,61 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Credit Note Date</label>
-                                    <input type="date" [formControl]="creditNoteDate" [attr.min]="minDate"
-                                        [attr.max]="maxDate" (change)="filterData()">
+
+
+
+                                    <mat-form-field style="width: 100%;" class="border">
+                                        <mat-date-range-input
+                                        [formGroup]="range"
+                                        [rangePicker]="startdatePicker"
+                                        [comparisonStart]="range.value.start"
+                                        [comparisonEnd]="range.value.end">
+                                        <input matStartDate style="border: none !important;" placeholder="Start date" 
+                                        (dateChange)="filterData('Date')"
+                                        formControlName="start" class="mat-input text-r" >
+                                        <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate style="border: none !important;" placeholder="End date" formControlName="end"  class="mat-input"
+                                                >
+                                        </mat-date-range-input>
+        
+                                        <mat-datepicker-toggle  matSuffix [for]="startdatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #startdatePicker>
+                                        <mat-date-range-picker-actions>
+                                            <button mat-button matDateRangePickerCancel>Cancel</button>
+                                            <button mat-raised-button color="primary" (click)="filterData('Date')" matDateRangePickerApply>Apply</button>
+                                        </mat-date-range-picker-actions>
+                                        </mat-date-range-picker>
+                                    </mat-form-field>   
+                                     
+                                    <!-- <input type="date" [formControl]="creditNoteDate" [attr.min]="minDate"
+                                        [attr.max]="maxDate" (change)="filterData()"> -->
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select class="form-select" #Status (change)="filterData('Status',Status.value)" aria-label="Default select example">
+                                        <option value="">Select Status</option>
+                                        <option >Draft</option>
+                                        <option >Pending</option>
+                                        <option >Partially Used</option>
+                                        <option >Used</option>
+                                        <option >Ordered</option>
+                                        <option >Complete</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select  class="form-select" #val (change)="filterData('Is Active',val.value)">
+                                        <option value=""  >Select Is Active Type</option>
+                                        <option > Active</option>
+                                        <option >InActive</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -124,8 +177,8 @@
                         <th (click)="sort('id')" class="thone">Credit Note Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sales Bill<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th> -->
-                        <th (click)="sort('id')" class="thone">Round off <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Round off <i class="fa fa-sort"></i></th> -->
+                        <!-- <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
@@ -152,13 +205,19 @@
                         <td>{{products?.date}}</td>
                         <td>{{products?.sale_bill_no?.customer_bill_no}}</td>
                         <!-- <td>{{products.reason}}</td> -->
-                        <td>{{products.roundoff}}</td>
-                        <td>{{products.tax}}</td>
+                        <!-- <td>{{products.roundoff}}</td> -->
+                        <!-- <td>{{products.tax}}</td> -->
                         <td>{{products.total}}</td>
                         <td>
                             <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}"
-                                class="badges">{{products.status}}</span>
+                                [ngClass]="{'bg-lightgreen': products.status === 'Complete',
+                                 'bg-lightred' : products.status === 'Pending',
+                                 'bg-lightyellow' : products.status === 'Ordered',
+                                 'bg-info' : products.status === 'Used',
+                                 'bg-secondary' : products.status === 'Partially Used',
+                                 'bg-dark' : products.status === 'Draft'
+                                }"
+                                class="badges rounded-pill">{{products.status}}</span>
                         </td>
                         <td>
                             <mat-slide-toggle
