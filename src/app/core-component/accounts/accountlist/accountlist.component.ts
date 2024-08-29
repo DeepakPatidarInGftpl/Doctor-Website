@@ -180,7 +180,7 @@ export class AccountlistComponent implements OnInit {
   }
 
   filterActive_StatusData( event : string){
-    this.filteredData =  this.filteredData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
+    this.filteredData =  this.tableData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
 }
 
 

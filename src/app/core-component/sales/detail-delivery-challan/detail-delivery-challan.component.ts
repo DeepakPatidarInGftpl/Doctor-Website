@@ -21,6 +21,7 @@ export class DetailDeliveryChallanComponent implements OnInit {
   supplierAddress:any;
   selectedAddressBilling:any;
   selectedAddressShipping:any;
+  totalItems: any;
   isSyncLoading = false;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -51,6 +52,7 @@ export class DetailDeliveryChallanComponent implements OnInit {
                console.log(this.selectedAddressShipping);
              }
            });
+           this.totalItems = this.deliveryChallanDetail?.cart?.length;
            this.deliveryChallanDetail?.cart?.map((res:any)=>{
           this.totalmrp.push(res?.mrp);
           this.totalMrp = 0;

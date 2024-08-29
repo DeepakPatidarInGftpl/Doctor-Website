@@ -281,19 +281,16 @@ export class EditpurchaseComponent implements OnInit {
       const purchaseRate = j.purchase_rate || 0;
       const taxPercentage = j.tax || 0;
       const landingCost = j.landing_cost || 0;
+      let taxPrice = (j.purchase_rate * taxPercentage) / 100;
       console.log(this.taxIntoRupees[i]);
 
       // tax including & excluding
-      if (j.tax == 18) {
-        this.TotalWithoutTax[i] = (j.purchase_rate * j.qty).toFixed(2);
+      let totalWithoutTax:any = (j.purchase_rate * j.qty).toFixed(2);
+        this.TotalWithoutTax[i] = (totalWithoutTax - taxPrice).toFixed(2);
         const calculatedTax = (purchaseRate * taxPercentage) / 100;
         this.taxIntoRupees[i] = calculatedTax;
         console.log(this.taxIntoRupees[i]);
-      } else {
-        this.TotalWithoutTax[i] = (j.landing_cost * j.qty).toFixed(2);
-        let taxPrice = (landingCost * taxPercentage) / 100
-        this.taxIntoRupees[i] = taxPrice;
-      }
+
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
@@ -628,7 +625,7 @@ export class EditpurchaseComponent implements OnInit {
       this.originalCoastPrice = getCoastPrice - taxPrice;
     } else {
       let costprice = event?.batch[0]?.cost_price || 0;
-      let purchaseTax = 18
+      let purchaseTax = this.apiPurchaseTax;
       // cost price 
       let getDiscountPrice = (costprice * this.batchDiscount) / 100
       console.log(getDiscountPrice);
@@ -656,19 +653,19 @@ export class EditpurchaseComponent implements OnInit {
           // landing_cost: this.landingCost
         });
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax;
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
           qty: 1,
-          tax: 18,
+          tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           purchase_rate: event.batch[0]?.cost_price,
           // landing_cost: this.landingCost || 0
         });
       }
     } else {
-      this.tax[index] = 18
+      this.tax[index] = this.apiPurchaseTax;
       const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
@@ -676,7 +673,7 @@ export class EditpurchaseComponent implements OnInit {
         qty: 1 || 0,
         discount: event.batch[0]?.discount || 0,
         purchase_rate: event.batch[0]?.cost_price || 0,
-        tax: 18,
+        tax: this.apiPurchaseTax,
       });
     }
 
@@ -710,7 +707,6 @@ export class EditpurchaseComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     } else {
       let costprice = this.coastprice[index] || 0;
-      let purchaseTax = 18;
       // cost price 
       let getDiscountPrice = (costprice * this.batchDiscount) / 100
       console.log(getDiscountPrice, 'getDiscountPrice');
@@ -764,8 +760,6 @@ export class EditpurchaseComponent implements OnInit {
   TotalWithoutTax: any[] = [];
   landingCostEveryIndex: any[] = [];
   calculateTotalLandingCostEveryIndex(index: number): number {
-
-
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
     const taxPercentageControl = cartItem.get('tax');
@@ -779,10 +773,12 @@ export class EditpurchaseComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const qty = +qtyControlControl.value || 0;
         if (this.batchCostPrice[index] > 0) {
+          let taxPrice = (purchaseRate * taxPercentageControl.value) / 100;
           const discountAmount = (this.batchCostPrice[index] * discountPercentage) / 100;
           const afterDiscountAmount = Number(this.batchCostPrice[index]) - discountAmount;
           if(afterDiscountAmount) {
-            this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
+            let totalWithoutTax:any = (purchaseRate * qty).toFixed(2)
+            this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0
           } else {
             this.TotalWithoutTax[index] = 0;
           }
@@ -795,10 +791,15 @@ export class EditpurchaseComponent implements OnInit {
           // without tax price 
           return landingCost;
         } else {
+          let taxPrice = (purchaseRate * taxPercentageControl.value) / 100;
           const discountAmount = (Number(purchaseRateControl.value) * discountPercentage) / 100;
           const afterDiscountAmount = Number(purchaseRateControl.value) - discountAmount;
-          this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0
-          const landingCost = afterDiscountAmount || 0;
+          let totalWithoutTax:any = (purchaseRate * qty).toFixed(2)
+
+          this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0
+          console.log(this.TotalWithoutTax[index]);
+          
+          const landingCost = afterDiscountAmount || 0
           this.landingCostEveryIndex[index] = landingCost
           barcode.patchValue({
             landing_cost: landingCost.toFixed(2),
@@ -806,21 +807,25 @@ export class EditpurchaseComponent implements OnInit {
           return landingCost;
         }
       } else {
-        let purchaseTax = 18
+        let purchaseTax = this.apiPurchaseTax;
         const discountPercentage = +discountPercentageControl.value || 0;
         const qty = +qtyControlControl.value || 0;
         // cost price 
         let getDiscountPrice = (this.batchCostPrice[index] * discountPercentage) / 100
-        let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
+        if(discountPercentage > 0){
+           getDiscountPrice = (Number(purchaseRateControl?.value) * discountPercentage) / 100
+        }
+        let getCoastPrice = Number(purchaseRateControl?.value) - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice
         // without tax price 
+        let taxPrice = ((purchaseRateControl?.value * purchaseTax) / 100) || 0
+        let totalWithoutTax:any = (getCoastPrice * qty).toFixed(2);
         if(getCoastPrice) {
-          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+          this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0;
         } else {
           this.TotalWithoutTax[index] = 0;
         }
         // landing cost
-        let taxPrice = ((this.batchCostPrice[index] * purchaseTax) / 100 ) || 0
         this.taxIntoRupees[index] = taxPrice || 0;
         let landingCost = getCoastPrice + taxPrice || 0;
         barcode.patchValue({

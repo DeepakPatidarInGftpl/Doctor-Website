@@ -21,7 +21,8 @@ export class AccountSubTypeComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
+  public tableData: any;
+  selectedActive: any = null;
 
   accountSubTypeForm!: FormGroup;
   get f() {
@@ -207,6 +208,10 @@ export class AccountSubTypeComponent implements OnInit {
         }
       });
     });
+  }
+
+  filterActive_StatusData( event : string){
+    this.filteredData =  this.tableData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
   }
 
   openModal() {
@@ -673,6 +678,7 @@ export class AccountSubTypeComponent implements OnInit {
   clearFilter() {
     this.selectedAccountType = null;
     this.selectedAlias = null;
+    this.selectedActive = null;
     this.filterData();
   }
   changePg(val: any) {

@@ -20,10 +20,10 @@
                                 [ngClass]="{'is-invalid': userControl.touched && userControl.invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let user of filteredusers | async">
-                                    <mat-option *ngIf="user.is_active === true"
-                                        [value]="user?.name + ' ' + user?.username" (onSelectionChange)="oncheck(user)"
-                                        style="color:#FF9F43">
-                                        {{user?.name + ' (' + user?.username + ')'}}
+                                    <mat-option *ngIf="user.is_active === true" [value]="user?.phone_number ? (user?.name + ' (' + user?.phone_number + ')') :
+                                        user?.name" (onSelectionChange)="oncheck(user)" style="color:#FF9F43">
+                                        {{user?.phone_number ? (user?.name + ' (' + user?.phone_number + ')') :
+                                        user?.name}}
                                     </mat-option>
 
                                 </ng-container>
@@ -648,9 +648,9 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-start"><strong>Total</strong></td>
-                                        <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
+                                        <td class="text-start">{{calculateTotalQty()}}
                                             <input type="text" formControlName="total_qty" class="input"
-                                                [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                                [ngModel]="calculateTotalQty()" style="display: none;">
                                         </td>
                                         <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
@@ -663,7 +663,7 @@
                                                 [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                        <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                        <td>{{calculateTotalWithoutTax()}}</td>
                                         <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
                                     </tr>
                                 </tbody>

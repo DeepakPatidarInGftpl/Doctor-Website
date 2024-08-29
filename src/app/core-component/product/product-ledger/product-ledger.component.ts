@@ -18,6 +18,7 @@ export class ProductLedgerComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false;
   selectActive: any;
+  productVariantList: any;
 
   constructor(private coreService: CoreService, private contactService: ContactService, private cs: CompanyService) { }
 
@@ -52,6 +53,7 @@ export class ProductLedgerComponent implements OnInit {
     this.getProductLedger();
     this.getVoucher();
     this.getProduct();
+    this.getVariant();
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
@@ -98,6 +100,13 @@ export class ProductLedgerComponent implements OnInit {
       // this.variants=res;
     })
   }
+
+  getVariant() {
+    this.contactService.productVariant().subscribe((res)=> {
+      this.productVariantList = res;
+    })
+  }
+
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
