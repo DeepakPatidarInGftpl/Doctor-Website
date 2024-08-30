@@ -26,7 +26,11 @@ export class EditcompanyComponent implements OnInit {
 
   companyId: any
   data: any
-  selectS: any
+  selectS: any;
+  selectedFileName: File | null = null;
+  fileError: string | null = null;
+  url: any;
+  imgUrl = 'https://pv.greatfuturetechno.com';
 
   ngOnInit(): void {
     this.companyId = this.Arout.snapshot.paramMap.get('id');
@@ -57,6 +61,7 @@ export class EditcompanyComponent implements OnInit {
       this.selectCity(this.data?.state?.id);
       this.companyForm.get('city')?.patchValue(this.data?.city?.id);
       this.companyForm.get('financial_year')?.patchValue(this.data?.financial_year?.id);
+      this.url = this.imgUrl + this.data?.logo;
       this.selectS = this?.data?.state;
     })
   }
@@ -75,8 +80,24 @@ export class EditcompanyComponent implements OnInit {
     })
   }
 
-  selectedFile(event) {
-    console.log(event);
+  selectedFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const fileType = file.type;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.url = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      if (fileType.startsWith('image/')) {
+        this.selectedFileName = file;
+        this.fileError = null;
+      } else {
+        this.selectedFile = null;
+        this.fileError = 'Please upload a valid image file (e.g., .jpg, .png).';
+      }
+    }
   }
 
   state: any

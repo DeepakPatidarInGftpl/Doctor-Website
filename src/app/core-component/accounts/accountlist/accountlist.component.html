@@ -155,7 +155,9 @@
                         <td>{{products?.accounts_type}}</td>
                         <td>{{products?.account_subtype?.title}}</td>
                         <td>{{products?.account_id}}</td>
-                        <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
+                        <td> <span [ngClass]="products?.opening_balance_type === 'Cr' ? 'text-success' : 'text-danger'">
+                                {{ products?.opening_balance_type }} </span> {{ (products?.opening_balance != null ? '
+                            : ' +
                             products?.opening_balance : '') }}</td>
                         <td>
                             <mat-slide-toggle
