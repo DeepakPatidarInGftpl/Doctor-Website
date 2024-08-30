@@ -569,6 +569,9 @@ if (str == 'Is Active') {
     }
   }
   //20-5
+  total_Account : number =0;
+  total_advance_payment : number =0;
+  total_against_bill : number =0;
   getEstimate(fy: any , date ?: any) {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
@@ -576,11 +579,26 @@ if (str == 'Is Active') {
 
     this.transactionService
       .getRecieptVoucherFy(fy, this.selectData,date)
-      .subscribe((res) => {
+      .subscribe((res : any) => {
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+
+        res.forEach((item : any) => {
+
+          console.log(item.mode_type)
+          if (item.mode_type === 'On Account') {
+            this.total_Account += +item.amount
+          }else if(item.mode_type === 'Advance Payment'){
+            this.total_advance_payment += +item.amount
+
+          }else if(item.mode_type === 'Against Bill'){
+            this.total_against_bill += +item.amount
+          }
+
+        });
+
         this.filterData();
       });
   }
