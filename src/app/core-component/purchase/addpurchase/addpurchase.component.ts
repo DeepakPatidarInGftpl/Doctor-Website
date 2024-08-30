@@ -469,6 +469,7 @@ export class AddpurchaseComponent implements OnInit {
         purchase_rate: 0,
         mrp: 0,
         discount: 0,
+        landing_cost: 0
     });
       this.myControls[index].reset();
       this.updateTotal(existingProductIndex);
@@ -670,7 +671,7 @@ export class AddpurchaseComponent implements OnInit {
           const afterDiscountAmount = Number(this.batchCostPrice[index]) - discountAmount;
           if(afterDiscountAmount) {
             let totalWithoutTax:any = (purchaseRate * qty).toFixed(2)
-            this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0
+            this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0
           } else {
             this.TotalWithoutTax[index] = 0;
           }
@@ -683,7 +684,7 @@ export class AddpurchaseComponent implements OnInit {
           const afterDiscountAmount = this.coastprice[index] - discountAmount;
           let totalWithoutTax:any = (purchaseRate * qty).toFixed(2)
 
-          this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0
+          this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0
           console.log(this.TotalWithoutTax[index]);
           
           const landingCost = afterDiscountAmount || 0
@@ -704,13 +705,13 @@ export class AddpurchaseComponent implements OnInit {
         let taxPrice = ((purchaseRateControl?.value * purchaseTax) / 100) || 0
         let totalWithoutTax:any = (getCoastPrice * qty).toFixed(2);
         if(getCoastPrice) {
-          this.TotalWithoutTax[index] = totalWithoutTax - taxPrice || 0;
+          this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0;
         } else {
           this.TotalWithoutTax[index] = 0;
         }
         // landing cost
         this.taxIntoRupees[index] = taxPrice || 0;
-        let landingCost = getCoastPrice + taxPrice || 0;
+        let landingCost = getCoastPrice || 0;
 
         return landingCost;
       }
@@ -795,8 +796,8 @@ export class AddpurchaseComponent implements OnInit {
       formdata.append('note', this.purchaseForm.get('note')?.value);
       formdata.append('export', this.purchaseForm.get('export')?.value);
       formdata.append('total_qty', this.purchaseForm.get('total_qty')?.value);
-      formdata.append('total_tax', this.purchaseForm.get('total_tax')?.value);
-      formdata.append('total_discount', this.purchaseForm.get('total_discount')?.value);
+      formdata.append('total_tax', this.calculateTotalTax());
+      formdata.append('total_discount', this.calculateTotalDiscount());
       formdata.append('round_off', this.purchaseForm.get('round_off')?.value);
       formdata.append('sub_total', this.purchaseForm.get('sub_total')?.value);
       formdata.append('total', this.purchaseForm.get('total')?.value);
@@ -822,13 +823,14 @@ export class AddpurchaseComponent implements OnInit {
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
         const cartObject = {};
+        let qtyValue = 0; 
         Object.keys(cartGroup.controls).forEach((key) => {
           const control:any = cartGroup.controls[key];
           let value = control.value;
-          console.log(value);
-          
-          // Convert the value to an integer if it's a number
-          if(value.length === 0){
+          if (key === 'qty') {
+            qtyValue = parseFloat(value); 
+          }
+          if(value?.length === 0){
             cartObject[key] = 0;
           } 
           else if (!isNaN(control.value)) {
@@ -837,7 +839,9 @@ export class AddpurchaseComponent implements OnInit {
             cartObject[key] = control.value;
           }
         });
+        if (qtyValue > 0) {
         cartData.push(cartObject);
+        }
       });
       formdata.append('purchase_cart', JSON.stringify(cartData));
       this.purchaseService.addPurchase(formdata).subscribe(res => {

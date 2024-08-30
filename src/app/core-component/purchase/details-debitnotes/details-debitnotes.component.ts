@@ -366,13 +366,63 @@ export class DetailsDebitnotesComponent implements OnInit {
       }
 
 
-  printForm(): void {
-    const printContents = document.getElementById('debitNote').outerHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-  }
+      printForm(): void {
+        const formElement = document.getElementById('debitNote');
+        if (!formElement) {
+            console.error('Form not found');
+            return;
+        }
+    
+        const clonedForm = formElement.cloneNode(true) as HTMLElement;
+    
+        const printContainer = document.createElement('div');
+        printContainer.id = 'printContainer';
+        printContainer.appendChild(clonedForm);
+    
+        const style = document.createElement('style');
+        style.id = 'printStyle';
+        style.textContent = `
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+                #printContainer, #printContainer * {
+                    visibility: visible;
+                }
+                #printContainer {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    
+        document.body.appendChild(printContainer);
+    
+        window.print();
+    
+        window.addEventListener('afterprint', () => {
+          this.clearPrintContainer();
+        });
+    
+        setTimeout(() => {
+          this.clearPrintContainer();
+        }, 2000);
+    }
+    
+    clearPrintContainer(): void {
+        const printContainer = document.getElementById('printContainer');
+        const printStyle = document.getElementById('printStyle');
+    
+        if (printContainer) {
+            printContainer.remove();
+        }
+        if (printStyle) {
+            printStyle.remove();
+        }
+    }
 
   
   p: number = 1

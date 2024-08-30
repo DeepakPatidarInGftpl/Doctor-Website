@@ -25,39 +25,70 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="name.." [(ngModel)]="titlee" (ngModelChange)="search()">
+                            <input type="search" class="form-control form-control-sm" placeholder="name.."
+                                [(ngModel)]="titlee" (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
             </div>
             <div class="wordset">
                 <ul>
-                    <li> <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a> </li>
-                    <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a></li>
-                    <li> <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a></li>
+                    <li> <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a> </li>
+                    <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                                src="assets/img/icons/excel.svg" alt="img"></a></li>
+                    <li> <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                                src="assets/img/icons/printer.svg" alt="img"></a></li>
                 </ul>
             </div>
         </div>
         <!-- /Filter -->
-        <!-- <div class="card mb-0" id="filter_inputs">
+        <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Company Name</label>
-                                    <input type="search" [(ngModel)]="selectedCompany" (ngModelChange)="filterData()"
-                                        class="search" placeholder="Search Company">
+                                    <label>Discount Type</label>
+                                    <select [(ngModel)]="discountType" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Discount Type</option>
+                                        <option value="BasedOnInvoiceAmount">Based On Invoice Amount</option>
+                                        <option value="BasedOnBrands">Based On Brands</option>
+                                        <option value="BasedOnSubCategorie’sBrand">Based On Sub-Categorie’s Brand
+                                        </option>
+                                        <option value="BasedOnCollection">Based On Collection</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Opening Balance Type</label>
-                                    <select [(ngModel)]="selectCredit" (change)="filterData()" class="form-select">
-                                        <option value="" selected disabled>Opening Balance Type</option>
-                                        <option value="Cr">Cr</option>
-                                        <option value="Dr">Dr</option>
+                                    <label>Business Location</label>
+                                    <select [(ngModel)]="businessLocation" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Business Location</option>
+                                        <option value="{{branch?.title}}" *ngFor="let branch of branchList">
+                                            {{branch?.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Customers Group</label>
+                                    <select [(ngModel)]="customerGroup" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Customer Group</option>
+                                        <option value="{{member?.title}}" *ngFor="let member of membershipList">
+                                            {{member?.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select [(ngModel)]="selectActive" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Active Status
+                                        </option>
+                                        <option [value]="true">Yes</option>
+                                        <option [value]="false">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -68,7 +99,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <!-- /Filter -->
         <div class="table-responsive">
             <table class="table datanew" id="mytable">
@@ -88,33 +119,34 @@
                         <th (click)="sort('id')" class="thone">End Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Business Location <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Customers Group <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Multiuse<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Multiuse<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Compulsory<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Applicable For Only Coupons<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Auto Update Price<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Auto Update Price<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0">
-                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <ng-container *ngIf="products.discount_type==='BasedOnInvoiceAmount'">
-                        <td>
-                            <label class="checkboxs">
-                                <input type="checkbox" [(ngModel)]="selectedRows[i]">
-                                <span class="checkmarks"></span>
-                            </label>
-                        </td>
-                        <td>{{i+1}}</td>
-                        <td class="productimgname" routerLink="//offer/detail-invoice-amount/{{products.id}}">
-                            <a style="line-height: 3;">{{products.name}}</a>
-                        </td>
-                        <td>{{products.discount_type}}</td>
-                        <td>{{products.start_date}}</td>
-                        <td>{{products.end_date}}</td>
-                        <td>{{products.business_location?.title}}</td>
-                        <td>{{products.customers_group?.title}}</td>
-                       <td>
+                            <td>
+                                <label class="checkboxs">
+                                    <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                    <span class="checkmarks"></span>
+                                </label>
+                            </td>
+                            <td>{{i+1}}</td>
+                            <td class="productimgname" routerLink="//offer/detail-invoice-amount/{{products.id}}">
+                                <a style="line-height: 3;">{{products.name}}</a>
+                            </td>
+                            <td>{{products.discount_type}}</td>
+                            <td>{{products.start_date}}</td>
+                            <td>{{products.end_date}}</td>
+                            <td>{{products.business_location?.title}}</td>
+                            <td>{{products.customers_group?.title}}</td>
+                            <!-- <td>
                         <span [ngClass]="{'bg-lightgreen': products?.multiuse === true, 'bg-lightred' : products?.multiuse === false}"
                         class="badges">{{products?.multiuse}}</span>
                     </td>
@@ -122,24 +154,24 @@
                         class="badges">{{products?.is_compulsory}}</span></td>
                         <td> <span [ngClass]="{'bg-lightgreen': products?.applicable_for_only_coupons === true, 'bg-lightred' : products?.applicable_for_only_coupons === false} "class="badges">{{products?.applicable_for_only_coupons}}</span></td>
                         <td> <span [ngClass]="{'bg-lightgreen': products?.auto_update_price === true, 'bg-lightred' : products?.auto_update_price === false}"
-                            class="badges">{{products?.auto_update_price}}</span></td>
-                        <td>
-                            <mat-slide-toggle
-                                (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)"
-                                [(ngModel)]="products.is_active"></mat-slide-toggle>
-                        </td>
-                        <td>
-                            <a class="me-1" routerLink="//offer/detail-invoice-amount/{{products.id}}">
-                                <img src="assets/img/icons/eye.svg" alt="img">
-                            </a>
-                            <a class="me-1" routerLink="//offer/edit-invoice-amount/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
-                                *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
-                        </td>
+                            class="badges">{{products?.auto_update_price}}</span></td> -->
+                            <td>
+                                <mat-slide-toggle
+                                    (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)"
+                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            </td>
+                            <td>
+                                <a class="me-1" routerLink="//offer/detail-invoice-amount/{{products.id}}">
+                                    <img src="assets/img/icons/eye.svg" alt="img">
+                                </a>
+                                <a class="me-1" routerLink="//offer/edit-invoice-amount/{{products.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a (click)="confirmText(i,products.id)" class="me-1 confirm-text"
+                                    href="javascript:void(0);" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </td>
                         </ng-container>
                         <!-- <ng-container *ngIf="products.discount_type!=='BasedOnInvoiceAmount'">
                             <td colspan="10" [hidden]="i !== 0">
@@ -175,7 +207,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}}
+                            entries</div>
                     </div>
                 </div>
             </div>

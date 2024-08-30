@@ -275,6 +275,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.getCart().push(this.material_inward_cart());
     this.isCart = false;
     this.setupValueChanges();
+    this.myControls.push(new FormControl());
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -374,7 +375,6 @@ export class UpdatematerialInwardComponent implements OnInit {
     const purchaseBillFormArray = this.getCart();
     const currentControl = purchaseBillFormArray.at(index) as FormGroup;
     currentControl.controls['barcode'].setValue('');
-
     const existingProductIndex = purchaseBillFormArray.controls.findIndex(control => control.value.barcode === selectedItemId);
     if (existingProductIndex !== -1) {
       const existingProduct = purchaseBillFormArray.at(existingProductIndex) as FormGroup;
@@ -598,17 +598,25 @@ export class UpdatematerialInwardComponent implements OnInit {
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
         const cartObject = {};
+        let qtyValue = 0; 
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          // Convert the value to an integer if it's a number
-          if (!isNaN(control.value)) {
+          let value = control.value;
+          if (key === 'qty') {
+            qtyValue = parseFloat(value); 
+          }
+          if(value?.length === 0){
+            cartObject[key] = 0;
+          } else if (!isNaN(control.value)) {
             cartObject[key] = parseInt(control.value, 10);
           } else {
             cartObject[key] = control.value;
           }
         });
 
+        if (qtyValue > 0) {
         cartData.push(cartObject);
+        }
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
       this.purchaseService.updateMaterial(formdata, this.id).subscribe(res => {

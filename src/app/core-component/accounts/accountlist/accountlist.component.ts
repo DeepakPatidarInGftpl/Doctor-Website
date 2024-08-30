@@ -154,6 +154,7 @@ export class AccountlistComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      console.log(this.filteredData);
       this.filterData();
     })
 

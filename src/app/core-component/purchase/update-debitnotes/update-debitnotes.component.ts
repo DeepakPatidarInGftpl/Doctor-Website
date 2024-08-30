@@ -221,16 +221,12 @@ export class UpdateDebitnotesComponent implements OnInit {
       const purchaseRate = j.unit_cost || 0;
       const taxPercentage = j.tax || 0;
       const landingCost = j.landing_cost || 0;
-      if (j.tax == 18) {
-        this.TotalWithoutTax[i] = (j.unit_cost * j.qty).toFixed(2);
-        const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
+      let taxPrice = (j.unit_cost * taxPercentage) / 100;
+      let totalWithoutTax:any = (j.unit_cost * j.qty).toFixed(2);
+        this.TotalWithoutTax[i] = (totalWithoutTax - (taxPrice * j.qty)).toFixed(2);
+        const calculatedTax = (purchaseRate * taxPercentage) / 100;
         this.taxIntoRupees[i] = calculatedTax;
         console.log(this.taxIntoRupees[i]);
-      } else {
-        this.TotalWithoutTax[i] = (j.landing_cost * j.qty).toFixed(2);
-        let taxPrice = (landingCost * taxPercentage) / 100;
-        this.taxIntoRupees[i] = taxPrice;
-      }
       this.isPercentage[i] = true;
       if (j.deduction > 100) {
         this.isAmount[i] = true;
