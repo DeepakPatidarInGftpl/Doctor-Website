@@ -11,14 +11,14 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Account Name*</label>
+                        <label>Customor Name*</label>
                         <!-- <select formControlName="account"  required id="account" [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <option value="" selected disabled>Select Account</option>
                             <option value="{{account?.id}}" *ngFor="let account of accountList"> {{account?.accounts_type}}</option>
                         </select> -->
 
                         <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Select From Account" aria-label="from_account" matInput
+                            <input type="text" placeholder="Enter A Customor Name" aria-label="from_account" matInput
                                 [formControl]="fromAccountControl" [matAutocomplete]="auto"
                                 style="box-sizing: border-box;">
                             <mat-autocomplete #auto="matAutocomplete">
@@ -107,6 +107,14 @@
                     </div>
                 </div>
 
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" formControlName="amount" placeholder="Enter Amount"
+                            [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                        <span class="text-danger" *ngIf="Amount && Amount.invalid && Amount.touched">Enter Amount</span>
+                    </div>
+                </div>
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Round Off</label>

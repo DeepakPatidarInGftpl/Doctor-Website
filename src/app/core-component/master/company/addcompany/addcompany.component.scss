@@ -3,8 +3,7 @@
 }
 
 select,
-input[type="date"]
-{
+input[type="date"] {
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
     width: 100%;
@@ -14,7 +13,23 @@ input[type="date"]
     padding: 10px 15px;
     border-radius: 5px;
 }
-textarea
-{
+
+textarea {
     height: 40px;
+}
+
+.img-upload-btn-wrapper {
+    border: 1px solid gray;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.btn-text-wrapper {
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+.img-wrapper {
+    height: 150px;
 }

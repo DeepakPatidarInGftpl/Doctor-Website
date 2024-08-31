@@ -134,7 +134,7 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Is Active</label>
-                                    <select #val (change)="filterData('Is Active',val.value)">
+                                    <select  class="form-select" #val (change)="filterData('Is Active',val.value)">
                                         <option value=""  >Select Is Active Type</option>
                                         <option > Active</option>
                                         <option >InActive</option>
@@ -169,8 +169,45 @@
                 </div>
             </div>
         </div>
-        <!-- /Filter -->
-        <div class="table-responsive">
+        <!-- /Filter end -->
+
+        <!-- card start -->
+        <div class="row w-100">
+            <div class="col-md-4">
+                <div class="card" style=" border: none;outline: none;">
+                    <div class="card-body rounded-3" style="background: #FF9E43;">
+                        <h4 class="text-center text-light text-bg-light text-capitalize f-500">Account</h4>
+                        <h5 class="text-center mt-3 text-light text-bg-light text-capitalize f-500 border border-light  rounded">{{total_Account}}</h5>
+                   
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card" style=" border: none;outline: none;">
+                    <div class="card-body  rounded-3" style="background: #FF9E43;">
+                        <h4 class="text-center text-light text-bg-light text-capitalize f-500">advance payment</h4>
+                        <h5 class="text-center mt-3 text-light text-bg-light text-s text-capitalize f-500 border border-light  rounded" >{{total_advance_payment}}</h5>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card" style=" border: none;outline: none;">
+                    <div class="card-body rounded-3" style="background: #FF9E43;">
+                        <h4 class="text-center text-light text-bg-light text-capitalize f-500">against bill</h4>
+                        <h5 class="text-center mt-3 text-light text-bg-light text-capitalize f-500 border border-light  rounded">{{total_against_bill}}</h5>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- card end -->
+
+
+        <!-- /product list start -->
+         <div class="table-responsive">
             <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
@@ -278,6 +315,6 @@
                 </div>
             </div>
         </div>
+        <!-- /product list end -->
     </div>
 </div>
-<!-- /product list -->

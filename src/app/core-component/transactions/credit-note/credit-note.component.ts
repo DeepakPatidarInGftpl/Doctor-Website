@@ -8,7 +8,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-credit-note',
@@ -33,7 +33,10 @@ export class CreditNoteComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
   creditNoteDate = new FormControl('');
-
+ public range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   constructor( private transactionService: TransactionService,private cs: CompanyService,private dashboardservice :DashboardService, private contactservice : ContactService,
     private commonService: CommonServiceService
   ) { }
@@ -170,7 +173,7 @@ export class CreditNoteComponent implements OnInit {
     })
 //20-5
 this.cs.userDetails$.subscribe((res: any) => {
-  if (res.role == 'admin') {
+  if (res && res.role == 'admin') {
     this.isAdmin = true;
   } else {
     this.isAdmin = false;
@@ -223,6 +226,11 @@ if (localStorage.getItem('financialYear')) {
     this.selectedRows.fill(this.allSelected);
   }
 
+
+ public go(){
+  // let filteredData = this.tableData.slice();
+  
+}
   select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -241,14 +249,20 @@ if (localStorage.getItem('financialYear')) {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.account?.account_id.toLocaleLowerCase();
-        const companyNameLower = res?.credit_note_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
+        const nameLower : string = res?.account?.account_id.toLocaleLowerCase();
+        const companyNameLower : string = res?.credit_note_no.toLocaleLowerCase();
+        const sale_bill = String(res?.sale_bill_no?.customer_bill_no).toLocaleLowerCase();
+
+
+        return nameLower.includes(searchTerm) || companyNameLower.includes(searchTerm)||sale_bill.includes(searchTerm)
+    //     if (nameLower.match(searchTerm)) {
+    //       return true;
+    //     } else if (companyNameLower.match(searchTerm)) {
+    //       return true;
+    //     }else if (sale_bill.match(searchTerm)) {
+    //       return true
+    //     }
+    //     return false;
       });
     }
   }
@@ -471,7 +485,7 @@ if (localStorage.getItem('financialYear')) {
     this.maxDate = formattedMaxDate;
   }
 
-  filterData() {
+  filterData(str? : any,val ?:any ) {
     let filteredData = this.tableData.slice();
     if (this.creditNoteDate.value) {
       const selectedDate = new Date(this.creditNoteDate.value).toISOString().split('T')[0];
@@ -483,6 +497,36 @@ if (localStorage.getItem('financialYear')) {
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
     }
+    if (str == 'Status') {
+      filteredData = filteredData.filter((item) => item?.status == val);
+    }
+    if (str == 'Is Active') {
+  
+      filteredData = filteredData.filter((item : any) =>{
+        if (val === 'Active') {
+         return item.is_active == true;
+        }else if (val === 'InActive') {
+          return item.is_active == false;
+        }
+        return item
+      }
+      );
+    }
+
+
+if (str == 'Date') {
+  const s = this.range.get('start').value;
+  const e = this.range.get('end').value;
+  if ( s && e) {
+    const startDate = new Date(s);
+    const endDate = new Date(e);
+    filteredData = filteredData.filter((item) => {
+    const supplierBillDate = new Date(item?.date);
+      return supplierBillDate >= startDate && supplierBillDate <= endDate;
+    });
+  }
+}
+
     this.filteredData = filteredData;
   }
   clearFilters() {

@@ -23,6 +23,7 @@ export class AddDeliveryChallanComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
+  priceQtyData:any = {};
 
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
@@ -297,7 +298,7 @@ export class AddDeliveryChallanComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       mrp: (0)
     })
   }
@@ -487,7 +488,42 @@ export class AddDeliveryChallanComponent implements OnInit {
  
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+    const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
+    currentControl.controls['barcode'].setValue('');
+    currentControl.controls['item_name'].setValue('');
+    const priceQtyArray:any = Object.values(this.priceQtyData);
+  
+    const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+    if (existingProductIndex !== -1) {
+      priceQtyArray[existingProductIndex].qty += 1;
+  
+      const barcode = (this.deliveryChallanForm.get('cart') as FormArray).at(existingProductIndex) as FormGroup;
+      barcode.patchValue({
+        qty: priceQtyArray[existingProductIndex].qty
+      });
+  
+      const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
+      currentControl.reset();
+      console.log(currentControl);
+      this.barcode[index] = '';
+        currentControl.patchValue({
+          barcode: 0,
+          item_name: '',
+          qty: 0,
+          mrp: 0
+      });
+      return;
+    }
+  
+    this.barcode[index] = event.sku;
     console.log(event);
+    this.priceQtyData[index] = {
+      barcode: selectedItemId,
+      item_name: event?.product_title,
+      qty: 1,
+      mrp: event.batch[0]?.mrp
+    };
+
     const barcode = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
     if (event.batch.length > 0) {
         barcode.patchValue({
@@ -539,8 +575,10 @@ export class AddDeliveryChallanComponent implements OnInit {
       const cartData = [];
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
-        const cartObject = {};
-        Object.keys(cartGroup.controls).forEach((key) => {
+        const qty = cartGroup.get('qty')?.value;
+        if(qty > 0){
+          const cartObject = {};
+          Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number, but keep item_name as a string
           if (key !== 'item_name' && !isNaN(control.value)) {
@@ -550,6 +588,7 @@ export class AddDeliveryChallanComponent implements OnInit {
           }
         });
         cartData.push(cartObject);
+        }
       });
       formdata.append('cart', JSON.stringify(cartData));
       this.saleService.addDelivryChallan(formdata).subscribe(res => {
@@ -717,20 +756,14 @@ export class AddDeliveryChallanComponent implements OnInit {
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
-
-    console.log(value);
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
+    // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const modal = document.getElementById(`productModal-${index}`);
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
-    this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
+    // this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
   };
 
   searchs: any[] = [];
@@ -750,14 +783,14 @@ export class AddDeliveryChallanComponent implements OnInit {
     return totalQty;
   }
   calculateTotalMRP(): any {
-    let totalQty = 0;
+    let totalmrp = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i].get('mrp') || 0;
-      if (qtyControl) {
-        totalQty += +qtyControl.value || 0;
+      const mrpControl = this.getCart().controls[i].get('mrp') || 0;
+      if (mrpControl) {
+        totalmrp += parseFloat(mrpControl.value) || 0;
       }
     }
-    return totalQty;
+    return totalmrp.toFixed(2);
   }
   clearForm() {
     this.deliveryChallanForm.reset();

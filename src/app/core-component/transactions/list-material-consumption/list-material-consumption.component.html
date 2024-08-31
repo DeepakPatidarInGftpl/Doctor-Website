@@ -22,7 +22,8 @@
                                         style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
                                     <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
                                         (click)="onLabelClick($event)">{{branch.title}}</label>
-                                </a></li>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="d-flex">
@@ -43,7 +44,7 @@
 <div class="card">
     <div class="card-body">
         <div class="table-top">
-            <div class="search-set">
+            <div class="search-set" >
                 <div class="search-path">
                     <a class="btn btn-filter" id="filter_search">
                         <img src="assets/img/icons/filter.svg" alt="img">
@@ -78,7 +79,7 @@
             </div>
         </div>
         <!-- /Filter -->
-        <!-- <div class="card mb-0" id="filter_inputs">
+        <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
@@ -86,14 +87,66 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Debit Note Date</label>
-                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                    <mat-form-field style="width: 100%;" class="border">
+                                        <mat-date-range-input
+                                        [formGroup]="range"
+                                        [rangePicker]="startdatePicker"
+                                        [comparisonStart]="range.value.start"
+                                        [comparisonEnd]="range.value.end">
+                                        <input matStartDate style="border: none !important;" placeholder="Start date" 
+                                        (dateChange)="filterData('date')"
+                                        formControlName="start" class="mat-input text-r" >
+                                        <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate style="border: none !important;" placeholder="End date" formControlName="end"  class="mat-input"
+                                                >
+                                        </mat-date-range-input>
+        
+                                        <mat-datepicker-toggle  matSuffix [for]="startdatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #startdatePicker>
+                                        <mat-date-range-picker-actions>
+                                            <button mat-button matDateRangePickerCancel>Cancel</button>
+                                            <button mat-raised-button color="primary" (click)="filterData('date')" matDateRangePickerApply>Apply</button>
+                                        </mat-date-range-picker-actions>
+                                        </mat-date-range-picker>
+                                    </mat-form-field>   
+                                     
+                                    <!-- <input type="date" [(ngModel)]="date" (change)="filterData()"> -->
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Enter Amount</label>
-                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
-                                    <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span>
+                                    <label>Select Consumption Type</label>
+                                    <select class="form-select" 
+                                    [(ngModel)]="Consumption_Type"
+                                    #Types (change)="filterData('Types', Types.value)" aria-label="Default select example">
+                                        <option value="">Select Consumption Type</option>
+                                        <option >Sample</option>
+                                        <option >Production</option>
+                                        <option >Scrap/Wastage</option>
+                                      </select>
+
+                                    <!-- <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()"> -->
+                                    <!-- <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span> -->
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select class="form-select"
+                                    [(ngModel)]="Select_Status"
+                                    
+                                    #val (change)="filterData('Status', val.value)" aria-label="Default select example">
+                                        <option value="">Select Status</option>
+                                        <option >Pending</option>
+                                        <option >Approved</option>
+                                        <option >Rejected</option>
+                                      </select>
+
+                                    <!-- <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()"> -->
+                                    <!-- <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span> -->
                                 </div>
                             </div>
                         </div>
@@ -103,7 +156,7 @@
                     </div>
                 </div>
             </div>
-        </div>  -->
+        </div> 
         <!-- /Filter -->
         <div class="table-responsive">
             <table class="table datanew" id="mytable">
@@ -119,12 +172,12 @@
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Consumption No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">User<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Prefix<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Prefix<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Consumption Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Price <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">QTY <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th> -->
+                        <!-- <th (click)="sort('id')" class="thone">Price <i class="fa fa-sort"></i></th> -->
+                        <!-- <th (click)="sort('id')" class="thone">QTY <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Remark<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
@@ -148,11 +201,11 @@
                                 style="line-height: 3;">{{products?.user?.username}}</a>
                         </td>
                         <td>{{products?.consumption_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.prefix}}</td>
+                        <!-- <td>{{products?.prefix}}</td> -->
                         <td>{{products.consumption_type}}</td>
-                        <td>{{products.barcode?.product_title}}</td>
-                        <td>{{products.price}}</td>
-                        <td>{{products.qty}}</td>
+                        <!-- <td>{{products.barcode?.product_title}}</td> -->
+                        <!-- <td>{{products.price}}</td> -->
+                        <!-- <td>{{products.qty}}</td> -->
                         <td>{{products.total_action}}</td>
                         <td>{{products.remarks}}</td>
                         <td>

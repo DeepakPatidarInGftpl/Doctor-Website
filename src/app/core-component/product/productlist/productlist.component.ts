@@ -31,6 +31,7 @@ export class ProductlistComponent implements OnInit {
   selectedBrandType: string = '';
   selectedProductStoreType: string = '';
   selectedLabel: string = '';
+  createdDate: any;
   constructor(private QueryService: QueryService, private coreService: CoreService, private cs: CompanyService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
@@ -314,6 +315,9 @@ export class ProductlistComponent implements OnInit {
   // filter data
   filterData() {
     let filteredData = this.tableData.slice();
+    if(this.createdDate) {
+      filteredData = filteredData.filter((item) => item?.created_date === this.createdDate);
+    }
     if (this.selectedCategoryType) {
       filteredData = filteredData.filter((item) => item?.category?.title === this.selectedCategoryType);
     }
@@ -348,6 +352,7 @@ export class ProductlistComponent implements OnInit {
     this.selectedLabel = null;//16/2
     this.selectedProductStoreType = null;
     this.selectActive = undefined;
+    this.createdDate = null;
     this.filterData();
   }
 

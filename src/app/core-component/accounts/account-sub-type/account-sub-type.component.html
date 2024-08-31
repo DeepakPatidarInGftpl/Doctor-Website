@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="col-lg-12 col-sm-12">
                                 <div class="row">
-                                    <div class="col-lg col-sm-6 col-12">
+                                    <div class="col-lg-4 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Alias</label>
                                             <input type="search" [(ngModel)]="selectedAlias"
@@ -68,7 +68,7 @@
                                                 placeholder="Search Alias">
                                         </div>
                                     </div>
-                                    <div class="col-lg col-sm-6 col-12">
+                                    <div class="col-lg-4 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Account Type</label>
                                             <select [(ngModel)]="selectedAccountType" (change)="filterData()"
@@ -76,6 +76,18 @@
                                                 <option value="" selected disabled>Select Account Type</option>
                                                 <option value="{{acc.title}}" *ngFor="let acc of accountType">
                                                     {{acc.title}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label> Is Active </label>
+                                            <select [(ngModel)]="selectedActive"
+                                                (change)="filterActive_StatusData($event.target.value)"
+                                                class="form-select">
+                                                <option [value]="null" selected disabled>Select Active Status</option>
+                                                <option>Yes</option>
+                                                <option>No</option>
                                             </select>
                                         </div>
                                     </div>

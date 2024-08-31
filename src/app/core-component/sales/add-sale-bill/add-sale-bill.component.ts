@@ -477,9 +477,12 @@ export class AddSaleBillComponent implements OnInit {
     if (this.priceQtyData[index]?.price) {
       const productAmout = this.productItemPrice[index];
       const discAmount = (productAmout * value) / 100;
-      const getCoastPrice = Number(productAmout - discAmount);
       const getQuantity = Number(this.priceQtyData[index]?.qty);
-      this.TotalWithoutTax[index] = (getCoastPrice * getQuantity).toFixed(2);
+      const getCoastPrice = Number(productAmout - (discAmount));
+      const getTaxPrice = Number(this.priceQtyData[index]?.taxPrice)
+      let totalWithoutTaxPrice = getCoastPrice - (getTaxPrice);
+      let totalWithoutTax:any = (totalWithoutTaxPrice * getQuantity).toFixed(2);
+      this.TotalWithoutTax[index] = totalWithoutTax; 
     }
   }
 
@@ -1145,8 +1148,8 @@ export class AddSaleBillComponent implements OnInit {
     return 0
   }
   purchase4(index) {
-    const result = this.calculationDiscountCostPrice(index);
-    this.coastprice[index] = result.toFixed(2);
+    // const result = this.calculationDiscountCostPrice(index);
+    // this.coastprice[index] = result.toFixed(2);
     console.log(this.coastprice[index], 'this.coastprice[index]');
     // setTimeout(() => {
       this.calculateRoundoffValue()
@@ -1470,6 +1473,7 @@ export class AddSaleBillComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_bill_cart', JSON.stringify(cartData));
+
       this.saleService.addSalesBill(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -2312,7 +2316,7 @@ export class AddSaleBillComponent implements OnInit {
         const discAmount = (productAmout * value) / 100;
         const getCoastPrice = Number(productAmout - discAmount);
         const qty = this.priceQtyData[index]?.qty;
-        const total = (Number(getCoastPrice) * qty) + Number(data?.taxPrice * qty);
+        const total = (Number(getCoastPrice) * qty);
         finalTotal = total;
       }
     }

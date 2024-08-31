@@ -369,27 +369,24 @@ if (obj.Type !== 'Scrap Entry') {
     if(data.section === 'body' || data.section === 'head' ){
     const {cell,table} = data;
     // top
-    if (data.row.index == 0) {
     pdf.setDrawColor(0,0,0);
     pdf.setLineWidth(0.2);
+    if (data.row.index == 0) {
     pdf.line(cell.x,cell.y,cell.x+cell.width,cell.y)
     }
     // bottom
     if (data.row.index == table.body.length-1) {
-    pdf.setDrawColor(0,0,0);
-    pdf.setLineWidth(0.2);
+
     pdf.line(cell.x,cell.y+cell.height,cell.x+cell.width,cell.y+cell.height)
     }
     // lift
     if (data.column.index == 0) {
-    pdf.setDrawColor(0,0,0);
-    pdf.setLineWidth(0.2);
+    
     pdf.line(cell.x,cell.y,cell.x,cell.y+cell.height)
     }
     // right
     if (data.column.index == table.columns.length -1) {
-    pdf.setDrawColor(0,0,0);
-    pdf.setLineWidth(0.2);
+    
     pdf.line(cell.x+cell.width,cell.y,cell.x+cell.width,cell.y+cell.height)
     }}}})
 
