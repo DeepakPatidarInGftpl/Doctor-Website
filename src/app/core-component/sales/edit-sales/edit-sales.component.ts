@@ -109,6 +109,10 @@ export class EditSalesComponent implements OnInit {
   isStatusDraft = false;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
 
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
@@ -120,7 +124,7 @@ export class EditSalesComponent implements OnInit {
       sale_order_no: new FormControl('', [Validators.required]),
       payment_terms: new FormControl(''),
       sale_order_cart: this.fb.array([]),
-      due_date: new FormControl('', [Validators.required]),
+      due_date: new FormControl(defaultDateago7, [Validators.required]),
       estimate: new FormControl(''),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
@@ -180,6 +184,11 @@ export class EditSalesComponent implements OnInit {
     this.saleOrderDateValidation(financialYear);
 
     this.saleForm.get('sale_order_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 

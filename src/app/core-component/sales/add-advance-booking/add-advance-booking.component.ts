@@ -116,6 +116,11 @@ export class AddAdvanceBookingComponent implements OnInit {
     this.saleAdvanceBookingDateValidation(financialYear);
 
     this.saleEstimateForm.get('booking_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleEstimateForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 
