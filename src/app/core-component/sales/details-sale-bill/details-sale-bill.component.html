@@ -384,6 +384,27 @@
                                                             <p>{{BillDetail?.note}}</p>
                                                         </div>
                                                     </div>
+                                                    <div class="pdf-table2 mb-4 mt-3">
+                                                        <h2 class="mb-2" style="color:#FF9F43;font-size: 16px;">Payment
+                                                            details</h2>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Mode Type</th>
+                                                                    <th>Payment</th>
+                                                                    <th>Created Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let payment of BillDetail?.payment; let i =index">
+                                                                    <td>{{payment?.mode_type}}</td>
+                                                                    <td>{{payment?.payment}}</td>
+                                                                    <td>{{payment?.created_date}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6 col-sm-6 col-12" style="float: inline-end;">
                                                     <div class="form-group text-end">

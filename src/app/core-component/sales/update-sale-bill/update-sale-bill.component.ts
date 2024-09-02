@@ -120,6 +120,10 @@ export class UpdateSaleBillComponent implements OnInit {
   ngOnInit(): void {
 
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
     this.myControl = new FormArray([]);
@@ -127,7 +131,7 @@ export class UpdateSaleBillComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       bill_date: new FormControl(defaultDate, [Validators.required]),
       customer_bill_no: new FormControl('', [Validators.required]),
-      due_date: new FormControl('', [Validators.required]),
+      due_date: new FormControl(defaultDateago7, [Validators.required]),
       payment_terms: new FormControl(''),
       sale_order: new FormControl(''),
       sale_bill_cart: this.fb.array([]),
@@ -197,6 +201,11 @@ export class UpdateSaleBillComponent implements OnInit {
     this.saleOrderDateValidation(financialYear);
 
     this.saleBillForm.get('bill_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleBillForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 
