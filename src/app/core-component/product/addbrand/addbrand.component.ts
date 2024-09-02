@@ -50,7 +50,6 @@ export class AddbrandComponent implements OnInit {
     this.getAllBrand();
 
     this.brandCtrl.valueChanges.subscribe((res) => {
-      console.log(res);
       this._filterBrands(res);
     });
   }
@@ -309,6 +308,8 @@ export class AddbrandComponent implements OnInit {
         }
       }, err => {
         // console.log(err.error.gst);
+        this.loaders = false
+        this.toastr.error(this.addRes.msg)
       })
 
     } else {

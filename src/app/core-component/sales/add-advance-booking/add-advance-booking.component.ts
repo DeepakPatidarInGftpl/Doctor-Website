@@ -24,7 +24,7 @@ export class AddAdvanceBookingComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
-  priceQtyData = {};
+  priceQtyData:any = {};
   getCoastPrice: any;
   totalCartAmount: any;
   calculatingTotal: boolean = false;
@@ -308,7 +308,7 @@ export class AddAdvanceBookingComponent implements OnInit {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (1),
+      qty: (0),
       price: (0),
       // amount: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -344,7 +344,8 @@ export class AddAdvanceBookingComponent implements OnInit {
       if (totalProductPrice && taxPercentage) {
         this.taxIntoRupees[index] = (totalProductPrice * taxPercentage) / 100;
       }
-      this.TotalWithoutTax[index] = ((getCoastPrice * value) - (getTaxPrice * value)).toFixed(2);
+      let totalWithoutTax = getCoastPrice - getTaxPrice;
+      this.TotalWithoutTax[index] = (totalWithoutTax * value).toFixed(2);
       barcode.patchValue({
         qty: value,
         tax: taxPercentage,
@@ -574,7 +575,7 @@ export class AddAdvanceBookingComponent implements OnInit {
   //     barcode.patchValue({
   //       barcode: selectedItemId,
   //       mrp: event.batch[0]?.mrp,
-  //       qty: event.batch[0]?.stock,
+  //       qty: 1,
   //       tax: event.batch[0]?.purchase_tax,
   //       discount: event.batch[0]?.discount,
   //       price: event.batch[0]?.cost_price,
@@ -594,6 +595,36 @@ export class AddAdvanceBookingComponent implements OnInit {
   batchCostPrice: any[] = [];
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+
+  const currentControl = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
+  currentControl.controls['barcode'].setValue('');
+  const priceQtyArray:any = Object.values(this.priceQtyData);
+
+  const existingProductIndex = priceQtyArray.findIndex(item => item.barcode === selectedItemId);
+  if (existingProductIndex !== -1) {
+    priceQtyArray[existingProductIndex].qty += 1;
+
+    const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(existingProductIndex) as FormGroup;
+    barcode.patchValue({
+      qty: priceQtyArray[existingProductIndex].qty
+    });
+
+    const currentControl = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
+    currentControl.reset();
+    console.log(currentControl);
+    this.barcode[index] = '';
+      currentControl.patchValue({
+        barcode: 0,
+        item_name: '',
+        qty: 0,
+        price: 0,
+        discount: 0
+    });
+    this.calculateTotal(existingProductIndex);
+    return;
+  }
+
+    this.barcode[index] = event.sku;
     console.log(event);
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
@@ -614,7 +645,7 @@ export class AddAdvanceBookingComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
       } else if (this.userType == 'Dealer') {
@@ -629,7 +660,7 @@ export class AddAdvanceBookingComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice;
@@ -646,7 +677,7 @@ export class AddAdvanceBookingComponent implements OnInit {
         let taxPrice;
         taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
         this.taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
-        this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 1;
+        this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 1;
         console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
@@ -655,7 +686,6 @@ export class AddAdvanceBookingComponent implements OnInit {
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       this.productItemPrice[index] = offlineprice;
-      let purchaseTax = 18
       // cost price 
       let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
       console.log(getDiscountPrice);
@@ -667,7 +697,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       console.log(this.TotalWithoutTax[index]);
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
-      this.TotalWithoutTax[index] = ((getCoastPrice * event.batch[0]?.stock) - (taxPrice * event.batch[0]?.stock)).toFixed(2) || 0;
+      this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2) || 0;
       // this.originalCoastPrice = getCoastPrice
     }
     if (event.batch.length > 0) {
@@ -680,7 +710,7 @@ export class AddAdvanceBookingComponent implements OnInit {
           barcode: selectedItemId,
           item_name: event?.product_title,
           amount: event.batch[0]?.mrp,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
           price: Number(this.originalCoastPrice).toFixed(2),
@@ -691,7 +721,7 @@ export class AddAdvanceBookingComponent implements OnInit {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
+          qty: 1,
           tax: event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage,
           discount: event.batch[0]?.discount || 0,
           price: Number(this.originalCoastPrice).toFixed(2),
@@ -700,8 +730,9 @@ export class AddAdvanceBookingComponent implements OnInit {
         taxValue = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage;
       }
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
-        qty: event.batch[0]?.stock,
+        qty: 1,
         additional_discount: event.batch[0]?.additional_discount || 0,
         tax: taxValue,
         coastPrice: this.getCoastPrice,
@@ -723,6 +754,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       });
       
       this.priceQtyData[index] = {
+        barcode: selectedItemId,
         price: 0,
         qty: 0,
         additional_discount: 0,
@@ -755,7 +787,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     } else {
       let costprice = this.coastprice[index] || 0;
-      let purchaseTax = 18;
+      let purchaseTax = this.apiPurchaseTax;
       // cost price 
       let getDiscountPrice = (costprice * this.batchDiscount) / 100
       console.log(getDiscountPrice, 'getDiscountPrice');
@@ -818,7 +850,7 @@ export class AddAdvanceBookingComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         // cost price 
         let getDiscountPrice = (this.coastprice[index] * discountPercentage) / 100
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
@@ -896,7 +928,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       } else {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        let purchaseTax = 18;
+        let purchaseTax = this.apiPurchaseTax;
         const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
@@ -923,9 +955,11 @@ export class AddAdvanceBookingComponent implements OnInit {
   }
   calculateTotalWithoutTax(): number {
     let total = 0;
+    let totalWithoutTax:any = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
-      total += Number(number);
+      totalWithoutTax += parseFloat(number);
     })
+    total = totalWithoutTax.toFixed(2)
     return total;
   }
 
@@ -958,7 +992,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       formdata.append('total_discount', this.saleEstimateForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleEstimateForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleEstimateForm.get('subtotal')?.value);
-      formdata.append('total', this.saleEstimateForm.get('total')?.value);
+      formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1134,11 +1168,7 @@ export class AddAdvanceBookingComponent implements OnInit {
   v_id: any;
   variantChanged(value: any, index) {
     console.log(value);
-    // console.log(index);
-    // console.log(value?.sku);
-    this.barcode[index] = value.sku;
-    // console.log(this.barcode[index]);
-    // console.log(this.barcode);
+    // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const barcode = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({

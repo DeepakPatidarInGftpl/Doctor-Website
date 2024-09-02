@@ -59,7 +59,7 @@ export class AddpurchaseBillComponent implements OnInit {
   maxDate: string = '';
   dueMinDate: string = '';
   dueMaxDate: string = '';
-  totalTaxRate: any;
+  totalTaxRate: any = 0;
   get f() {
     return this.purchaseBillForm.controls;
   }
@@ -620,6 +620,14 @@ export class AddpurchaseBillComponent implements OnInit {
     const selectedItemId = event.id;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
+    this.apiPurchaseTax =
+      event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage ||
+      0;
+    this.batchDiscount = event.batch[0]?.discount || 0;
+    this.batchAdditionalDiscount = event.batch[0]?.additional_discount || 0;
+    this.totalDiscount = this.batchDiscount + this.batchAdditionalDiscount;
+    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
   
     const purchaseBillFormArray = this.getCart();
     const currentControl = purchaseBillFormArray.at(index) as FormGroup;
@@ -645,6 +653,7 @@ export class AddpurchaseBillComponent implements OnInit {
         dealer_price: 0,
         employee_price: 0,
         additional_discount: 0,
+        landing_cost: 0
     });
       this.myControls[index].reset();
       this.updateTotal(existingProductIndex);
@@ -658,15 +667,6 @@ export class AddpurchaseBillComponent implements OnInit {
     this.getVariant('', '', '');
 
     console.log(event.batch);
-    this.apiPurchaseTax =
-      event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage ||
-      0;
-    console.log(this.apiPurchaseTax);
-    this.batchDiscount = event.batch[0]?.discount || 0;
-    this.batchAdditionalDiscount = event.batch[0]?.additional_discount || 0;
-    this.totalDiscount = this.batchDiscount + this.batchAdditionalDiscount;
-    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
-    this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including == true) {
       let costprice = event?.batch[0]?.cost_price || 0;
       // landing cost
@@ -679,7 +679,7 @@ export class AddpurchaseBillComponent implements OnInit {
       let taxPrice = (getCoastPrice * this.apiPurchaseTax) / 100;
       console.log(taxPrice, 'taxprice');
       this.taxIntoRupees[index] = taxPrice || 0;
-      this.originalCoastPrice = getCoastPrice - taxPrice;
+      this.originalCoastPrice = getCoastPrice;
     } else {
       let costprice = event?.batch[0]?.cost_price || 0;
       let purchaseTax = this.apiPurchaseTax;
@@ -1031,19 +1031,27 @@ export class AddpurchaseBillComponent implements OnInit {
         // console.log(this.batchCostPrice[index],'this.batchCostPrice[index]');
 
         if (this.batchCostPrice[index] > 0) {
+          let taxPrice = (purchaseRate * taxPercentageControl.value) / 100;
           const discountAmount =
             (this.batchCostPrice[index] * totalDiscount) / 100;
           const afterDiscountAmount =
             Number(this.batchCostPrice[index]) - discountAmount;
-          this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0;
+          if(afterDiscountAmount) {
+            let totalWithoutTax:any = (afterDiscountAmount * qty).toFixed(2);
+            this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0
+          } else {
+            this.TotalWithoutTax[index] = 0;
+          }
           const landingCost = afterDiscountAmount || 0;
           // without tax price
           return landingCost;
         } else {
-          const discountAmount = (this.costPrice * totalDiscount) / 100;
-          const afterDiscountAmount = this.costPrice - discountAmount;
+          let taxPrice = (purchaseRate * taxPercentageControl.value) / 100;
+          const discountAmount = (this.coastprice[index] * totalDiscount) / 100;
+          const afterDiscountAmount = this.coastprice[index] - discountAmount;
           if(afterDiscountAmount) {
-            this.TotalWithoutTax[index] = (afterDiscountAmount * qty).toFixed(2) || 0;
+            let totalWithoutTax:any = (afterDiscountAmount * qty).toFixed(2)
+            this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0;
           } else {
             this.TotalWithoutTax[index] = 0;
           }
@@ -1063,16 +1071,18 @@ export class AddpurchaseBillComponent implements OnInit {
         let getCoastPrice =
           Number(purchaseRateControl?.value) - getDiscountPrice;
         this.originalCoastPrice = getCoastPrice;
+        let taxPrice = ((purchaseRateControl?.value * purchaseTax) / 100) || 0
+        let totalWithoutTax:any = (getCoastPrice * qty).toFixed(2);
         // without tax price
         if(getCoastPrice) {
-          this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0;
+          this.TotalWithoutTax[index] = (totalWithoutTax - (taxPrice * qtyControlControl.value)).toFixed(2) || 0;
         } else {
           this.TotalWithoutTax[index] = 0;
         }
         // landing cost
-        let taxPrice = (getCoastPrice * purchaseTax) / 100 || 0;
+        // let taxPrice = (getCoastPrice * purchaseTax) / 100 || 0;
         this.taxIntoRupees[index] = taxPrice || 0;
-        let landingCost = getCoastPrice + taxPrice || 0;
+        let landingCost = getCoastPrice || 0;
         return landingCost;
       }
     }
@@ -1292,20 +1302,26 @@ export class AddpurchaseBillComponent implements OnInit {
         cartArray.controls.forEach((address) => {
           const cartGroup = address as FormGroup;
           const cartObject = {};
+          let qtyValue = 0; 
           Object.keys(cartGroup.controls).forEach((key) => {
             const control = cartGroup.controls[key];
             let value = control.value;
-            if (value.length === 0) {
+            if (key === 'qty') {
+              qtyValue = parseFloat(value); 
+            }
+            if (value?.length === 0) {
               cartObject[key] = 0;
             }
             // Convert the value to an integer if it's a number
             else if (!isNaN(control.value)) {
               cartObject[key] = parseFloat(control.value);
             } else {
-              cartObject[key] = control.value;
+              cartObject[key] = control?.value;
             }
           });
+          if (qtyValue > 0) {
           cartData.push(cartObject);
+          }
         });
         formdata.append('purchase_bill', JSON.stringify(cartData));
         //taxrate
@@ -1318,9 +1334,9 @@ export class AddpurchaseBillComponent implements OnInit {
             const control = taxGroup.controls[key];
             // Convert the value to an integer if it's a number
             if (!isNaN(control.value)) {
-              taxObject[key] = parseFloat(control.value);
+              taxObject[key] = parseFloat(control?.value);
             } else {
-              taxObject[key] = control.value;
+              taxObject[key] = control?.value;
             }
           });
           textData.push(taxObject);

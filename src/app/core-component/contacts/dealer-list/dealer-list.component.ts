@@ -345,68 +345,97 @@ export class DealerListComponent implements OnInit {
   }
 
   printTable(): void {
-    // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
-    const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
-    const titleElement = document.querySelector('.titl');
-    const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
+    const titleElement = document.querySelector('.titl'); 
+    if (!tableElement) {
+        console.error('Table not found');
+        return;
+    }  
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
+    const clonedTitle = titleElement.cloneNode(true) as HTMLElement;
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
 
-    // Remove the "Action" column header from the cloned table
-    const actionTh = clonedTable.querySelector('th.thone:last-child');
-    if (actionTh) {
-      actionTh.remove();
+    const isfirstTh = clonedTable.querySelector('th.thone:nth-child(1)');
+    if (isfirstTh) {
+      isfirstTh.remove();
     }
 
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
-    const rows = clonedTable.querySelectorAll('tr');
-    rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(10)');
-      if (isActiveTd) {
-        isActiveTd.remove();
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+      if (actionTh) {
+        actionTh.remove();
       }
-
-      // Remove the "Action" column data cell
-      const actionTd = row.querySelector('td:last-child');
-      if (actionTd) {
-        actionTd.remove();
-      }
-    });
-
-    // Get the modified table's HTML content
-    const modifiedTableHTML = clonedTable.outerHTML;
-
-    // Apply styles to add some space from the top after the title
-    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
-    // Combine the title and table content
-    const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-    // Store the original contents
-    const originalContents = document.body.innerHTML;
-    //refresh
-    window.addEventListener('afterprint', () => {
-      console.log('afterprint');
-      window.location.reload();
-    });
-    //end
-    // Replace the content of the body with the combined content
-    document.body.innerHTML = combinedContent;
+  
+      const rows = clonedTable.querySelectorAll('tr');
+      rows.forEach((row) => {
+        const isActiveTd = row.querySelector('td:nth-child(11)');
+        if (isActiveTd) {
+          isActiveTd.remove();
+        }
+        const isfirstTd = row.querySelector('td:nth-child(1)');
+    if (isfirstTd) {
+      isfirstTd.remove();
+    }
+        const actionTd = row.querySelector('td:last-child');
+        if (actionTd) {
+          actionTd.remove();
+        }
+      });
+  
+    const printContainer = document.createElement('div');
+    clonedTitle.classList.add('spaced-title');
+    printContainer.appendChild(clonedTitle);
+    printContainer.appendChild(clonedTable);
+  
+    const style = document.createElement('style');
+    style.id = 'printStyle'; 
+    style.textContent = `
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printContainer, #printContainer * {
+                visibility: visible;
+            }
+            #printContainer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+            .spaced-title {
+                margin-top: 60px;
+                margin-bottom: 20px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+  
+    printContainer.id = 'printContainer';
+    document.body.appendChild(printContainer);
+  
     window.print();
+  
+    window.addEventListener('afterprint', () => {
+      this.clearData();
+    });
 
-    // Restore the original content of the body
-    document.body.innerHTML = originalContents;
+    setTimeout(() => {
+      this.clearData();
+    }, 2000);
+  }
+
+  clearData() {
+    const printContainer = document.getElementById('printContainer');
+    const style = document.getElementById('printStyle');
+    if (printContainer) {
+      document.body.removeChild(printContainer);
+    }
+    if (style) {
+      document.head.removeChild(style);
+    }
   }
 
   // filter data

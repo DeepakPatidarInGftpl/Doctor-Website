@@ -21,9 +21,11 @@ export class BranchComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any = []
-
- 
+  public tableData: any = [];
+  stateList: any;
+  cityList: any;
+  selectedCity: any = "";
+  selectedState: any = "";
   titlee: any;
   p: number = 1
   pageSize: number = 10;
@@ -137,13 +139,17 @@ export class BranchComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   gst: string = '';
-  filteredData = [];
+  filteredData:any = [];
   ngOnInit(): void {
     this.coreService.getBranch().subscribe(res => {
       this.tableData = res;
+      this.filteredData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     });
+
+    this.getCity();
+    this.getState();
 
     //from localstorage
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -186,9 +192,16 @@ export class BranchComponent implements OnInit {
     }
   }
   filterActive_StatusData( event : string){
-    this.tableData =  this.tableData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
+    this.tableData =  this.filteredData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
 }
 
+changeState(event) {
+  this.tableData =  this.filteredData.filter((item:any)=>event === item?.state?.state)
+}
+
+changeCity(event) {
+  this.tableData =  this.filteredData.filter((item:any)=>event === item?.city?.city)
+}
 
   search() {
     if (this.titlee === "") {
@@ -349,6 +362,20 @@ generatePDFAgain() {
   //   window.print();
   //   document.body.innerHTML = originalContents;
   // }
+
+  getState() {
+    this.coreService.getstate().subscribe((res)=> {
+      console.log(res);
+      this.stateList = res;
+    })
+  }
+
+  getCity() {
+    this.coreService.getCity().subscribe((res)=> {
+      this.cityList = res;
+      console.log(res);
+    })
+  }
 
   printTable(): void {
     const tableElement = document.getElementById('mytable');

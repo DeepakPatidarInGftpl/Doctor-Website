@@ -35,7 +35,10 @@ export class AddcompanyComponent implements OnInit {
       img: 'assets/img/product/product6.jpg',
     }]
 
-  companyForm!: FormGroup
+  companyForm!: FormGroup;
+  selectedFileName: File | null = null;
+  fileError: string | null = null;
+  url: any;
   get f() {
     return this.companyForm.controls;
   }
@@ -86,6 +89,26 @@ yearDetails:any
     })
   }
 
+  selectedFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const fileType = file.type;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.url = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      if (fileType.startsWith('image/')) {
+        this.selectedFileName = file;
+        this.fileError = null;
+      } else {
+        this.selectedFile = null;
+        this.fileError = 'Please upload a valid image file (e.g., .jpg, .png).';
+      }
+    }
+  }
+
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;
@@ -117,7 +140,19 @@ yearDetails:any
     // console.log(this.companyForm.value);
     if (this.companyForm.valid) {
       this.loaders=true;
-      this.copmpanyService.postCompany(this.companyForm.value).subscribe(res => {
+
+      const formData = new FormData();
+      for (const key in this.companyForm.value) {
+        if (this.companyForm.value.hasOwnProperty(key)) {
+          formData.append(key, this.companyForm.value[key]);
+        }
+      }
+
+      if (this.selectedFile) {
+        formData.append('logo', this.selectedFileName);
+      }
+
+      this.copmpanyService.postCompany(formData).subscribe(res => {
         // console.log(res);
         if (res.success) {
           this.loaders=false;

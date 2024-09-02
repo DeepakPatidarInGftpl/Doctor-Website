@@ -6,6 +6,8 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { OfferService } from 'src/app/Services/offer/offer.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 @Component({
   selector: 'app-list-brand-subcategory-offer',
   templateUrl: './list-brand-subcategory-offer.component.html',
@@ -24,9 +26,12 @@ export class ListBrandSubcategoryOfferComponent implements OnInit {
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
+  selectActive: any = "";
+  discountType: any = "";
+  businessLocation: any = "";
+  customerGroup: any = "";
 
-  constructor(private offerService: OfferService, private cs:CompanyService) {
-  
+  constructor(private offerService: OfferService, private cs:CompanyService,private coreService: CoreService, private hrmService: HrmServiceService) {
   }
 
   delRes: any
@@ -165,6 +170,8 @@ userDetails:any;
         }
     });
   })
+  this.getBranch();
+  this.getMembership();
   }
 
   allSelected: boolean = false;
@@ -211,6 +218,19 @@ select=false
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
+  }
+
+  branchList: any;
+  getBranch() {
+    this.coreService.getBranch().subscribe(res => {
+      this.branchList = res;
+    })
+  }
+  membershipList: any;
+  getMembership() {
+    this.hrmService.getMembership().subscribe(res => {
+      this.membershipList = res;
+    })
   }
 
    // convert to pdf
@@ -384,29 +404,27 @@ select=false
   }
 
   // filter data
-  selectCredit:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    // if (this.supplierType) {
-    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-    // }
-    
-    if (this.selectedCompany) {
-      const searchTerm = this.selectedCompany.toLowerCase();
-      filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.company_name.toLowerCase();
-        return aliasLower.includes(searchTerm);
-      });
+    if(this.businessLocation) {
+      filteredData = this.tableData.filter((item) => item?.business_location?.title === this.businessLocation);
     }
-    if (this.selectCredit) {
-      filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
+    if(this.customerGroup) {
+      filteredData = this.tableData.filter((item) => item?.customers_group?.title === this.customerGroup);
+    }
+    if(this.discountType) {
+      filteredData = this.tableData.filter((item) => item?.discount_type === this.discountType);
+    }
+    if(this.selectActive) {
+      filteredData = this.tableData.filter((item) => (item?.is_active).toString() === this.selectActive);
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    this.selectCredit = null;
-    this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectActive = '';
+    this.discountType = '';    
+    this.customerGroup = '';    
+    this.businessLocation = '';    
     this.filterData();
   }
 

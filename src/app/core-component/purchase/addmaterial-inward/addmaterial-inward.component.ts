@@ -501,16 +501,24 @@ export class AddmaterialInwardComponent implements OnInit {
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
         const cartObject = {};
+        let qtyValue = 0; 
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          // Convert the value to an integer if it's a number
-          if (!isNaN(control.value)) {
-            cartObject[key] = parseInt(control.value, 10);
+          let value = control?.value;
+          if (key === 'qty') {
+            qtyValue = parseFloat(value); 
+          }
+          if(value?.length === 0){
+            cartObject[key] = 0;
+          } else if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control?.value, 10);
           } else {
-            cartObject[key] = control.value;
+            cartObject[key] = control?.value;
           }
         });
+        if (qtyValue > 0) {
         cartData.push(cartObject);
+        }
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
       this.purchaseService.addMaterial(formdata).subscribe(res => {

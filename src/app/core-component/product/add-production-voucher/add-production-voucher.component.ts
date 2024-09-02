@@ -44,7 +44,7 @@ export class AddProductionVoucherComponent implements OnInit {
     this.coreService.getProductionVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res?.data[0]?.prefix
       } else {
         this.toastrService.error(res.msg)
       }

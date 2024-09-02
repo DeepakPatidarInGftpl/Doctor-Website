@@ -154,6 +154,7 @@ export class AccountlistComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      console.log(this.filteredData);
       this.filterData();
     })
 
@@ -180,7 +181,7 @@ export class AccountlistComponent implements OnInit {
   }
 
   filterActive_StatusData( event : string){
-    this.filteredData =  this.filteredData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
+    this.filteredData =  this.tableData.filter((item:any)=>event == 'Yes' ? item.is_active : !item.is_active)
 }
 
 
