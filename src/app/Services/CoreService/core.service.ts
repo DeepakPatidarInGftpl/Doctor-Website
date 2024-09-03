@@ -36,19 +36,17 @@ export class CoreService {
   StaticPageBehaveSub = new BehaviorSubject(null);
   profileDetails = new BehaviorSubject(null);
   loaderBehaveSub = new BehaviorSubject(null);
-
-
-
-
   editThings = new BehaviorSubject(null);
-
-
   wareHouseSubject = new BehaviorSubject(null)
-
   ProdCategBehaveSub = new BehaviorSubject(null)
-
   subCategoriesGroup = new BehaviorSubject(null)
 
+
+  prefixList = ['POSOrder','POSReturn','DeliveryChallan','ProductionVoucher','PurchaseBill','PurchaseOrder','DebitNote',
+    'MaterialInward','PaymentVoucher','ReceiptVoucher','JournalVoucher','PurchaseReturn','CountraVoucher','CreditNote',
+    'Estimate','SaleOrder','SaleBill','SaleReturn','MaterialOutward','StockEntry','StockTransfer','StockTransferRequest',
+    'ExpensesVoucher','MaterialConsumption','StockVerification','ScarpEntry','AdvanceBooking','Website Order','Website Return Order'
+  ]
 
 
   constructor(private http: HttpClient) { }
@@ -2189,5 +2187,20 @@ export class CoreService {
   getShippingCharges() {
     let url = this.apiUrl + '/pv-api/shipping_charges/';
     return this.http.get(url)
+  }
+
+  getPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/';
+    return this.http.get(url)
+  }
+
+  PrefixIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/prefix/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
+  addPrefix(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/prefix/';
+    return this.http.post<any>(url, data)
   }
 }

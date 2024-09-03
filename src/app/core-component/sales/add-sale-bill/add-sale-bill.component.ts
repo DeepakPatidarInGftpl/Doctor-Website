@@ -165,6 +165,11 @@ export class AddSaleBillComponent implements OnInit {
     this.saleOrderDateValidation(financialYear);
 
     this.saleBillForm.get('bill_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleBillForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 
