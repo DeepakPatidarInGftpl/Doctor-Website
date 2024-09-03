@@ -78,13 +78,17 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    const today = new Date();
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
     this.userControl.setValue('Loading...');
     this.myControl = new FormArray([]);
     this.saleEstimateForm = this.fb.group({
       account: new FormControl('', [Validators.required]),
       booking_date: new FormControl(defaultDate, [Validators.required]),
       booking_no: new FormControl('', [Validators.required]),
-      due_date: new FormControl(''),
+      due_date: new FormControl(defaultDateago7),
       payment_terms: new FormControl('', [Validators.required]),
       advance_booking_cart: this.fb.array([]),
       total_qty: new FormControl(''),
@@ -138,6 +142,11 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     this.saleAdvanceBookingDateValidation(financialYear);
 
     this.saleEstimateForm.get('booking_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.saleEstimateForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 
