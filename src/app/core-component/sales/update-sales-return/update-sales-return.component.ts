@@ -96,7 +96,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       status: new FormControl(''),
       note: new FormControl(''),
       //2-1
-      return_date: new FormControl('', [Validators.required])
+      return_date: new FormControl(defaultDate, [Validators.required])
     });
 
     this.searchForm = this.fb.group({
