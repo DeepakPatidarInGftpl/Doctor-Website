@@ -141,7 +141,7 @@
                                     <label>Payment terms</label>
                                     <select [(ngModel)]="filterPaymentTerms" (change)="filterData()"
                                         class="form-select">
-                                        <option value="" selected disabled>Select Payment Terms</option>
+                                        <option value="" selected disabled>Select Valid Term</option>
                                         <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}
                                         </option>
                                     </select>
@@ -189,11 +189,12 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Booking no <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Account <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Party Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Booking Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Branch <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
@@ -219,7 +220,8 @@
                         <td>{{products?.booking_date}}</td>
                         <td>{{products.payment_terms.title}}</td>
                         <td>{{products?.due_date}}</td>
-                        <td>{{products?.subtotal}}</td>
+                        <td>{{products?.branch?.title}}</td>
+                        <!-- <td>{{products?.subtotal}}</td> -->
                         <td>{{products?.total}}</td>
                         <td><span [ngClass]="{
                                 'bg-lightgreen': products.status === 'Booked',

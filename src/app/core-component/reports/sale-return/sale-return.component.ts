@@ -134,9 +134,10 @@ export class SaleReturnComponent implements OnInit {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.purchaseRegisterList = this.purchaseRegisterList.filter((res: any) => {
         const nameLower = res?.user?.party_name.toLocaleLowerCase();
+        const status = res?.status?.toLocaleLowerCase();
         const usernameLower = res?.payment_voucher_no.toLocaleLowerCase() || "";
         // return nameLower.includes(searchTerm);
-        if (nameLower.includes(searchTerm) || usernameLower.includes(searchTerm)) {
+        if (nameLower.includes(searchTerm) || usernameLower.includes(searchTerm) || status.includes(searchTerm)) {
           return true;
         }
         return false;

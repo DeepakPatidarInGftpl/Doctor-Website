@@ -135,12 +135,16 @@ export class AddpurchaseBillComponent implements OnInit {
     this.purchaseBillForm
       .get('supplier_bill_date')
       .valueChanges.subscribe((date) => {
+          if (date) {
+            const expiryDate = new Date(date);
+            expiryDate.setDate(expiryDate.getDate() + 7);
+            this.purchaseBillForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+          }
         this.updateDueDateMin(date, financialYear);
       });
 
     // this.getVariants();
     this.getPurchase();
-    this.getMaterialInward();
     this.getPaymentTerms();
     this.getprefix();
     this.addAdditionalCharge();
@@ -364,12 +368,6 @@ export class AddpurchaseBillComponent implements OnInit {
     });
   }
   materialList: any;
-  getMaterialInward() {
-    this.purchaseService.getMaterial().subscribe((res) => {
-      // console.log(res);
-      this.materialList = res;
-    });
-  }
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe((res) => {

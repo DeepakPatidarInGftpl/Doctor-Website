@@ -161,7 +161,7 @@
                         <th (click)="sort('id')" class="thone">Return No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Return Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone multi-line-text">Purchase Return Bill Amount<i
                                 class="fa fa-sort"></i>
                         </th>
@@ -186,7 +186,7 @@
                                 style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
                         <td>{{products?.purchase_return_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.purchase_bill?.supplier_bill_no}}</td>
+                        <!-- <td>{{products?.purchase_bill?.supplier_bill_no}}</td> -->
                         <td>{{products?.total}}</td>
                         <td>
                             <span [ngClass]="{
