@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ElementRef, Renderer2 } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -23,9 +23,10 @@ export class AddPaymentVoucherComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private transactionService: TransactionService,
-    private commonService: CommonServiceService
+    private commonService: CommonServiceService,
+    private _renderer : Renderer2
   ) {}
-
+@ViewChild('inp') Input : ElementRef<any>
   supplierControl = new FormControl();
   filteredsupplier: Observable<any[]>;
   // payer
@@ -117,6 +118,10 @@ export class AddPaymentVoucherComponent implements OnInit {
     // );
     // this.getAccount();
     // this.getPurchaseBill();
+
+
+
+
     this.getDebitNote();
     this.getprefix();
     this.getAccountByAlies('cash-in-hand');
@@ -170,13 +175,17 @@ export class AddPaymentVoucherComponent implements OnInit {
     );
   }
 
-  cart(): FormGroup {
+  // this.myControls.setValue(item?.id)
+  cart(item?:any): FormGroup {
+    // console.log(item)
+    // this.myControls.setValue(item?.id)
+
     return this.fb.group({
-      purchase_bill: new FormControl(0),
-      original_amount: new FormControl(0),
-      paid_amount: new FormControl(0),
-      pending_amount: new FormControl(0),
-      payment: new FormControl(0),
+      purchase_bill: [item ? item?.id : 0],
+      original_amount: [item ? item?.total: 0],
+      paid_amount: [item ? item?.paid_amount: 0],
+      pending_amount: [item ? item?.pending_amount : 0],
+      payment:[item ? item?.pending_amount : 0],
       debit_note_cart: this.fb.array([]),
     });
   }
@@ -184,9 +193,10 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
   }
   isCart = false;
-  addCart() {
-    this.getCart().push(this.cart());
-    this.myControls.push(new FormControl(''));
+  addCart(data ? :any) {
+    // console.log(data,'data')
+    this.getCart().push(this.cart(data));
+    this.myControls.push(new FormControl(data? data.supplier_bill_no : ''));
     this.isCart = false;
   }
   removeCart(i: any) {
@@ -259,6 +269,8 @@ export class AddPaymentVoucherComponent implements OnInit {
 
   // end
   isAgainstBill = false;
+  totalPending_Amount : number = 0;
+  totalPayment_Amount : number = 0;
   setRadioValue(value: string) {
     this.paymentVoucherForm.get('mode_type').setValue(value);
     const supplier = this.paymentVoucherForm.get('supplier').value;
@@ -268,7 +280,29 @@ export class AddPaymentVoucherComponent implements OnInit {
         'payment_voucher_cart'
       ) as FormArray;
       cart.clear();
-      this.addCart();
+
+
+
+for (let index = 0; index < this.purchaseBillList.length; index++) {
+
+  this.totalPending_Amount +=  +this.purchaseBillList[index].pending_amount
+  this.totalPayment_Amount +=  +this.purchaseBillList[index].pending_amount
+  this.addCart(this.purchaseBillList[index]);
+
+}
+this.paymentVoucherForm.get('amount')?.setValue(this.totalPayment_Amount);
+
+this.paymentVoucherForm.get('payment_voucher_cart').valueChanges.subscribe((res:any)=>{
+  let arr :any[] = this.getCart().value;
+  let total : number = 0
+  for (let a = 0; a < arr.length; a++) {
+    total += +arr[a].payment
+  }
+  this.paymentVoucherForm.get('amount')?.setValue(total);
+  })
+  // set input to readonly type
+this._renderer.setAttribute(this.Input.nativeElement,'readonly','true')
+
     } else {
       this.isAgainstBill = false;
     }
@@ -470,7 +504,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     });
   }
   oncheck3(data: any, index: number) {
-    console.log(data);
+    console.log(data?.id,'deepak');
     const cart = (
       this.paymentVoucherForm.get('payment_voucher_cart') as FormArray
     ).at(index) as FormGroup;
