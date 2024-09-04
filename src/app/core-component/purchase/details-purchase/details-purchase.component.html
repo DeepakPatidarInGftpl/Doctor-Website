@@ -386,6 +386,11 @@
                                                                         currency :'INR'}}
                                                                     </h5>
                                                                 </li>
+                                                                <li class="total">
+                                                                    <h4>Total Tax</h4>
+                                                                    <h5>{{ purchaseDetail?.total_tax }}
+                                                                    </h5>
+                                                                </li>
                                                                 <!-- <li class="total">
                                                             <h4>Total QTY</h4>
                                                             <h5>{{ purchaseDetail?.total_qty}}
@@ -409,7 +414,8 @@
                                                                 </li>
                                                                 <li class="total">
                                                                     <h4>Total</h4>
-                                                                    <h5>{{ purchaseDetail?.total | currency
+                                                                    <h5 class="total-title-wrapper">{{
+                                                                        purchaseDetail?.total | currency
                                                                         :'INR'}}
                                                                     </h5>
                                                                 </li>

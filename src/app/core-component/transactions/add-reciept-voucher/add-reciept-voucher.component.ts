@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -27,12 +27,14 @@ export class AddRecieptVoucherComponent implements OnInit {
     private router: Router,
     private transactionService: TransactionService,
     private commonService: CommonServiceService,
-    private coreService: CoreService
+    private coreService: CoreService,
+    private _renderer : Renderer2
   ) {}
 
   customerControlName = 'payment_account';
   customerControl = new FormControl();
   filteredCustomer: Observable<any[]>;
+  @ViewChild('inp') Input : ElementRef<any>
 
   // payer
   payerControl = new FormControl();
@@ -172,21 +174,21 @@ export class AddRecieptVoucherComponent implements OnInit {
     );
   }
   //
-  cart(): FormGroup {
+  cart(data?:any): FormGroup {
     return this.fb.group({
-      sale_bill: new FormControl(0),
-      original_amount: new FormControl(0),
-      paid_amount: new FormControl(0),
-      pending_amount: new FormControl(0),
-      payment: new FormControl(0),
+      sale_bill: new FormControl(data ? data.id : 0),
+      original_amount: new FormControl(data ? data.original_amount :0),
+      paid_amount: new FormControl(data ? data.paid_amount :0),
+      pending_amount: new FormControl(data ? data.pending_amount :0),
+      payment: new FormControl(data ? data.pending_amount :0),
     });
   }
   getCart(): FormArray {
     return this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
   }
-  addCart() {
-    this.getCart().push(this.cart());
-    this.myControls.push(new FormControl(''));
+  addCart(data?:any) {
+    this.getCart().push(this.cart(data));
+    this.myControls.push(new FormControl(data ? data.customer_bill_no :''));
     this.isCart = false;
   }
   isCart = false;
@@ -214,6 +216,9 @@ export class AddRecieptVoucherComponent implements OnInit {
   }
 
   isAgainstBill = false;
+  
+  totalPending_Amount : number = 0;
+  totalPayment_Amount : number = 0;
   setRadioValue(value: string) {
     this.recieptVoucherForm.get('mode_type').setValue(value);
     const payer = this.recieptVoucherForm.get('payer').value;
@@ -223,7 +228,33 @@ export class AddRecieptVoucherComponent implements OnInit {
         'receipt_voucher_cart'
       ) as FormArray;
       cart.clear();
-      this.addCart();
+
+      for (let index = 0; index < this.filterSaleBill.length; index++) {
+// console.log(this.filterSaleBill[index])
+        this.totalPending_Amount +=  +this.filterSaleBill[index].pending_amount
+        this.totalPayment_Amount +=  +this.filterSaleBill[index].pending_amount
+        this.addCart(this.filterSaleBill[index]);
+      
+      }
+
+this.recieptVoucherForm.get('amount')?.setValue(this.totalPayment_Amount.toFixed(2));
+// receipt_voucher_cart formarray
+
+
+
+this.recieptVoucherForm.get('receipt_voucher_cart').valueChanges.subscribe((res:any)=>{
+  let arr :any[] = this.getCart().value;
+  let total : number = 0
+  for (let a = 0; a < arr.length; a++) {
+    total += +arr[a].payment
+  }
+  this.recieptVoucherForm.get('amount')?.setValue(total.toFixed(2));
+  })
+
+  this._renderer.setAttribute(this.Input.nativeElement,'readonly','true')
+
+
+      // this.addCart();
     } else {
       this.isAgainstBill = false;
     }

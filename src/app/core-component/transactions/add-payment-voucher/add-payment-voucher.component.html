@@ -132,11 +132,26 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" formControlName="amount" id="amount" placeholder="Enter Amount"
+                        <input #inp type="number"  formControlName="amount" id="amount" placeholder="Enter Amount"
                             [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
                         <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                     </div>
                 </div>
+
+
+                <div
+                
+                *ngIf="getCart().controls.length > 0"
+                
+                class="col-lg-3 col-sm-4 col-12">
+                    <label> Pending Amount</label>
+                    <div class="border text-center f-500 border-1 mt-2 rounded py-2">
+                        {{totalPending_Amount | currency:"INR"}}
+                    </div>
+                    <!-- <span></span> -->
+                </div>
+
+
 
                 <!-- <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
@@ -233,7 +248,7 @@
                                                                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                                                     </svg>
                                                                 </div>
-                                                                <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                                <!-- <svg *ngIf="isLastCart(i)" (click)="addCart()"
                                                                     style="color:green"
                                                                     xmlns="http://www.w3.org/2000/svg" width="16"
                                                                     height="16" fill="currentColor"
@@ -242,20 +257,20 @@
                                                                         d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                                     <path
                                                                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                                </svg>
+                                                                </svg> -->
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group" style="margin-bottom:-1%">
-                                                                <mat-form-field class="w-100"
+                                                                <mat-form-field  class="w-100"
                                                                     style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                                    <input type="text" placeholder="Search purchaseBill"
+                                                                    <input readonly  type="text" placeholder="Search purchaseBill"
                                                                         aria-label="Search purchaseBills" matInput
                                                                         [formControl]="myControls.at(i)"
                                                                         (input)="getFilter($event.target.value)"
-                                                                        [matAutocomplete]="autos"
                                                                         style="box-sizing: border-box;" />
-                                                                    <mat-autocomplete #autos="matAutocomplete">
+                                                                        <!-- [matAutocomplete]="autos" -->
+                                                                    <!-- <mat-autocomplete #autos="matAutocomplete">
                                                                         <ng-container
                                                                             *ngFor="let option of filterPurchaseBill">
                                                                             <mat-option *ngIf="option?.is_active==true"
@@ -277,7 +292,7 @@
                                                                             class="is-loading">
                                                                             Please Enter 1 or more characters
                                                                         </mat-option>
-                                                                    </mat-autocomplete>
+                                                                    </mat-autocomplete> -->
                                                                 </mat-form-field>
                                                             </div>
                                                             <span class="text-danger" style="display: block;"
@@ -285,20 +300,20 @@
                                                                 Purchase Bill</span>
                                                         </td>
                                                         <td>
-                                                            <input type="number" formControlName="original_amount"
+                                                            <input type="number" readonly formControlName="original_amount"
                                                                 class="input">
                                                             <span class="text-danger" style="display: block;"
                                                                 *ngIf="original_amount(i) && original_amount(i).invalid && original_amount(i).touched">Enter
                                                                 Original
                                                                 Amount </span>
                                                         </td>
-                                                        <td><input type="number" formControlName="paid_amount"
+                                                        <td><input type="number" readonly formControlName="paid_amount"
                                                                 class="input">
                                                             <span class="text-danger" style="display: block;"
                                                                 *ngIf="paid_amount(i) && paid_amount(i).invalid && paid_amount(i).touched">Enter
                                                                 debit Paid Amount</span>
                                                         </td>
-                                                        <td><input type="number" formControlName="pending_amount"
+                                                        <td><input type="number" readonly formControlName="pending_amount"
                                                                 class="input">
                                                             <span class="text-danger" style="display: block;"
                                                                 *ngIf="pending_amount(i) && pending_amount(i).invalid && pending_amount(i).touched">Enter
@@ -311,6 +326,7 @@
                                                                 Payment</span>
                                                         </td>
                                                     </tr>
+                                                   
                                                     <tr>
                                                         <td></td>
                                                         <td colspan="5">
@@ -432,6 +448,7 @@
                                                                                             class="input">
                                                                                     </td>
                                                                                 </tr>
+                                                                               
                                                                             </ng-container>
                                                                         </ng-container>
 
@@ -441,7 +458,16 @@
                                                         </td>
                                                     </tr>
                                                 </ng-container>
+
+                                                
                                             </ng-container>
+                                            <tr class="" style="background: #ccc;">
+                                                <td colspan="5" class="text-center text-bg-dark f-500" style="color: #000;">
+                                                    Pending Amount
+                                                </td>
+                                                <td class="text-center text-bg-dark f-500" style="color: #000;">{{totalPending_Amount | currency:"INR"}}</td>
+                                                <td></td>
+                                            </tr>
                                         </ng-container>
                                     </tbody>
                                 </table>
