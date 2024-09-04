@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Account*</label>
+                        <label>Party*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Account" aria-label="account" matInput
+                            <input type="text" placeholder="Select Party Name" aria-label="account" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
@@ -382,13 +382,12 @@
                     <div class="form-group">
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms">
-                            <option value="" selected disabled>Select Payment Terms</option>
+                            <option value="" selected disabled>Select Valid Term</option>
                             <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}
                             </option>
                         </select>
                         <span class="text-danger"
-                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select
-                            Payment Terms
+                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Valid Term
                         </span>
                     </div>
                 </div>

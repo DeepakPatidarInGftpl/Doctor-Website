@@ -264,7 +264,8 @@ select=false
         const nameLower = res?.customer?.name.toLocaleLowerCase();
         const usernameLower = res?.customer?.username.toLocaleLowerCase() || "";
         const companyNameLower = res?.sale_order_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)|| usernameLower.includes(searchTerm)) {
+        const status = res?.status.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)|| usernameLower.includes(searchTerm) || status.includes(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
           return true;

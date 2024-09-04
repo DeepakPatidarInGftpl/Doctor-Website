@@ -110,6 +110,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
     });
 
     this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
+      const userId = res?.party?.userid?.id;
+      this.purchaseService.getMaterialByUserId(userId).subscribe((res) => {
+      this.materialList = res;
+      });
       // console.log(res);
       this.getresbyId = res;
       this.companyName = res.party?.company_name;
@@ -179,6 +183,11 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.supplierBillDateValidation(financialYear);
 
     this.puchaseBillForm.get('supplier_bill_date').valueChanges.subscribe((date) => {
+      if (date) {
+        const expiryDate = new Date(date);
+        expiryDate.setDate(expiryDate.getDate() + 7);
+        this.puchaseBillForm.get('due_date').patchValue(this.commonService.formatDate(expiryDate));
+      }
       this.updateDueDateMin(date, financialYear);
     });
 
@@ -202,7 +211,6 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
     // this.getVariants();
     this.getPurchase();
-    this.getMaterialInward();
     this.getPaymentTerms()
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
@@ -488,12 +496,6 @@ export class UpdatepurchaseBillComponent implements OnInit {
     })
   }
   materialList: any;
-  getMaterialInward() {
-    this.purchaseService.getMaterial().subscribe(res => {
-      // console.log(res);
-      this.materialList = res;
-    })
-  }
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {

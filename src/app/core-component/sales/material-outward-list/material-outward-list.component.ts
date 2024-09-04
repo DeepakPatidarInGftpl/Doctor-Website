@@ -244,7 +244,7 @@ select=false
         const nameLower = res?.customer?.name.toLocaleLowerCase();
         const status = res?.status?.toLocaleLowerCase();
         const usernameLower = res?.customer?.username.toLocaleLowerCase() || "";
-        const companyNameLower = res?.voucher_number.toLocaleLowerCase();;
+        const companyNameLower = res?.voucher_number.toLocaleLowerCase();
         return nameLower.includes(searchTerm) || 
                    usernameLower.includes(searchTerm) || 
                    status.includes(searchTerm) || 

@@ -577,8 +577,7 @@
                                                                                 <table class="table datanew">
                                                                                     <thead>
                                                                                         <tr>
-                                                                                            <th
-                                                                                                class="boder space-text">
+                                                                                            <th class="boder">
                                                                                                 Sr.No.</th>
                                                                                             <th
                                                                                                 class="boder space-text">
@@ -586,9 +585,10 @@
                                                                                             <th
                                                                                                 class="boder space-text">
                                                                                                 Product</th>
-                                                                                            <th
-                                                                                                class="boder space-text">
+                                                                                            <th class="boder">
                                                                                                 Variant Name</th>
+                                                                                            <th class="boder">
+                                                                                                Article No.</th>
                                                                                             <th
                                                                                                 class="boder space-text">
                                                                                                 Date</th>
@@ -612,6 +612,9 @@
                                                                                             </td>
                                                                                             <td class="boder">
                                                                                                 {{prod?.variant_name}}
+                                                                                            </td>
+                                                                                            <td class="boder">
+                                                                                                {{prod?.product?.article_no}}
                                                                                             </td>
                                                                                             <td class="boder">{{
                                                                                                 prod?.created_date}}
