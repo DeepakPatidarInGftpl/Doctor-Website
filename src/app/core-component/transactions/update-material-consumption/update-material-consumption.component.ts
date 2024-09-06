@@ -133,6 +133,23 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
     })
   }
 
+  openModalProduct() {
+    const modalId = `productModal`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct() {
+    const modal = document.getElementById(`productModal`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();

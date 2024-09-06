@@ -253,6 +253,25 @@ export class InvoiceAmountComponent implements OnInit {
     }
   }
 
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   selectedBrand = 0;
   selectedBrandIds: any[] = [];
 
@@ -391,12 +410,12 @@ export class InvoiceAmountComponent implements OnInit {
   variantList: any[] = [];
   barcode: any[] = [];
   isSearch = false;
-  getVariant(search: any) {
+  getVariant(search: any, index: any) {
     this.isSearch=true;
     this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
-      this.variantList = res;
+      this.variantList[index] = res;
       console.log(this.variantList);
     });
   }

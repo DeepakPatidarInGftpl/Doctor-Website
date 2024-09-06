@@ -707,6 +707,83 @@ export class UpdateSaleBillComponent implements OnInit {
       }
     })
   }
+
+  changeSaleOrder(value) {
+    this.saleService.getSalesOrder().subscribe((res:any) => {
+    const saleOrderData = res?.filter((val)=> val.id === Number(value));
+    const cart = saleOrderData[0]?.cart;
+      this.addCart(); 
+      const formArr = this.saleBillForm.get('sale_bill_cart') as FormArray;
+      
+      cart.forEach((j: any, i) => {
+        const price = j.price || 0;
+        const taxPercentage = j.tax || 0;
+        const calculatedTax = price - (price * taxPercentage) / 100;
+        this.taxIntoRupees[i] = calculatedTax;
+        
+        let taxPrice = (price * taxPercentage) / 100;
+        this.taxIntoRupees[i] = taxPrice;
+        let TotalWithoutTaxPrice = j.price - taxPrice;
+        this.TotalWithoutTax[i] = (TotalWithoutTaxPrice * j?.qty).toFixed(2);
+        
+        let totalDiscount: any = 0;
+        totalDiscount += parseFloat(j?.discount);
+        
+        if (!formArr.at(i)) {
+          formArr.push(
+            new FormGroup({
+              barcode: new FormControl(j?.barcode.id),
+              item_name: new FormControl(j?.item_name),
+              qty: new FormControl(j?.qty),
+              price: new FormControl(j.price),
+              tax: new FormControl(j?.tax || 0),
+              discount: new FormControl(j?.discount),
+              additional_discount: new FormControl(j?.barcode?.batch[0]?.additional_discount),
+              total: new FormControl(j?.total)
+            })
+          );
+        } else {
+          formArr.at(i).patchValue({
+            barcode: j?.barcode.id,
+            item_name: j?.item_name,
+            qty: j?.qty,
+            price: j.price,
+            tax: j?.tax || 0,
+            discount: j?.discount,
+            additional_discount: j?.barcode?.batch[0]?.additional_discount,
+            total: j?.total
+          });
+        }
+        
+        if (j?.barcode?.batch[0]?.discount) {
+          j.barcode.batch[0].discount.forEach((discount: any) => {
+            if (!this.discountTyp[i]) {
+              this.discountTyp[i] = [];
+            }
+            this.discountTyp[i].push(discount);
+          });
+        }
+        this.calculateTotalForAll();
+        
+        this.barcode[i] = j.barcode.sku;
+        this.productName[i] = j.barcode.product_title;
+        this.coastprice[i] = j.price;
+        this.tax[i] = j.tax || 0;
+        this.myControl.push(new FormControl(j?.barcode?.product_title));
+        this.priceQtyData[i] = {
+          price: Number(j?.price)?.toFixed(2),
+          qty: j?.qty,
+          additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+          tax: j.tax || 0,
+          coastPrice: j.price,
+          taxPrice: taxPrice
+        };
+        this.subscribeToQtyChanges(formArr.at(i) as FormGroup, i);
+      });
+      return formArr;
+    })
+}
+
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;

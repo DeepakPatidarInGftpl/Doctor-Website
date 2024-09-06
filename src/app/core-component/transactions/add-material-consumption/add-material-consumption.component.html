@@ -108,8 +108,8 @@
           <div class="card-body">
             <div class="row">
               <div class="col-lg-3 col-sm-3 col-12">
-                <div class="form-group">
-                  <label>Select Product</label>
+                <label class="mb-2">Select Product</label>
+                <div class="form-group d-flex align-items-center">
                   <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
                     [formControl]="barcodeControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
                     style="box-sizing: border-box;" />
@@ -129,6 +129,80 @@
                     <mat-option *ngIf="barcodeControl.value?.length < 3" class="is-loading"> Please Enter 3 or more
                       characters</mat-option>
                   </mat-autocomplete>
+                  <i class="ion-information circle ms-2" data-bs-toggle="tooltip" title="ion-information"
+                    (click)="openModalProduct()"></i>
+
+                  <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
+                    aria-labelledby="addressModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Products
+                          </h1>
+                          <button type="button" class="close" (click)="closeModalProduct()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="form-group" *ngIf="variantList">
+                            <div class="row">
+                              <div class="table-responsive">
+                                <table class="table datanew">
+                                  <thead>
+                                    <tr>
+                                      <th class="boder">
+                                        Sr.No.</th>
+                                      <th class="boder">
+                                        Barcode</th>
+                                      <th class="boder space-text">
+                                        Product</th>
+                                      <th class="boder">
+                                        Variant Name</th>
+                                      <th class="boder">
+                                        Article No.</th>
+                                      <th class="boder space-text">
+                                        Date</th>
+                                      <th class="boder space-text">
+                                        MRP</th>
+                                      <th class="boder space-text">
+                                        Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let prod of variantList;let inde=index;">
+                                      <td class="boder">
+                                        {{inde+1+'.'}}</td>
+                                      <td class="boder">
+                                        {{prod?.sku}}</td>
+                                      <td class="boder">
+                                        {{prod?.product_title
+                                        }}
+                                      </td>
+                                      <td class="boder">
+                                        {{prod?.variant_name}}
+                                      </td>
+                                      <td class="boder">
+                                        {{prod?.product?.article_no}}
+                                      </td>
+                                      <td class="boder">
+                                        {{prod?.created_date}}
+                                      </td>
+                                      <td class="boder">
+                                        {{prod?.batch[0]?.mrp}}
+                                      </td>
+                                      <td><button type="button" (click)="closeModalProduct()"
+                                          class="btn btn-primary btn-sm" style="float: right;">Select
+                                        </button> </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col-lg-3 col-sm-3 col-12">
