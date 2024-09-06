@@ -119,6 +119,43 @@ export class AddProductionVoucherComponent implements OnInit {
     return index === cartControls.length - 1;
   }
 
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
+  openModalItemProduct(index: number) {
+    this.indexCartValue = index
+    const modalId = `productModalItem-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalItemProduct(i: number) {
+    const modal = document.getElementById(`productModalItem-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
 
   myControl: FormArray;
   variantList: any[] = [];
@@ -198,6 +235,7 @@ export class AddProductionVoucherComponent implements OnInit {
           console.log(res);
           this.isSearchConsumed = false;
           this.variantList2[index] = res;
+          console.log(res);
           console.log(this.variantList2);
           if (barcode === 'barcode') {
             this.oncheckVariantConsumed(res[0], index);

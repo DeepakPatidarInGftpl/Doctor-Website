@@ -357,6 +357,28 @@ export class AddmaterialInwardComponent implements OnInit {
     }
   }
 
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    console.log(index, 'index');
+    // this.cartIndex.findIndex(index)
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   selectedProductName: any;
   productDetails: any[] = [];
   oncheckVariant(event: any, index) {
@@ -811,7 +833,7 @@ export class AddmaterialInwardComponent implements OnInit {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -836,7 +858,7 @@ export class AddmaterialInwardComponent implements OnInit {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -857,6 +879,45 @@ export class AddmaterialInwardComponent implements OnInit {
         }
       });
     }
+  }
+
+  changePurchaseOrder(value) {
+    debugger
+    this.purchaseService.getPurchaseById(value).subscribe((res:any) => {
+      const saleOrderData = res?.cart;
+      // this.addCart(); 
+    const formarr = this.materialForm.get('material_inward_cart') as FormArray;
+    saleOrderData.forEach((j: any, i) => {
+      if (!formarr.at(i)) {
+      formarr.push(this.fb.group({
+        barcode: j.barcode.id,
+        variant_name: j?.barcode?.variant_name,
+        qty: j.qty,
+        po_qty: j?.po_qty,
+        mrp: j.mrp,
+      }))
+      this.barcode[i] = j.barcode.sku;
+      this.productName[i] = j.barcode.product_title;
+      this.myControls.push(new FormControl(j?.barcode?.product_title));
+  } else {
+    formarr.at(i).patchValue({
+      barcode: j?.barcode?.id,
+      variant_name: j?.barcode?.variant_name,
+      qty: j?.qty,
+      po_qty: j?.po_qty,
+      mrp: j.mrp,
+    });
+    this.barcode[i] = j.barcode.sku;
+    this.productName[i] = j.barcode.product_title;
+    if(!this.myControls[i]){
+      this.myControls.push(new FormControl(j?.barcode?.product_title));
+    } else {
+      this.myControls[i].setValue(j?.barcode?.product_title);
+    }
+  }
+    })
+    return formarr
+  })
   }
 
 

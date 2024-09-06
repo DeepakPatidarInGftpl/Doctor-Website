@@ -136,6 +136,24 @@ export class AddMaterialConsumptionComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
+  openModalProduct() {
+    // this.cartIndex.findIndex(index)
+    const modalId = `productModal`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct() {
+    const modal = document.getElementById(`productModal`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   oncheck(data: any) {
     console.log(data);
     this.materialConsumptionForm.patchValue({

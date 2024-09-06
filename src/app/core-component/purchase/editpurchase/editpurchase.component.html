@@ -517,7 +517,7 @@
                                                         [matAutocomplete]="autos" style="box-sizing: border-box;" />
                                                     <mat-autocomplete #autos="matAutocomplete">
                                                         <!-- <ng-container *ngIf="myControls[i]?.value?.length >= 1 && myControls[i]?.value?.length > 0"> -->
-                                                        <ng-container *ngFor="let option of variantList">
+                                                        <ng-container *ngFor="let option of variantList[i]">
                                                             <mat-option *ngIf="option?.is_active==true"
                                                                 [value]="option?.product_title + ' ' + option?.variant_name"
                                                                 (onSelectionChange)="oncheckVariant(option,i)"
@@ -528,7 +528,7 @@
                                                         </ng-container>
                                                         <mat-option *ngIf="isSearch"
                                                             style="color:#FF9F43">Loading...</mat-option>
-                                                        <mat-option *ngIf="variantList?.length === 0 && !isSearch"
+                                                        <mat-option *ngIf="variantList[i]?.length === 0 && !isSearch"
                                                             [value]="'No data found'">
                                                             <a routerLink="//product/addproduct"
                                                                 style="color:#FF9F43">+add Product</a>
@@ -539,6 +539,90 @@
                                                         </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-form-field>
+
+                                                <i class="ion-information circle ms-2" data-bs-toggle="tooltip"
+                                                    title="ion-information" (click)="openModalProduct(i)"></i>
+
+                                                <div class="modal fade" id="productModal-{{i}}" tabindex="-1"
+                                                    role="dialog" aria-labelledby="addressModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                        role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                                                                    Selected Products
+                                                                </h1>
+                                                                <button type="button" class="close"
+                                                                    (click)="closeModalProduct(i)" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group"
+                                                                    *ngIf="variantList && variantList[indexCartValue]">
+                                                                    <div class="row">
+                                                                        <div class="table-responsive">
+                                                                            <table class="table datanew">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th class="boder">
+                                                                                            Sr.No.</th>
+                                                                                        <th class="boder">
+                                                                                            Barcode</th>
+                                                                                        <th class="boder space-text">
+                                                                                            Product</th>
+                                                                                        <th class="boder">
+                                                                                            Variant Name</th>
+                                                                                        <th class="boder">
+                                                                                            Article No.</th>
+                                                                                        <th class="boder space-text">
+                                                                                            Date</th>
+                                                                                        <th class="boder space-text">
+                                                                                            MRP</th>
+                                                                                        <th class="boder space-text">
+                                                                                            Action</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr
+                                                                                        *ngFor="let prod of variantList[indexCartValue];let inde=index;">
+                                                                                        <td class="boder">
+                                                                                            {{inde+1+'.'}}</td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.sku}}</td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.product_title
+                                                                                            }}
+                                                                                        </td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.variant_name}}
+                                                                                        </td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.product?.article_no}}
+                                                                                        </td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.created_date}}
+                                                                                        </td>
+                                                                                        <td class="boder">
+                                                                                            {{prod?.batch[0]?.mrp}}
+                                                                                        </td>
+                                                                                        <td><button type="button"
+                                                                                                (click)="oncheckVariant(prod,indexCartValue)"
+                                                                                                (click)="variantChanged(prod, indexCartValue)"
+                                                                                                class="btn btn-primary btn-sm"
+                                                                                                style="float: right;">Select
+                                                                                            </button> </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="p-1"><input type="number"
@@ -792,25 +876,29 @@
                             Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>&nbsp; Save & Print</button>
+                                aria-hidden="true"></span>&nbsp; Save &
+                            Print</button>
                         <ng-container *ngIf="isStatusDraft">
                             <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save
                                 as Draft</button>
                             <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status"
-                                    aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                                    aria-hidden="true"></span>&nbsp;
+                                Save as Draft</button>
                         </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>&nbsp; Save</button>
+                                aria-hidden="true"></span>&nbsp;
+                            Save</button>
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
                             Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>&nbsp; Save & Create New</button>
+                                aria-hidden="true"></span>&nbsp; Save &
+                            Create New</button>
                     </div>
                 </div>
             </div>

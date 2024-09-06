@@ -49,7 +49,9 @@
                                 [ngClass]="{'is-invalid': f['to_branch'].touched && f['to_branch'].invalid}">
                             <mat-autocomplete autoActiveFirstOption #toBranchAuto="matAutocomplete">
                                 <ng-container *ngFor="let Branch of filteredToBranch | async">
-                                    <mat-option *ngIf="Branch.is_active==true" [value]="Branch?.title" (onSelectionChange)="oncheck1(Branch)" style="color:#FF9F43">{{Branch?.title }}</mat-option>
+                                    <mat-option *ngIf="Branch.is_active==true" [value]="Branch?.title"
+                                        (onSelectionChange)="oncheck1(Branch)" style="color:#FF9F43">{{Branch?.title
+                                        }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredToBranch | async) as Branchs">
                                     <mat-option *ngIf="Branchs.length === 0" [value]="'No data found'">
@@ -60,15 +62,19 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="to_branch && to_branch.invalid && to_branch.touched">Select To Branch </span>
+                        <span class="text-danger" *ngIf="to_branch && to_branch.invalid && to_branch.touched">Select To
+                            Branch </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Request Date*</label>
-                        <input type="date" formControlName="request_date" [attr.min]="minDate" [attr.max]="maxDate" [ngClass]="{'is-invalid': f['request_date'].touched && f['request_date'].invalid}">
-                        <span class="text-danger" *ngIf="request_date && request_date.invalid && request_date.touched">Select Request Date </span>
+                        <input type="date" formControlName="request_date" [attr.min]="minDate" [attr.max]="maxDate"
+                            [ngClass]="{'is-invalid': f['request_date'].touched && f['request_date'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="request_date && request_date.invalid && request_date.touched">Select Request Date
+                        </span>
                     </div>
                 </div>
 
@@ -78,15 +84,17 @@
                         <input type="text" formControlName="transfer_request_number" [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['transfer_request_number'].touched && f['transfer_request_number'].invalid}">
                         <span class="text-danger"
-                            *ngIf="transfer_request_number && transfer_request_number.invalid && transfer_request_number.touched">Enter Transfer
-                           Request Number </span>
+                            *ngIf="transfer_request_number && transfer_request_number.invalid && transfer_request_number.touched">Enter
+                            Transfer
+                            Request Number </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Status</label>
-                        <select formControlName="status" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
+                        <select formControlName="status" [ngModel]="prefixNo"
+                            [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
                             <option value="" selected disabled>Select Status</option>
                             <option value="Open">Open</option>
                             <option value="Approved">Approved</option>
@@ -94,7 +102,8 @@
                             <option value="Dispatched">Dispatched</option>
                             <option value="Received">Received</option>
                         </select>
-                        <span class="text-danger" *ngIf="status && status.invalid && status.touched">select Status</span>
+                        <span class="text-danger" *ngIf="status && status.invalid && status.touched">select
+                            Status</span>
                     </div>
                 </div>
             </div>
@@ -165,7 +174,8 @@
                                         <th></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart"
+                                                *ngIf="isCart">Add Cart+</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -205,9 +215,10 @@
                                                         (blur)="hideSearch()">
                                                 </td>
                                                 <td colspan="1">
-                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                    <div class="form-group d-flex align-items-center"
+                                                        style="margin-bottom: 0;">
                                                         <mat-form-field class="w-100"
-                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            style="padding: 0; border-top: none;">
                                                             <input type="text" placeholder="Search Product"
                                                                 aria-label="Search Products" matInput
                                                                 [formControl]="myControl"
@@ -217,7 +228,7 @@
                                                             <mat-autocomplete #autos="matAutocomplete">
                                                                 <ng-container
                                                                     *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
-                                                                    <ng-container *ngFor="let option of variantList">
+                                                                    <ng-container *ngFor="let option of variantList[i]">
                                                                         <mat-option *ngIf="option.is_active==true"
                                                                             [value]="option?.product_title + ' ' + option?.variant_name"
                                                                             (onSelectionChange)="oncheckVariant(option,i)"
@@ -228,7 +239,7 @@
                                                                         </mat-option>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <mat-option *ngIf="variantList?.length === 0"
+                                                                <mat-option *ngIf="variantList[i]?.length === 0"
                                                                     [value]="'No data found'">
                                                                     <a routerLink="//product/addproduct"
                                                                         style="color:#FF9F43">+add Product</a>
@@ -239,9 +250,99 @@
                                                                 </mat-option>
                                                             </mat-autocomplete>
                                                         </mat-form-field>
+                                                        <i class="ion-information circle ms-2" data-bs-toggle="tooltip"
+                                                            title="ion-information" (click)="openModalProduct(i)"></i>
+
+                                                        <div class="modal fade" id="productModal-{{i}}" tabindex="-1"
+                                                            role="dialog" aria-labelledby="addressModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                                role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5"
+                                                                            id="staticBackdropLabel">Selected Products
+                                                                        </h1>
+                                                                        <button type="button" class="close"
+                                                                            (click)="closeModalProduct(i)"
+                                                                            aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group"
+                                                                            *ngIf="variantList && variantList[indexCartValue]">
+                                                                            <div class="row">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table datanew">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="boder">
+                                                                                                    Sr.No.</th>
+                                                                                                <th class="boder">
+                                                                                                    Barcode</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Product</th>
+                                                                                                <th class="boder">
+                                                                                                    Variant Name</th>
+                                                                                                <th class="boder">
+                                                                                                    Article No.</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Date</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    MRP</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Action</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr
+                                                                                                *ngFor="let prod of variantList[indexCartValue];let inde=index;">
+                                                                                                <td class="boder">
+                                                                                                    {{inde+1+'.'}}</td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.sku}}</td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.product_title
+                                                                                                    }}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.variant_name}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.product?.article_no}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.created_date}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.batch[0]?.mrp}}
+                                                                                                </td>
+                                                                                                <td><button
+                                                                                                        type="button"
+                                                                                                        (click)="oncheckVariant(prod,indexCartValue)"
+                                                                                                        (click)="variantChanged(prod, indexCartValue)"
+                                                                                                        class="btn btn-primary btn-sm"
+                                                                                                        style="float: right;">Select
+                                                                                                    </button> </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="quantity" class="input" (blur)="purchase4(i)"></td>
+                                                <td><input type="number" formControlName="quantity" class="input"
+                                                        (blur)="purchase4(i)"></td>
                                             </tr>
                                         </ng-container>
                                     </ng-container>
@@ -258,7 +359,7 @@
 
                         <div class="row">
                             <div class="col-lg-6 my-3">
-                              
+
                             </div>
                             <div class="col-lg-6 my-3">
                                 <div class="form-group">
@@ -268,13 +369,14 @@
                                                 <h4>Total Product</h4>
                                                 <h5>{{calculateTotalProduct()}}
                                                     <input type="text" formControlName="total_product" class="input"
-                                                    [ngModel]="calculateTotalProduct()" style="display: none;">
+                                                        [ngModel]="calculateTotalProduct()" style="display: none;">
                                                 </h5>
                                             </li>
                                             <li class="total">
                                                 <h4>Total QTY</h4>
-                                                <h5> {{calculateTotalQty()}}  <input type="text" formControlName="total_qty" class="input"
-                                                    [ngModel]="calculateTotalQty()" style="display: none;"></h5>
+                                                <h5> {{calculateTotalQty()}} <input type="text"
+                                                        formControlName="total_qty" class="input"
+                                                        [ngModel]="calculateTotalQty()" style="display: none;"></h5>
                                             </li>
                                         </ul>
                                     </div>
@@ -288,7 +390,8 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status"aria-hidden="true"></span>&nbsp; Submit</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit</button>
                     <a routerLink="//inventory/list-stock-transfer-request" class="btn btn-cancel text-white">Cancel</a>
                 </div>
             </div>
