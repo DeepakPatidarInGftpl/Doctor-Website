@@ -442,6 +442,27 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
   }
 
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    console.log(index, 'index');
+    // this.cartIndex.findIndex(index)
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
 
   openModalShipping() {
     // Trigger Bootstrap modal using JavaScript
@@ -950,7 +971,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -975,7 +996,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index)

@@ -565,6 +565,29 @@ export class AddpurchaseBillComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    console.log(index, 'index');
+    // this.cartIndex.findIndex(index)
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   selectedProductName: any;
   // oncheckVariant(event: any, index) {
   //   console.log('hhhhh');
@@ -1927,7 +1950,7 @@ export class AddpurchaseBillComponent implements OnInit {
         .subscribe((res: any) => {
           console.log(res);
           this.isSearch = false;
-          this.variantList = res;
+          this.variantList[index] = res;
           console.log(this.variantList);
           if (barcode === 'barcode') {
             this.oncheckVariant(res[0], index);
@@ -1955,7 +1978,7 @@ export class AddpurchaseBillComponent implements OnInit {
         .subscribe((res: any) => {
           console.log(res);
           this.isSearch = false;
-          this.variantList = res;
+          this.variantList[index] = res;
           console.log(this.variantList);
           if (barcode === 'barcode') {
             this.oncheckVariant(res[0], index);

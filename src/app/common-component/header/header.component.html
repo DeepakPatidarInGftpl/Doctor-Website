@@ -9,7 +9,7 @@
     <!-- Logo -->
     <div class="header-left active" *ngIf="activePath != 'pos'">
       <a routerLink="/dashboard/sales" class="logo">
-        <img [src]="logoPath" alt="" />
+        <img style="height:45px;" [src]="logoImg" alt="" />
       </a>
       <a routerLink="/dashboard/sales" class="logo-small mt-2">
         <img src="/assets/dummy/fevicon.png" style="height:80% ;width:100%;" alt="" />
@@ -19,7 +19,7 @@
     </div>
     <div class="header-left active" *ngIf="activePath === 'pos'" style="border-right: none">
       <a routerLink="/dashboard/sales" class="logo">
-        <img [src]="logoPath" alt="" />
+        <img style="height:45px;" [src]="logoImg" alt="" />
       </a>
       <a routerLink="/dashboard/sales" class="logo-small">
         <img src="/assets/dummy/fevicon.png" alt="" />
