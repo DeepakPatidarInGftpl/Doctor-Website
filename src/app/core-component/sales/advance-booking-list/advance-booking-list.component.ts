@@ -243,10 +243,8 @@ select=false
       this.filteredData = this.filteredData.filter(res => {
         const nameLower = res?.customer?.name.toLocaleLowerCase() || "";
         const usernameLower = res?.customer?.username.toLocaleLowerCase() || "";
-        const companyNameLower = res.estimate_no.toLocaleLowerCase();
-        if (nameLower.includes(searchTerm) || usernameLower.includes(searchTerm)) {
-          return true;
-        } else if (companyNameLower.includes(searchTerm)) {
+        const status = res?.status.toLocaleLowerCase();
+        if (nameLower.includes(searchTerm) || usernameLower.includes(searchTerm) || status.includes(searchTerm)) {
           return true;
         }
         return false;

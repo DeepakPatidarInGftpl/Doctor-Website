@@ -37,6 +37,8 @@ export class HeaderComponent implements OnInit {
   notificationList: any;
   totalNotificationCount: any;
   notificationIds: any = [];
+  logoImg: string;
+  imgUrl = 'https://pv.greatfuturetechno.com';
   // private notificationIdsSubject = new BehaviorSubject<number[]>([]);
   // private destroy$ = new Subject<void>();
 
@@ -113,6 +115,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
     this.profile();
+    this.companyList();
     //open day
     this.dayOpenForm = this.fb.group({
       opening_amount: new FormControl(0, [Validators.required]),
@@ -455,6 +458,14 @@ export class HeaderComponent implements OnInit {
         }
       );
     }
+  }
+
+  companyList() {
+    this.companyService.getCompany().subscribe((res:any) => {
+      // this.tableData = res.reverse();
+      console.log(res);
+      this.logoImg = this.imgUrl + res[0]?.logo;
+    })
   }
 
   financialYearList: any[] = [];

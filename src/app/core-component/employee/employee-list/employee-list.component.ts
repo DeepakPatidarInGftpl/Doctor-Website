@@ -208,7 +208,12 @@ select=false
         // console.log(res);
         // console.log(res.name.toLocaleLowerCase());
         // console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
+        const city = (res?.address[0]?.city?.city).toLocaleLowerCase();
+        if(res.name.match(this.titlee) || city.includes(this.titlee)) {
+          return true;
+        } else {
+          return false;
+        }
       })
     }
   }

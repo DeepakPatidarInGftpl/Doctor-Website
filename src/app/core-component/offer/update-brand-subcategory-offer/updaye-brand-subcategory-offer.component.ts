@@ -177,6 +177,25 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
     return index === cartControls.length - 1;
   }
 
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   get name() {
     return this.brandOfferForm.get('name');
   }

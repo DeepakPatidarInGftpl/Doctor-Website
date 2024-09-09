@@ -384,7 +384,8 @@
                                                             <p>{{BillDetail?.note}}</p>
                                                         </div>
                                                     </div>
-                                                    <div class="pdf-table2 mb-4 mt-3">
+                                                    <div *ngIf="BillDetail?.payment?.length > 0"
+                                                        class="pdf-table2 mb-4 mt-3">
                                                         <h2 class="mb-2" style="color:#FF9F43;font-size: 16px;">Payment
                                                             details</h2>
                                                         <table>
@@ -452,6 +453,12 @@
                                                         class="badges">{{BillDetail?.status}}</span></p>
                                                 <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': BillDetail?.is_active === true, 'bg-lightred' : BillDetail?.is_active === false,'bg-lightyellow' : BillDetail?.is_active === 'Partial' }"
                                             class="badges">{{BillDetail?.is_active}}</span> </p> -->
+                                            </div>
+
+                                            <div *ngIf="BillDetail?.payment_status" class="d-flex mx-5 mt-3">
+                                                <p class="text-black"><strong>Payment Status : </strong><span
+                                                        [ngClass]="{'bg-lightyellow' : BillDetail?.payment_status === 'Payment Pending'}"
+                                                        class="badges">{{BillDetail?.payment_status}}</span></p>
                                             </div>
 
                                             <div class="pdf-footer">

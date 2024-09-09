@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Account*</label>
+                        <label>Party*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Account" aria-label="account" matInput
+                            <input type="text" placeholder="Select Party Name" aria-label="account" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
@@ -382,13 +382,12 @@
                     <div class="form-group">
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms">
-                            <option value="" selected disabled>Select Payment Terms</option>
+                            <option value="" selected disabled>Select Valid Term</option>
                             <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}
                             </option>
                         </select>
                         <span class="text-danger"
-                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select
-                            Payment Terms
+                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Valid Term
                         </span>
                     </div>
                 </div>
@@ -507,9 +506,10 @@
                                                         (blur)="hideSearch()">
                                                 </td>
                                                 <td colspan="1">
-                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                    <div class="form-group d-flex align-items-center"
+                                                        style="margin-bottom: 0;">
                                                         <mat-form-field class="w-100"
-                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            style="padding: 0; border-top: none;">
                                                             <input type="text" placeholder="Search Product"
                                                                 aria-label="Search Products" matInput
                                                                 [formControl]="d.get('item_name')"
@@ -518,7 +518,7 @@
                                                                 style="box-sizing: border-box;" />
                                                             <mat-autocomplete #autos="matAutocomplete">
                                                                 <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
-                                                                <ng-container *ngFor="let option of variantList">
+                                                                <ng-container *ngFor="let option of variantList[i]">
                                                                     <mat-option *ngIf="option?.is_active==true"
                                                                         [value]="option?.product_title + ' ' + option?.variant_name"
                                                                         (onSelectionChange)="oncheckVariant(option,i)"
@@ -532,7 +532,7 @@
                                                                 <mat-option *ngIf="isSearch"
                                                                     style="color:#FF9F43">Loading...</mat-option>
                                                                 <mat-option
-                                                                    *ngIf="variantList?.length === 0 && !isSearch"
+                                                                    *ngIf="variantList[i]?.length === 0 && !isSearch"
                                                                     [value]="'No data found'">
                                                                     <a routerLink="//product/addproduct"
                                                                         style="color:#FF9F43">+add Product</a>
@@ -544,6 +544,97 @@
                                                                 </mat-option>
                                                             </mat-autocomplete>
                                                         </mat-form-field>
+
+                                                        <i class="ion-information circle ms-2" data-bs-toggle="tooltip"
+                                                            title="ion-information" (click)="openModalProduct(i)"></i>
+
+                                                        <div class="modal fade" id="productModal-{{i}}" tabindex="-1"
+                                                            role="dialog" aria-labelledby="addressModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                                role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5"
+                                                                            id="staticBackdropLabel">Selected Products
+                                                                        </h1>
+                                                                        <button type="button" class="close"
+                                                                            (click)="closeModalProduct(i)"
+                                                                            aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group"
+                                                                            *ngIf="variantList && variantList[indexCartValue]">
+                                                                            <div class="row">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table datanew">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="boder">
+                                                                                                    Sr.No.</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Barcode</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Product</th>
+                                                                                                <th class="boder">
+                                                                                                    Variant Name</th>
+                                                                                                <th class="boder">
+                                                                                                    Article No.</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Date</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    MRP</th>
+                                                                                                <th
+                                                                                                    class="boder space-text">
+                                                                                                    Action</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr
+                                                                                                *ngFor="let prod of variantList[indexCartValue];let inde=index;">
+                                                                                                <td class="boder">
+                                                                                                    {{inde+1+'.'}}</td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.sku}}</td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.product_title
+                                                                                                    }}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.variant_name}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.product?.article_no}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.created_date}}
+                                                                                                </td>
+                                                                                                <td class="boder">
+                                                                                                    {{prod?.batch[0]?.mrp}}
+                                                                                                </td>
+                                                                                                <td><button
+                                                                                                        type="button"
+                                                                                                        (click)="oncheckVariant(prod,indexCartValue)"
+                                                                                                        (click)="variantChanged(prod, indexCartValue)"
+                                                                                                        class="btn btn-primary btn-sm"
+                                                                                                        style="float: right;">Select
+                                                                                                    </button> </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td><input type="number" formControlName="qty" class="input"></td>

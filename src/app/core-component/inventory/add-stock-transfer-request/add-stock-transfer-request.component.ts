@@ -123,7 +123,7 @@ export class AddStockTransferRequestComponent implements OnInit {
       }
       this.stockService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -153,7 +153,7 @@ export class AddStockTransferRequestComponent implements OnInit {
     else {
       this.stockService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.variantList = res;
+        this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -508,6 +508,25 @@ export class AddStockTransferRequestComponent implements OnInit {
   clearForm() {
     this.stockTransferRequestForm.reset();
 
+  }
+
+  indexCartValue: any;
+  openModalProduct(index: number) {
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct(i: number) {
+    const modal = document.getElementById(`productModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
 }
 
