@@ -1,10 +1,11 @@
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpClientService } from './http-client.service';
 import { environment } from 'src/environments/environment';
 import { Auth } from '../interfaces/auth';
+import { LogoapiInterFase } from '../interfaces/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,13 @@ export class AuthServiceService {
     // console.log(authToken);
     return authToken !== null ? true : false;
   }
+public HoldLogoData$  = new BehaviorSubject<LogoapiInterFase>(null)
+  getLogoApi() : Observable<any>{
+    return this.http.get<LogoapiInterFase>(this.apiurl+'/pv-api/company_configs/').pipe(
+      tap((res:LogoapiInterFase)=>this.HoldLogoData$.next(res)),
+      catchError(this.Errorhandling)
+    )
+  }
 
   isLogggedIn() {
     const loggedIn = localStorage.getItem('token');
@@ -56,7 +64,7 @@ export class AuthServiceService {
     return this.roleAs;
   }
 
-  updateUserDeviceToken(token) {
+  updateUserDeviceToken(token : any) {
     let url = this.apiurl + '/pv-api/user_device_token_update/';
     return this.httpService.post(url, token, new HttpHeaders({
       'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -66,10 +74,42 @@ export class AuthServiceService {
 
   Errorhandling(err: HttpErrorResponse) {
     if (err.error instanceof ErrorEvent) {
-      console.error(err.error.message);
+      throwError(()=>`An error occurred: ${err.error.message}`);
     } else {
-      console.error(`Backend returned code ${err.status}`);
+      throwError(()=>`Backend returned code ${err.status}`);
     }
-    return throwError('Please try again later.');
+    return throwError(()=>'Please try again later.');
   }
+
+
+  // Function to convert HEX to RGB
+ hexToRgbConvter(hex: string): any | null {
+  // Ensure the input is a valid hex code (e.g., #FFFFFF or FFFFFF)
+  const cleanedHex = hex.replace(/^#/, '');
+
+  // Validate the cleaned hex string (must be 3 or 6 characters long)
+  if (![3, 6].includes(cleanedHex.length)) {
+    console.error('Invalid HEX color format.');
+    return null;
+  }
+
+  // Expand shorthand HEX to full form (e.g., 'FFF' to 'FFFFFF')
+  const fullHex = cleanedHex.length === 3
+    ? cleanedHex.split('').map(char => char + char).join('')
+    : cleanedHex;
+
+  // Parse the RGB values from the full hex string
+  const r = parseInt(fullHex.substring(0, 2), 16);
+  const g = parseInt(fullHex.substring(2, 4), 16);
+  const b = parseInt(fullHex.substring(4, 6), 16);
+
+  // Return the RGB color in a string format
+  return {
+    arr :[r, g, b],
+    r ,
+    g,
+    b
+  };
+}
+
 }

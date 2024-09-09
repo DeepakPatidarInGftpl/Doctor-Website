@@ -1,3 +1,4 @@
+import { LogoapiInterFase } from './../../../interfaces/employee';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -5,6 +6,8 @@ import { Location ,DatePipe} from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { AuthServiceService } from 'src/app/Services/auth-service.service';
+import { environment } from 'src/environments/environment';
 type address_type = {
   address_type : 'Billing' | 'Shipping'
 }
@@ -19,13 +22,15 @@ type address_type = {
 export class DetailsPurchaseComponent  implements OnInit  {
 
   constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location,
-    private _date_pipe : DatePipe
+    private _date_pipe : DatePipe,
+    public _auth : AuthServiceService
   ) { }
 
 
 
 
 
+  api_Url :string = environment.api
   id: any;
   companyDetails:any;
   printDetails: any;
@@ -35,6 +40,7 @@ export class DetailsPurchaseComponent  implements OnInit  {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.pageLoadData();
     this.companyService.getCompany().subscribe(res=>{
       this.companyDetails=res[0];
     })
@@ -95,19 +101,8 @@ export class DetailsPurchaseComponent  implements OnInit  {
 
   loaderPdf = false;
   generatePdf() {
-    // this.loaderPdf = true;
-    // const elementToCapture = document.getElementById('debitNote');
-    // if (elementToCapture) {
-    //   html2canvas(elementToCapture).then((canvas) => {
-    //     this.loaderPdf = false;
-    //     const imgData = canvas.toDataURL('image/png');
-    //     const pdf = new jsPDF('p', 'mm', 'a4');
-    //     const width = pdf.internal.pageSize.getWidth();
-    //     const height = pdf.internal.pageSize.getHeight();
-    //     pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-    //     pdf.save('purchaseOrder.pdf').;
-    //   });
-    // }
+ const colors = this._auth.hexToRgbConvter(this.logoData.data.primary_colour)
+//  console.log(colors)
     const img  = new Image();
     const pdf = new jsPDF('p','mm','a4');
     img.src = 'assets/logo/pdfLogo.png';
@@ -265,7 +260,7 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
       headStyles:{
         fontSize : 7,
         textColor :[0,0,0],
-        fillColor :[255, 202, 153],
+        fillColor :colors.arr,
         // lineColor:[0,0,0],
         // lineWidth:0.1,  
        },
@@ -394,14 +389,16 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
     } 
     
    
+    // const src = this.api_Url+this.logoData.data.logo;
     
     let leftcontantSpaces : number = 14;
-   
+    // let imgsendPoint :string[] = this.logoData.data.logo.split('.')
+  //  const web =imgsendPoint[imgsendPoint.length - 1]
     
     // lift content
-    pdf.addImage(compressedImage,"PNG",leftcontantSpaces, 8, 31, 10)
+    pdf.addImage(compressedImage,'PNG',leftcontantSpaces, 8, 31, 10)
     pdf.setFontSize(18)
-    pdf.setTextColor(256,112,8)
+    pdf.setTextColor(colors.r,colors.g,colors.b)
 
     pdf.text(`${(this.companyDetails?.name as string)}`,51,15)
 
@@ -414,9 +411,7 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
     pdf.text(`${this.companyDetails?.state?.state+' , '+this.companyDetails?.country?.country_name+' , '+this.companyDetails?.pincode}`,leftcontantSpaces,31)
     pdf.text(`Phone: ${this.companyDetails?.phone}`,leftcontantSpaces,39);
     pdf.text(`Email: ${this.companyDetails?.email}`,leftcontantSpaces,35);
-    console.log('comm',this.companyDetails)
-    pdf.setTextColor(256,112,8)
-    pdf.setFontSize(11)
+    pdf.setTextColor(colors.r,colors.g,colors.b)
     pdf.text('BILLING ADDRESS',leftcontantSpaces,48);
     pdf.setTextColor(0,0,0)
     pdf.setFontSize(9)
@@ -471,7 +466,7 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
 
     let SHIPPING_ADDRESS_X_value : number = 159
 
-    pdf.setTextColor(256,112,8)
+    pdf.setTextColor(colors.r,colors.g,colors.b)
     pdf.setFontSize(11)
     pdf.text('SHIPPING ADDRESS',SHIPPING_ADDRESS_X_value,48);
     pdf.setTextColor(0,0,0)
@@ -498,7 +493,7 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
     headStyles:{
     fontSize : 9,
     textColor :[0,0,0],
-    fillColor :[255, 202, 153],
+    fillColor :colors.arr,
     
     },
     alternateRowStyles:{
@@ -556,6 +551,14 @@ if (loop !== 0) for(let i = 0; i < newval; i++) arr2.push([]);
     }
     pdf.save('purchase-order.pdf')
   } 
+}
+logoData :LogoapiInterFase;
+pageLoadData(){
+  this._auth.HoldLogoData$.subscribe({
+    next : (value :LogoapiInterFase) =>{
+      this.logoData = value;
+    },
+  })
 }
 
   printForm(): void {
