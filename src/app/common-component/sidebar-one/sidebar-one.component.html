@@ -11,10 +11,7 @@
                     <!-- [ngStyle]="{ 'background': secondary$  }" -->
                                         <li class="submenu">
                                                 <a 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles($event)"
-                                                (mouseleave)="removeHoverClass()"
-                                                [ngClass]="{'active': activePath === 'dashboard'}"
+                                                [ngClass]="{'active': activePath === 'dashboard' }"
                                                 ><img
                                                                 src="assets/img/icons/dashboard.svg"
                                                                 alt="img"><span>Dashboard</span> <span
@@ -73,9 +70,7 @@
 
                                         <li class="submenu" *ngIf="isCompany || isBranch">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles($event)"
-                                                (mouseleave)="removeHoverClass()"
+                                                
                                                 [ngClass]="{'active': activePath === 'masters'}"><i
                                                                 class="fa fa-signal" data-bs-toggle="tooltip"
                                                                 title="fa fa-signal" style="color: #637381;"></i><span>
@@ -90,9 +85,7 @@
 
                                         <li class="submenu" *ngIf="isAccount || isAccountSubType">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'account'}"><i
                                                                 class="fa fa-users" data-bs-toggle="tooltip"
                                                                 title="fa fa-users" style="color: #637381;"></i><span>
@@ -109,9 +102,7 @@
                                         <li class="submenu"
                                                 *ngIf="isSupplier || isVendor || isEmployee ||isCustomer || isTransport || isDealer">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'contacts'}"><svg
                                                                 xmlns="http://www.w3.org/2000/svg" width="16"
                                                                 height="16" fill="currentColor"
@@ -139,9 +130,7 @@
                                         <li class="submenu"
                                                 *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isProductLabel || isProductionVoucher">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'product'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Product Management</span> <span
@@ -202,14 +191,16 @@
                                                 *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
                                                 <a 
                                                 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'purchase'}">
                                                         <!-- <img src="assets/img/icons/purchase1.svg" alt="img"> -->
-                                                        <i class="fa fa-book" data-bs-toggle="tooltip"
+                                                        <i class="fa fa-book" style="color: #637381;" data-bs-toggle="tooltip"
                                                                 title="fa fa-book"></i>
-                                                        <span> Purchase</span> <span class="menu-arrow"></span></a>
+                                                        <span> Purchase</span>
+
+                                                         <span class="menu-arrow"></span>
+                                                        
+                                                        </a>
                                                 <ul>
                                                         <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist"
                                                                         routerLinkActive="active">Purchase Order
@@ -233,9 +224,7 @@
                                         <li class="submenu"
                                                 *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn || isAdvanceBooking || isDeliveryChallan">
                                                 <a 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'sales'}"> <img
                                                                 src="assets/img/icons/sales1.svg" alt="img"><span>
                                                                 Sales</span> <span class="menu-arrow"></span></a>
@@ -277,12 +266,11 @@
                                                 *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher || isMaterialConsuption || isScarpEntry">
                                                 <a 
                                                 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
-                                                [ngClass]="{'active': activePath === 'transaction'}"><i
-                                                                data-bs-toggle="tooltip" title="fa fa-university"
-                                                                class="fa fa-university"></i><span>Transaction</span>
+                                           
+                                                [ngClass]="{'active': activePath === 'transaction'}">
+                                                <i  data-bs-toggle="tooltip" style="color: #637381;" title="fa fa-university"
+                                                                class="fa fa-university"></i>
+                                                                <span>Transaction</span>
                                                         <span class="menu-arrow"></span></a>
                                                 <ul>
                                                         <li *ngIf="isPaymentVoucher"><a
@@ -324,9 +312,7 @@
                                                 <a 
                                                 
                                                 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles($event)"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax"
                                                                 data-bs-toggle="tooltip" title="fa fa-fax"
                                                                 style="color: #637381;"></i><span> POS</span> <span
@@ -341,9 +327,7 @@
                                         <li class="submenu"
                                                 *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
                                                 <a 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'bank'}"> <i
                                                                 class="fa fa-credit-card" data-bs-toggle="tooltip"
                                                                 title="fa fa-credit-card"
@@ -362,9 +346,7 @@
                                                 *ngIf="isAttendnace || isTarget || isDepartment || isIncentive">
                                                 <a 
                                                 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 
                                                 [ngClass]="{'active': activePath === 'hrm'}"><i
                                                                 data-bs-toggle="tooltip" title="fa fa-users"
@@ -386,9 +368,7 @@
                                         </li>
                                         <li class="submenu" *ngIf="isCountry || isState || isCity">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 
                                                 [ngClass]="{'active': activePath === 'places'}"><img
                                                                 src="assets/img/icons/places.svg" alt="img"><span>
@@ -409,9 +389,7 @@
                                         <li  class="submenu"
                                                 *ngIf="isStock || isStockTransport || isStockTransportRequest || isStockVerification">
                                                 <a  
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'inventory'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Inventory</span> <span
@@ -436,9 +414,7 @@
 
                                         <li class="submenu" *ngIf="isInvoiceOffer && isMembership">
                                                 <a
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'offer'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Promotion</span> <span
@@ -463,9 +439,7 @@
                                         <li class="submenu"
                                                 *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
                                                 <a 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles()"
-                                                (mouseleave)="removeHoverClass()"
+                                           
                                                 [ngClass]="{'active': activePath === 'website'}"><i
                                                                 class="fa fa-sitemap" data-bs-toggle="tooltip"
                                                                 title="fa fa-sitemap" style="color: #637381;"></i><span>
@@ -1551,9 +1525,7 @@
                                         <li class="submenu">
                                                 <a
                                                 
-                                                class="colo"
-                                                (mouseover)="applyDynamicStyles($event)"
-                                                (mouseleave)="removeHoverClass()"
+                                                
                                                 [ngClass]="{'active': activePath === 'report'}"><img
                                                                 src="assets/img/icons/time.svg" alt="img"><span>
                                                                 Report</span> <span class="menu-arrow"></span></a>

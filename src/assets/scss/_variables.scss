@@ -1,2 +1,3 @@
-$button-color: #FF9F43; // Default button color
-$button-hover-color: #1B2850; 
+$button-color: var(--primary-color); // Default button color
+
+$button-hover-color: var(--secondary-color); 

@@ -68,9 +68,37 @@
     color: #000;
   }
 }
+// .rotaed_img{
+//   transform: translateX(44px);
+//     // animation: IMGAnimation 1.9s ease-in-out;
+//   }
+
+.scale:hover{
+  animation: logoAnimation 0.9s ease-in-out;
+  // .rotaed_img{
+  //   animation: IMGAnimation 1.9s ease-in-out;
+  // }
+}
 
 
-
+@keyframes logoAnimation {
+ 
+  50% {
+  transform: rotateZ(8deg);
+ }
+  100% {
+    transform: rotateZ(-6deg);
+  }
+}
+@keyframes IMGAnimation {
+ 
+  50% {
+    transform: translateX(80px);
+  }
+  100% {
+    transform: translateX(-5px);
+   }
+}
 
 .example-form-field {
   margin: 0 8px 5px 0;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 ,RendererStyleFlags2} from '@angular/core';
+import { Component, HostBinding, OnInit, Renderer2 ,RendererFactory2,RendererStyleFlags2} from '@angular/core';
 // import { SettingsService } from 'src/app/shared/settings/settings.service';
 import { NavigationStart, Router } from '@angular/router';
 import { LogoapiInterFase } from 'src/app/interfaces/employee';
@@ -6,7 +6,7 @@ import { AuthServiceService } from 'src/app/Services/auth-service.service';
 // import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-sidebar-one',
   templateUrl: './sidebar-one.component.html',
@@ -38,9 +38,10 @@ export class SidebarOneComponent implements OnInit {
   ];
   constructor(private Router: Router, private profileService: CompanyService,private websiteService:WebsiteService
     ,private _auth : AuthServiceService,
-    private renderer : Renderer2
-
+    private renderer : Renderer2,
+    rendererFactory: RendererFactory2
   ) {
+    this.renderer = rendererFactory.createRenderer(null, null);
     this.activePath = this.Router.url.split('/')[1]
     this.Router.events.subscribe((data: any) => {
       if (data instanceof NavigationStart) {
@@ -50,7 +51,7 @@ export class SidebarOneComponent implements OnInit {
   }
 
   isWarehouse;
-
+api_url :string = environment.api;
   //master
   isCompany;
   isBranch;
@@ -578,33 +579,34 @@ if(this.profileService.CheckBlur$){
     // });
 
   }
-primary$ : string = '#FF9F43';
-secondary$ : string = '#1B2850';
+// primary$ : string = '#FF9F43';
+// secondary$ : string = '#1B2850';
 
 logoData:LogoapiInterFase;
   pageLoadData(){
-    this._auth.HoldLogoData$.subscribe({
+  this._auth.HoldLogoData$.subscribe({
       next : (value : LogoapiInterFase)=> {
         if(value && value.success){
-
-          this.logoData = value;
-          this.secondary$ = value.data.primary_colour;
+         this.logoData = value;
+          this.applyDynamicStyles('--secondary-color',value.data.secondary_colour)
+          this.applyDynamicStyles('--primary-color',value.data.primary_colour);
+          this.updateFavicon(this.api_url+value.data.favicon)
         }
 
       },
     })
   }
-  applyDynamicStyles(event :any) {
-    // console.log(event)
-    // const cl :any = document.querySelector('.colo')
-    // cl.style.background = this.secondary$
+  applyDynamicStyles(var_name :string , values_of_var : string) {
+    this.renderer.setStyle(document.documentElement,var_name ,values_of_var,RendererStyleFlags2.Important);
 
   }
-
-  removeHoverClass(): void {
-    // const cl :any = document.querySelector('.colo')
-    // cl.style.background = ''
+updateFavicon(iconUrl: string): void {
+    const favicon = this.renderer.selectRootElement('#dynamic-favicon', true);
+    if (favicon) {
+      this.renderer.setAttribute(favicon, 'href', iconUrl);
+    }
   }
+
   LoadScript(js: string) {
     var script = document.createElement('script');
     script.src = js;

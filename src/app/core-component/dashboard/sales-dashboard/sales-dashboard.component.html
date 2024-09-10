@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-sm-6 col-12 d-flex"></div>
-            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+            <div @bounce class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="form-group w-100" *ngIf="isAdmin">
                     <label>Select Branch</label>
                     <div class="dropdown">
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <ng-container>
-                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-2  scale col-sm-3 col-12 d-flex">
                     <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
                         <div class="dash-counts" style="width: 100%;">
                             <div class="num-1">
@@ -110,7 +110,7 @@
                                     <img src="assets/img/dollar.png" alt="">
                                 </div>
                                 <div style="margin-left:10px">
-                                    <p class="card-num1-p1">Total Sales</p>
+                                    <p class="card-num1-p1"  style="font-size: 17px; color: var(--primary-color) ;">Total Sales</p>
                                 </div>
                             </div>
                            
@@ -122,7 +122,8 @@
                             <p class="card-num1-p" style="margin-bottom:5px;">{{salePurchaseList?.sales | currency :'INR'}}</p>
                             <div class="d-flex sale_chart_img">
                                 <ng-container *ngIf="salePurchaseList?.loss_sale_percent">
-                                    <img src="assets/img/chartDown.png" alt="">
+                                    
+                                    <img  src="assets/img/chartDown.png" alt="">
                                     <p class="sale_percentage_p">{{salePurchaseList?.loss_sale_percent}}</p>
                                 </ng-container>
                                 <ng-container *ngIf="salePurchaseList?.profit_sales_percentage">
@@ -134,15 +135,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-2 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
                         <div class="dash-counts" style="width: 100%;">
                             <div class="num-1" >
-                                <div class="num-img" style="width: 50px; height: 50px; border:0px solid">
-                                    <img src="assets/img/user_circle.png" alt="">
+                                <div class="num-img rotaed_img" style="width: 50px; height: 50px; border:0px solid">
+                                    <img  src="assets/img/user_circle.png" alt="">
                                 </div>
                                 <div style="margin-left:10px">
-                                    <p class="card-num1-p1">Total Purchase</p>
+                                    <p class="card-num1-p1" style="font-size: 17px; color: var(--primary-color);">Total Purchase</p>
                                 </div>
                             </div>
                             
@@ -192,7 +193,7 @@
                         </div>
                     </div>
                 </div> -->
-                 <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                 <div @bounce class="col-lg-2 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count" >
                         <div class="dash-counts">
                             <div class="num-img">
@@ -236,14 +237,14 @@
                         </div>
                     </div>
                 </div> -->
-                 <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                 <div @bounce class="col-lg-2 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count">
                         <div class="dash-counts">
                             <div class="num-img">
                                 <img src="assets/img/dollar.png" alt="">
                             </div>
                             <div>
-                                <p class="card-num-p1">Total Purchase Return</p>
+                                <p class="card-num-p1" style="font-size: 17px;">Total Purchase Return</p>
                                 <p class="card-num-p2">{{saleTotalList?.total_purchase_return}}</p>
                             </div>
                         </div>
@@ -277,14 +278,14 @@
                         </div>
                     </div>
                 </div> -->
-                 <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                 <div @bounce class="col-lg-2 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count">
                         <div class="dash-counts">
                             <div class="num-img">
                                 <img src="assets/img/dollar.png" alt="">
                             </div>
                             <div>
-                                <p class="card-num-p1">Stock QTY</p>
+                                <p class="card-num-p1" style="font-size: 17px;">Stock QTY</p>
                                 <p class="card-num-p2">{{saleTotalList?.total_stock_quantity}}</p>
                             </div>
                         </div>
@@ -318,15 +319,15 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-2 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count">
                         <div class="dash-counts">
                             <div class="num-img">
                                 <img src="assets/img/dollar.png" alt="">
                             </div>
                             <div>
-                                <p class="card-num-p1">Stock Value</p>
-                                <p class="card-num-p2">{{saleTotalList?.total_stock_value}}</p>
+                                <p class="card-num-p1" style="font-size: 17px;">Stock Value</p>
+                                <p class="card-num-p2" >{{(saleTotalList?.total_stock_value+'')?.substring(0,6) }}...</p>
                             </div>
                         </div>
                     </div>
@@ -334,37 +335,37 @@
                
             </ng-container>
             <ng-container>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #dffefe;">
                         <div class="dash-counts">
-                            <p class="card-num-p1"  style="color: #2673DD;">Sold QTY</p>
+                            <p class="card-num-p1"  style="color: var(--primary-color);">Sold QTY</p>
                             <p class="card-num-p2">{{saleTotalList?.total_sale_bill_sold_quantity}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #ffeab6;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Total Invoice</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Total Invoice</p>
                             <p class="card-num-p2">{{saleTotalList?.total_sale_bill}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #ffcfc9;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Total Customers</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Total Customers</p>
                             <p class="card-num-p2">{{saleTotalList?.total_customers}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #edf5ff;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Customer Retention</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Customer Retention</p>
                             <p class="card-num-p2">{{customerRetentionList?.customer_retention_rate}}</p>
 
                         </div>
@@ -372,37 +373,37 @@
                 </div>
             </ng-container>
             <ng-container>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #edf5ff;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Purchase QTY</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Purchase QTY</p>
                             <p class="card-num-p2">{{saleTotalList?.total_purchase_bill_quantity}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #dffefe;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Total Bills</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Total Bills</p>
                             <p class="card-num-p2">{{saleTotalList?.total_purchase_bill}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #ffeab6;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Total Suppliers</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Total Suppliers</p>
                             <p class="card-num-p2">{{saleTotalList?.total_suppliers}}</p>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div @bounce class="col-lg-3 scale col-sm-3 col-12 d-flex">
                     <div class="dash-count das-w" style="background: #ffcfc9;">
                         <div class="dash-counts">
-                            <p class="card-num-p1" style="color: #2673DD;">Total Products</p>
+                            <p class="card-num-p1" style="color: var(--primary-color);">Total Products</p>
                             <p class="card-num-p2">{{saleTotalList?.total_products}}</p>
                         </div>
                     </div>
