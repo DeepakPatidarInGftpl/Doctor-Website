@@ -1,3 +1,5 @@
+@import '../variables';
+
 .login-wrapper {
     width: $__full__width;
     overflow: $__hidden;
@@ -72,15 +74,15 @@
             .btn-login {
                 width: $__full__width;
                 font-weight: $__bold;
-                background: $__primarycolor;
-                border-color:$__primarycolor ;
+                background: $button-color;
+                border-color:$button-color ;
                 @include margin-padding(null, 12px);
                 @include transition(all 0.5s ease);
                 margin-top:15px;
                 color: $__white;
                 &:hover{
                    box-shadow:0  50px #fff inset !important;
-                   color: $__primarycolor;
+                   color: $button-color;
                 }
             }
             .alreadyuser {

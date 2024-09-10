@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,21 +7,14 @@ import {
 } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-// import {
-//   BehaviorSubject,
-//   catchError,
-//   debounceTime,
-//   of,
-//   Subject,
-//   switchMap,
-//   takeUntil,
-// } from 'rxjs';
+
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { NotificationService } from 'src/app/Services/notification/notification.service';
 import { SettingsService } from 'src/app/shared/settings/settings.service';
-
+import {LogoapiInterFase} from '../../interfaces/employee';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -37,8 +30,8 @@ export class HeaderComponent implements OnInit {
   notificationList: any;
   totalNotificationCount: any;
   notificationIds: any = [];
-  logoImg: string;
-  imgUrl = 'https://pv.greatfuturetechno.com';
+  logoImg: string = environment.api;
+
   // private notificationIdsSubject = new BehaviorSubject<number[]>([]);
   // private destroy$ = new Subject<void>();
 
@@ -50,7 +43,8 @@ export class HeaderComponent implements OnInit {
     private coreService: CoreService,
     private companyService: CompanyService,
     private fb: FormBuilder,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private renderer : Renderer2
   ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
@@ -115,7 +109,8 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
     this.profile();
-    this.companyList();
+    this.getLogo()
+    // this.companyList();
     //open day
     this.dayOpenForm = this.fb.group({
       opening_amount: new FormControl(0, [Validators.required]),
@@ -257,6 +252,25 @@ export class HeaderComponent implements OnInit {
     document.body.appendChild(script);
   }
 
+  // get Logo And Other Information
+
+  LogoData :LogoapiInterFase ;
+  buttonColor:string = ''
+  getLogo(){
+    this.authServ.getLogoApi().subscribe({
+      next : (value : LogoapiInterFase) =>{
+        if (value.success) {
+          this.LogoData = value;
+          this.buttonColor = value.data.primary_colour;
+          this.applyDynamicStyles()
+        }
+      },
+    })
+  }
+
+  applyDynamicStyles() {
+    this.renderer.setStyle(document.documentElement, '$button-color', this.buttonColor);
+  }
   // day open day close
 
   // day close or day open
@@ -460,13 +474,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  companyList() {
-    this.companyService.getCompany().subscribe((res:any) => {
-      // this.tableData = res.reverse();
-      console.log(res);
-      this.logoImg = this.imgUrl + res[0]?.logo;
-    })
-  }
+  
 
   financialYearList: any[] = [];
   startDate: string = '';

@@ -1,5 +1,8 @@
+
+@import '../../../assets/scss/variables';
 .ng-dirty.ng-invalid.is-invalid.ng-touched {
     border: 1px solid red;
+    
 }
 .ng-pristine.ng-invalid.is-invalid.ng-touched{
     border: 1px solid red;
@@ -16,9 +19,14 @@
 .spinner-border {
     width: 150px;
     height: 150px;
-    color: #FF9F43 !important;
+    color: $button-color;
 }
 
 .blur-background-wrapper{
     filter: blur(3px);
 }
+
+
+.hover-button:hover {
+    color: $button-color !important; /* Fallback for browsers that don’t support custom properties */
+  }

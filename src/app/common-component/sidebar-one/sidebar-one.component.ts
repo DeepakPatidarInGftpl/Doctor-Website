@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 ,RendererStyleFlags2} from '@angular/core';
 // import { SettingsService } from 'src/app/shared/settings/settings.service';
 import { NavigationStart, Router } from '@angular/router';
+import { LogoapiInterFase } from 'src/app/interfaces/employee';
+import { AuthServiceService } from 'src/app/Services/auth-service.service';
 // import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
@@ -34,7 +36,11 @@ export class SidebarOneComponent implements OnInit {
     { value: false, key: 'users' },
     { value: false, key: 'settings' },
   ];
-  constructor(private Router: Router, private profileService: CompanyService,private websiteService:WebsiteService) {
+  constructor(private Router: Router, private profileService: CompanyService,private websiteService:WebsiteService
+    ,private _auth : AuthServiceService,
+    private renderer : Renderer2
+
+  ) {
     this.activePath = this.Router.url.split('/')[1]
     this.Router.events.subscribe((data: any) => {
       if (data instanceof NavigationStart) {
@@ -152,7 +158,7 @@ isBrandSubcategoryOffer:any;
   isModalOpen:any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js");
-
+this.pageLoadData();
     if(this.websiteService.CheckBlur$){
       this.websiteService.CheckBlur$.subscribe((res:any)=>{
         // console.log(res);
@@ -572,8 +578,33 @@ if(this.profileService.CheckBlur$){
     // });
 
   }
+primary$ : string = '#FF9F43';
+secondary$ : string = '#1B2850';
 
+logoData:LogoapiInterFase;
+  pageLoadData(){
+    this._auth.HoldLogoData$.subscribe({
+      next : (value : LogoapiInterFase)=> {
+        if(value && value.success){
 
+          this.logoData = value;
+          this.secondary$ = value.data.primary_colour;
+        }
+
+      },
+    })
+  }
+  applyDynamicStyles(event :any) {
+    // console.log(event)
+    // const cl :any = document.querySelector('.colo')
+    // cl.style.background = this.secondary$
+
+  }
+
+  removeHoverClass(): void {
+    // const cl :any = document.querySelector('.colo')
+    // cl.style.background = ''
+  }
   LoadScript(js: string) {
     var script = document.createElement('script');
     script.src = js;
