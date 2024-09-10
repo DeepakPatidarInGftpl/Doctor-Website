@@ -4,7 +4,14 @@
 
 
 
+
+:root {
+  --primary-color:#FF9F43; /* Default color */
+  --secondary-color: #1B2850; /* Default color */
+}
 @import './assets/scss/variables';
+
+
 * {
   font-family: 'Poppins', sans-serif;
 }
