@@ -239,9 +239,15 @@ export class ListExpensesComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.journal_voucher_no.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+      this.filteredData = this.tableData.filter(res => {
+        const nameLower = res?.expense_no.toLocaleLowerCase();
+        const partyName = res?.party?.name?.toLocaleLowerCase();
+        const totalAmount = res?.total_amount?.toLocaleLowerCase();
+        if(nameLower.includes(searchTerm) || partyName.includes(searchTerm) || totalAmount.includes(searchTerm)){
+          return true;
+        } else {
+          return false;
+        }
       });
     }
   }

@@ -172,5 +172,19 @@ export class HrmServiceService {
     let url = this.apiUrl+'/pv-api/get-employees/';
     return this.http.get(url)
   }
+
+  getMonthAndYear(dateString) {
+    const date = new Date(dateString);
+
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const month = monthNames[date.getMonth()];  
+    const year = date.getFullYear();
+
+    return `${month} (${year})`;
+}
 }
 

@@ -21,7 +21,7 @@
                         <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                     </a>
                 </div>
-              
+
                 <div class="search-input">
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
@@ -34,17 +34,20 @@
             </div>
             <div class="wordset">
                 <ul>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                  </li>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                  </li>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                  </li>
-              </ul>
-              </div>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                                src="assets/img/icons/excel.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                                src="assets/img/icons/printer.svg" alt="img"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- /Filter -->
@@ -61,6 +64,7 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Employee Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Start Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">End Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Target Value<i class="fa fa-sort"></i></th>
@@ -69,7 +73,8 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0 ">
-                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -78,8 +83,10 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//hrm/detail-target/{{products.id}}" style="line-height: 3;">{{products?.department?.title}}</a>
+                            <a routerLink="//hrm/detail-target/{{products.id}}"
+                                style="line-height: 3;">{{products?.department?.title}}</a>
                         </td>
+                        <td>{{products?.employee_type}}</td>
                         <td>{{products?.start_date}}</td>
                         <td>{{products?.end_date}}</td>
                         <td>{{products?.target_value}}</td>
@@ -87,17 +94,19 @@
                             <span [ngClass]="{'bg-lightgreen': products?.is_active === true, 'bg-lightred' : products?.is_active === false }" class="badges">{{products?.is_active}}</span>
                         </td> -->
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                          </td>
+                            <mat-slide-toggle
+                                (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                        </td>
                         <td>
                             <a class="me-2" routerLink="//hrm/detail-target/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-2" routerLink="//hrm/update-target/{{products.id}}" >
+                            <a class="me-2" routerLink="//hrm/update-target/{{products.id}}">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
-                                href="javascript:void(0);" >
+                                href="javascript:void(0);">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>
@@ -105,11 +114,11 @@
                 </tbody>
                 <tbody *ngIf="tableData?.length===0 && !loader">
                     <tr>
-                      <td colspan="10">
-                        <p class="center-textt">Data not available</p>
-                      </td>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                        </td>
                     </tr>
-                  </tbody>
+                </tbody>
             </table>
             <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
@@ -118,7 +127,7 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                            
+
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -131,7 +140,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
                     </div>
                 </div>
             </div>

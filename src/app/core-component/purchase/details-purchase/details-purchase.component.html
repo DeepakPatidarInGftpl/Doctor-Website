@@ -7,7 +7,7 @@
                         <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
                         Back to Purchase Order
                     </h6>
-                    <h4>New Purchase Order  </h4>
+                    <h4>New Purchase Order </h4>
                 </div>
                 <div class="page-btn">
                     <a routerLink="//purchase/editpurchase/{{purchaseDetail ?.id}}" class="btn btn-added">
@@ -137,9 +137,7 @@
                                 <div class="container py-10">
                                     <div class="d-flex align-items-center justify-content-end">
                                         <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
-                                            title="print" (click)="printForm()"><img 
-                                            src="assets/img/icons/printer.svg"
-                                            
+                                            title="print" (click)="printForm()"><img src="assets/img/icons/printer.svg"
                                                 class="print-icon-wrapper" alt="img"></button>
 
                                         <button class="chat-attach-download border-0 bg-white" (click)="generatePdf()">
@@ -156,9 +154,8 @@
                                                                 <div class="d-flex justify-content-between align-items-center top-div"
                                                                     style="float: inline-start;">
                                                                     <div class="left-top">
-                                                                        <img
-                                                                        *ngIf="logoData"
-                                                                        [src]="api_Url+logoData.data.logo" alt="">
+                                                                        <img *ngIf="logoData"
+                                                                            [src]="api_Url+logoData.data.logo" alt="">
                                                                         <p class="gst"> {{companyDetails?.gst}}</p>
                                                                         <p>{{companyDetails?.name}}</p>
                                                                         <p>
@@ -381,7 +378,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-sm-6 col-12">
-                                                    <div class="form-group" style="float: inline-end;">
+                                                    <div class="form-group">
                                                         <div class="total-order text-end">
                                                             <ul>
                                                                 <li class="total">
