@@ -713,7 +713,7 @@ hr{
                 color: $__white;
                 font-weight: $__bold;
                 @include position($__absolute,6px,3px,null,null);
-                background: $__primarycolor;
+                // background: $__primarycolor;
                 width: 20px;
                 height: 20px;
                 @extend %display-flex;

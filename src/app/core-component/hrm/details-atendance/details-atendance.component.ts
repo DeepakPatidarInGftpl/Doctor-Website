@@ -37,7 +37,8 @@ export class DetailsAtendanceComponent implements OnInit {
   productDetail: any
   getdata() {
     this.hrmService.getAttendanceById(this.id).subscribe((res:any) => {
-      this.productDetail = res
+      const date = this.hrmService.getMonthAndYear(res?.date);
+      this.productDetail = {...res, month: date}
       // console.log(res);
       this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
       this.filterData(); 

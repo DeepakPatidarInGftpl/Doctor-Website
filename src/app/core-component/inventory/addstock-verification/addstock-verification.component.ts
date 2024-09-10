@@ -193,6 +193,7 @@ export class AddstockVerificationComponent implements OnInit {
   indexProduct = 0;
   stockList: any;
   oncheckProduct(product: any) {
+    debugger
     console.log(product);
     this.supplierControl.reset()
     if (this.getCart().length > 0) {
@@ -235,12 +236,10 @@ export class AddstockVerificationComponent implements OnInit {
 
   calculateDifference(index: number): number {
    const item = this.getCart().at(index);
-   const systemControl=item.get('system_qty');
-   const physicalControl=item.get('physical_qty')
-    if (systemControl && physicalControl) {
-      const systemQty = systemControl.value;
-      const physicalQty = physicalControl.value;
-      return systemQty - physicalQty;
+   const systemControlQty=item.get('system_qty').value || 0;
+   const physicalControlQty=item.get('physical_qty').value || 0;
+    if (systemControlQty && physicalControlQty) {
+      return systemControlQty - physicalControlQty;
     }
     return 0; 
   }
@@ -253,6 +252,20 @@ export class AddstockVerificationComponent implements OnInit {
       });
   }
 
- 
-  
+  openModalProduct() {
+    const modalId = `productModal`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  closeModalProduct() {
+    const modal = document.getElementById(`productModal`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
 }
