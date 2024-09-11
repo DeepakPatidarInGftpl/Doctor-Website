@@ -198,6 +198,7 @@ export class ListAttendanceComponent implements OnInit {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
         const status = res?.status.toLocaleLowerCase(); 
+        // const department = res?.status.toLocaleLowerCase(); 
         return status.includes(searchTerm); 
       });
     }

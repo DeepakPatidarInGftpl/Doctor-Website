@@ -66,6 +66,7 @@
                         <th (click)="sort('id')" class="thone">Employee<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Month<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Total Day of Month<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Present Day<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Wages<i class="fa fa-sort"></i></th>
@@ -93,6 +94,7 @@
                         </td>
                         <td>{{products?.date}}</td>
                         <td>{{products?.month}}</td>
+                        <!-- <td>{{products?.employee?.department?.title}}</td> -->
                         <td>{{products?.total_day_of_month}}</td>
                         <td>{{products?.total_persent_day}}</td>
                         <td>{{products?.wages}}</td>

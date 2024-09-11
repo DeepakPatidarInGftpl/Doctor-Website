@@ -713,7 +713,8 @@
                                                     </div>
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                                <td><input type="number" formControlName="discount" class="input">
+                                                <td><input type="number" formControlName="discount" class="input"
+                                                        readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
@@ -764,6 +765,17 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group mb-2">
+                        <label>Additional Charges</label>
+                        <input class="form-control" type="number" formControlName="additional_charges"
+                            placeholder="Enter Additional Charges" />
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
@@ -785,6 +797,12 @@
                                         {{calculateTotalWithoutTax() | currency:'INR'}}
                                         <input type="text" formControlName="subtotal" class="input"
                                             [ngModel]="calculateTotalWithoutTax()" style="display: none;">
+                                    </h5>
+                                </li>
+                                <li>
+                                    <h4>Total Discount</h4>
+                                    <h5>
+                                        {{calculateTotalDiscount()}}
                                     </h5>
                                 </li>
                                 <li>

@@ -90,6 +90,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       booking_no: new FormControl('', [Validators.required]),
       due_date: new FormControl(defaultDateago7),
       payment_terms: new FormControl('', [Validators.required]),
+      additional_charges: new FormControl(0),
       advance_booking_cart: this.fb.array([]),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
@@ -1135,7 +1136,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       formdata.append('total_discount', this.saleEstimateForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleEstimateForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleEstimateForm.get('subtotal')?.value);
-      formdata.append('total', this.saleEstimateForm.get('total')?.value);
+      formdata.append('additional_charges', this.saleEstimateForm.get('additional_charges')?.value);
+      formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1469,6 +1471,13 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       cartArray.controls.forEach((val)=> {
         total += Number(val.get('total').value)
       })
+
+      if(total > 0) {
+        const additionalCharges = this.saleEstimateForm.get('additional_charges').value;
+        if(additionalCharges > 0) {
+         total = total + additionalCharges;
+        }
+       }
     // const totalDiscount = this.calculateTotalDiscount();
     this.totalAmount = total;
     return this.totalAmount;

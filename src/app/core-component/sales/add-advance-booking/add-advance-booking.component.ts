@@ -86,7 +86,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       booking_no: new FormControl('', [Validators.required]),
       due_date: new FormControl(defaultDateago7, [Validators.required]),
       payment_terms: new FormControl('', [Validators.required]),
-
+      additional_charges: new FormControl(0),
       advance_booking_cart: this.fb.array([]),
       total_qty: new FormControl(0),
       total_tax: new FormControl(0),
@@ -123,6 +123,10 @@ export class AddAdvanceBookingComponent implements OnInit {
       }
       this.updateDueDateMin(date, financialYear);
     });
+
+    this.saleEstimateForm.get('additional_charges').valueChanges.subscribe((res) => {
+      this.calculateTotalForAll();
+    })
 
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -998,6 +1002,7 @@ export class AddAdvanceBookingComponent implements OnInit {
       formdata.append('total_discount', this.saleEstimateForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleEstimateForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleEstimateForm.get('subtotal')?.value);
+      formdata.append('additional_charges', this.saleEstimateForm.get('additional_charges')?.value);
       formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
@@ -1360,6 +1365,13 @@ export class AddAdvanceBookingComponent implements OnInit {
       Object.values(this.finalTotalAmount).forEach((value, index) => {
         total += Number(value);
       });
+    }
+
+    if(total > 0) {
+     const additionalCharges = this.saleEstimateForm.get('additional_charges').value;
+     if(additionalCharges > 0) {
+      total = total + additionalCharges;
+     }
     }
 
     // const totalDiscount = this.calculateTotalDiscount();
