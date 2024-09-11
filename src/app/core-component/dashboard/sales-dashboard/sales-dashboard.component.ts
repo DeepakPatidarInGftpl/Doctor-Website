@@ -7,10 +7,26 @@ import { DashboardService } from 'src/app/Services/DashboardService/dashboard.se
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 @Component({
   selector: 'app-sales-dashboard',
   templateUrl: './sales-dashboard.component.html',
-  styleUrls: ['./sales-dashboard.component.scss']
+  styleUrls: ['./sales-dashboard.component.scss'],
+  animations: [
+    trigger('bounce', [
+      state('void', style({
+        transform: 'scale(1)',
+        opacity: 0
+      })),
+      transition(':enter', [
+        style({ transform: 'scale(0.5)', opacity: 0 }),
+        animate('300ms ease-in-out', style({ transform: 'scale(1)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'scale(0.5)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class SalesDashboardComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
@@ -71,6 +87,11 @@ export class SalesDashboardComponent implements OnInit {
 // blur bg when modal open
 if(this.companyService.CheckBlur$){
   this.companyService.CheckBlur$.subscribe((res:any)=>{
+
+let str :string = 'heelooereroierou'
+
+console.log(str.substring(0,5),'deepak')
+
     console.log(res);
     if(res !== null){
     if(res){
@@ -94,7 +115,7 @@ this.isAdmin=true;
      //22-5
      if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
-      console.warn(JSON.parse(fy));
+      // console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
       this.fyID=fyId;
     }
@@ -112,7 +133,7 @@ this.isAdmin=true;
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     });
-    console.log(this.campaignOne.value);
+    // console.log(this.campaignOne.value);
     this.startDate = this.campaignOne.value?.start;
     this.endDate = this.campaignOne.value?.end;
     // daily sales
@@ -236,7 +257,7 @@ this.isAdmin=true;
   saleTotalList: any;
   getSaleTotalDashboard() {
     const idString = JSON.stringify(this.selectData);
-    console.log(idString);
+    // console.log(idString);
     this.dashboardService.getSalesNumber(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
@@ -262,7 +283,7 @@ this.isAdmin=true;
     console.log(idString);
 
     this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
-      console.log(res);
+      console.log(res,'per');
       this.salePurchaseList = res;
       this.saleTotalChartOption = {
         chart: {

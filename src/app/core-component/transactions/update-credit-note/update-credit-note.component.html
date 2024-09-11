@@ -115,6 +115,21 @@
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
+                        <label>Tax Percentage</label>
+                        <select formControlName="tax" (change)="onChangePercentage($event)">
+                            <option value="" selected disabled>Select Tax Percentage
+                            </option>
+                            <option *ngFor="let prefix of taxSlabList;" [value]="prefix?.slab_title">
+                                {{prefix?.slab_title}}
+                            </option>
+                        </select>
+                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select Tax
+                            Percentage</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
                         <label>Round off</label>
                         <input type="number" formControlName="roundoff" placeholder="Enter Round Off"
                             [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
@@ -131,21 +146,6 @@
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
                     </div>
                 </div> -->
-
-                <div class="col-lg-4 col-sm-4 col-12">
-                    <div class="form-group">
-                        <label>Tax Percentage</label>
-                        <select formControlName="tax" (change)="onChangePercentage($event)">
-                            <option value="" selected disabled>Select Tax Percentage
-                            </option>
-                            <option *ngFor="let prefix of taxSlabList;" [value]="prefix?.slab_title">
-                                {{prefix?.slab_title}}
-                            </option>
-                        </select>
-                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select Tax
-                            Percentage</span>
-                    </div>
-                </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">

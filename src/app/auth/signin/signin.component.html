@@ -4,14 +4,14 @@
             <div class="login-content w-50">
                 <div class="login-userset">
                     <div class="login-logo logo-normal">
-                        <img src="assets/dummy/pos.png" alt="img">
+                        <img *ngIf="logoData" [src]="liveUrl+logoData.data.logo" alt="img">
                     </div>
                     <a routerLink="//dashboard" class="login-logo logo-white">
-                        <img src="assets/img/logo-white.png"  alt="">
+                        <!-- <img src="assets/img/logo-white.png"  alt=""> -->
                     </a>
                     <div class="login-userheading">
-                        <h3>Login</h3>
-                        <h4>Please login to your account</h4>
+                        <h3>Login </h3>
+                        <h4 >Please login to your account</h4>
                     </div>
                     <form [formGroup]="form" (ngSubmit)="submit()">
                    <div class="form-login">
@@ -47,7 +47,7 @@
                     </div>
                     </div>
                     <div class="form-login">
-                        <label>Password</label>
+                        <label >Password</label>
                         <div class="pass-group">
                             <input [type]="password" class="pass-input" placeholder="Enter your password" formControlName="password"
                             id="password"
@@ -61,11 +61,8 @@
                             <span class="fas toggle-password fa-eye-slash" (click)="onClick()" *ngIf="!show"></span>
                         </div>
                     </div>
-                    <div class="form-login">
-                        <!-- <a class="btn btn-login" routerLink="//dashboard">Sign In</a> -->
-                        <button class="btn btn-login me-2" type="submit" *ngIf="!loaders">Sign In</button>
-                        <button class="btn btn-login me-2" type="submit" *ngIf="loaders" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Sign In</button>
+                    <div [ngClass]="{'hover-button': true}" class="form-login">
+                        <button  [ngStyle]="{ 'background-color': buttonColor , 'border-color' :buttonColor }" class="btn btn-login me-2" type="submit" >Sign In</button>
                     </div>
                   </form>
                   <!-- <div class="form-login">
@@ -101,16 +98,17 @@
                  
                 </div>
             </div>
-            <div class="login-img w-50">
-                <!-- <img src="assets/img/login.jpg" alt="img"> -->
-                <img src="assets/img/LoginImage.webp" alt="" >
+            <div id="addimg"  class="login-img w-50">
+               <img alt="bg-img" [src]="img_url" />
             </div>
         </div>  
     </div>
 </div>
 
 <div *ngIf="isSyncLoading" class="spinner-container">
-    <div class="spinner-border" role="status">
+    <div class="spinner-border" 
+    [ngStyle]="{ 'color': buttonColor  }"
+    role="status">
         <span class="sr-only">Loading...</span>
     </div>
 </div>

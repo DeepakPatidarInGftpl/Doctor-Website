@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { LogoapiInterFase } from './../../interfaces/employee';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -9,13 +10,14 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebstorgeService } from 'src/app/shared/webstorge.service';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { FirebaseMessagingService } from 'src/app/Services/firebase-messaging.service';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss']
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, AfterViewInit {
+  
   password: any;
   show = false;
   public CustomControler: any;
@@ -23,14 +25,17 @@ export class SigninComponent implements OnInit {
   public subscription: Subscription;
   notificationLoading = false;
   isSyncLoading = false;
-  form!: FormGroup
+  form!: FormGroup;
+  buttonColor : string = '#FF9F43';
+  buttonHoverColor : string = '#1B2850'
+  img_url = 'assets/img/LoginImage.webp'
   get f() {
     return this.form.controls;
   }
-
+liveUrl :string = environment.api;
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
-  constructor(private storage: WebstorgeService, private authService: AuthServiceService, private coreService:CoreService,
+  constructor(private storage: WebstorgeService,private renderer: Renderer2, private authService: AuthServiceService, private coreService:CoreService,
     private toastr: ToastrService, private router: Router, private afMessaging: AngularFireMessaging, private messagingService: FirebaseMessagingService) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
@@ -44,7 +49,6 @@ export class SigninComponent implements OnInit {
       username: new FormControl("", [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
-
     this.storage.Checkuser();
     this.password = 'password';
 
@@ -58,6 +62,10 @@ export class SigninComponent implements OnInit {
         this.showNotification(message);
       }
     });
+  }
+  ngAfterViewInit(): void {
+this.PageLoadData()
+    
   }
 
   requestPermission() {
@@ -77,6 +85,33 @@ export class SigninComponent implements OnInit {
       window.location.reload();
       this.isSyncLoading = false;
     });
+  }
+logoData :LogoapiInterFase
+  PageLoadData(){
+    this.authService.getLogoApi().subscribe({
+      next : (value :LogoapiInterFase)=> {
+      
+        if (value.success) {
+          this.logoData = value;
+          this.buttonColor = value.data.primary_colour;
+          this.buttonHoverColor = value.data.secondary_colour;
+          this.img_url = this.liveUrl+this.logoData.data.auth_image 
+          this.applyDynamicStyles()
+        }else{
+          
+          throw Error("No Data Found")
+        }
+      },
+      error(err) {
+
+
+        throw Error("No Data Found "+ err)
+      },
+    })
+  }
+  applyDynamicStyles() {
+    this.renderer.setStyle(document.documentElement, '$button-color', this.buttonColor,1);
+    this.renderer.setStyle(document.documentElement, '$button-hover-color', this.buttonHoverColor,1);
   }
 
   showNotification(payload: any) {

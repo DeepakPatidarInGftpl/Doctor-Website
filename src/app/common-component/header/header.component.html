@@ -9,20 +9,20 @@
     <!-- Logo -->
     <div class="header-left active" *ngIf="activePath != 'pos'">
       <a routerLink="/dashboard/sales" class="logo">
-        <img style="height:45px;" [src]="logoImg" alt="" />
+        <img style="height:45px;" *ngIf="LogoData" [src]="logoImg+LogoData.data.logo" alt="" />
       </a>
       <a routerLink="/dashboard/sales" class="logo-small mt-2">
-        <img src="/assets/dummy/fevicon.png" style="height:80% ;width:100%;" alt="" />
+        <img *ngIf="LogoData" [src]="logoImg+LogoData.data.logo" style="height:80% ;width:100%;" alt="" />
       </a>
       <a id="toggle_btn" *ngIf="changeLayout == '1' || changeLayout == '3'" href="javascript:void(0);">
       </a>
     </div>
     <div class="header-left active" *ngIf="activePath === 'pos'" style="border-right: none">
       <a routerLink="/dashboard/sales" class="logo">
-        <img style="height:45px;" [src]="logoImg" alt="" />
+        <img style="height:45px;" *ngIf="LogoData" [src]="logoImg+LogoData.data.logo" alt="" />
       </a>
       <a routerLink="/dashboard/sales" class="logo-small">
-        <img src="/assets/dummy/fevicon.png" alt="" />
+        <img *ngIf="LogoData" [src]="logoImg+LogoData.data.logo" alt="" />
       </a>
     </div>
     <!-- /Logo -->
@@ -117,7 +117,7 @@
       <li class="nav-item dropdown">
         <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
           <img src="assets/img/icons/notification-bing.svg" alt="img" />
-          <span class="badge rounded-pill badge-wrapper">{{totalNotificationCount}}</span>
+          <span     [ngStyle]="{ 'background': buttonColor  }" class="badge bg-g rounded-pill badge-wrapper">{{totalNotificationCount}}</span>
         </a>
         <div class="dropdown-menu notifications" (click)="$event.stopPropagation()">
           <div class="topnav-dropdown-header">
