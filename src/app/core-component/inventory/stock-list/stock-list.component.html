@@ -88,6 +88,8 @@
                         <th (click)="sort('id')">Landing Stock Value<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Variant<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">HSN Code<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Items Location<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Tax%<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0 ">
@@ -111,7 +113,9 @@
                         <td>{{products?.stock_value==null?0:products?.stock_value}}</td>
                         <td>{{products?.landing_stock_value==null?0:products?.landing_stock_value}}</td>
                         <td>{{products?.variant?.variant_name}}</td>
-                        <td>{{products?.id}}</td>
+                        <td>{{products?.variant?.product?.hsncode?.hsn_code}}</td>
+                        <td>{{products?.branch?.branch_name}}</td>
+                        <td>{{products?.variant?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage}}</td>
                     </tr>
                 </tbody>
                 <tbody *ngIf="filteredData?.length===0 && !loader">

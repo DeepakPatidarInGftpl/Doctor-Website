@@ -49,6 +49,57 @@
             </div>
         </div>
         <!-- /Filter -->
+
+        <div class="card mb-0" id="filter_inputs">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" [(ngModel)]="selectedBankName" (input)="filterData()"
+                                        placeholder="Search Bank Name" />
+                                    <!-- <select [(ngModel)]="selectedBankName" (change)="filterData()"
+                                        class="form-select">
+                                        <option value="" selected disabled>Select Bank Name</option>
+                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">
+                                            {{acc?.title}}
+                                        </option>
+                                    </select> -->
+                                </div>
+                            </div>
+                            <!-- <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Account Type</label>
+                                    <select [(ngModel)]="selectedAccoutType" (change)="filterData()"
+                                        class="form-select">
+                                        <option value="" selected disabled>Select Account Type</option>
+                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">
+                                            {{acc?.title}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Is Active</label>
+                                    <select class="form-control" [(ngModel)]="selectedIsActive" (change)="filterData()">
+                                        <option value="" selected disabled>Select Type</option>
+                                        <option> Active</option>
+                                        <option>InActive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" (click)="clearFilter()">
+                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- <div class="card" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
@@ -102,8 +153,8 @@
                         <th (click)="sort('id')" class="thone">Accounts Holder Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Branch<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Credit Balance <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Debit Balance <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Balance <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Debit Balance <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -119,15 +170,20 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//bank/detailsCompanyBank/{{products.id}}" style="line-height: 3;">{{products?.name}}</a>
+                            <a routerLink="//bank/detailsCompanyBank/{{products.id}}"
+                                style="line-height: 3;">{{products?.name}}</a>
                         </td>
                         <td>{{products?.account_holder_name}}</td>
                         <td>{{products?.account_number}}</td>
                         <td>{{products?.branch_name}}</td>
-                        <td>{{products?.credit_balance}}</td>
-                        <td>{{products?.debit_balance}}</td>
+                        <td><span class="text-success d-block w-100">{{products?.credit_balance}}</span>
+                            <span class="text-danger d-block w-100">{{products?.debit_balance}} </span>
+                        </td>
+                        <!-- <td>{{products?.debit_balance}}</td> -->
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            <mat-slide-toggle
+                                (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
                             <a class="me-1" routerLink="//bank/detailsCompanyBank/{{products.id}}">
@@ -171,7 +227,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
                     </div>
 
                 </div>
