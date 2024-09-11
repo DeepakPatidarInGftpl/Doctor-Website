@@ -64,16 +64,21 @@
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Title*</label>
-                            <input type="text" placeholder="Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
-                            <span class="text-danger" *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab Title</span>
+                            <input type="text" placeholder="Title" formControlName="slab_title"
+                                [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab
+                                Title</span>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <div class="d-flex" style="margin-top: 2rem">
-                                <input type="checkbox" formControlName="variable_tax" [id]="'checkboxMeasure-'" [ngModel]="isTax" (click)="toggle()">
-                                <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Variable Tax</label>
+                                <input type="checkbox" formControlName="variable_tax" [id]="'checkboxMeasure-'"
+                                    [ngModel]="isTax" (click)="toggle()">
+                                <label [for]="'checkboxMeasure-'" class="d_flex"
+                                    style="margin-bottom: 0; margin-left: 5px;">Variable Tax</label>
                             </div>
                         </div>
                     </div>
@@ -121,8 +126,8 @@
                             <span (click)="addAmount()" class="addMore">+ Add more</span>
                         </div>
                     </div>
-                   <div class="col-lg-8 col-sm-8 col-12" *ngIf="!isAddmoreTax">
-                       <table class="table amt-table">
+                    <div class="col-lg-8 col-sm-8 col-12" *ngIf="!isAddmoreTax">
+                        <table class="table amt-table">
                             <thead>
                                 <tr class="text-center">
                                     <th>Tax</th>
@@ -135,19 +140,21 @@
                                             <td class="text-center">
                                                 <select formControlName="tax" class="inp" style="width: 30%;">
                                                     <option value="" selected disabled>Select Tax</option>
-                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">{{tax.tax_percentage + '%'}}</option>
-                                                </select> 
+                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">
+                                                        {{tax.tax_percentage + '%'}}</option>
+                                                </select>
                                             </td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </tbody>
-                        </table> 
-                    </div> 
+                        </table>
+                    </div>
                     <div class="col-lg-8 text-end mt-5">
-                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Update</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Update</button>
                         <a routerLink="//product/taxSlabList" class="btn btn-cancel">Cancel</a>
                     </div>
                 </div>

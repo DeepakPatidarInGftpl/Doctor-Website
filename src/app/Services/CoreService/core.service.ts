@@ -149,7 +149,7 @@ export class CoreService {
   }
   getAccountTypeById(type: any) {
     let url = this.apiUrl + '/pv-api/subtype_based_on_account_type/?type='
-    return this.http.get(`${url}${type}`)
+    return this.http.get(`${url}${encodeURIComponent(type)}`)
   }
 
   getAccount() {

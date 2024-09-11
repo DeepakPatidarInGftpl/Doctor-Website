@@ -15,7 +15,7 @@
                     <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Name*</label>
-                            <input type="text" placeholder="name" formControlName="name"
+                            <input type="text" placeholder="Create Offer Name" formControlName="name"
                                 [ngClass]="{'is-invalid': f['name'].touched && f['name'].invalid}">
                             <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter Name </span>
                         </div>
@@ -59,7 +59,7 @@
                             <label>Customer Group*</label>
                             <select formControlName="customers_group" formControlName="customers_group"
                                 [ngClass]="{'is-invalid': f['customers_group'].touched && f['customers_group'].invalid}">
-                                <option value="" selected disabled>Select Business Location</option>
+                                <option value="" selected disabled>Select Customer Group</option>
                                 <option value="{{member?.id}}" *ngFor="let member of membershipList">{{member?.title}}
                                 </option>
                             </select>
