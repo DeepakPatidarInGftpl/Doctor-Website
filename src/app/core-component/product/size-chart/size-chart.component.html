@@ -1,0 +1,455 @@
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4 class="titl">Size Chart list</h4>
+                <h6>Manage your Size Chart</h6>
+            </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Size Chart
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <!-- <div class="search-input">
+                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        </div> -->
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Size..." [(ngModel)]="titlee" (ngModelChange)="search()">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
+                                    data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
+                                        class="fas fa-cloud-upload-alt upload-icon"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Is Active</label>
+                                            <select [(ngModel)]="selectActive" (change)="filterData()"
+                                                class="form-select">
+                                                <option [ngValue]="undefined" selected disabled>Select Active Status
+                                                </option>
+                                                <option [ngValue]="true">Yes</option>
+                                                <option [ngValue]="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table datanew" id="mytable">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Size Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Size Code <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="filteredData?.length>=0">
+                            <tr
+                                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{ itemsPerPage: itemsPerPage, currentPage: p } let i = index">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{i+1}}</td>
+                                <td class="productimgname">
+                                    <a routerLink="//product/size-details/{{products?.id}}"
+                                        style="line-height: 3;">{{products.title}}</a>
+                                </td>
+                                <td>{{products.code}}</td>
+                                <td>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                        class="badges">{{products.is_active}}</span> -->
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+
+                                </td>
+                                <td>
+                                    <a class="me-1" routerLink="//product/size-details/{{products?.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+
+
+                        <!-- <tr>
+                            <td colspan="5">
+                                <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                            </td>
+                        </tr> -->
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}}
+                                    entries</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
+                    <h4> Add size chart </h4>
+                    <h6>Create new size chart </h6>
+                </div>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
+                    <h4> Update size chart </h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="sizeChartForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Brand*</label>
+                                    <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                        <input type="text" placeholder="Search Brand" aria-label="brand" matInput
+                                            [formControl]="brandCtrl" [matAutocomplete]="subCategoryAuto"
+                                            style="box-sizing: border-box;"
+                                            [ngClass]="{'is-invalid': brandCtrl.touched && brandCtrl.invalid}">
+                                        <mat-autocomplete #subCategoryAuto="matAutocomplete"
+                                            (optionSelected)="onBrandSelected($event)">
+                                            <ng-container *ngIf="brandCtrl.value?.length > 0">
+                                                <mat-option *ngFor="let brand of brandList" [value]="brand?.title"
+                                                    style="color:#FF9F43">{{
+                                                    brand?.title
+                                                    }}</mat-option>
+                                            </ng-container>
+
+                                            <ng-container>
+                                                <mat-option *ngIf="brandCtrl.value?.length < 1"
+                                                    class="is-loading">Please
+                                                    Enter 1 or more characters</mat-option>
+                                            </ng-container>
+                                        </mat-autocomplete>
+                                        <mat-error class="mt-3 error-msg"
+                                            *ngIf="brandCtrl.touched && brandCtrl.invalid">Brand
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>SubCategory*</label>
+                                    <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                        <input type="text" placeholder="Search SubCategory" aria-label="subCategory"
+                                            matInput [formControl]="subCategoryCtrl" [matAutocomplete]="auto"
+                                            style="box-sizing: border-box;"
+                                            [ngClass]="{'is-invalid': subCategoryCtrl.touched && subCategoryCtrl.invalid}">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <ng-container *ngIf="subCategoryCtrl.value?.length > 0">
+                                                <mat-option *ngFor="let subcategory of subCategoryList"
+                                                    [value]="subcategory?.title" style="color:#FF9F43">{{
+                                                    subcategory?.title
+                                                    }}</mat-option>
+                                            </ng-container>
+
+                                            <ng-container>
+                                                <mat-option *ngIf="subCategoryCtrl.value?.length < 1"
+                                                    class="is-loading">Please
+                                                    Enter 1 or more characters</mat-option>
+                                            </ng-container>
+                                        </mat-autocomplete>
+                                        <mat-error class="mt-3 error-msg"
+                                            *ngIf="subCategoryCtrl.touched && subCategoryCtrl.invalid">SubCategory
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Size Chart Image*</label>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-6 col-12">
+                                            <div class="image-upload">
+                                                <input type="file" formControlName="image" (change)="onSelect($event)"
+                                                    required>
+                                                <div class="image-uploads">
+                                                    <img src="assets/img/icons/upload.svg" alt="img">
+                                                    <h4>Drag and drop a file to upload</h4>
+                                                </div>
+                                                <span class="text-danger"
+                                                    *ngIf="image && image.invalid && image.touched">Select
+                                                    Size Chart</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
+                                                style="height: 100px; width: 100px;">
+                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                <path
+                                                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                            </svg>
+                                            <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    &nbsp; Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="sizeChartForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Brand*</label>
+                                    <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                        <input type="text" placeholder="Search Brand" aria-label="brand" matInput
+                                            [formControl]="brandCtrl" [matAutocomplete]="subCategoryAuto"
+                                            style="box-sizing: border-box;"
+                                            [ngClass]="{'is-invalid': brandCtrl.touched && brandCtrl.invalid}">
+                                        <mat-autocomplete #subCategoryAuto="matAutocomplete"
+                                            (optionSelected)="onBrandSelected($event)">
+                                            <ng-container *ngIf="brandCtrl.value?.length > 0">
+                                                <mat-option *ngFor="let brand of brandList" [value]="brand?.title"
+                                                    style="color:#FF9F43">{{
+                                                    brand?.title
+                                                    }}</mat-option>
+                                            </ng-container>
+
+                                            <ng-container>
+                                                <mat-option *ngIf="brandCtrl.value?.length < 1"
+                                                    class="is-loading">Please
+                                                    Enter 1 or more characters</mat-option>
+                                            </ng-container>
+                                        </mat-autocomplete>
+                                        <mat-error class="mt-3 error-msg"
+                                            *ngIf="brandCtrl.touched && brandCtrl.invalid">Brand
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>SubCategory*</label>
+                                    <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                        <input type="text" placeholder="Search SubCategory" aria-label="subCategory"
+                                            matInput [formControl]="subCategoryCtrl" [matAutocomplete]="auto"
+                                            style="box-sizing: border-box;"
+                                            [ngClass]="{'is-invalid': subCategoryCtrl.touched && subCategoryCtrl.invalid}">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <ng-container *ngIf="subCategoryCtrl.value?.length > 0">
+                                                <mat-option *ngFor="let subcategory of subCategoryList"
+                                                    [value]="subcategory?.title" style="color:#FF9F43">{{
+                                                    subcategory?.title
+                                                    }}</mat-option>
+                                            </ng-container>
+
+                                            <ng-container>
+                                                <mat-option *ngIf="subCategoryCtrl.value?.length < 1"
+                                                    class="is-loading">Please
+                                                    Enter 1 or more characters</mat-option>
+                                            </ng-container>
+                                        </mat-autocomplete>
+                                        <mat-error class="mt-3 error-msg"
+                                            *ngIf="subCategoryCtrl.touched && subCategoryCtrl.invalid">SubCategory
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Size Chart Image*</label>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-6 col-12">
+                                            <div class="image-upload">
+                                                <input type="file" formControlName="image" (change)="onSelect($event)"
+                                                    required>
+                                                <div class="image-uploads">
+                                                    <img src="assets/img/icons/upload.svg" alt="img">
+                                                    <h4>Drag and drop a file to upload</h4>
+                                                </div>
+                                                <span class="text-danger"
+                                                    *ngIf="image && image.invalid && image.touched">Select
+                                                    Size Chart</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
+                                                style="height: 100px; width: 100px;">
+                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                <path
+                                                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                            </svg>
+                                            <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    &nbsp; Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Size File</h5>
+                <button type="button" class="btn-close closeModal d-none" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                <a class="text-primary text-decoration-underline" (click)="download()">Download Sample</a>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="file" id="fileInput" #fileInput class="d-none" [(ngModel)]="fileName"
+                        (change)="onFileChange($event)" accept=".xlsx">
+                    <div class="file-upload-button d-flex align-items-center justify-content-center"
+                        (click)="triggerFileInput()">Upload File <i
+                            class="fas fa-cloud-upload-alt upload-btn-icon ms-2"></i></div>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && !fileName" class="text-secondary mt-2 mb-1">
+                        Please select
+                        an Excel file (.xlsx format) </p>
+                    <p *ngIf="fileFormatError" class="text-danger">Please select a valid .xlsx file.</p>
+                    <p *ngIf="missingFieldsError" class="text-danger">The Excel file must contain
+                        'title','accounts_type','account_subtype','opening_balance', and 'opening_balance_type'.
+                    </p>
+                    <p *ngIf="!fileFormatError && !missingFieldsError && fileName" class="mt-2">{{selectedFileName}}</p>
+                </div>
+                <div class="submit-section d-flex justify-content-end align-items-center">
+                    <button class="btn btn-danger me-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="btn btn-primary" (click)="uploadFile()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
