@@ -279,6 +279,11 @@ export class AddProductionVoucherComponent implements OnInit {
   loaders = false;
 
   submit() {
+    const totalItemGenerated = this.calculateTotalMrp();
+    const totalItemConsumed = this.totalMrpConsumed();
+    if(totalItemGenerated < totalItemConsumed) {
+      alert('do you want to proceed.');
+    }
     console.log(this.productionvoucherForm.value);
       if (this.productionvoucherForm.valid) {
         this.loaders = true;
