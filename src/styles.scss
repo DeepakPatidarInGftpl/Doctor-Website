@@ -6,9 +6,12 @@
 
 
 :root {
-  --primary-color:#FF9F43; /* Default color */
-  --secondary-color: #1B2850; /* Default color */
+  --primary-color: #FF9F43;
+  /* Default color */
+  --secondary-color: #1B2850;
+  /* Default color */
 }
+
 @import './assets/scss/variables';
 
 
@@ -246,8 +249,8 @@ mat-form-field {
 /* Add custom class to apex chart component */
 .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
 .apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
-    justify-content: center !important;
-    inset: auto 6px 0px !important;
+  justify-content: center !important;
+  inset: auto 6px 0px !important;
 }
 
 /* blur background when modal open */

@@ -730,6 +730,24 @@ export class CoreService {
     })
   }
 
+  getSizeChart(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  addSizeChart(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   //tax section
   gettax() {
     let url = this.apiUrl + '/pv-api/tax/';
