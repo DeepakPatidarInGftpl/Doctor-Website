@@ -19,8 +19,6 @@ export class ProductLedgerComponent implements OnInit {
   initChecked: boolean = false;
   selectActive: any;
   productVariantList: any;
-  productVariantData: any;
-  supplierControl: FormControl = new FormControl('');
 
   constructor(private coreService: CoreService, private contactService: ContactService, private cs: CompanyService) { }
 
@@ -57,22 +55,13 @@ export class ProductLedgerComponent implements OnInit {
     this.getProduct();
     this.getVariant();
 
-    this.supplierControl.valueChanges.subscribe((res) => {
-      if(res) {
-        const filteredData = this._filter(res);
-        this.productVariantList = filteredData;
-      } else {
-        this.productVariantList = this.productVariantData;
-      }
-    })
-
-    // this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map((value: any) => {
-    //     const title = typeof value === 'string' ? value : value?.title;
-    //     return title ? this._filter(title as string) : this.suppliers.slice();
-    //   }),
-    // );
+    this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const title = typeof value === 'string' ? value : value?.title;
+        return title ? this._filter(title as string) : this.suppliers.slice();
+      }),
+    );
   }
   getProductLedger() {
     console.log(this.productId);
@@ -93,14 +82,16 @@ export class ProductLedgerComponent implements OnInit {
     })
   }
   private _filter(title: string): any[] {
-    const filterValue = typeof title === 'string' ? title.toLowerCase() : '';
+    const filterValue = title ? title.toLowerCase() : '';
     console.log(filterValue);
-    return this.productVariantList?.length ? (this.productVariantList.filter((option: any) =>
-      (option?.product_title && option.product_title.toLowerCase().includes(filterValue)) ||
-      (option?.variant_name && option.variant_name.toLowerCase().includes(filterValue))
-    )) : '';
+    return this.suppliers.filter((option: any) =>
+      (option?.title && option.title.toLowerCase().includes(filterValue)) ||
+      (option?.name && option.name.toLowerCase().includes(filterValue))
+    );
   }
- 
+  displayFn(user: any): string {
+    return user && user?.title || user?.name ? user?.title || user?.name : '';
+  }
   suppliers: any[] = [];
   getProduct() {
     this.coreService.getProducts().subscribe((res: any) => {
@@ -113,7 +104,6 @@ export class ProductLedgerComponent implements OnInit {
   getVariant() {
     this.contactService.productVariant().subscribe((res)=> {
       this.productVariantList = res;
-      this.productVariantData = res;
     })
   }
 
@@ -135,10 +125,6 @@ export class ProductLedgerComponent implements OnInit {
     }
   }
 
-  displayFn(product: any): string {
-    return product ? (product.variant_name ? `${product.product_title} (${product.variant_name})` : product.product_title) : '';
-  }
-
   search() {
     if (this.titlee === "") {
       this.ngOnInit();
@@ -158,22 +144,6 @@ export class ProductLedgerComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  openModalProduct() {
-    const modalId = `productModal`;
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.add('show');
-      modal.style.display = 'block';
-    }
-  }
-
-  closeModalProduct() {
-    const modal = document.getElementById(`productModal`);
-    if (modal) {
-      modal.classList.remove('show');
-      modal.style.display = 'none';
-    }
-  }
 
   // read more or less
   sho = true;
@@ -409,9 +379,10 @@ export class ProductLedgerComponent implements OnInit {
   // api call
   dataId: any;
   filteredSuppliers: Observable<any[]> | undefined;
+  supplierControl: FormControl = new FormControl('');
   oncheckAccount(data: any) {
     console.warn(data);
-    this.productId = data?.id;
+    this.productId = data;
     this?.getProductLedger();
   }
 }

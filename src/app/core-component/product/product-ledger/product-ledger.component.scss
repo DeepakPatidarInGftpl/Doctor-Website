@@ -1,5 +1,6 @@
 input[type="date"],
-select {
+select
+{
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
     width: 100%;
@@ -10,7 +11,7 @@ select {
     border-radius: 5px;
 }
 
-.button {
+.button{
     border: 1px solid rgba(145, 158, 171, 0.32);
     height: 40px;
     width: 781%;
@@ -23,26 +24,4 @@ select {
     justify-content: space-between;
     align-items: center;
     background: white;
-}
-
-.product-title {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5;
-    max-height: 3em;
-    white-space: normal;
-}
-
-.circle {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 1px solid #FF9F43;
-    text-align: center;
-    line-height: 16px;
-    color: #FF9F43;
-}
+  }

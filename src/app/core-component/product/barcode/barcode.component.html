@@ -1,22 +1,22 @@
 <div class="page-header">
     <div class="page-title">
         <h4>Print Barcode</h4>
-        <h6>Generate barcode</h6>
+        <h6>Print product barcodes</h6>
     </div>
     <div class="page-btn" *ngIf="isPrint || isPrintProduct">
-        <div class="form-group">
-            <label>Select Print Size</label>
-            <select class="form-select" #pgVal (change)="selectPG(pgVal.value)">
-                <option disabled>Select Paper Size</option>
-                <option value="a4" selected>A4 Size</option>
-                <option value="50mm x 25mm x 2UP">50mm x 25mm x 2UP</option>
-                <option value="50mm x 25mm x 1UP">50mm x 25mm x 1UP</option>
-            </select>
-        </div>
+    <div class="form-group">
+        <label>Select Print Size</label>
+        <select class="form-select" #pgVal (change)="selectPG(pgVal.value)">
+            <option disabled>Select Paper Size</option>
+            <option value="a4" selected>A4 Size</option>
+            <option value="50mm x 25mm x 2UP">50mm x 25mm x 2UP</option>
+            <option value="50mm x 25mm x 1UP">50mm x 25mm x 1UP</option>
+        </select>
+    </div>
     </div>
     <div class="page-btn" *ngIf="isSelectPg">
         <a class="btn btn-added" (click)="printPG()">
-            <img src="assets/img/icons/printer.svg" class="me-1" alt="img">Print
+            <img src="assets/img/icons/printer.svg"  class="me-1" alt="img">Print
         </a>
     </div>
 </div>
@@ -40,17 +40,14 @@
             </div>
         </div> -->
         <div class="mb-5">
-            <div class="row">
-                <div class="col-lg-2 col-sm-3 col-12">
-                    <input type="radio" name="barcodeType" (change)="typeBarcode('GRN')" [id]="'checkboxGRN-'"><label
-                        [for]="'checkboxGRN-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">GRN</label>
-                </div>
-                <div class="col-lg-2 col-sm-3 col-12">
-                    <input type="radio" name="barcodeType" (change)="typeBarcode('Product')"
-                        [id]="'checkboxisPro-'"><label [for]="'checkboxisPro-'" class="d_flex"
-                        style="margin-bottom: 0; margin-left: 5px;">PRODUCT</label>
-                </div>
+        <div class="row">
+            <div class="col-lg-2 col-sm-3 col-12">
+                    <input type="radio" name="barcodeType" (change)="typeBarcode('GRN')" [id]="'checkboxGRN-'" ><label [for]="'checkboxGRN-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">GRN</label>
+            </div> 
+            <div class="col-lg-2 col-sm-3 col-12">
+                    <input type="radio" name="barcodeType" (change)="typeBarcode('Product')" [id]="'checkboxisPro-'" ><label [for]="'checkboxisPro-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">PRODUCT</label>
             </div>
+        </div>
         </div>
         <ng-container *ngIf="isGRN">
             <!-- <div class="form-group">
@@ -72,30 +69,25 @@
                 </mat-form-field>
             </div> -->
             <div class="form-group">
-                <div class="form-group">
-                    <label>Select GRN</label>
-                    <div class="dropdown">
-                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">Select GRN</button>
-                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                            <li> <input type="text" placeholder="search GRN" class="form-control"
-                                    [(ngModel)]="searchPurchaseBill" (ngModelChange)="filterPurchaseBill()"
-                                    [ngModelOptions]="{standalone: true}"></li>
-                            <!-- <li><a class="dropdown-item" *ngFor="let purchase of filteredPurchaseBill let j=index;">
+                    <div class="form-group">
+                        <label>Select GRN</label>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Select GRN</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li> <input type="text" placeholder="search GRN" class="form-control" [(ngModel)]="searchPurchaseBill" (ngModelChange)="filterPurchaseBill()" [ngModelOptions]="{standalone: true}"></li>
+                                <!-- <li><a class="dropdown-item" *ngFor="let purchase of filteredPurchaseBill let j=index;">
                                         <input type="checkbox" [value]="category.id" [checked]="selectedSubCategoryIds.includes(category.id)" (change)="onCheckSubCategory($event)" formArrayName="subcategory" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + j">
                                         <label [for]="'checkboxCat-' + j" style="margin-bottom: 0;" (click)="onLabelClick($event)" (click)="onCheckPurchase(purchase)">{{purchase?.refrence_bill_no}}</label>
                                 </a></li> -->
-                            <li *ngFor="let purchase of filteredPurchaseBill; let j=index;">
-                                <a class="dropdown-item" (click)="onCheckPurchase(purchase)">
-                                    <input type="radio" [value]="purchase.refrence_bill_no"
-                                        [checked]="selectedPurchaseBill === purchase.refrence_bill_no"
-                                        style="margin-right: 5px;">
-                                    <label>{{purchase.refrence_bill_no}}</label>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <p *ngIf="selectedPurchaseBill">Selected Purchase Bill: {{ selectedPurchaseBill }}</p>
+                                <li *ngFor="let purchase of filteredPurchaseBill; let j=index;">
+                                    <a class="dropdown-item" (click)="onCheckPurchase(purchase)">
+                                        <input type="radio" [value]="purchase.refrence_bill_no" [checked]="selectedPurchaseBill === purchase.refrence_bill_no" style="margin-right: 5px;">
+                                        <label>{{purchase.refrence_bill_no}}</label>
+                                    </a>
+                                </li>
+                            </ul>
+                      </div>             
+                <p *ngIf="selectedPurchaseBill">Selected Purchase Bill: {{ selectedPurchaseBill }}</p>
                 </div>
             </div>
             <div class="row my-3">
@@ -112,41 +104,25 @@
                                 <th>Batch</th>
                                 <th style="width: 8%;">QTY</th>
                                 <th>MRP</th>
-                                <th>Price Offline</th>
+                                <th>Price Offline</th> 
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let data of cartData;let j=index">
-                                <td><i data-bs-toggle="tooltip" title="ion-close-circled" class="ion-close-circled"
-                                        (click)="removePurchase(data.id)" style="color: red; font-size: 20px;"></i>
-                                </td>
-                                <td>{{j+1+'.'}}</td>
-                                <td>
-                                    <p>{{data?.barcode?.product_title + ' ' + data?.barcode?.variant_name}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.barcode?.sku}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.barcode?.size?.title}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.barcode?.color?.title}}</p>
-                                </td>
-                                <td><select #batchVal (change)="batchPurchase(j,batchVal.value)">
-                                        <option selected disabled>Select Batch</option>
-                                        <option [value]="p?.id" *ngFor="let p of data?.barcode?.batch">{{p?.mrp}}
-                                        </option>
-                                    </select></td>
-                                <td><input type="number" [value]="data?.qty" #qtyVal
-                                        (change)="qtyChangePurchase(j,qtyVal.value)" class="input"></td>
-                                <td>
-                                    <p>{{data?.mrp}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.selling_price_offline}}</p>
-                                </td>
-                            </tr>
+                             <tr *ngFor="let data of cartData;let j=index">
+                                        <td><i data-bs-toggle="tooltip" title="ion-close-circled" class="ion-close-circled" (click)="removePurchase(data.id)" style="color: red; font-size: 20px;"></i> </td>
+                                        <td>{{j+1+'.'}}</td>
+                                        <td><p>{{data?.barcode?.product_title + ' ' + data?.barcode?.variant_name}}</p> </td>
+                                        <td><p>{{data?.barcode?.sku}}</p> </td>
+                                        <td><p>{{data?.barcode?.size?.title}}</p> </td>
+                                        <td><p>{{data?.barcode?.color?.title}}</p> </td>
+                                        <td><select #batchVal (change)="batchPurchase(j,batchVal.value)">
+                                            <option selected disabled>Select Batch</option>
+                                            <option [value]="p?.id" *ngFor="let p of data?.barcode?.batch">{{p?.mrp}}</option>
+                                        </select></td>
+                                        <td><input type="number" [value]="data?.qty" #qtyVal (change)="qtyChangePurchase(j,qtyVal.value)" class="input"></td>
+                                        <td><p>{{data?.mrp}}</p></td>
+                                        <td><p>{{data?.selling_price_offline}}</p> </td>
+                              </tr>
                         </tbody>
                     </table>
                 </div>
@@ -213,25 +189,18 @@
             </div>  -->
 
             <div class="form-group">
-                <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
-                    [formControl]="productControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
-                    style="box-sizing: border-box;" />
-                <mat-autocomplete #autos="matAutocomplete">
+                <input type="text" placeholder="Search Product" aria-label="Search Products" matInput [formControl]="productControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos" style="box-sizing: border-box;" />
+            <mat-autocomplete #autos="matAutocomplete">
                     <ng-container *ngFor="let option of variantData">
-                        <mat-option *ngIf="option?.is_active==true"
-                            [value]="option?.product_title + ' ' + option?.variant_name"
-                            (onSelectionChange)="onCheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title
-                            + ' ' + option?.variant_name}} </mat-option>
+                    <mat-option *ngIf="option?.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name" (onSelectionChange)="onCheckProduct(option)"  style="color:#FF9F43"> {{ option?.product_title + ' ' + option?.variant_name}} </mat-option>
                     </ng-container>
-                    <mat-option *ngIf="isSearch && searchLength?.toString()?.length >2 "
-                        style="color:#FF9F43">Loading...</mat-option>
-                    <mat-option *ngIf="variantData?.length === 0 && !isSearch" [value]="'No data found'">
-                        <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                    </mat-option>
-                    <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading">Please Enter 3 or more
-                        characters</mat-option>
-                </mat-autocomplete>
-            </div>
+                <mat-option *ngIf="isSearch && searchLength?.toString()?.length >2 " style="color:#FF9F43">Loading...</mat-option>
+                <mat-option *ngIf="variantData?.length === 0 && !isSearch" [value]="'No data found'">
+                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                </mat-option>
+                <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading">Please Enter 3 or more characters</mat-option>
+            </mat-autocomplete>
+            </div> 
 
             <div class="row my-3">
                 <div class="table-responsive">
@@ -251,385 +220,392 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let data of productData; let j=index">
-                                <td><i data-bs-toggle="tooltip" title="ion-close-circled" class="ion-close-circled"
-                                        (click)="removeVariant(data.id)" style="color: red; font-size: 20px;"></i> </td>
-                                <td>{{j+1+'.'}}</td>
-                                <td>
-                                    <p>{{data?.product_title + ' ' + data?.variant_name}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.sku}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.size?.title}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.color?.title}}</p>
-                                </td>
-                                <td><select #batchV (change)="batchProduct(j,batchV.value)">
+                             <tr *ngFor="let data of productData; let j=index">
+                                        <td><i data-bs-toggle="tooltip" title="ion-close-circled" class="ion-close-circled" (click)="removeVariant(data.id)" style="color: red; font-size: 20px;"></i> </td>
+                                        <td>{{j+1+'.'}}</td>
+                                        <td><p>{{data?.product_title + ' ' + data?.variant_name}}</p> </td>
+                                        <td><p>{{data?.sku}}</p> </td>
+                                        <td><p>{{data?.size?.title}}</p> </td>
+                                        <td><p>{{data?.color?.title}}</p> </td>
+                                        <td><select #batchV (change)="batchProduct(j,batchV.value)">
                                         <option selected disabled>Select Batch</option>
                                         <option [value]="p?.id" *ngFor="let p of data?.batch">{{p?.mrp}}</option>
-                                    </select></td>
-                                <td><input type="number" [value]="data?.qty" #qtyVl
-                                        (change)="qtyChangeProduct(j,qtyVl.value)" class="input"></td>
-                                <td>
-                                    <p>{{data?.mrp}}</p>
-                                </td>
-                                <td>
-                                    <p>{{data?.selling_price_offline}}</p>
-                                </td>
-                            </tr>
+                                        </select></td>
+                                        <td><input type="number" [value]="data?.qty" #qtyVl (change)="qtyChangeProduct(j,qtyVl.value)" class="input"></td>
+                                        <td><p>{{data?.mrp}}</p></td>
+                                        <td><p>{{data?.selling_price_offline}}</p> </td>
+                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <button class="btn btn-submit me-2" (click)="printProduct()">Print Product Barcode</button>
         </ng-container>
-
+      
     </div>
 </div>
 
 <div *ngIf="isPrint" id="print">
     <ng-container *ngIf="selectedPageSize=='50mm x 25mm x 1UP'">
-        <ng-container *ngFor="let product of cartData">
-            <div class="row">
-                <div class="col-sm-6 col-lg-6 col-12">
-                    <div class="col-sm-3 col-lg-4 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">
-                        <div fxLayout="column">
-                            <div class="card card_" style="width: 55mm !important;">
-                                <div class="card-header pb-0 pt-0 card_header">
-                                    <div class="card-title mb-0 title"
-                                        style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                        {{ product?.barcode?.product_title.length > 20 ?
-                                        (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' :
-                                        product?.barcode?.product_title }}</div>
-                                </div>
-                                <div class="card-body card_body">
-                                    <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                        <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
-                                        <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of
-                                            all taxes' : 'Exclusive of all taxes'}}</p>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between product">
-                                        <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
-                                        <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between align-items-center"
-                                        style="margin-bottom: -3px;">
-                                        <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span>
-                                        </p>
-                                        <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between align-items-center"
-                                        style="margin-bottom: 0px;">
-                                        <p class="p3">Price: <span>{{ product?.selling_price_offline |
-                                                number:'1.2-2'}}</span></p>
-                                        <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
-                                    </div>
-                                    <div class="text-center">
-                                        <ngx-barcode [bc-element-type]="elementType" [bc-value]="product?.barcode?.sku"
-                                            [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                            [bc-height]="height" [bc-display-value]="displayValue"
-                                            [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                            [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                            [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                            [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                            [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                        </ngx-barcode>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <ng-container *ngFor="let product of cartData">
+    <div class="row">
+        <div class="col-sm-6 col-lg-6 col-12">
+    <div class="col-sm-3 col-lg-4 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">    
+        <div fxLayout="column">
+            <div class="card card_" style="width: 55mm !important;">
+                <div class="card-header pb-0 pt-0 card_header">
+                    <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ product?.barcode?.product_title.length > 20 ? (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' : product?.barcode?.product_title }}</div>
+                </div>
+                <div class="card-body card_body">
+                    <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                        <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
+                        <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of all taxes' : 'Exclusive of all taxes'}}</p>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between product">
+                        <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
+                        <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -3px;">
+                        <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span></p>
+                        <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: 0px;">
+                        <p class="p3">Price: <span>{{ product?.selling_price_offline | number:'1.2-2'}}</span></p>
+                        <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
+                    </div>
+                    <div class="text-center">
+                        <ngx-barcode 
+                                     [bc-element-type]="elementType" 
+                                     [bc-value]="product?.barcode?.sku" 
+                                     [bc-format]="format" 
+                                     [bc-line-color]="lineColor" 
+                                     [bc-width]="width" 
+                                     [bc-height]="height" 
+                                     [bc-display-value]="displayValue" 
+                                     [bc-font-options]="fontOptions" 
+                                     [bc-font]="font" 
+                                     [bc-text-align]="textAlign" 
+                                     [bc-text-position]="textPosition" 
+                                     [bc-text-margin]="textMargin" 
+                                     [bc-font-size]="fontSize" 
+                                     [bc-background]="background" 
+                                     [bc-margin]="margin" 
+                                     [bc-margin-top]="marginTop" 
+                                     [bc-margin-bottom]="marginBottom" 
+                                     [bc-margin-left]="marginLeft" 
+                                     [bc-margin-right]="marginRight">
+                        </ngx-barcode>
                     </div>
                 </div>
             </div>
-        </ng-container>
+        </div>
+    </div>
+    </div>
+    </div>
+    </ng-container>
     </ng-container>
     <ng-container *ngIf="selectedPageSize=='50mm x 25mm x 2UP'">
         <ng-container *ngFor="let product of cartData">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-6 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">
-                            <div fxLayout="column">
-                                <div class="card card_">
-                                    <div class="card-header pb-0 pt-0 card_header">
-                                        <div class="card-title mb-0 title"
-                                            style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                            {{ product?.barcode?.product_title.length > 20 ?
-                                            (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' :
-                                            product?.barcode?.product_title }}</div>
-                                    </div>
-                                    <div class="card-body card_body">
-                                        <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                            <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
-                                            <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive
-                                                of all taxes' : 'Exclusive of all taxes'}}</p>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between product">
-                                            <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span>
-                                            </p>
-                                            <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between align-items-center"
-                                            style="margin-bottom: -3px;">
-                                            <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no
-                                                    }}</span></p>
-                                            <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between align-items-center"
-                                            style="margin-bottom: 0px;">
-                                            <p class="p3">Price: <span>{{ product?.selling_price_offline |
-                                                    number:'1.2-2'}}</span></p>
-                                            <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
-                                        </div>
-                                        <div class="text-center">
-                                            <ngx-barcode [bc-element-type]="elementType"
-                                                [bc-value]="product?.barcode?.sku" [bc-format]="format"
-                                                [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="height"
-                                                [bc-display-value]="displayValue" [bc-font-options]="fontOptions"
-                                                [bc-font]="font" [bc-text-align]="textAlign"
-                                                [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                                [bc-font-size]="fontSize" [bc-background]="background"
-                                                [bc-margin]="margin" [bc-margin-top]="marginTop"
-                                                [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft"
-                                                [bc-margin-right]="marginRight">
-                                            </ngx-barcode>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-sm-6 col-lg-6 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">     
+              <div fxLayout="column">
+                  <div class="card card_">
+                      <div class="card-header pb-0 pt-0 card_header">
+                        <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ product?.barcode?.product_title.length > 20 ? (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' : product?.barcode?.product_title }}</div>
                     </div>
-                </div>
+                      <div class="card-body card_body">
+                          <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                              <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
+                              <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of all taxes' : 'Exclusive of all taxes'}}</p>
+                          </div>
+                          <div class="pb-0 d-flex justify-content-between product">
+                              <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
+                              <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
+                          </div>
+                          <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -3px;">
+                              <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span></p>
+                              <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
+                          </div>
+                          <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: 0px;">
+                              <p class="p3">Price: <span>{{ product?.selling_price_offline | number:'1.2-2'}}</span></p>
+                              <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
+                          </div>
+                          <div class="text-center">
+                              <ngx-barcode 
+                                           [bc-element-type]="elementType" 
+                                           [bc-value]="product?.barcode?.sku" 
+                                           [bc-format]="format" 
+                                           [bc-line-color]="lineColor" 
+                                           [bc-width]="width" 
+                                           [bc-height]="height" 
+                                           [bc-display-value]="displayValue" 
+                                           [bc-font-options]="fontOptions" 
+                                           [bc-font]="font" 
+                                           [bc-text-align]="textAlign" 
+                                           [bc-text-position]="textPosition" 
+                                           [bc-text-margin]="textMargin" 
+                                           [bc-font-size]="fontSize" 
+                                           [bc-background]="background" 
+                                           [bc-margin]="margin" 
+                                           [bc-margin-top]="marginTop" 
+                                           [bc-margin-bottom]="marginBottom" 
+                                           [bc-margin-left]="marginLeft" 
+                                           [bc-margin-right]="marginRight">
+                              </ngx-barcode>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </div>
+          </div>
+          </div>
+          </ng-container>
+          </ng-container>
+          <ng-container *ngIf="selectedPageSize=='a4'">
+            <div class="row">
+            <ng-container *ngFor="let product of cartData">  
+              <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">    
+                  <div fxLayout="column">
+                      <div class="card card_" style="width: 55mm !important;">
+                          <div class="card-header pb-0 pt-0 card_header">
+                              <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ product?.barcode?.product_title.length > 20 ? (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' : product?.barcode?.product_title }}</div>
+                          </div>
+                          <div class="card-body card_body">
+                              <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                                  <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
+                                  <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of all taxes' : 'Exclusive of all taxes'}}</p>
+                              </div>
+                              <div class="pb-0 d-flex justify-content-between product">
+                                  <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
+                                  <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
+                              </div>
+                              <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -3px;">
+                                  <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span></p>
+                                  <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
+                              </div>
+                              <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: 0px;">
+                                  <p class="p3">Price: <span>{{ product?.selling_price_offline | number:'1.2-2'}}</span></p>
+                                  <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
+                              </div>
+                              <div class="text-center">
+                                  <ngx-barcode 
+                                               [bc-element-type]="elementType" 
+                                               [bc-value]="product?.barcode?.sku" 
+                                               [bc-format]="format" 
+                                               [bc-line-color]="lineColor" 
+                                               [bc-width]="width" 
+                                               [bc-height]="height" 
+                                               [bc-display-value]="displayValue" 
+                                               [bc-font-options]="fontOptions" 
+                                               [bc-font]="font" 
+                                               [bc-text-align]="textAlign" 
+                                               [bc-text-position]="textPosition" 
+                                               [bc-text-margin]="textMargin" 
+                                               [bc-font-size]="fontSize" 
+                                               [bc-background]="background" 
+                                               [bc-margin]="margin" 
+                                               [bc-margin-top]="marginTop" 
+                                               [bc-margin-bottom]="marginBottom" 
+                                               [bc-margin-left]="marginLeft" 
+                                               [bc-margin-right]="marginRight">
+                                  </ngx-barcode>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              </ng-container>
             </div>
-        </ng-container>
-    </ng-container>
-    <ng-container *ngIf="selectedPageSize=='a4'">
-        <div class="row">
-            <ng-container *ngFor="let product of cartData">
-                <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">
-                    <div fxLayout="column">
-                        <div class="card card_" style="width: 55mm !important;">
-                            <div class="card-header pb-0 pt-0 card_header">
-                                <div class="card-title mb-0 title"
-                                    style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                    {{ product?.barcode?.product_title.length > 20 ?
-                                    (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' :
-                                    product?.barcode?.product_title }}</div>
-                            </div>
-                            <div class="card-body card_body">
-                                <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                    <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
-                                    <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of all
-                                        taxes' : 'Exclusive of all taxes'}}</p>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between product">
-                                    <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
-                                    <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: -3px;">
-                                    <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span></p>
-                                    <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: 0px;">
-                                    <p class="p3">Price: <span>{{ product?.selling_price_offline |
-                                            number:'1.2-2'}}</span></p>
-                                    <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
-                                </div>
-                                <div class="text-center">
-                                    <ngx-barcode [bc-element-type]="elementType" [bc-value]="product?.barcode?.sku"
-                                        [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                        [bc-height]="height" [bc-display-value]="displayValue"
-                                        [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                        [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                        [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                        [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                        [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                    </ngx-barcode>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </ng-container>
+              </ng-container>
 </div>
 
-
-<div *ngIf="isPrintProduct" id="print">
+  
+<div *ngIf="isPrintProduct" id="print" >
     <ng-container *ngIf="selectedPageSize=='50mm x 25mm x 1UP'">
-        <ng-container *ngFor="let products of productData">
-            <div class="row">
-                <div class="col-sm-6 col-lg-6 col-12">
-                    <div class="col-sm-3 col-lg-4 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">
-                        <div fxLayout="column">
-                            <div class="card card_" style="width: 55mm !important;">
-                                <div class="card-header pb-0 pt-0 card_header">
-                                    <div class="card-title mb-0 title"
-                                        style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                        {{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20)
-                                        + '...' : products?.product_title }}</div>
-                                </div>
-                                <div class="card-body card_body">
-                                    <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                        <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
-                                        <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all
-                                            taxes':'Exclusive of all taxes'}}</p>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between product">
-                                        <p class="p3">Product : <span> {{products?.variant_name.length > 20 ?
-                                                (products?.variant_name | slice:0:20) + '...' : products?.variant_name
-                                                }}</span></p>
-                                        <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between align-items-center"
-                                        style="margin-bottom: -3px;">
-                                        <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
-                                        <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
-                                    </div>
-                                    <div class="pb-0 d-flex justify-content-between align-items-center"
-                                        style="margin-bottom: 0px;">
-                                        <p class="p3">Price: <span>{{products?.selling_price_offline
-                                                |number:'1.2-2'}}</span></p>
-                                        <P class="p3">Discount : <span>{{products?.discount}}</span></P>
-                                    </div>
-                                    <div class="text-center">
-                                        <ngx-barcode [bc-element-type]="elementType" [bc-value]="products?.sku"
-                                            [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                            [bc-height]="height" [bc-display-value]="displayValue"
-                                            [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                            [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                            [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                            [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                            [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                        </ngx-barcode>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-    </ng-container>
-    <ng-container *ngIf="selectedPageSize=='50mm x 25mm x 2UP'">
-        <ng-container *ngFor="let products of productData">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-6 col-lg-6 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">
-                            <div fxLayout="column">
-                                <div class="card card_">
-                                    <div class="card-header pb-0 pt-0 card_header">
-                                        <div class="card-title mb-0 title"
-                                            style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                            {{ products?.product_title.length > 20 ? (products?.product_title |
-                                            slice:0:20) + '...' : products?.product_title }}</div>
-                                    </div>
-                                    <div class="card-body card_body">
-                                        <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                            <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
-                                            <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all
-                                                taxes':'Exclusive of all taxes'}}</p>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between product">
-                                            <p class="p3">Product : <span> {{products?.variant_name.length > 20 ?
-                                                    (products?.variant_name | slice:0:20) + '...' :
-                                                    products?.variant_name }}</span></p>
-                                            <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between align-items-center"
-                                            style="margin-bottom: -3px;">
-                                            <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
-                                            <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
-                                        </div>
-                                        <div class="pb-0 d-flex justify-content-between align-items-center"
-                                            style="margin-bottom: 0px;">
-                                            <p class="p3">Price: <span>{{products?.selling_price_offline
-                                                    |number:'1.2-2'}}</span></p>
-                                            <P class="p3">Discount : <span>{{products?.discount}}</span></P>
-                                        </div>
-                                        <div class="text-center">
-                                            <ngx-barcode [bc-element-type]="elementType" [bc-value]="products?.sku"
-                                                [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                                [bc-height]="height" [bc-display-value]="displayValue"
-                                                [bc-font-options]="fontOptions" [bc-font]="font"
-                                                [bc-text-align]="textAlign" [bc-text-position]="textPosition"
-                                                [bc-text-margin]="textMargin" [bc-font-size]="fontSize"
-                                                [bc-background]="background" [bc-margin]="margin"
-                                                [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                                [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                            </ngx-barcode>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-
-    </ng-container>
-    <ng-container *ngIf="selectedPageSize=='a4'">
+   <ng-container *ngFor="let products of productData">
         <div class="row">
-            <ng-container *ngFor="let products of productData">
-                <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">
-                    <div fxLayout="column">
-                        <div class="card card_">
-                            <div class="card-header pb-0 pt-0 card_header">
-                                <div class="card-title mb-0 title"
-                                    style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                    {{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20) +
-                                    '...' : products?.product_title }}</div>
-                            </div>
-                            <div class="card-body card_body">
-                                <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                    <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
-                                    <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all
-                                        taxes':'Exclusive of all taxes'}}</p>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between product">
-                                    <p class="p3">Product : <span> {{products?.variant_name.length > 20 ?
-                                            (products?.variant_name | slice:0:20) + '...' : products?.variant_name
-                                            }}</span></p>
-                                    <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: -3px;">
-                                    <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
-                                    <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: 0px;">
-                                    <p class="p3">Price: <span>{{products?.selling_price_offline
-                                            |number:'1.2-2'}}</span></p>
-                                    <P class="p3">Discount : <span>{{products?.discount}}</span></P>
-                                </div>
-                                <div class="text-center">
-                                    <ngx-barcode [bc-element-type]="elementType" [bc-value]="products?.sku"
-                                        [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                        [bc-height]="height" [bc-display-value]="displayValue"
-                                        [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                        [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                        [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                        [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                        [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                    </ngx-barcode>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+            <div class="col-sm-6 col-lg-6 col-12">
+    <div class="col-sm-3 col-lg-4 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">    
+        <div fxLayout="column">
+            <div class="card card_" style="width: 55mm !important;">
+                <div class="card-header pb-0 pt-0 card_header">
+                    <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20) + '...' : products?.product_title }}</div>
                 </div>
-            </ng-container>
+                <div class="card-body card_body">
+                    <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                        <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
+                        <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all taxes':'Exclusive of all taxes'}}</p>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between product">
+                        <p class="p3">Product : <span> {{products?.variant_name.length > 20 ? (products?.variant_name | slice:0:20) + '...' : products?.variant_name }}</span></p>
+                        <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center"
+                        style="margin-bottom: -3px;">
+                        <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
+                        <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center"
+                        style="margin-bottom: 0px;">
+                        <p class="p3">Price: <span>{{products?.selling_price_offline |number:'1.2-2'}}</span></p>
+                        <P class="p3">Discount : <span>{{products?.discount}}</span></P>
+                    </div>
+                    <div class="text-center">
+                        <ngx-barcode 
+                                     [bc-element-type]="elementType" 
+                                     [bc-value]="products?.sku" 
+                                     [bc-format]="format" 
+                                     [bc-line-color]="lineColor" 
+                                     [bc-width]="width" 
+                                     [bc-height]="height" 
+                                     [bc-display-value]="displayValue" 
+                                     [bc-font-options]="fontOptions" 
+                                     [bc-font]="font" 
+                                     [bc-text-align]="textAlign" 
+                                     [bc-text-position]="textPosition" 
+                                     [bc-text-margin]="textMargin" 
+                                     [bc-font-size]="fontSize" 
+                                     [bc-background]="background" 
+                                     [bc-margin]="margin" 
+                                     [bc-margin-top]="marginTop" 
+                                     [bc-margin-bottom]="marginBottom" 
+                                     [bc-margin-left]="marginLeft" 
+                                     [bc-margin-right]="marginRight">
+                        </ngx-barcode>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    </div>
+    </div>
     </ng-container>
+</ng-container>
+<ng-container *ngIf="selectedPageSize=='50mm x 25mm x 2UP'">
+    <ng-container *ngFor="let products of productData">
+     <div class="row">
+         <div class="col-sm-6">
+             <div class="row">
+     <div class="col-sm-6 col-lg-6 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">    
+         <div fxLayout="column">
+             <div class="card card_">
+                 <div class="card-header pb-0 pt-0 card_header">
+                     <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20) + '...' : products?.product_title }}</div>
+                 </div>
+                 <div class="card-body card_body">
+                     <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                         <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
+                         <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all taxes':'Exclusive of all taxes'}}</p>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between product">
+                         <p class="p3">Product : <span> {{products?.variant_name.length > 20 ? (products?.variant_name | slice:0:20) + '...' : products?.variant_name }}</span></p>
+                         <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between align-items-center"
+                         style="margin-bottom: -3px;">
+                         <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
+                         <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between align-items-center"
+                         style="margin-bottom: 0px;">
+                         <p class="p3">Price: <span>{{products?.selling_price_offline |number:'1.2-2'}}</span></p>
+                         <P class="p3">Discount : <span>{{products?.discount}}</span></P>
+                     </div>
+                     <div class="text-center">
+                         <ngx-barcode 
+                                      [bc-element-type]="elementType" 
+                                      [bc-value]="products?.sku" 
+                                      [bc-format]="format" 
+                                      [bc-line-color]="lineColor" 
+                                      [bc-width]="width" 
+                                      [bc-height]="height" 
+                                      [bc-display-value]="displayValue" 
+                                      [bc-font-options]="fontOptions" 
+                                      [bc-font]="font" 
+                                      [bc-text-align]="textAlign" 
+                                      [bc-text-position]="textPosition" 
+                                      [bc-text-margin]="textMargin" 
+                                      [bc-font-size]="fontSize" 
+                                      [bc-background]="background" 
+                                      [bc-margin]="margin" 
+                                      [bc-margin-top]="marginTop" 
+                                      [bc-margin-bottom]="marginBottom" 
+                                      [bc-margin-left]="marginLeft" 
+                                      [bc-margin-right]="marginRight">
+                         </ngx-barcode>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     </div>
+     </div>
+     </div>
+     </ng-container>
+ 
+ </ng-container>
+ <ng-container *ngIf="selectedPageSize=='a4'">
+    <div class="row">
+    <ng-container *ngFor="let products of productData">
+     <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">    
+         <div fxLayout="column">
+             <div class="card card_">
+                 <div class="card-header pb-0 pt-0 card_header">
+                     <div class="card-title mb-0 title" style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">{{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20) + '...' : products?.product_title }}</div>
+                 </div>
+                 <div class="card-body card_body">
+                     <div class="pb-0 d-flex justify-content-between align-items-center mrp">
+                         <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
+                         <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all taxes':'Exclusive of all taxes'}}</p>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between product">
+                         <p class="p3">Product : <span> {{products?.variant_name.length > 20 ? (products?.variant_name | slice:0:20) + '...' : products?.variant_name }}</span></p>
+                         <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between align-items-center"
+                         style="margin-bottom: -3px;">
+                         <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
+                         <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
+                     </div>
+                     <div class="pb-0 d-flex justify-content-between align-items-center"
+                         style="margin-bottom: 0px;">
+                         <p class="p3">Price: <span>{{products?.selling_price_offline |number:'1.2-2'}}</span></p>
+                         <P class="p3">Discount : <span>{{products?.discount}}</span></P>
+                     </div>
+                     <div class="text-center">
+                         <ngx-barcode 
+                                      [bc-element-type]="elementType" 
+                                      [bc-value]="products?.sku" 
+                                      [bc-format]="format" 
+                                      [bc-line-color]="lineColor" 
+                                      [bc-width]="width" 
+                                      [bc-height]="height" 
+                                      [bc-display-value]="displayValue" 
+                                      [bc-font-options]="fontOptions" 
+                                      [bc-font]="font" 
+                                      [bc-text-align]="textAlign" 
+                                      [bc-text-position]="textPosition" 
+                                      [bc-text-margin]="textMargin" 
+                                      [bc-font-size]="fontSize" 
+                                      [bc-background]="background" 
+                                      [bc-margin]="margin" 
+                                      [bc-margin-top]="marginTop" 
+                                      [bc-margin-bottom]="marginBottom" 
+                                      [bc-margin-left]="marginLeft" 
+                                      [bc-margin-right]="marginRight">
+                         </ngx-barcode>
+                     </div>
+                 </div>
+             </div>
+         </div>
+   
+     </div>
+     </ng-container>
+    </div> 
+ </ng-container>
 </div>
 
 

@@ -73,7 +73,6 @@ api_url :string = environment.api;
   isBrand;
   isColors;
   isSize;
-  isSizeChart;
   isTax;
   isTaxSlab;
   isFeature;
@@ -249,8 +248,6 @@ if(this.profileService.CheckBlur$){
           this.isColors = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename == 'view_size') {
           this.isSize = res.codename
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'sizechart' && res.codename == 'view_sizechart') {
-          this.isSizeChart = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'view_tax') {
           this.isTax = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'view_taxslabs') {

@@ -7,10 +7,12 @@
                                         <!-- <li routerLinkActive="active">
                         <a routerLink="/dashboard"><img src="assets/img/icons/dashboard.svg"alt="img"><span> Dashboard</span> </a>
                     </li> -->
-
-                                        <!-- [ngStyle]="{ 'background': secondary$  }" -->
+           
+                    <!-- [ngStyle]="{ 'background': secondary$  }" -->
                                         <li class="submenu">
-                                                <a [ngClass]="{'active': activePath === 'dashboard' }"><img
+                                                <a 
+                                                [ngClass]="{'active': activePath === 'dashboard' }"
+                                                ><img
                                                                 src="assets/img/icons/dashboard.svg"
                                                                 alt="img"><span>Dashboard</span> <span
                                                                 class="menu-arrow"></span></a>
@@ -67,7 +69,9 @@
                   </li> -->
 
                                         <li class="submenu" *ngIf="isCompany || isBranch">
-                                                <a [ngClass]="{'active': activePath === 'masters'}"><i
+                                                <a
+                                                
+                                                [ngClass]="{'active': activePath === 'masters'}"><i
                                                                 class="fa fa-signal" data-bs-toggle="tooltip"
                                                                 title="fa fa-signal" style="color: #637381;"></i><span>
                                                                 Master</span> <span class="menu-arrow"></span></a>
@@ -80,7 +84,9 @@
                                         </li>
 
                                         <li class="submenu" *ngIf="isAccount || isAccountSubType">
-                                                <a [ngClass]="{'active': activePath === 'account'}"><i
+                                                <a
+                                           
+                                                [ngClass]="{'active': activePath === 'account'}"><i
                                                                 class="fa fa-users" data-bs-toggle="tooltip"
                                                                 title="fa fa-users" style="color: #637381;"></i><span>
                                                                 Accounts</span> <span class="menu-arrow"></span></a>
@@ -95,7 +101,9 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isSupplier || isVendor || isEmployee ||isCustomer || isTransport || isDealer">
-                                                <a [ngClass]="{'active': activePath === 'contacts'}"><svg
+                                                <a
+                                           
+                                                [ngClass]="{'active': activePath === 'contacts'}"><svg
                                                                 xmlns="http://www.w3.org/2000/svg" width="16"
                                                                 height="16" fill="currentColor"
                                                                 class="bi bi-person-lines-fill" viewBox="0 0 16 16">
@@ -121,7 +129,9 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isProductLabel || isProductionVoucher">
-                                                <a [ngClass]="{'active': activePath === 'product'}"><img
+                                                <a
+                                           
+                                                [ngClass]="{'active': activePath === 'product'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Product Management</span> <span
                                                                 class="menu-arrow"></span></a>
@@ -147,8 +157,6 @@
                                                                         routerLinkActive="active">Colors</a></li>
                                                         <li *ngIf="isSize"><a routerLink="/product/size"
                                                                         routerLinkActive="active">Sizes</a></li>
-                                                        <li *ngIf="isSizeChart"><a routerLink="/product/size-chart"
-                                                                        routerLinkActive="active">Size Chart</a></li>
                                                         <li *ngIf="isTax"><a routerLink="/product/tax"
                                                                         routerLinkActive="active">Tax</a></li>
                                                         <li *ngIf="isTaxSlab"><a routerLink="/product/taxSlabList"
@@ -181,15 +189,18 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
-                                                <a [ngClass]="{'active': activePath === 'purchase'}">
+                                                <a 
+                                                
+                                           
+                                                [ngClass]="{'active': activePath === 'purchase'}">
                                                         <!-- <img src="assets/img/icons/purchase1.svg" alt="img"> -->
-                                                        <i class="fa fa-book" style="color: #637381;"
-                                                                data-bs-toggle="tooltip" title="fa fa-book"></i>
+                                                        <i class="fa fa-book" style="color: #637381;" data-bs-toggle="tooltip"
+                                                                title="fa fa-book"></i>
                                                         <span> Purchase</span>
 
-                                                        <span class="menu-arrow"></span>
-
-                                                </a>
+                                                         <span class="menu-arrow"></span>
+                                                        
+                                                        </a>
                                                 <ul>
                                                         <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist"
                                                                         routerLinkActive="active">Purchase Order
@@ -212,7 +223,9 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn || isAdvanceBooking || isDeliveryChallan">
-                                                <a [ngClass]="{'active': activePath === 'sales'}"> <img
+                                                <a 
+                                           
+                                                [ngClass]="{'active': activePath === 'sales'}"> <img
                                                                 src="assets/img/icons/sales1.svg" alt="img"><span>
                                                                 Sales</span> <span class="menu-arrow"></span></a>
                                                 <ul>
@@ -251,10 +264,13 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher || isMaterialConsuption || isScarpEntry">
-                                                <a [ngClass]="{'active': activePath === 'transaction'}">
-                                                        <i data-bs-toggle="tooltip" style="color: #637381;"
-                                                                title="fa fa-university" class="fa fa-university"></i>
-                                                        <span>Transaction</span>
+                                                <a 
+                                                
+                                           
+                                                [ngClass]="{'active': activePath === 'transaction'}">
+                                                <i  data-bs-toggle="tooltip" style="color: #637381;" title="fa fa-university"
+                                                                class="fa fa-university"></i>
+                                                                <span>Transaction</span>
                                                         <span class="menu-arrow"></span></a>
                                                 <ul>
                                                         <li *ngIf="isPaymentVoucher"><a
@@ -293,7 +309,11 @@
                                                 </ul>
                                         </li>
                                         <li class="submenu">
-                                                <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax"
+                                                <a 
+                                                
+                                                
+                                           
+                                                [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax"
                                                                 data-bs-toggle="tooltip" title="fa fa-fax"
                                                                 style="color: #637381;"></i><span> POS</span> <span
                                                                 class="menu-arrow"></span></a>
@@ -306,7 +326,9 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
-                                                <a [ngClass]="{'active': activePath === 'bank'}"> <i
+                                                <a 
+                                           
+                                                [ngClass]="{'active': activePath === 'bank'}"> <i
                                                                 class="fa fa-credit-card" data-bs-toggle="tooltip"
                                                                 title="fa fa-credit-card"
                                                                 style="color: #637381;"></i><span> Bank</span> <span
@@ -322,7 +344,11 @@
                                         </li>
                                         <li class="submenu"
                                                 *ngIf="isAttendnace || isTarget || isDepartment || isIncentive">
-                                                <a [ngClass]="{'active': activePath === 'hrm'}"><i
+                                                <a 
+                                                
+                                           
+                                                
+                                                [ngClass]="{'active': activePath === 'hrm'}"><i
                                                                 data-bs-toggle="tooltip" title="fa fa-users"
                                                                 class="fa fa-users" style="color: #637381;"></i><span>
                                                                 HRM</span> <span class="menu-arrow"></span></a>
@@ -341,7 +367,10 @@
                                                 </ul>
                                         </li>
                                         <li class="submenu" *ngIf="isCountry || isState || isCity">
-                                                <a [ngClass]="{'active': activePath === 'places'}"><img
+                                                <a
+                                           
+                                                
+                                                [ngClass]="{'active': activePath === 'places'}"><img
                                                                 src="assets/img/icons/places.svg" alt="img"><span>
                                                                 Places</span> <span class="menu-arrow"></span></a>
                                                 <ul>
@@ -357,9 +386,11 @@
                                                 </ul>
                                         </li>
 
-                                        <li class="submenu"
+                                        <li  class="submenu"
                                                 *ngIf="isStock || isStockTransport || isStockTransportRequest || isStockVerification">
-                                                <a [ngClass]="{'active': activePath === 'inventory'}"><img
+                                                <a  
+                                           
+                                                [ngClass]="{'active': activePath === 'inventory'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Inventory</span> <span
                                                                 class="menu-arrow"></span></a>
@@ -382,7 +413,9 @@
                                         </li>
 
                                         <li class="submenu" *ngIf="isInvoiceOffer && isMembership">
-                                                <a [ngClass]="{'active': activePath === 'offer'}"><img
+                                                <a
+                                           
+                                                [ngClass]="{'active': activePath === 'offer'}"><img
                                                                 src="assets/img/icons/product.svg"
                                                                 alt="img"><span>Promotion</span> <span
                                                                 class="menu-arrow"></span></a>
@@ -405,7 +438,9 @@
 
                                         <li class="submenu"
                                                 *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
-                                                <a [ngClass]="{'active': activePath === 'website'}"><i
+                                                <a 
+                                           
+                                                [ngClass]="{'active': activePath === 'website'}"><i
                                                                 class="fa fa-sitemap" data-bs-toggle="tooltip"
                                                                 title="fa fa-sitemap" style="color: #637381;"></i><span>
                                                                 Website</span> <span class="menu-arrow"></span></a>
@@ -458,9 +493,9 @@
 
                                         <li class="submenu"
                                                 *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isCompanyDrive">
-                                                <a class="colo" (mouseover)="applyDynamicStyles()"
-                                                        (mouseleave)="removeHoverClass()"
-                                                        [ngClass]="{'active': activePath === 'settings'}"><img
+                                                <a class="colo"
+                                                (mouseover)="applyDynamicStyles()"
+                                                (mouseleave)="removeHoverClass()" [ngClass]="{'active': activePath === 'settings'}"><img
                                                                 src="assets/img/icons/settings.svg" alt="img"><span>
                                                                 Settings</span> <span class="menu-arrow"></span></a>
                                                 <ul [ngClass]="{'block': sideBarControls[18].value === true}">
@@ -1488,7 +1523,10 @@
                     </li> -->
 
                                         <li class="submenu">
-                                                <a [ngClass]="{'active': activePath === 'report'}"><img
+                                                <a
+                                                
+                                                
+                                                [ngClass]="{'active': activePath === 'report'}"><img
                                                                 src="assets/img/icons/time.svg" alt="img"><span>
                                                                 Report</span> <span class="menu-arrow"></span></a>
                                                 <ul>

@@ -167,13 +167,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'size-chart',
-        loadChildren: () =>
-          import('./size-chart/size-chart.module').then(
-            (m) => m.SizeChartModule
-          ),
-      },
-      {
         path: 'tax',
         loadChildren: () =>
           import('./tax/tax.module').then(

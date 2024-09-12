@@ -59,90 +59,18 @@
                 </div>
 
             </div>
-            <div class="row w-50">
+            <div class="row w-25">
                 <div class="col-lg-12 col-sm-12 col-12">
-                    <strong class="mb-2">Select Product</strong>
-                    <div class="form-group d-flex align-items-center">
+                    <div class="form-group">
+                        <strong class="mb-1">Select Product</strong>
                         <input type="text" placeholder="Enter Product" [formControl]="supplierControl"
                             [matAutocomplete]="auto" class="form-control">
                         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                             <mat-option *ngFor="let product of productVariantList" [value]="product"
-                                (blur)="oncheckAccount(product)">{{product?.variant_name ? product?.product_title +
+                                (blur)="oncheckAccount(product?.id)">{{product?.variant_name ? product?.product_title +
                                 ' (' + product?.variant_name + ')' : product?.product_title}} </mat-option>
                         </mat-autocomplete>
-                        <i class="ion-information circle ms-2" data-bs-toggle="tooltip" title="ion-information"
-                            (click)="openModalProduct()"></i>
-                    </div>
-                    <div class="modal fade " id="productModal" tabindex="-1" role="dialog"
-                        aria-labelledby="addressModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Variants</h1>
-                                    <button type="button" class="close" (click)="closeModalProduct()"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group" *ngIf="productVariantList">
-                                        <div class="row">
-                                            <div class="table-responsive">
-                                                <table class="table datanew">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="boder">
-                                                                Sr.No.</th>
-                                                            <th class="boder space-text">
-                                                                Barcode</th>
-                                                            <th class="boder space-text">
-                                                                Product</th>
-                                                            <th class="boder">
-                                                                Variant Name</th>
-                                                            <th class="boder">
-                                                                Article No.</th>
-                                                            <th class="boder space-text">
-                                                                Date</th>
-                                                            <th class="boder space-text">
-                                                                MRP</th>
-                                                            <th class="boder space-text">
-                                                                Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let prod of productVariantList;let ind=index;">
-                                                            <td class="boder">{{
-                                                                ind+1+'.'}}</td>
-                                                            <td class="boder">{{
-                                                                prod?.sku}}</td>
-                                                            <td class="boder">{{
-                                                                prod?.product_title }}
-                                                            </td>
-                                                            <td class="boder">
-                                                                {{prod?.variant_name}}
-                                                            </td>
-                                                            <td class="boder">
-                                                                {{prod?.product?.article_no}}
-                                                            </td>
-                                                            <td class="boder">{{
-                                                                prod?.created_date}}
-                                                            </td>
-                                                            <td class="boder">{{
-                                                                prod?.batch[0]?.mrp}}
-                                                            </td>
-                                                            <td><button type="button" (click)="closeModalProduct()"
-                                                                    class="btn btn-primary btn-sm"
-                                                                    style="float: right;">Select
-                                                                </button> </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -219,8 +147,6 @@
                         </th>
                         <th (click)="sort('id')">Sr No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Name<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')">Product Name<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')">Variant Name<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Voucher Type <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Voucher No. <i class="fa fa-sort"></i></th>
@@ -240,8 +166,6 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>{{products?.name}}</td>
-                        <td><a class="product-title">{{products?.product?.title}}</a></td>
-                        <td>{{products?.variant?.variant_name}}</td>
                         <td>{{products?.date}}</td>
                         <td>{{products?.voucher_type}}</td>
                         <td>{{products?.voucher_no}}</td>
