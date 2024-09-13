@@ -748,6 +748,38 @@ export class CoreService {
     })
   }
 
+  getsizeChartById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  updateSizeChart(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  deleteSizeChart(id: number) {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  sizeChartIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   //tax section
   gettax() {
     let url = this.apiUrl + '/pv-api/tax/';

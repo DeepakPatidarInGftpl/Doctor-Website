@@ -50,11 +50,11 @@
                                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
                                     (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a data-bs-toggle="tooltip" (click)="openModal()" data-bs-toggle="modal"
                                     data-bs-target="#import_file_modal" data-bs-placement="top" title="import"><i
                                         class="fas fa-cloud-upload-alt upload-icon"></i></a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -97,8 +97,9 @@
                                     <i class="fa fa-sort"></i>
                                 </th>
                                 <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Size Name <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Size Code <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Brand Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Subcategory <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
                                         class="fa fa-sort"></i></th>
@@ -114,11 +115,13 @@
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
-                                <td class="productimgname">
-                                    <a routerLink="//product/size-details/{{products?.id}}"
-                                        style="line-height: 3;">{{products.title}}</a>
+                                <td>
+                                    <a class="product-img">
+                                        <img [src]="imgUrl+products?.size_chart_image" alt="product">
+                                    </a>
                                 </td>
-                                <td>{{products.code}}</td>
+                                <td>{{products.brand?.title}}</td>
+                                <td>{{products.subcategory?.title}}</td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
@@ -128,7 +131,7 @@
 
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//product/size-details/{{products?.id}}">
+                                    <a class="me-1" routerLink="//product/size-chart-details/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
                                     <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
@@ -246,7 +249,8 @@
                                             matInput [formControl]="subCategoryCtrl" [matAutocomplete]="auto"
                                             style="box-sizing: border-box;"
                                             [ngClass]="{'is-invalid': subCategoryCtrl.touched && subCategoryCtrl.invalid}">
-                                        <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-autocomplete (optionSelected)="onSubCategorySelected($event)"
+                                            #auto="matAutocomplete">
                                             <ng-container *ngIf="subCategoryCtrl.value?.length > 0">
                                                 <mat-option *ngFor="let subcategory of subCategoryList"
                                                     [value]="subcategory?.title" style="color:#FF9F43">{{
@@ -354,7 +358,8 @@
                                             matInput [formControl]="subCategoryCtrl" [matAutocomplete]="auto"
                                             style="box-sizing: border-box;"
                                             [ngClass]="{'is-invalid': subCategoryCtrl.touched && subCategoryCtrl.invalid}">
-                                        <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-autocomplete (optionSelected)="onSubCategorySelected($event)"
+                                            #auto="matAutocomplete">
                                             <ng-container *ngIf="subCategoryCtrl.value?.length > 0">
                                                 <mat-option *ngFor="let subcategory of subCategoryList"
                                                     [value]="subcategory?.title" style="color:#FF9F43">{{
@@ -420,7 +425,7 @@
     </div>
 </div>
 
-<div id="import_file_modal" class="modal custom-modal fade" role="dialog">
+<!-- <div id="import_file_modal" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -452,4 +457,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
