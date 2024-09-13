@@ -271,6 +271,7 @@ const routes: Routes = [
   { path: 'feature-details/:id', loadChildren: () => import('./feature-details/feature-details.module').then((m) => m.FeatureDetailsModule) },
   { path: 'feature-group-details/:id', loadChildren: () => import('./feature-group-details/feature-group-details.module').then((m) => m.FeatureGroupDetailsModule) },
   { path: 'size-details/:id', loadChildren: () => import('./size-details/size-details.module').then((m) => m.SizeDetailsModule) },
+  { path: 'size-chart-details/:id', loadChildren: () => import('./size-chart-details/size-chart-details.module').then((m) => m.SizeChartDetailsModule) },
   { path: 'tax-details/:id', loadChildren: () => import('./tax-details/tax-details.module').then((m) => m.TaxDetailsModule) },
   { path: 'unit-conversion-details/:id', loadChildren: () => import('./unit-conversion-details/unit-conversion-details.module').then((m) => m.UnitConversionDetailsModule) },
   { path: 'unit-details/:id', loadChildren: () => import('./unit-details/unit-details.module').then((m) => m.UnitDetailsModule) },

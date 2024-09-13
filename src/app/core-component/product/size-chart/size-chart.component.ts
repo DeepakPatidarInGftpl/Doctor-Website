@@ -46,6 +46,7 @@ export class SizeChartComponent implements OnInit {
   fileFormatError = false;
   missingFieldsError = false;
   fieldfilteredData: any[] = [];
+  imgUrl = 'https://pv.greatfuturetechno.com';
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
     this.navigateData = this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData) {
@@ -69,11 +70,10 @@ export class SizeChartComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deletesize(id).subscribe(res => {
+        this.coreService.deleteSizeChart(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.tableData
-            this.ngOnInit();
+            this.getSizeChart();
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -97,7 +97,7 @@ export class SizeChartComponent implements OnInit {
   deActivate(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this size!",
+      text: "Do you want to Deactivate this sizeChart!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -109,16 +109,16 @@ export class SizeChartComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.sizeIsActive(id, '').subscribe(res => {
+        this.coreService.sizeChartIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            this.getSizeChart();
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Size Is Deactivate Successfully.',
+          text: 'SizeChart Is Deactivate Successfully.',
         });
       }
     });
@@ -126,7 +126,7 @@ export class SizeChartComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this size!",
+      text: "Do you want to Active this sizeChart!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -138,16 +138,16 @@ export class SizeChartComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.sizeIsActive(id, '').subscribe(res => {
+        this.coreService.sizeChartIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            this.getSizeChart();
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Size Is Active Successfully.',
+          text: 'sizeChart Is Active Successfully.',
         });
       }
     });
@@ -164,15 +164,6 @@ export class SizeChartComponent implements OnInit {
       image: new FormControl('', [Validators.required,])
     })
   
-    this.coreService.getSize().subscribe(res => {
-      this.tableData = res;
-      this.sizeList = res;
-      this.allsizeData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice();
-      this.filterData();
-    })
 
     this.getSizeChart();
     this.getAllBrand();
@@ -210,10 +201,16 @@ export class SizeChartComponent implements OnInit {
 
   onBrandSelected(event) {
     const selectedTitle = event.option.value;
-    const selectedBrand = this.brandList.find(brand => brand.title === selectedTitle);
-    console.log(selectedBrand);
+    const selectedBrand = this.brandList.find(brand => brand?.title === selectedTitle);
+    this.sizeChartForm.get('title').setValue(selectedBrand?.id);
     this.subCategoryList =  selectedBrand?.subcategory ? selectedBrand?.subcategory : [];
     this.allSubCategoryData =  selectedBrand?.subcategory ? selectedBrand?.subcategory : [];
+  }
+
+  onSubCategorySelected(event) {
+    const selectedTitle = event.option.value;
+    const selectedSubCategory = this.subCategoryList.find(subCategory => subCategory?.title === selectedTitle);
+    this.sizeChartForm.get('subcategory').setValue(selectedSubCategory?.id);
   }
 
   openModal() {
@@ -232,7 +229,12 @@ export class SizeChartComponent implements OnInit {
   getSizeChart() {
     this.coreService.getSizeChart().subscribe((res)=> {
       console.log(res);
+      this.tableData = res;
+      this.filteredData = this.tableData.slice();
+      this.loader = false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
       this.sizeChartList = res;
+      this.filterData();
     })
   }
 
@@ -245,12 +247,12 @@ export class SizeChartComponent implements OnInit {
 
   private _filterBrands(value: string): any {
     const filterValue = value?.toLowerCase();
-    this.brandList = this.allBrandData.filter(size => size?.title?.toLowerCase().includes(filterValue));
+    this.brandList = this.allBrandData?.length ? this.allBrandData.filter(size => size?.title?.toLowerCase().includes(filterValue)) : [];
   }
 
   private _filterSubCategory(value: string): any {
     const filterValue = value?.toLowerCase();
-    this.subCategoryList = this.allSubCategoryData.filter(subcategory => subcategory?.title?.toLowerCase().includes(filterValue));
+    this.subCategoryList = this.allSubCategoryData?.length ? this.allSubCategoryData.filter(subcategory => subcategory?.title?.toLowerCase().includes(filterValue)) : [];
   }
 
   url: any;
@@ -421,11 +423,6 @@ export class SizeChartComponent implements OnInit {
   addRes: any
   loaders = false;
   submit() {
-    // console.log(this.sizeChartForm.value);
-    // console.log(this.id);
-
-    this.sizeChartForm.get('title').setValue(this.brandCtrl.value);
-    this.sizeChartForm.get('subcategory').setValue(this.subCategoryCtrl.value);
     if (this.sizeChartForm.valid) {
       this.loaders = true;
       let formData = new FormData();
@@ -441,6 +438,7 @@ export class SizeChartComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.sizeChartForm.reset();
           this.brandCtrl.reset();
+          this.url = '';
           this.brandCtrl.markAsPristine();
           this.subCategoryCtrl.reset();
           this.subCategoryCtrl.markAsPristine();
@@ -456,18 +454,31 @@ export class SizeChartComponent implements OnInit {
   }
 
   update() {
+    this.loaders = true;
+    let formData = new FormData();
+    formData.append('brand', this.sizeChartForm.get('title').value);
+    formData.append('subcategory', this.sizeChartForm.get('subcategory').value);
+    if(!!this.sizeChartForm.get('image').value){
+      formData.append('size_chart_image', this.sizeChartForm.get('image').value);
+    } else {
+      formData.append('size_chart_image', '');
+      this.sizeChartForm.get('image').setErrors(null);
+    }
     if (this.sizeChartForm.valid) {
-      this.loaders = true;
-      this.coreService.updatesize(this.sizeChartForm.value, this.id).subscribe(res => {
-        // console.log(res);
+      this.coreService.updateSizeChart(formData, this.id).subscribe(res => {
+        console.log(res);
         this.addRes = res
         if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.sizeChartForm.reset()
+          this.brandCtrl.reset();
+          this.subCategoryCtrl.reset();
+          this.url = '';
+          this.brandCtrl.markAsPristine();
+          this.subCategoryCtrl.markAsPristine();
           this.addForm = true
-          // window.location.reload()
-          this.ngOnInit()
+          this.getSizeChart();
         }
       }, err => {
         // console.log(err.error.gst);
@@ -487,13 +498,14 @@ export class SizeChartComponent implements OnInit {
   editFormdata: any
   editForm(id: number) {
     this.id = id
-    this.coreService.getsizeById(id).subscribe(res => {
-      // console.log(res);
+    this.coreService.getsizeChartById(id).subscribe(res => {
       res.map((data: any) => {
         // console.log(data);
         if (id == data.id) {
           this.addForm = false
-          this.sizeChartForm.patchValue(data);
+          this.brandCtrl.setValue(data?.brand.title);
+          this.subCategoryCtrl.setValue(data?.subcategory?.title);
+          this.url = this.imgUrl + data?.size_chart_image;
           this.editFormdata = res
         }
       })
@@ -510,8 +522,13 @@ export class SizeChartComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const brandName = res.brand?.title.toLocaleLowerCase();
+        const subCategory = res.subcategory?.title.toLocaleLowerCase();
+        if(brandName.includes(searchTerm) || subCategory.includes(searchTerm)){
+          return true;
+        } else {
+          return false;
+        }
       });
     }
   }
@@ -552,7 +569,7 @@ export class SizeChartComponent implements OnInit {
   }
   generatePDFAgain() {
     const doc = new jsPDF();
-    const title = 'Size List';
+    const title = 'Size Chart List';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
@@ -560,15 +577,13 @@ export class SizeChartComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'Size Name', '']
+        ['#', 'Image', 'Brand Name', 'SubCategory']
       ],
       body: this.tableData.map((row: any, index: number) => [
         index + 1,
-        row.title,
-        // row.code,
-
-
-
+        this.imgUrl + row?.size_chart_image,
+        row?.brand?.title,
+        row?.subcategory?.title
       ]),
       theme: 'grid',
       headStyles: {
@@ -576,7 +591,7 @@ export class SizeChartComponent implements OnInit {
       },
       startY: 15,
     });
-    doc.save('Size.pdf');
+    doc.save('SizeChart.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -613,7 +628,7 @@ export class SizeChartComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'size.xlsx';
+    const fileName = 'sizeChart.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
   printTable(): void {
@@ -629,7 +644,7 @@ export class SizeChartComponent implements OnInit {
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
 
     // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(5)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -644,7 +659,7 @@ export class SizeChartComponent implements OnInit {
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
       // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(5)');
+      const isActiveTd = row.querySelector('td:nth-child(6)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
@@ -685,8 +700,5 @@ export class SizeChartComponent implements OnInit {
     }
   }
 
-}
-function saveAs(blob: Blob, fileName: string) {
-  throw new Error('Function not implemented.');
 }
 
