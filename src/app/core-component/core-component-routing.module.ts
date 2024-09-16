@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard';
 import { CoreComponentComponent } from './core-component.component';
+import { DynamicRolesGuardGuard } from '../guards/dynamic-roles-guard.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   {
     path: '',
     component:CoreComponentComponent,
-    canActivate:[AuthGuard],
+    canActivate:[AuthGuard,DynamicRolesGuardGuard],
     children: [
       {
         path: 'dashboard',

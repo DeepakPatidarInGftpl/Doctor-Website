@@ -1,7 +1,7 @@
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, Subscription, tap, throwError } from 'rxjs';
 import { HttpClientService } from './http-client.service';
 import { environment } from 'src/environments/environment';
 import { Auth } from '../interfaces/auth';
@@ -15,7 +15,9 @@ export class AuthServiceService {
   // user roles
   isLogin = false;
   roleAs: string;
-  constructor(private http: HttpClient, private httpService: HttpClientService) { }
+  public scricption = new BehaviorSubject<boolean>(false)
+  constructor(private http: HttpClient, private httpService: HttpClientService) {
+ }
   apiurl = `${environment.api}`;
 
   login(data: Auth): Observable<Auth> {
@@ -28,6 +30,22 @@ export class AuthServiceService {
       'Authorization': 'token ' + `${localStorage.getItem('token')}`
     }))
   }
+// get subsu
+getSubscriptions() :Observable<any>{
+    let url = this.apiurl + '/pv-api/is_activeERP/';
+    return this.http.get<any>(url).pipe(catchError((err)=>this.Errorhandling(err)))
+}
+
+
+pageLoadData(){
+  this.getSubscriptions().subscribe({
+    next(value) {
+      console.log(value);
+    },
+  })
+}
+
+
   // get the token value when loged in
   getToken() {
     return localStorage.getItem('token');
@@ -36,6 +54,10 @@ export class AuthServiceService {
     let authToken = localStorage.getItem('token');
     // console.log(authToken);
     return authToken !== null ? true : false;
+  }
+  get isSubIn(): boolean {
+    let authToken  = JSON.parse(localStorage.getItem('sp'));
+    return (authToken) ;
   }
 public HoldLogoData$  = new BehaviorSubject<LogoapiInterFase>(null)
   getLogoApi() : Observable<any>{
