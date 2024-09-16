@@ -260,6 +260,7 @@ export class AddStockTransferComponent implements OnInit {
   cart(): FormGroup {
     return this.fb.group({
       barcode: (0),
+      variant_name: (''),
       quantity: (1),
     })
   }
@@ -315,6 +316,7 @@ export class AddStockTransferComponent implements OnInit {
       barcode.patchValue({
         barcode: selectedItemId,
         item_name: event?.product_title,
+        variant_name: event?.variant_name,
         quantity: event.batch[0]?.stock,
       });
     }

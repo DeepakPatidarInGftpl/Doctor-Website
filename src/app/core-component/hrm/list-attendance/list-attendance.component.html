@@ -21,7 +21,7 @@
                         <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                     </a>
                 </div>
-              
+
                 <div class="search-input">
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
@@ -34,17 +34,20 @@
             </div>
             <div class="wordset">
                 <ul>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                  </li>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                  </li>
-                  <li>
-                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                  </li>
-              </ul>
-              </div>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                                src="assets/img/icons/excel.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                                src="assets/img/icons/printer.svg" alt="img"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- /Filter -->
@@ -62,6 +65,8 @@
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Employee<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Month<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Total Day of Month<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Present Day<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Wages<i class="fa fa-sort"></i></th>
@@ -69,11 +74,13 @@
                         <th (click)="sort('id')" class="thone">Base Salary<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Salary<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i
+                                class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0 ">
-                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -82,18 +89,23 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//hrm/detail-attendance/{{products.id}}" style="line-height: 3;">{{products?.employee?.name}}</a>
+                            <a routerLink="//hrm/detail-attendance/{{products.id}}"
+                                style="line-height: 3;">{{products?.employee?.name}}</a>
                         </td>
                         <td>{{products?.date}}</td>
+                        <td>{{products?.month}}</td>
+                        <!-- <td>{{products?.employee?.department?.title}}</td> -->
                         <td>{{products?.total_day_of_month}}</td>
                         <td>{{products?.total_persent_day}}</td>
                         <td>{{products?.wages}}</td>
                         <td>{{products?.incentive}}</td>
                         <td>{{products?.base_salary}}</td>
                         <td>{{products?.total_salary}}</td>
-                        <td (click)="deActivate(i, products.id)" >
-                        <!-- <span [ngClass]="{'bg-lightgreen': products?.status === 'Draft', 'bg-lightyellow' : products?.status === 'Reviewed' }" class="badges">{{products?.status}}</span> -->
-                    {{products?.status}}
+                        <td (click)="deActivate(i, products.id)">
+                            <span
+                                [ngClass]="{'bg-lightgreen': products?.status === 'Draft', 'bg-lightyellow' : products?.status === 'Reviewed' }"
+                                class="badges">{{products?.status}}</span>
+                            <!-- {{products?.status}} -->
                         <td>
                             <a class="me-2" routerLink="//hrm/detail-attendance/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
@@ -104,20 +116,21 @@
                                 </a>
                             </ng-container>
                             <ng-container *ngIf="products?.status === 'Draft'">
-                                <a (click)="confirmText(i,products.id)" class="me-2 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+                                <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
+                                    href="javascript:void(0);" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
                             </ng-container>
                         </td>
                     </tr>
                 </tbody>
                 <tbody *ngIf="tableData?.length===0 && !loader">
                     <tr>
-                      <td colspan="10">
-                        <p class="center-textt">Data not available</p>
-                      </td>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                        </td>
                     </tr>
-                  </tbody>
+                </tbody>
             </table>
             <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
@@ -138,7 +151,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
                     </div>
                 </div>
             </div>

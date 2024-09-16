@@ -78,8 +78,10 @@ export class AddAttendanceComponent implements OnInit {
       const variants = this.attendanceForm.get('attendance') as FormArray;
       variants.clear(); 
       this.employeeList.forEach((res:any,index:any)=>{
-        this.addAttendance();
-        variants.at(index)?.get('employee')?.patchValue(res?.id);
+        if(!!res?.is_active) {
+          this.addAttendance();
+          variants.at(index)?.get('employee')?.patchValue(res?.id);
+        }
       })
     })
   }

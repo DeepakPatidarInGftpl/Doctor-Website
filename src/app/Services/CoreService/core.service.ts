@@ -149,7 +149,7 @@ export class CoreService {
   }
   getAccountTypeById(type: any) {
     let url = this.apiUrl + '/pv-api/subtype_based_on_account_type/?type='
-    return this.http.get(`${url}${type}`)
+    return this.http.get(`${url}${encodeURIComponent(type)}`)
   }
 
   getAccount() {
@@ -728,6 +728,56 @@ export class CoreService {
       }),
       responseType: 'blob' as 'json'
     })
+  }
+
+  getSizeChart(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  addSizeChart(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getsizeChartById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  updateSizeChart(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  deleteSizeChart(id: number) {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  sizeChartIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/size_chart/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
 
   //tax section

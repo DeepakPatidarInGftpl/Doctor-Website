@@ -90,31 +90,29 @@
 
 
                                     <mat-form-field style="width: 100%;" class="border">
-                                        <mat-date-range-input
-                                        [formGroup]="range"
-                                        [rangePicker]="startdatePicker"
-                                        [comparisonStart]="range.value.start"
-                                        [comparisonEnd]="range.value.end">
-                                        <input matStartDate style="border: none !important;" placeholder="Start date" 
-                                        (dateChange)="filterData('Date')"
-                                        formControlName="start" class="mat-input text-r" >
-                                        <span class="mat-input-placeholder-wrapper">
+                                        <mat-date-range-input [formGroup]="range" [rangePicker]="startdatePicker"
+                                            [comparisonStart]="range.value.start" [comparisonEnd]="range.value.end">
+                                            <input matStartDate style="border: none !important;"
+                                                placeholder="Start date" (dateChange)="filterData('Date')"
+                                                formControlName="start" class="mat-input text-r">
+                                            <span class="mat-input-placeholder-wrapper">
                                                 <span class="mat-input-placeholder">to</span>
                                             </span>
-                                            <input matEndDate style="border: none !important;" placeholder="End date" formControlName="end"  class="mat-input"
-                                                >
+                                            <input matEndDate style="border: none !important;" placeholder="End date"
+                                                formControlName="end" class="mat-input">
                                         </mat-date-range-input>
-        
-                                        <mat-datepicker-toggle  matSuffix [for]="startdatePicker"
+
+                                        <mat-datepicker-toggle matSuffix [for]="startdatePicker"
                                             style=" font-size: x-large;"></mat-datepicker-toggle>
                                         <mat-date-range-picker #startdatePicker>
-                                        <mat-date-range-picker-actions>
-                                            <button mat-button matDateRangePickerCancel>Cancel</button>
-                                            <button mat-raised-button color="primary" (click)="filterData('Date')" matDateRangePickerApply>Apply</button>
-                                        </mat-date-range-picker-actions>
+                                            <mat-date-range-picker-actions>
+                                                <button mat-button matDateRangePickerCancel>Cancel</button>
+                                                <button mat-raised-button color="primary" (click)="filterData('Date')"
+                                                    matDateRangePickerApply>Apply</button>
+                                            </mat-date-range-picker-actions>
                                         </mat-date-range-picker>
-                                    </mat-form-field>   
-                                     
+                                    </mat-form-field>
+
                                     <!-- <input type="date" [formControl]="creditNoteDate" [attr.min]="minDate"
                                         [attr.max]="maxDate" (change)="filterData()"> -->
                                 </div>
@@ -122,24 +120,25 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Select Status</label>
-                                    <select class="form-select" #Status (change)="filterData('Status',Status.value)" aria-label="Default select example">
+                                    <select class="form-select" #Status (change)="filterData('Status',Status.value)"
+                                        aria-label="Default select example">
                                         <option value="">Select Status</option>
-                                        <option >Draft</option>
-                                        <option >Pending</option>
-                                        <option >Partially Used</option>
-                                        <option >Used</option>
-                                        <option >Ordered</option>
-                                        <option >Complete</option>
-                                      </select>
+                                        <option>Draft</option>
+                                        <option>Pending</option>
+                                        <option>Partially Used</option>
+                                        <option>Used</option>
+                                        <option>Ordered</option>
+                                        <option>Complete</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Is Active</label>
-                                    <select  class="form-select" #val (change)="filterData('Is Active',val.value)">
-                                        <option value=""  >Select Is Active Type</option>
-                                        <option > Active</option>
-                                        <option >InActive</option>
+                                    <select class="form-select" #val (change)="filterData('Is Active',val.value)">
+                                        <option value="">Select Is Active Type</option>
+                                        <option> Active</option>
+                                        <option>InActive</option>
                                     </select>
                                 </div>
                             </div>
@@ -173,7 +172,7 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Credit Note No<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Customer Name<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Credit Note Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sales Bill<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Reason<i class="fa fa-sort"></i></th> -->
@@ -209,15 +208,13 @@
                         <!-- <td>{{products.tax}}</td> -->
                         <td>{{products.total}}</td>
                         <td>
-                            <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Complete',
+                            <span [ngClass]="{'bg-lightgreen': products.status === 'Complete',
                                  'bg-lightred' : products.status === 'Pending',
                                  'bg-lightyellow' : products.status === 'Ordered',
                                  'bg-info' : products.status === 'Used',
                                  'bg-secondary' : products.status === 'Partially Used',
                                  'bg-dark' : products.status === 'Draft'
-                                }"
-                                class="badges rounded-pill">{{products.status}}</span>
+                                }" class="badges rounded-pill">{{products.status}}</span>
                         </td>
                         <td>
                             <mat-slide-toggle

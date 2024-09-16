@@ -19,13 +19,17 @@ export class CompanyBankComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any | Account
+  public tableData: any | Account;
+  filteredData: any;
 
   titlee: any;
   name:any
   p:number=1
   pageSize: number = 10;
   itemsPerPage:number=10;
+  selectedBankName: any = '';
+  selectedIsActive: any = '';
+  // selectedAccoutType: any;
   constructor(private coreService: CoreService, private QueryService: QueryService,private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
@@ -135,6 +139,7 @@ export class CompanyBankComponent implements OnInit {
   ngOnInit(): void {
     this.coreService.getCompanyBank().subscribe(res=>{
       this.tableData=res;
+      this.filteredData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -202,6 +207,36 @@ export class CompanyBankComponent implements OnInit {
     })
   }
 
+  filterData() {
+    this.tableData = this.filteredData;
+    let filteredData = this.tableData.slice();
+    if (this.selectedBankName) {
+      filteredData = filteredData.filter(
+        (item) => item?.name?.toLowerCase().includes(this.selectedBankName?.toLowerCase())
+      );
+    }
+    // if (this.selectedAccoutType) {
+    //   filteredData = filteredData.filter(
+    //     (item) => item?.mode_type === this.selectedAccoutType
+    //   );
+    // }
+    if(this.selectedIsActive) {
+      let isActive = this.selectedIsActive === 'Active' ? true : false;
+      filteredData = filteredData.filter(
+        (item) => item?.is_active === isActive
+      );
+    }
+
+    this.tableData = filteredData;
+  }
+
+  clearFilter() {
+    this.selectedBankName = '';
+    // this.selectedAccoutType = '';
+    this.selectedIsActive = '';
+    this.filterData();
+  }
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
@@ -230,12 +265,13 @@ export class CompanyBankComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.account_holder_name.toLocaleLowerCase();
+      this.tableData = this.filteredData.filter(res => {
+        const nameLower = res?.name?.toLocaleLowerCase();
+        const companyNameLower = res?.account_holder_name.toLocaleLowerCase();
+        const accountNo = res?.account_number.toLocaleLowerCase()
         if (nameLower.match(searchTerm)) {
           return true;
-        } else if (companyNameLower.match(searchTerm)) {
+        } else if (companyNameLower.includes(searchTerm) || accountNo.includes(searchTerm)) {
           return true;
         }
         return false;

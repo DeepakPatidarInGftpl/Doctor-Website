@@ -1,0 +1,53 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>Back to Size Chart</h6>
+                    <h4>Full details of a Size Chart</h4>
+                </div>
+                <div class="page-btn">
+                    <a (click)="navigate()" class="btn btn-added">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Size Chart
+                    </a>
+                </div>
+            </div>
+            <div class="company-details-card card" *ngIf="employeeDetails">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Brand Name </td>
+                                            <td class="td">{{employeeDetails?.brand?.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">SubCategory Name</td>
+                                            <td class="td">{{employeeDetails?.subcategory?.title}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex align-items-center mx-4 mt-3">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span
+                                    [ngClass]="{'bg-lightgreen': employeeDetails?.is_active === true, 'bg-lightred' : employeeDetails?.is_active === false,'bg-lightyellow' : employeeDetails?.is_active === 'Partial' }"
+                                    class="badges">{{employeeDetails?.is_active}}</span>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs">
+                            <div class="card">
+                                <div class="card-body">
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

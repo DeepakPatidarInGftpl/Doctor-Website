@@ -20,7 +20,8 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search Product Name..." [(ngModel)]="titlee" (ngModelChange)="search()">
+                            <input type="search" class="form-control form-control-sm"
+                                placeholder="Search Product Name..." [(ngModel)]="titlee" (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -28,8 +29,8 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                            (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -51,8 +52,10 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group mx-5">
                                     <label>Search Item Code</label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search Item Code..." [(ngModel)]="enterFilterSku" (ngModelChange)="filterData()">
-                                </div> 
+                                    <input type="search" class="form-control form-control-sm"
+                                        placeholder="Search Item Code..." [(ngModel)]="enterFilterSku"
+                                        (ngModelChange)="filterData()">
+                                </div>
                             </div>
 
                         </div>
@@ -83,6 +86,10 @@
                         <th (click)="sort('id')">MRP<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Stock Value<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Landing Stock Value<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Variant<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">HSN Code<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Items Location<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Tax%<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0 ">
@@ -97,13 +104,18 @@
                         <td>{{i+1}}</td>
                         <td>{{products?.variant?.sku}}</td>
                         <td class="productimgname">
-                            <a routerLink="//product/product-details/{{products?.variant?.product}}" style="line-height: 3;">{{products?.product_name}}</a>
+                            <a routerLink="//product/product-details/{{products?.variant?.product}}"
+                                style="line-height: 3;">{{products?.product_name}}</a>
                         </td>
                         <td>{{products?.min_qty}}</td>
                         <td>{{products?.available_qty}}</td>
                         <td>{{products?.mrp==null?0:products?.mrp}}</td>
                         <td>{{products?.stock_value==null?0:products?.stock_value}}</td>
                         <td>{{products?.landing_stock_value==null?0:products?.landing_stock_value}}</td>
+                        <td>{{products?.variant?.variant_name}}</td>
+                        <td>{{products?.variant?.product?.hsncode?.hsn_code}}</td>
+                        <td>{{products?.branch?.branch_name}}</td>
+                        <td>{{products?.variant?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage}}</td>
                     </tr>
                 </tbody>
                 <tbody *ngIf="filteredData?.length===0 && !loader">
@@ -135,7 +147,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
+                        </div>
 
                     </div>
                 </div>

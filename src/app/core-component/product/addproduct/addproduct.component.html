@@ -564,7 +564,7 @@
 									</div>
 									<div *ngIf="product_store?.value === 'Online'" class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
-											<label>Return Time*</label>
+											<label>Return Time (In days)*</label>
 											<input type="text" formControlName="return_time" placeholder="Return Time"
 												[ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
 											<span class="text-danger"
@@ -655,7 +655,7 @@
 									</div>
 									<div class="col-lg-2 col-sm-4 col-12" *ngIf="isOnline">
 										<div class="form-group">
-											<label>Weight*</label>
+											<label>Weight(kg)*</label>
 											<input type="text" formControlName="weight" placeholder="Weight"
 												[ngClass]="{'is-invalid': f['weight'].touched && f['weight'].invalid}">
 											<span class="text-danger"
@@ -664,7 +664,7 @@
 									</div>
 									<div class="col-lg-2 col-sm-4 col-12" *ngIf="isOnline">
 										<div class="form-group">
-											<label>Length*</label>
+											<label>Length(cm)*</label>
 											<input type="text" formControlName="length" placeholder="Length"
 												[ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
 											<span class="text-danger"
@@ -673,7 +673,7 @@
 									</div>
 									<div class="col-lg-2 col-sm-4 col-12" *ngIf="isOnline">
 										<div class="form-group">
-											<label>Height*</label>
+											<label>Height(cm)*</label>
 											<input type="text" formControlName="height" placeholder="Height"
 												[ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
 											<span class="text-danger"
@@ -682,7 +682,7 @@
 									</div>
 									<div class="col-lg-2 col-sm-4 col-12" *ngIf="isOnline">
 										<div class="form-group">
-											<label>Breadth*</label>
+											<label>Breadth(cm)*</label>
 											<input type="text" formControlName="breadth" placeholder="Breadth"
 												[ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
 											<span class="text-danger"

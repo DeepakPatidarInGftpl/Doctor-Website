@@ -18,7 +18,7 @@ export class ListAttendanceComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any 
+  public tableData: any = [];
 
  
   titlee: any;
@@ -145,8 +145,11 @@ export class ListAttendanceComponent implements OnInit {
   isDelete:any;
   userDetails:any
   ngOnInit(): void {
-    this.hrmService.getAttendance().subscribe(res=>{
-      this.tableData=res;
+    this.hrmService.getAttendance().subscribe((res:any)=>{
+      res.forEach(val => {
+        let date = this.hrmService.getMonthAndYear(val?.date);
+        this.tableData.push({...val, month: date});
+      });
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -194,8 +197,9 @@ export class ListAttendanceComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.slab_title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const status = res?.status.toLocaleLowerCase(); 
+        // const department = res?.status.toLocaleLowerCase(); 
+        return status.includes(searchTerm); 
       });
     }
   }

@@ -151,7 +151,8 @@
                                                             'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
                                                           }" #categoryValue [id]="'checkbox-' + i">
                                             <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
-                                                (click)="onLabelClick($event)">{{subcatgroup.title}}</label>
+                                                (click)="onLabelClick($event)">{{subcatgroup.title + ' (' +
+                                                subcatgroup?.category?.title + ')'}}</label>
                                         </a></li>
                                 </ul>
                             </div>
@@ -182,7 +183,8 @@
                                                             'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
                                                           }" [id]="'checkboxSub-' + i">
                                             <label [for]="'checkboxSub-' + i" style="margin-bottom: 0;"
-                                                (click)="onLabelClick($event)">{{subcategory.title}}</label>
+                                                (click)="onLabelClick($event)">{{subcategory.title + ' (' +
+                                                subcategory?.category?.title + ')'}}</label>
                                         </a></li>
                                 </ul>
                             </div>
