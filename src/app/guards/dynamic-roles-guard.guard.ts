@@ -12,7 +12,7 @@ export class DynamicRolesGuardGuard  {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         if (this.authService.isSubIn == false) {
-          this.router.navigate(['/auth/scription']);
+          this.router.navigate(['/auth/subscription']);
           return false;
         }
      return true;
