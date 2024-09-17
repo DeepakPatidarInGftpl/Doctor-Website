@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth.component';
+import { DynamicRolesGuardGuard } from '../guards/dynamic-roles-guard.guard';
 
 const routes: Routes = [
   // { path: '', redirectTo: 'signin', pathMatch: 'full' },
@@ -19,9 +20,17 @@ const routes: Routes = [
       },
       {
         path: 'forgetpassword',
+      
         loadChildren: () =>
           import('./forgetpassword/forgetpassword.module').then(
             (m) => m.ForgetpasswordModule
+          ),
+      },
+      {
+        path: 'scription',
+        loadChildren: () =>
+          import('./subscription/subscription.module').then(
+            (m) => m.SubscriptionModule
           ),
       },
     ],

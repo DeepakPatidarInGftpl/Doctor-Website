@@ -23,6 +23,7 @@ export class SigninComponent implements OnInit, AfterViewInit {
   public CustomControler: any;
   deviceToken: any;
   public subscription: Subscription;
+
   notificationLoading = false;
   isSyncLoading = false;
   form!: FormGroup;
@@ -42,6 +43,7 @@ liveUrl :string = environment.api;
         this.CustomControler = data;
       }
     });
+
   }
 
   ngOnInit() {
@@ -63,8 +65,9 @@ liveUrl :string = environment.api;
       }
     });
   }
-  ngAfterViewInit(): void {
-this.PageLoadData()
+  ngAfterViewInit() {
+this.PageLoadData();
+
     
   }
 
@@ -73,12 +76,30 @@ this.PageLoadData()
       if (token) {
         this.deviceToken = token;
         this.updateUserDeviceToken();
+       
         console.log(token);
       } else {
         alert('You have not given notification access, so you will not be notified.');
       }
       this.isSyncLoading = false;
-      window.location.reload();
+     this.authService.getSubscriptions().subscribe({
+        next: (value: any) => {
+          console.log(value);
+          if (value.IsActive == false) {
+            localStorage.setItem('sp',value.IsActive);
+            this.router.navigate(['/auth/scription'],{replaceUrl :true});
+          }else{
+            window.location.reload();
+
+          }
+         
+          
+        },
+        
+      })
+
+
+      
     }).catch(error => {
       console.error('Error retrieving token:', error);
       alert('You have not given notification access, so you will not be notified.');
@@ -141,6 +162,7 @@ logoData :LogoapiInterFase
             };
             this.authService.updateUserDeviceToken(payload).subscribe((res) => {
               console.log(res);
+            
             }, (error) => {
               console.error('Error updating device token:', error);
             });
@@ -160,8 +182,7 @@ logoData :LogoapiInterFase
   loginStatus: string = ''
   loaders=false;
   submit() {
-    // this.storage.Login(this.form.value);
-    // console.log(this.form.value);
+ 
     if (this.form.valid) {
       this.loaders=true;
       this.authService.login(this.form.value).subscribe(res => {
@@ -183,6 +204,12 @@ logoData :LogoapiInterFase
               console.warn(res);
               localStorage.setItem('financialYear',JSON.stringify(res?.id)); 
               this.requestPermission();
+           
+
+              // if((this.AllSubscriptions.IsActive == false)) {
+              //   this.router.navigate(['/auth/scription'],{replaceUrl : true});
+              //   return
+              // }
             }, (err) => {
               this.isSyncLoading = false;
             });
@@ -212,6 +239,7 @@ logoData :LogoapiInterFase
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
+   
   }
 
   get username() {
@@ -220,6 +248,9 @@ logoData :LogoapiInterFase
   get passwords() {
     return this.form.get('password')
   }
+
+
+ 
 
   onClick() {
     if (this.password === 'password') {

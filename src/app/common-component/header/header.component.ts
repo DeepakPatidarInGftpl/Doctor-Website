@@ -312,6 +312,9 @@ export class HeaderComponent implements OnInit {
   }
   // condition for day close or not
 
+ 
+
+
   notificationRead(id: number, isView: boolean) {
       if (!isView && !this.notificationIds.includes(id)) {
         this.notificationIds.push(id);
