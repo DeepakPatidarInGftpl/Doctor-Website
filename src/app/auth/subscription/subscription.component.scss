@@ -1,0 +1,18 @@
+
+
+.imgs_scription{
+
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    // filter: drop-shadow(33px 10px 3px);
+}
+
+.btnss{
+    border: none;
+    outline: none;
+    padding:1rem 2rem;
+    background: var(--primary-color);
+    color: #FFF;
+    font-size: 1.3rem;
+}

@@ -219,23 +219,43 @@ if(this.profileService.CheckBlur$){
           this.isTransport = res.codename
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename == 'view_vendor') {
           this.isVendor = res.codename
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename == 'view_dealer') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'dealer' && res.codename == 'view_dealer') {
           this.isDealer = res.codename
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'view_employee') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'employee' && res.codename == 'view_employee') {
           this.isEmployee = res.codename;
         }
+
+
         //purchase
-        else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename == 'view_purchaseorder') {
+          // old one 
+          //  else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename == 'view_purchaseorder') {
+          //   this.isPurchase = res.codename;
+          // } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename == 'view_materialinward') {
+          //   this.isMaterialInward = res.codename;
+          // } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename == 'view_purchasebill') {
+          //   this.isPurchaseBill = res.codename;
+          // } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'view_debitnote') {
+          //   this.isDebitNotes = res.codename
+          // }
+         // new one 
+         else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'purchaseorder' && res.codename == 'view_purchaseorder') {
           this.isPurchase = res.codename;
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename == 'view_materialinward') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'materialinward' && res.codename == 'view_materialinward') {
           this.isMaterialInward = res.codename;
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename == 'view_purchasebill') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'purchasebill' && res.codename == 'view_purchasebill') {
           this.isPurchaseBill = res.codename;
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'view_debitnote') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'debitnote' && res.codename == 'view_debitnote') {
           this.isDebitNotes = res.codename
         }
+
+
+      
+
+
+
+
         //product
-        else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'view_product') {
+       else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'view_product') {
           this.isProduct = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename == 'view_productcategory') {
           this.isCategory = res.codename
