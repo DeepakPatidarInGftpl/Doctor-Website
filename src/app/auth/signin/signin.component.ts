@@ -87,7 +87,7 @@ this.PageLoadData();
           console.log(value);
           if (value.IsActive == false) {
             localStorage.setItem('sp',value.IsActive);
-            this.router.navigate(['/auth/scription'],{replaceUrl :true});
+            this.router.navigate(['/auth/subscription'],{replaceUrl :true});
           }else{
             window.location.reload();
 
