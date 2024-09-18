@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Purchase Order Add</h4>
+        <h4>Purchase Order Add </h4>
         <h6>Create New Purchase Order</h6>
     </div>
 </div>
@@ -407,9 +407,9 @@
                                 <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
-                                <div class="dropdown">
+                                <div class="dropdown" >
                                     <button type="button" class="dropdown-toggle button" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
                                     <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
@@ -430,7 +430,7 @@
                                 <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
@@ -454,22 +454,25 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                       
+                    </div>
+                    <div class="row" style="width: 100%;">
+                        <div class="table-responsive" style="width: 100%;" >
                             <table class="table datanew">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th class="space-text">Barcode/SKU</th>
-                                        <th style="width: 25%;" class="space-text">Product Name </th>
-                                        <th class="qty space-text" style="width: 12%;">QTY</th>
-                                        <th class="space-text" style="width: 15%;">Cost Price</th>
-                                        <th class="mrp space-text" style="width: 15%;">Mrp</th>
-                                        <th class="space-text">Discount %</th>
-                                        <th class="space-text" style="width: 7%;">Tax %</th>
-                                        <th class="space-text" style="width: 10%;">Landing Cost</th>
-                                        <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
-                                        <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
-                                        <th class="space-text" style="width: 10%;">Total Cost With Tax</th>
+                                        <th   ></th>
+                                        <th  >Barcode/SKU</th>
+                                        <th    >Product Name </th>
+                                        <th   >QTY</th>
+                                        <th   >Cost Price</th>
+                                        <th   >Mrp</th>
+                                        <th  >Discount %</th>
+                                        <th  >Tax %</th>
+                                        <th  >Landing Cost</th>
+                                        <!-- <th  style="width: 10%;">Total Cost</th> -->
+                                        <th  >Total Cost Without Tax</th>
+                                        <th  >Total Cost With Tax</th>
                                         <!-- <th></th> -->
                                     </tr>
                                     <tr>
@@ -481,7 +484,7 @@
                                     <ng-container formArrayName="purchase_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>
+                                                <td style="width: 20px;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -505,13 +508,15 @@
                                                         </svg>
                                                     </div>
                                                 </td>
-                                                <td class="p-1">
+                                                <td class="p-1"  >
                                                     <input class="input" type="text" placeholder="Search Barcode"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [attr.data-index]="i"
-                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                        (keyup)="getVariant(id.value,i,'barcode')"
-                                                        (blur)="hideSearch()">
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #barcodes
+                                                        (keyup)="getVariant(barcodes.value,i,'barcode')"
+                                                        (blur)="hideSearch()"
+                                                        style="width: 180px !important;"
+                                                        >
                                                 </td>
                                                 <td class="p-1" colspan="1">
                                                     <div class="form-group d-flex align-items-center"
@@ -523,7 +528,8 @@
                                                                 [formControl]="myControls[i]"
                                                                 (input)="getVariant($event.target.value,i,'')"
                                                                 [matAutocomplete]="autos"
-                                                                style="box-sizing: border-box;" />
+                                                                style="box-sizing: border-box;width: 200px !important;" 
+                                                                />
                                                             <mat-autocomplete #autos="matAutocomplete">
                                                                 <ng-container
                                                                     *ngIf="myControls[i].value?.length >= 1 && myControls[i].value?.length > 0">
@@ -642,13 +648,15 @@
                                                 </td>
                                                 <td class="p-1"><input type="number"
                                                         [ngClass]="{'error-border': (isFormCartInvalid || isCartQtyInvalid(i))}"
-                                                        formControlName="qty" class="input" min="1">
-                                                    <div *ngIf="isCartQtyInvalid(i)" class="error-message">
+                                                        formControlName="qty" class="input" min="1"
+                                                        style="width: 100px;"
+                                                        >
+                                                    <div *ngIf="isCartQtyInvalid(i)" class="error-message space-text">
                                                         Quantity must be a positive number.
                                                     </div>
                                                 </td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        formControlName="purchase_rate" class="input">
+                                                        formControlName="purchase_rate" class="input" style="width: 100px;">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -727,16 +735,17 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        formControlName="mrp" class="input"></td>
+                                                        formControlName="mrp" class="input" style="width: 100px;">
+                                                    </td>
                                                 <td class="p-1"><input type="text"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="discount" placeholder="Discount" class="input"
-                                                        (blur)="purchase(i)">
+                                                        (blur)="purchase(i)" style="width: 100px;">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
                                                 </td>
-                                                <td class="p-1">
+                                                <td class="p-1" style="width: 100px;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
@@ -746,17 +755,17 @@
                                                 <td class="text-end p-1">
                                                     <input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="landing_cost" class="input p-1"
-                                                        placeholder="Landing Cost" readonly />
+                                                        placeholder="Landing Cost" readonly style="width: 100px;" />
                                                 </td>
                                                 <td class="text-end p-1">
                                                     <input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         class="input p-1" readonly [value]="TotalWithoutTax[i]"
-                                                        placeholder="Total Without Tax">
+                                                        placeholder="Total Without Tax" style="width: 150px;">
                                                 </td>
                                                 <td class="text-end p-1">
                                                     <input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="total" class="input p-1" placeholder="Total"
-                                                        readonly>
+                                                        readonly style="width: 150px;">
                                                 </td>
                                             </tr>
                                         </ng-container>

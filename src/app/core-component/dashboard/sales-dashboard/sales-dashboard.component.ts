@@ -31,10 +31,10 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class SalesDashboardComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<any>;
-  public categoryWiseSaleChartOptions!: Partial<any>;
-  public dailySaleChartOptions!: Partial<any>;
-  public subCatSaleChartOptions!: Partial<any>;
-  public inventoryChartOptions!: Partial<any>;
+  public categoryWiseSaleChartOptions: Partial<any>;
+  public dailySaleChartOptions: Partial<any>;
+  public subCatSaleChartOptions: Partial<any>;
+  public inventoryChartOptions: Partial<any>;
   public saleTotalChartOption: Partial<any>;
   series: ApexNonAxisChartSeries;
   labels: string[];
