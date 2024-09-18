@@ -433,14 +433,16 @@
                         </mat-form-field>
                         <!-- </div> -->
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="dailySaleChartOptions">
                         <apx-chart [series]="dailySaleChartOptions?.['series']"
                             [chart]="dailySaleChartOptions?.['chart']"
                             [dataLabels]="dailySaleChartOptions?.['dataLabels']"
                             [plotOptions]="dailySaleChartOptions?.['plotOptions']"
                             [responsive]="dailySaleChartOptions?.['responsive']"
-                            [xaxis]="dailySaleChartOptions?.['xaxis']" [legend]="dailySaleChartOptions?.['legend']"
-                            [fill]="dailySaleChartOptions?.['fill']"></apx-chart>
+                            [xaxis]="dailySaleChartOptions?.['xaxis']"
+                            [legend]="dailySaleChartOptions?.['legend']"
+                            [fill]="dailySaleChartOptions?.['fill']">
+                        </apx-chart>
                     </div>
                 </div>
             </div>
@@ -465,7 +467,7 @@
                         </mat-form-field>
                         <!-- </div> -->
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="chartOptions">
                         <apx-chart [series]="chartOptions?.['series']" [chart]="chartOptions?.['chart']"
                             [dataLabels]="chartOptions?.['dataLabels']" [plotOptions]="chartOptions?.['plotOptions']"
                             [yaxis]="chartOptions?.['yaxis']" [legend]="chartOptions?.['legend']"
@@ -495,7 +497,7 @@
                             <mat-date-range-picker #catwisesalePicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="categoryWiseSaleChartOptions">
                         <apx-chart [series]="categoryWiseSaleChartOptions?.['series']"
                             [chart]="categoryWiseSaleChartOptions?.['chart']"
                             [dataLabels]="categoryWiseSaleChartOptions?.['dataLabels']"
@@ -530,7 +532,7 @@
                         <mat-date-range-picker #subcatPicker></mat-date-range-picker>
                     </mat-form-field>
                     <!-- </div> -->
-                    <div class="card-body d-flex justify-content-center">
+                    <div class="card-body d-flex justify-content-center" *ngIf="subCatSaleChartOptions">
                         <apx-chart class="sub-cat-sale-chart" [series]="subCatSaleChartOptions?.['series']"
                             [chart]="subCatSaleChartOptions?.['chart']" [labels]="subCatSaleChartOptions?.['labels']"
                             [responsive]="subCatSaleChartOptions?.['responsive']"
@@ -556,7 +558,7 @@
                         <mat-date-range-picker #inventoryPicker></mat-date-range-picker>
                     </mat-form-field>
                     <!-- </div> -->
-                    <div class="card-body d-flex justify-content-center">
+                    <div class="card-body d-flex justify-content-center" *ngIf="inventoryChartOptions">
                         <apx-chart [series]="inventoryChartOptions?.['series']"
                             [chart]="inventoryChartOptions?.['chart']" [labels]="inventoryChartOptions?.['labels']"
                             [responsive]="inventoryChartOptions?.['responsive']"

@@ -197,7 +197,10 @@ export class AddpurchaseComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+
         this.isSearch = false;
+        if (res) {
+          
         this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -217,12 +220,18 @@ export class AddpurchaseComponent implements OnInit {
             barcode: this.searchs[0]?.id
           });
         }
+
+      }
+
+
       });
     }
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
+        if (res && res.length > 0) {
+          
         this.variantList[index] = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -242,6 +251,8 @@ export class AddpurchaseComponent implements OnInit {
             barcode: this.searchs[0]?.id
           });
         }
+      }
+
       });
     }
   }
@@ -467,6 +478,9 @@ export class AddpurchaseComponent implements OnInit {
   landingCost: any;
   batchCostPrice: any[] = [];
   oncheckVariant(event: any, index) {
+    // console.log(event,'deepak')
+
+    if(event){
     const selectedItemId = event.id;
     console.log(event);
     this.selectedProductName = event.product_title;
@@ -578,6 +592,13 @@ export class AddpurchaseComponent implements OnInit {
     }
     this.updateTotal(index);
     this.updateLandingCost(index);
+
+
+
+
+
+  }
+
   }
   coastprice: any[] = []
   landingPrice: any[] = []
