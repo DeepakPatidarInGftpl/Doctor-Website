@@ -392,12 +392,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" >
                             <div class="page-title">
                                 <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
@@ -420,7 +420,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="dropdown">
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
@@ -447,16 +447,16 @@
                                         <th>#</th>
                                         <th></th>
                                         <th class="space-text">Barcode/SKU</th>
-                                        <th style="width: 25%;" class="space-text">Product Name</th>
-                                        <th class="qty space-text" style="width: 12%;">QTY</th>
-                                        <th class="space-text" style="width: 15%;">Price</th>
+                                        <th  class="space-text">Product Name</th>
+                                        <th class="qty space-text" >QTY</th>
+                                        <th class="space-text" >Price</th>
                                         <!-- <th class="mrp space-text" style="width: 10%;">Mrp</th> -->
                                         <th class="space-text">Discount %</th>
-                                        <th class="space-text" style="width: 7%;">Tax %</th>
+                                        <th class="space-text" >Tax %</th>
                                         <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
                                         <!-- <th class="mrp space-text" style="width: 10%;">Amount</th> -->
-                                        <th class="space-text" style="width: 10%;">Total Without Tax</th>
-                                        <th class="space-text" style="width: 10%;">Total With Tax</th>
+                                        <th class="space-text">Total Without Tax</th>
+                                        <th class="space-text" >Total With Tax</th>
                                         <th></th>
                                     </tr>
                                     <tr>
@@ -468,8 +468,8 @@
                                     <ng-container formArrayName="estimate_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>{{i+1+'.'}}</td>
-                                                <td>
+                                                <td style="width: 10px !important;">{{i+1+'.'}}</td>
+                                                <td style="width: 20px !important;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -497,7 +497,9 @@
                                                     <input class="input" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                        (blur)="hideSearch()">
+                                                        (blur)="hideSearch()"
+                                                        style="width: 200px !important;"
+                                                        >
                                                 </td>
                                                 <td colspan="1">
                                                     <div class="form-group d-flex item-align-center"
@@ -507,7 +509,7 @@
                                                             aria-label="Search Products" matInput
                                                             [formControl]="d.get('item_name')"
                                                             (input)="getVariant($event.target.value,i,'')"
-                                                            [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                            [matAutocomplete]="autos" style="box-sizing: border-box;width: 200px !important;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
                                                             <ng-container *ngIf="variantList && variantList[i]">
                                                                 <ng-container *ngFor="let option of variantList[i]">
@@ -623,10 +625,10 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" min="0" class="input">
+                                                <td><input type="number" formControlName="qty" min="0" class="input" style="width: 100px !important;">
                                                 </td>
                                                 <td><input type="number" formControlName="price" class="input" #price
-                                                        readonly>
+                                                        readonly style="width: 100px !important;">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -705,7 +707,7 @@
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
                                                 <td>
                                                     <input type="text" formControlName="discount" class="input"
-                                                        (blur)="purchase4(i)" readonly>
+                                                        (blur)="purchase4(i)" readonly style="width: 100px !important;">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalDiscount(i)"></i>
                                                     <div class="modal fade" id="discountModal-{{i}}" tabindex="-1"
@@ -807,7 +809,7 @@
                                                     </div>
                                                     <!-- <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span> -->
                                                 </td>
-                                                <td>
+                                                <td style="width: 100px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
                                                 <span class="text-danger" style="display: block;" *ngIf="taxx(i) && taxx(i).invalid && taxx(i).touched"> Enter Tax ex: 1-100 %</span> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
@@ -817,9 +819,9 @@
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                                 <td class="text-end"> <input type="number" class="input" readonly
-                                                        [value]="TotalWithoutTax[i] || 0"></td>
+                                                        [value]="TotalWithoutTax[i] || 0" style="width: 130px !important;"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total" class="input" readonly>
+                                                    <input type="number" formControlName="total" class="input" readonly style="width: 130px !important;">
                                                 </td>
                                             </tr>
                                         </ng-container>

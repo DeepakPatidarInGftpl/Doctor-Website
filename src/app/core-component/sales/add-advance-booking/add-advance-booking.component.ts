@@ -398,12 +398,13 @@ export class AddAdvanceBookingComponent implements OnInit {
   selectBatch: any;
   paymentTerms: any;
   userType: any;
-
+  supplierId:number;
   oncheck(data: any) {
     console.log(data);
     const userName = data?.name;
     const selectedItemId = data?.detail?.account;
     this.userType = data?.account_id;
+    this.supplierId = data?.account_id;
     const user = this.employeeList.filter((val) => val?.name === userName);
     this.discountLimit = user[0]?.discount_limit;
     //call detail api

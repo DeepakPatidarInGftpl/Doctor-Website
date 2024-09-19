@@ -337,10 +337,11 @@ export class AddDeliveryChallanComponent implements OnInit {
   selectBatch: any;
   paymentTerms: any;
   userType: any;
-
+  supplierId:number;
   oncheck(data: any) {
     console.log(data);
     this.getVariant('...','','')
+    this.supplierId = data.id
     const selectedItemId = data?.detail?.account;
     this.userType = data?.user_type;
     this.supplierAddress = data?.detail;
