@@ -447,7 +447,7 @@
                                 <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
@@ -470,7 +470,7 @@
                                 <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"

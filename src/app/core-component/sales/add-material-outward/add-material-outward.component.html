@@ -14,7 +14,7 @@
                         <label>Customer*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
-                        min-width: 100%;border-top: none;">
+                        min-width: 100%;border-top: none; box-sizing: border-box;">
                             <input type="text" placeholder="Search Customer" aria-label="customer" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['customer'].touched && f['customer'].invalid}">
@@ -385,7 +385,7 @@
                                 <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
@@ -408,7 +408,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="dropdown">
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>

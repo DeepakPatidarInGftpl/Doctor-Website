@@ -334,10 +334,11 @@ export class AddMaterialOutwardComponent implements OnInit {
   selectBatch: any;
   paymentTerms: any;
   userType: any;
-
+  supplierId :number;
   oncheck(data: any) {
     console.log(data);
     const selectedItemId = data.id;
+    this.supplierId = data.id;
     this.userType = data?.user_type;
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {

@@ -454,11 +454,12 @@ export class AddEstimateComponent implements OnInit {
   selectBatch: any;
   paymentTerms: any;
   userType: any;
-
+  supplierId : any;
   oncheck(data: any) {
     console.log(data);
     const userName = data?.name;
     const selectedItemId = data.id;
+    this.supplierId = data?.id;
     this.userType = data?.user_type;
     const user = this.employeeList.filter((val) => val?.name === userName);
     this.discountLimit = user[0]?.discount_limit;
