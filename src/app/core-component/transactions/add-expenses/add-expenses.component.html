@@ -121,8 +121,8 @@
                                     <ng-container formArrayName="expenses_voucher_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>{{i+1+'.'}}</td>
-                                                <td>
+                                                <td style="width: 10px !important;">{{i+1+'.'}}</td>
+                                                <td style="width: 20px !important;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -154,7 +154,7 @@
                                                                 aria-label="from_account" matInput
                                                                 [formControl]="myControls.at(i)"
                                                                 [matAutocomplete]="auto"
-                                                                style="box-sizing: border-box;">
+                                                                style="box-sizing: border-box; width: 200px !important;">
                                                             <mat-autocomplete #auto="matAutocomplete">
                                                                 <ng-container
                                                                     *ngFor="let account of filteredFromAccountList">
@@ -188,7 +188,7 @@
                                                         Account</span>
                                                 </td>
                                                 <td>
-                                                    <select formControlName="service_or_product">
+                                                    <select formControlName="service_or_product" style="width: 150px !important;">
                                                         <option value="Service" selected>Service</option>
                                                         <option value="Product">Product</option>
                                                     </select>
@@ -196,15 +196,15 @@
                                                         *ngIf="service_or_product(i) && service_or_product(i).invalid && service_or_product(i).touched">Select
                                                         Amount Type</span>
                                                 </td>
-                                                <td><input type="text" formControlName="description"
+                                                <td><input type="text" style="width: 200px !important;" formControlName="description"
                                                         placeholder="Enter Note" class="input"></td>
-                                                <td><input type="number" formControlName="amount" class="input"
+                                                <td><input type="number" style="width: 100px !important;" formControlName="amount" class="input"
                                                         (blur)="calculateTaxAmout(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
                                                         Amount</span>
                                                 </td>
-                                                <td><input type="number" formControlName="discount"
+                                                <td><input type="number" style="width: 100px !important;" formControlName="discount"
                                                         class="input discount-input-wrapper"
                                                         (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="symbol" (click)="percentage(i)"
@@ -216,7 +216,7 @@
                                                         Discount (ex:1-100)</span>
                                                 </td>
 
-                                                <td>
+                                                <td style="width: 100px !important;">
                                                     <div class="form-group mb-0">
                                                         <select formControlName="tax"
                                                             (change)="onChangePercentage($event, i)"
@@ -239,13 +239,13 @@
                                                         *ngIf="tax(i) && tax(i).invalid && tax(i).touched">Enter Tax
                                                         (ex:1-100)</span>
                                                 </td> -->
-                                                <td><input type="number" formControlName="tax_value" class="input"
+                                                <td><input type="number" style="width: 100px !important;" formControlName="tax_value" class="input"
                                                         readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="tax_value(i) && tax_value(i).invalid && tax_value(i).touched">Enter
                                                         Tax Value</span>
                                                 </td>
-                                                <td><input type="number" formControlName="total" class="input" readonly>
+                                                <td><input type="number" style="width: 100px !important;" formControlName="total" class="input" readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="total(i) && total(i).invalid && total(i).touched">Enter
                                                         Total</span>
