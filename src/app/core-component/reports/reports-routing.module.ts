@@ -51,6 +51,16 @@ const routes: Routes = [
     loadChildren: () =>
     import('./sale-overdue/sale-overdue.module').then((m) =>m.SaleOverdueModule)
 },
+  {
+    path:'sale-tax',
+    loadChildren: () =>
+    import('./sale-tax/sale-tax.module').then((m) =>m.SaleTaxModule)
+},
+  {
+    path:'hsncode-wise-sale',
+    loadChildren: () =>
+    import('./hsncode-wise-sale/hsncode-wise-sale.module').then((m) =>m.HsncodeWiseSaleModule)
+},
 {
   path:'amount-wise-sale',
     loadChildren: () =>
@@ -103,7 +113,12 @@ const routes: Routes = [
   loadChildren: () =>
     import('./purchase-overdue/purchase-overdue.module').then((m) => m.PurchaseOverdueModule),
 },
- 
+{
+  path: 'hsncode-wise-purchase',
+  loadChildren: () =>
+    import('./hsncode-wise-purchase/hsncode-wise-purchase.module').then((m) => m.HsncodeWisePurchaseModule),
+},
+
 {
   path: 'purchase-outstanding',
   loadChildren: () =>

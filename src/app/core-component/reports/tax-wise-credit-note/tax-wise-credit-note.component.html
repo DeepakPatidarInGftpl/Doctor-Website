@@ -94,8 +94,18 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Date <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Name<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">customer Name<i class="fa fa-sort"></i></th>
+                                <!-- <th class="thone" style="width:10%">Voucher Type</th> -->
                                 <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
+                                <!-- <th class="thone" style="width:10%">Hsn Code</th> -->
+                                <!-- <th class="thone" style="width:10%"> Taxable </th> -->
+                                <!-- <th class="thone" style="width:10%"> CGST Rate </th>
+                                <th class="thone" style="width:10%"> CGST Amount </th> -->
+                                <!-- <th class="thone" style="width:10%"> SGST Rate </th>
+                                <th class="thone" style="width:10%"> SGST Amount </th> -->
+                                <!-- <th class="thone" style="width:10%"> IGST Rate </th>
+                                <th class="thone" style="width:10%"> IGST Amount </th>
+                                <th class="thone" style="width:10%"> Tax Amount </th> -->
                                 <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
 
                                 <th class="thone" style="width:10%; padding-left: 25px;
@@ -109,7 +119,7 @@
                                 <th class="thone" style="width:10%"> CGST Amount </th>
                                 <th class="thone" style="width:10%"> SGST Rate </th>
                                 <th class="thone" style="width:10%"> SGST Amount </th>
-                                <th class="thone" style="width:10%"> GST Rate </th>
+                                <th class="thone" style="width:10%"> IGST Rate </th>
                                 <th class="thone" style="width:10%"> IGST Amount </th>
                                 <th class="thone" style="width:10%"> Tax Amount </th>
                             </tr>
@@ -131,7 +141,6 @@
                                                 <td style="width:8%">{{data.voucher_no}}</td>
                                                 <td style="width:8%">{{data.hsn_code}}</td>
                                                 <td style="width:8%">{{data.taxable}}</td>
-
                                                 <td style="width:8%">{{data.CGST_rate}}</td>
                                                 <td style="width:10%">{{data.CGST_amount}}</td>
                                                 <td style="width:10%">{{data.SGST_rate}}</td>

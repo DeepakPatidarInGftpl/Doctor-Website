@@ -431,6 +431,12 @@ export class CommonServiceService {
       "is_Favorite": false
     },
     {
+      "reportname": "Hsncode Wise Sale Report",
+      "group": "sale",
+      "url": "/report/hsncode-wise-sale",
+      "is_Favorite": false
+    },
+    {
       "reportname": "Tax Wise Sale Return",
       "group": "sale",
       "url": "/report/tax-wise-sale-return",
@@ -465,10 +471,18 @@ export class CommonServiceService {
       "group": "sale",
       "url": "/report/sale-item-register",
       "is_Favorite": false
-    }, {
+    },
+    
+    {
       "reportname": "Pending Sale Order",
       "group": "sale",
       "url": "/report/pending-sale-order",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "Sale Tax",
+      "group": "sale",
+      "url": "/report/sale-tax",
       "is_Favorite": false
     },
     {
@@ -559,6 +573,12 @@ export class CommonServiceService {
       "reportname": "Tax Wise Debit Note",
       "group": "purchase",
       "url": "/report/tax-wise-debit-note",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "Tax Wise Purchase",
+      "group": "purchase",
+      "url": "/report/hsncode-wise-purchase",
       "is_Favorite": false
     },
 
