@@ -14,8 +14,7 @@ export class ReportService {
   getSaleInvoiceList(start_date: any, end_date: any, user_id: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/sale/invoicelist/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+    
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -42,7 +41,44 @@ export class ReportService {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
+  };
+
+  getSaleTaxList(s:any,e:any):Observable<any>{
+    const Url = this.apiUrl+"/api/reports/sale_tax/"
+    const query = new URLSearchParams();
+    query.append('start_date',s);
+    query.append('end_date',e);
+    return this.http.get<any>(Url + (query.toString() ? '?' + query.toString() : ''));
   }
+
+  get_hsncode_wise_TaxList(s:any,e:any,hsc?:any):Observable<any>{
+    const Url = this.apiUrl+"/api/reports/hsncode/wise/sale/"
+    const query = new URLSearchParams();
+    query.append('start_date',s);
+    query.append('end_date',e);
+    query.append('hsncode',hsc);
+    return this.http.get<any>(Url + (query.toString() ? '?' + query.toString() : ''));
+  }
+  get_hsncode_wise_purchase_TaxList(s:any,e:any,hsc?:any):Observable<any>{
+    // /api/reports/hsncode/wise/purchase/?start_date=2022-01-19&end_date=2025-03-19&hsncode=1
+    const Url = this.apiUrl+"/api/reports/hsncode/wise/purchase/"
+    const query = new URLSearchParams();
+    query.append('start_date',s);
+    query.append('end_date',e);
+    query.append('hsncode',hsc);
+    return this.http.get<any>(Url + (query.toString() ? '?' + query.toString() : ''));
+  }
+
+
+
+
+
+
+
+
+
+
+
 
   getSaleSummaryList(start_date: any, end_date: any, user_id: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/sale/summary/';

@@ -26,7 +26,7 @@ export class AllReportsComponent implements OnInit {
 
     const stringifiedList = localStorage.getItem('favList');
     this.myData = JSON.parse(stringifiedList);
-    console.log(this.myData);
+    console.log(this.commonService.myData);
     if (!this.myData) {
       localStorage.setItem('favList', JSON.stringify(this.commonService.myData));
       const stringifiedList = localStorage.getItem('favList');

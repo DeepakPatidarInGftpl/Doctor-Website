@@ -65,7 +65,7 @@ export class TaxWiseCreditNoteComponent implements OnInit {
       this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
