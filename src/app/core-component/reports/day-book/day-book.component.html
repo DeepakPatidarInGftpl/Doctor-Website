@@ -79,7 +79,9 @@
                                         <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn3">
                                             <mat-option *ngFor="let supplier of filteredSuppliers | async"
                                                 [value]="supplier"
-                                                (blur)="getSelectedAccount( supplier?.id)">{{supplier?.title}}
+                                                (blur)="getSelectedAccount( supplier?.id)">
+                                                
+                                                {{   (supplier && supplier.company_name) ? supplier.company_name :  supplier?.title}}
                                             </mat-option>
                                         </mat-autocomplete>
                                     </div>

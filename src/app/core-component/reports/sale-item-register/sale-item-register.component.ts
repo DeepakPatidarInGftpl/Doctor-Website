@@ -71,7 +71,7 @@ export class SaleItemRegisterComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res && res.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
