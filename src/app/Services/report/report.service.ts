@@ -59,6 +59,19 @@ export class ReportService {
     query.append('hsncode',hsc);
     return this.http.get<any>(Url + (query.toString() ? '?' + query.toString() : ''));
   }
+
+  getMaterialConsumptionList(s:any,e:any):Observable<any>{
+    const Url = this.apiUrl+"/api/reports/materialconsumption/"
+    const query = new URLSearchParams();
+    query.append('start_date',s);
+    query.append('end_date',e);
+    return this.http.get<any>(Url + (query.toString() ? '?' + query.toString() : ''));
+  }
+
+
+
+
+
   get_hsncode_wise_purchase_TaxList(s:any,e:any,hsc?:any):Observable<any>{
     // /api/reports/hsncode/wise/purchase/?start_date=2022-01-19&end_date=2025-03-19&hsncode=1
     const Url = this.apiUrl+"/api/reports/hsncode/wise/purchase/"

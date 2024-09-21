@@ -9,16 +9,15 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
-
 @Component({
-  selector: 'app-hsncode-wise-sale',
-  templateUrl: './hsncode-wise-sale.component.html',
-  styleUrls: ['./hsncode-wise-sale.component.scss']
+  selector: 'app-material-consumption',
+  templateUrl: './material-consumption.component.html',
+  styleUrls: ['./material-consumption.component.scss']
 })
-export class HsncodeWiseSaleComponent implements OnInit {
+export class MaterialConsumptionComponent implements OnInit {
   saleSummaryList :any[] = [];
-  startDate ;
-  endDate ;
+  startDate :any ;
+  endDate :any ;
   saleSummaryform: FormGroup;
   financialYear!: string;
   userDetails:any;
@@ -30,8 +29,8 @@ export class HsncodeWiseSaleComponent implements OnInit {
     private cs: CompanyService,
     private datepipe: DatePipe,
     private _coreService : CoreService 
-
   ) { }
+
 
   ngOnInit(): void {
     if (localStorage.getItem('financialYear')) {
@@ -46,7 +45,6 @@ export class HsncodeWiseSaleComponent implements OnInit {
     this.minDate = minDate;
     this.maxDate = maxDate;
 
-    this.pageLoadData();
 
 
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -55,14 +53,12 @@ export class HsncodeWiseSaleComponent implements OnInit {
       // this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+   
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
-
     // salesummaryform
     this.saleSummaryform = new FormGroup({
       start: new FormControl(formattedStartDate, this.commonService.dateRangeValidator(this.financialYear)),
@@ -70,8 +66,10 @@ export class HsncodeWiseSaleComponent implements OnInit {
       user_id: new FormControl(),
       payment_type: new FormControl('')
     });
-    this.startDate = this.saleSummaryform.value.start;
-    this.endDate = this.saleSummaryform.value.end;
+    this.startDate = this.saleSummaryform.get('start')?.value;
+    this.endDate = this.saleSummaryform.get('end')?.value;
+    this.getSaleSummary();
+
   }
 
 
@@ -221,26 +219,27 @@ export class HsncodeWiseSaleComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  getSaleSummary(hsn :number) {
+  getSaleSummary() {
    
-    
-    this._reportService.get_hsncode_wise_TaxList(this.startDate, this.endDate,hsn).subscribe((res) => {
+    console.log(this.startDate)
+    this._reportService.getMaterialConsumptionList(this.startDate, this.endDate).subscribe((res) => {
+      console.log(res)
       this.saleSummaryList = res;
       this.saleSummary = res
     })
 
   }
-  getSelectedSaleSummaryDates() {
+  getSelectedSaleSummaryDates(str:any) {
     console.log(this.saleSummaryform.value);
     const start = this.datepipe.transform(this.saleSummaryform.value.start, 'yyyy-MM-dd');
     const end = this.datepipe.transform(this.saleSummaryform.value.end, 'yyyy-MM-dd');
-    console.log(start);
-    console.log(end);
+    console.log(str);
+    // console.log(end);
     this.startDate = start;
     this.endDate = end;
-    if (start && end) {
+    if (str =='end') {
       
-      this?.getSaleSummary(this.hsn_id);
+      this?.getSaleSummary();
     }
   }
 
@@ -254,20 +253,6 @@ export class HsncodeWiseSaleComponent implements OnInit {
   }
 
 
-  public hsnList :any[] = [];
-  private pageLoadData(){
-    this._coreService.getHSNCode().subscribe({
-      next : (value :any)=> {
-        this.hsnList = value;
-        console.log(value)
-      },
-    })
-  };
+ 
 
-
-  hsn_id : number;
-  handelChang(event :any){
-    this.hsn_id =(event.target.value)
-    this.getSaleSummary(event.target.value)
-  };
 }
