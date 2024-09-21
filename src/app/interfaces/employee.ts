@@ -29,4 +29,5 @@ export interface LogoapiInterFase {
     secondary_colour: string;
     title_ERP: string;
     title_POS: string;
+    base64_logo?:any
   }

@@ -340,6 +340,11 @@ const routes: Routes = [
   loadChildren: () =>
     import('./profit-loss/profit-loss.module').then((m) => m.ProfitLossModule),
 },
+{
+  path: 'material-consumption',
+  loadChildren: () =>
+    import('./material-consumption/material-consumption.module').then((m) => m.MaterialConsumptionModule),
+},
 ];
 
 @NgModule({

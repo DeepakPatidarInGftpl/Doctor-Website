@@ -673,6 +673,12 @@ export class CommonServiceService {
       "is_Favorite": false
     },
     {
+      "reportname": "material consumption",
+      "group": "inventory",
+      "url": "/report/material-consumption/",
+      "is_Favorite": false
+    },
+    {
       "reportname": "Day Book",
       "group": "accounts",
       "url": "/report/day-book",

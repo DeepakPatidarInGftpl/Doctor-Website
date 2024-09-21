@@ -1,3 +1,4 @@
+import { LogoapiInterFase } from './../../../interfaces/employee';
 import { Component, OnInit } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
@@ -14,6 +15,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { ReportService } from 'src/app/Services/report/report.service';
 import * as XLSX from 'xlsx';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { AuthServiceService } from 'src/app/Services/auth-service.service';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-purchase-summary',
@@ -41,8 +44,11 @@ export class PurchaseSummaryComponent implements OnInit {
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
     private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
-  }
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService
+    ,private _auth : AuthServiceService
+  ) {
+    
+    }
   //purchase summary form
   purchaseSummaryform!: FormGroup;
   startDate: any;
@@ -54,6 +60,12 @@ export class PurchaseSummaryComponent implements OnInit {
   isAdmin = false;
   fyID: any;
   ngOnInit(): void {
+
+
+      // console.log(this._auth.HoldLogoData$.value)
+
+
+
     //23-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
@@ -68,7 +80,7 @@ export class PurchaseSummaryComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -114,6 +126,8 @@ export class PurchaseSummaryComponent implements OnInit {
         return name ? this._filter(name as string) : this.suppliers.slice();
       }),
     );
+
+    this.Logo_api()
   }
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
@@ -187,6 +201,21 @@ export class PurchaseSummaryComponent implements OnInit {
 
   }
 
+logoPath :string;
+
+  Logo_api(){
+    this._auth.getLogoApi().subscribe({
+      next : (value : LogoapiInterFase) => {
+        this.logoPath = "https://pv.greatfuturetechno.com"+value.data?.logo
+        // console.log(this.logoPath)
+
+      },
+      error : (err) => {
+        console.log(err)
+      },
+    })
+  }
+
   // api call
   dataId: any;
   oncheckAccount(data: any) {
@@ -213,68 +242,109 @@ export class PurchaseSummaryComponent implements OnInit {
   // convert to pdf
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Purchase Summary Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+  getImageFromUrl(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous'); // To avoid CORS issues
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
 
+
+
+   
+    
+  }
+
+
+
+
+
+ async generatePDFAgain() {
+
+  this.cs.loadImage().then((img : any)=>{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const width = 200;
+    const heigth = 200;
+    canvas.width = width;
+    canvas.height = heigth;
+    ctx.clearRect(0,0,width,heigth); // remove Black Bg from images
+    ctx.drawImage(img,0,0,width,heigth);
+    const compressedImage = canvas.toDataURL('image/png',0.9); 
+
+
+
+
+
+    const doc = new jsPDF('p','mm','a4');
+    const PrintData = this.datepipe.transform(new Date(),'yyyy-MM-dd')
+  
+
+   
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
 
-    doc.text('', 10, 25); //,argin x, y
+  
 
-    // Pass tableData to autoTable
+try {
+
+
+    doc.addImage(compressedImage, "PNG", 86, 5, 31, 10);
+    doc.setFontSize(25);
+    doc.text('Purchase Summary Report', 52, 25);
+    doc.setFontSize(12);
+    doc.text('Business Location: Branch 001', 14, 39);
+    doc.text(`From Date : ${this.formatDate(this.purchaseSummaryform.get('start').value)}`, 14, 45)
+
+
+    // right shit content
+    doc.text('User : Admin', 172, 33);
+    doc.text(`Print Date : ${PrintData}`, 153, 39);
+    doc.text(`To Date : ${this.formatDate(this.purchaseSummaryform.get('end').value)}`, 157, 45);
+  
+
     // nested table
     const headers = ['#', 'Supplier', 'Date', 'Payment Type', 'Payment Voucher No. ', 'Amount', 'supplier Bill No.', 'Note'];
-    const data: any = [];
-
-    let customerIndex = 1;
-    this.purchaseSummaryList.forEach((list: any) => {
-      console.warn(list);
-
-      const supplier = list.supplier;
-      const date = list.date;
-      const payment_type = list.payment_type;
-      const payment_voucher_no = list.payment_voucher_no;
-      const amount = list.amount;
-      const note = list.note;
-      let isFirstInvoice = true;
-      list.payment_cart.forEach((res: any, index: number) => {
-        console.log(res);
-
-        const invoiceNumber = isFirstInvoice ? customerIndex : '';
-        data.push([
-          invoiceNumber, // row no of each cstmr
-          isFirstInvoice ? supplier : '',
-          isFirstInvoice ? date : '',
-          isFirstInvoice ? payment_type : '',
-          isFirstInvoice ? payment_voucher_no : '',
-          isFirstInvoice ? amount : '',
-          res.purchase_bill?.supplier_bill_no,
-          isFirstInvoice ? note : '',
-        ]);
-        isFirstInvoice = false;
-      });
-      customerIndex++;
-    });
+    
     autoTable(doc, {
       head: [headers],
-      body: data,
+      body: this.purchaseSummaryList.map((item:any,index:number)=>{
+        return [
+          index+1,
+          item.supplier,
+          item.date,
+          item.payment_type,
+          item.payment_voucher_no,
+          item.amount,
+          item.supplier_bill_no,
+          item.note
+        ]
+      }),
       theme: 'grid',
-      startY: 32,
+      startY: 49,
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color
-      }
+      },
+      margin : {top : 49}
     });
 
     doc.save('Purchase_Summary.pdf');
+
+  } catch (error) {
+  
+  }
+})
   }
 
 

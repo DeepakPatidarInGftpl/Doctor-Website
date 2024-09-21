@@ -39,12 +39,12 @@
         <div class="card">
             <div class="card-body">
 
-                <div class="table-top">
-                    <div class="search-set">
+                <div class="">
+                    <div class="">
                         <form [formGroup]="saleSummaryform">
                             <div class="row">
 
-                                <div class="col-lg-7 col-sm-6 col-12">
+                                <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="search-input mx-3">
                                         <strong>Select Date</strong>
                                         <mat-form-field style="width: 97%;" class="border">
@@ -65,27 +65,44 @@
                                         </mat-form-field>
                                     </div>
                                 </div>
+
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label class="m-0">Select Hsncode</label>
+                                        <select class="form-select"
+
+                                        (change)="handelChang($event)"
+                                        aria-label="Default select example">
+                                            <option selected> select Hsncode</option>
+                                            <option *ngFor="let hsn of hsnList" [value]="hsn.id">{{hsn?.hsn_code}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-4  col-sm-6 col-12 mt-4">
+                                    <div class="wordset d-flex align-center justify-content-end">
+                                        <ul>
+                                            <li>
+                                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                            </li>
+                                            <li>
+                                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                                            </li>
+                                            <li>
+                                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                                    (click)="printTable()"> <img src="assets/img/icons/printer.svg" alt="img"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 
                             </div>
                         </form>
 
                     </div>
-                    <div class="wordset">
-                        <ul>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
-                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
-                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
-                                    (click)="printTable()"> <img src="assets/img/icons/printer.svg" alt="img"></a>
-                            </li>
-                        </ul>
-                    </div>
+                
                 </div>
                 <div id="debitNote">
 

@@ -1853,7 +1853,42 @@
                 </div>
             </ng-template>
             <h2 class="row justify-content-center p_head">GST Returns</h2>
+            <!-- <div class="row">
+                <ng-container *ngFor="let fav of myData">
+
+                <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.group=='gst_return'">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                                <p class="p" [routerLink]="fav.url">{{fav.reportname}}</p>
+                                <i *ngIf="!fav.is_Favorite" data-bs-toggle="tooltip" title="ion-ios7-star-outline" class="ion-ios7-star-outline icon  ms-auto" (click)="star(fav.reportname)"></i>
+                                <i *ngIf="fav.is_Favorite" data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto" (click)="star(fav.reportname)"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </ng-container>
+                </div> -->
         </mat-tab>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <mat-tab>
 
             <ng-template mat-tab-label>
