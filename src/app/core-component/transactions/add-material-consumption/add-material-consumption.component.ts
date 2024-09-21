@@ -180,7 +180,7 @@ export class AddMaterialConsumptionComponent implements OnInit {
       formdata.append('barcode', this.materialConsumptionForm.get('barcode')?.value);
       formdata.append('qty', this.materialConsumptionForm.get('qty')?.value);
       formdata.append('price', this.materialConsumptionForm.get('price')?.value);
-      formdata.append('total_action', this.materialConsumptionForm.get('total_action')?.value);
+      formdata.append('total_amount', this.materialConsumptionForm.get('total_action')?.value);
       this.transactionService.addMaterialConsuption(formdata).subscribe(res => {
         // console.log(res);
         this.loaders = false;

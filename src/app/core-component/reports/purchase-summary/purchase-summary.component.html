@@ -112,7 +112,7 @@
                         <div class="dash-count das3" style="margin: 0 0 10px;">
                             <div class="dash-counts">
                                 <h4
-                                    [ngStyle]="{'font-size': purchaseSummary?.total_bank |number:'1.2-2'?.toString()?.length >= 10 ? '15px' : '24px'}">
+                                    [ngStyle]="{'font-size': purchaseSummary?.total_bank?.toString()?.length >= 10 ? '15px' : '24px'}">
                                     {{purchaseSummary?.total_bank| number:'1.2-2'}}</h4>
                                 <h5>Total Bank</h5>
                             </div>
@@ -122,7 +122,7 @@
                         <div class="dash-count das4" style="margin: 0 0 10px;">
                             <div class="dash-counts">
                                 <h4
-                                    [ngStyle]="{'font-size': purchaseSummary?.cash_percentage| number:'1.2-2'?.toString()?.length >= 10 ? '15px' : '24px'}">
+                                    [ngStyle]="{'font-size': purchaseSummary?.cash_percentage?.toString()?.length >= 10 ? '15px' : '24px'}">
                                     {{purchaseSummary?.cash_percentage| number:'1.2-2'}}</h4>
                                 <h5>Cash Percentage</h5>
                             </div>
@@ -132,7 +132,7 @@
                         <div class="dash-count das3" style="margin: 0 0 10px;">
                             <div class="dash-counts">
                                 <h4
-                                    [ngStyle]="{'font-size': purchaseSummary?.bank_percentage| number:'1.2-2'?.toString()?.length >= 10 ? '15px' : '24px'}">
+                                    [ngStyle]="{'font-size': purchaseSummary?.bank_percentage?.toString()?.length >= 10 ? '15px' : '24px'}">
                                     {{purchaseSummary?.bank_percentage| number:'1.2-2'}}</h4>
                                 <h5>Bank Percentage</h5>
                             </div>

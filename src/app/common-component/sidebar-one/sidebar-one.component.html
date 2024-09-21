@@ -458,8 +458,8 @@
 
                                         <li class="submenu"
                                                 *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isCompanyDrive">
-                                                <a class="colo" (mouseover)="applyDynamicStyles()"
-                                                        (mouseleave)="removeHoverClass()"
+                                                <a class="colo" 
+                                                        
                                                         [ngClass]="{'active': activePath === 'settings'}"><img
                                                                 src="assets/img/icons/settings.svg" alt="img"><span>
                                                                 Settings</span> <span class="menu-arrow"></span></a>

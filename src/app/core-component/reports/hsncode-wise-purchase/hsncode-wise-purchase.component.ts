@@ -8,6 +8,8 @@ import { CommonServiceService } from 'src/app/Services/commonService/common-serv
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl } from '@angular/forms';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
+
 @Component({
   selector: 'app-hsncode-wise-purchase',
   templateUrl: './hsncode-wise-purchase.component.html',
@@ -15,8 +17,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class HsncodeWisePurchaseComponent implements OnInit {
   saleSummaryList :any[] = [];
-  startDate = '2022-01-19';
-  endDate = '2025-03-19';
+  startDate ;
+  endDate ;
   saleSummaryform: FormGroup;
   financialYear!: string;
   userDetails:any;
@@ -26,6 +28,7 @@ export class HsncodeWisePurchaseComponent implements OnInit {
     private commonService: CommonServiceService,
     private cs: CompanyService,
     private datepipe: DatePipe,
+    private _coreService : CoreService 
 
   ) { }
 
@@ -41,8 +44,7 @@ export class HsncodeWisePurchaseComponent implements OnInit {
     const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.financialYear);
     this.minDate = minDate;
     this.maxDate = maxDate;
-
-    this.getSaleSummary();
+    this.pageLoadData()
 
 
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -107,6 +109,23 @@ export class HsncodeWisePurchaseComponent implements OnInit {
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
+public hsnList :any[] = [];
+  private pageLoadData(){
+    this._coreService.getHSNCode().subscribe({
+      next : (value :any)=> {
+        this.hsnList = value;
+        console.log(value)
+      },
+    })
+  }
+
+  hsn_id : number;
+  handelChang(event :any){
+    this.hsn_id =(event.target.value)
+    this.getSaleSummary(event.target.value)
+  }
+
+
  // excel export only filtered data
  getVisibleDataFromTable(): any[] {
   const visibleData = [];
@@ -215,11 +234,11 @@ export class HsncodeWisePurchaseComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  getSaleSummary() {
+  getSaleSummary(hsn:any) {
    
     
-    this._reportService.get_hsncode_wise_purchase_TaxList(this.startDate, this.endDate,1).subscribe((res) => {
-      // console.log(res);
+    this._reportService.get_hsncode_wise_purchase_TaxList(this.startDate, this.endDate, hsn).subscribe((res) => {
+      console.log(res);
       this.saleSummaryList = res;
       this.saleSummary = res
     })
@@ -235,7 +254,7 @@ export class HsncodeWisePurchaseComponent implements OnInit {
     this.endDate = end;
     if (start && end) {
       
-      this?.getSaleSummary();
+      this?.getSaleSummary(this.hsn_id);
     }
   }
 
