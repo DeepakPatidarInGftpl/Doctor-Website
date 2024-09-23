@@ -221,13 +221,13 @@ export class DebitnotesComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+        if (res.content_type.app_label === 'purchase' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }

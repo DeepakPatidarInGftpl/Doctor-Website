@@ -40,8 +40,8 @@ export class DebitNoteRegisterComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(
+    private transactionService: TransactionService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //Customer Wise Sale form
@@ -71,7 +71,7 @@ export class DebitNoteRegisterComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -85,8 +85,7 @@ export class DebitNoteRegisterComponent implements OnInit {
       this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+  
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
