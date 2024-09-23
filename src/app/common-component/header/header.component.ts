@@ -219,32 +219,74 @@ export class HeaderComponent implements OnInit {
 
   userDetails: any;
   profile() {
-    this.companyService.ProfileData$.subscribe({
-    next : (res: any) => {
-        this.userDetails = res;
-        this.coreService.profileDetails.next(res);
-        this.companyService.setUserDetails(this.userDetails);
-        const userDetails = res?.permission;
-        const storedUserDetails = this.companyService.getUserDetails();
-        if (
-          !storedUserDetails ||
-          storedUserDetails.length !== userDetails.length
-        ) {
-          this.companyService.setUserPermission(userDetails);
-          window.location.reload();
+    let result : any =  this.coreService.profileData$.value;
+    if (result?.username) {
+      this.companyService.ProfileData$.subscribe({
+        next : (res: any) => {
+            this.userDetails = res;
+            this.coreService.profileDetails.next(res);
+            this.companyService.setUserDetails(this.userDetails);
+            const userDetails = res?.permission;
+            const storedUserDetails = this.companyService.getUserDetails();
+            if (
+              !storedUserDetails ||
+              storedUserDetails.length !== userDetails.length
+            ) {
+              this.companyService.setUserPermission(userDetails);
+              window.location.reload();
+            }
+          },
+          error : (err) => {
+            // console.log(err.error.detail=='Invalid token.');
+            if (err.error.detail == 'Invalid token.') {
+              localStorage.clear();
+              window.location.reload();
+            }
+          }
         }
-      },
-    error : (err) => {
-        // console.log(err.error.detail=='Invalid token.');
-        if (err.error.detail == 'Invalid token.') {
-          localStorage.clear();
-          window.location.reload();
+    
+        );
+    }else{
+      this.coreService.getProfile().subscribe({
+        next : (res: any) => {
+          this.userDetails = res;
+          this.coreService.profileData$.next(res);
+          this.coreService.profileDetails.next(res);
+          this.companyService.setUserDetails(this.userDetails);
+          const userDetails = res?.permission;
+          const storedUserDetails = this.companyService.getUserDetails();
+          if (
+            !storedUserDetails ||
+            storedUserDetails.length !== userDetails.length
+          ) {
+            this.companyService.setUserPermission(userDetails);
+            window.location.reload();
+          }
+        },
+        error : (err) => {
+          // console.log(err.error.detail=='Invalid token.');
+          if (err.error.detail == 'Invalid token.') {
+            localStorage.clear();
+            window.location.reload();
+          }
         }
-      }
+      })
     }
+ 
 
-    );
-  }
+
+
+
+
+    
+  };
+
+
+
+
+
+
+
   LoadScript(js: string) {
     var script = document.createElement('script');
     script.src = js;

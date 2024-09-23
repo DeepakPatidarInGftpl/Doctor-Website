@@ -40,8 +40,7 @@ export class SupplierOutstandingComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(private coreService :CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase register form
@@ -207,21 +206,38 @@ export class SupplierOutstandingComponent implements OnInit {
   // convert to pdf
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF('landscape');
-    const subtitle = 'PV';
-    const title = ' Supplier Outstanding';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
 
-    doc.text('', 10, 25); //,argin x, y
+
+
+    const doc  = new jsPDF('landscape');
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+   // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+    
+     doc.setFontSize(25);
+    // Set up the centered permanent content
+    const pageWidth = doc.internal.pageSize.width;
+  const permanentContent = 'Supplier Outstanding';
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const textWidth = doc.getStringUnitWidth(permanentContent) * (doc as any).internal.getFontSize() / doc.internal.scaleFactor;
+  const textX = (pageWidth - textWidth) / 2;
+  doc.text(permanentContent, textX, 25);
+  doc.addImage(img, "PNG", textX+15, 5, 31, 10);
+
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.purchaseRegisterForm.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, (pageWidth - textWidth), 33);
+  doc.text(`Print Date: ${printDate}`, (pageWidth - textWidth), 39);
+  doc.text(`To Date: ${this.formatDate(this.purchaseRegisterForm.get('end').value)}`, (pageWidth - textWidth), 45);
+
+  
 
     // Pass tableData to autoTable
     autoTable(doc, {
@@ -241,7 +257,8 @@ export class SupplierOutstandingComponent implements OnInit {
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25, // margin top 
+      startY: 49,
+      margin: { top: 49 }
 
 
     });

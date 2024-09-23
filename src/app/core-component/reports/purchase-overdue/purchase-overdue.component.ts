@@ -1,22 +1,20 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import {  FormControl, FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
-import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+
 import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-purchase-overdue',
   templateUrl: './purchase-overdue.component.html',
-  styleUrls: ['./purchase-overdue.component.scss']
+  styleUrls: ['./purchase-overdue.component.scss'],
 })
 export class PurchaseOverdueComponent implements OnInit {
 
@@ -31,11 +29,15 @@ export class PurchaseOverdueComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
-  }
-  //Purchase overdue form
+  constructor(
+
+    private cs: CompanyService,
+    private datepipe: DatePipe,
+    private reportService: ReportService,
+    private commonService: CommonServiceService,
+    private coreService: CoreService
+  ) {}
+  // Purchase overdue form
   purchaseOverDueform!: FormGroup;
   date: any;
   userDetails: any;
@@ -51,7 +53,7 @@ export class PurchaseOverdueComponent implements OnInit {
       this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -86,7 +88,7 @@ export class PurchaseOverdueComponent implements OnInit {
     this.estimateDateValidation(financialYear);
   }
 
-  estimateDateValidation(financialYear) {
+  estimateDateValidation(financialYear :any) {
     const dateControl = this.purchaseOverDueform.get('date');
     const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
     this.minDate = formattedMinDate;
@@ -140,45 +142,62 @@ export class PurchaseOverdueComponent implements OnInit {
   UserName: any;
 
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Purchase Overdue Report';
-    const heading2 = `Date Range From: ${this.date}`
-    const heading = `User: ${this.userName}`;
-
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
-
-    // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'SupplierBill Date', 'Due Date', 'Supplier Bill No.', 'Pending Amount', 'Over Due Days']
-      ],
-      body: this.purchaseOverDueList.map((row: any, index: number) => [
-        index + 1,
-        this.formatDate(row.supplier_bill_date),
-        this.formatDate(row.due_date),
-        row.supplier_bill_no,
-        row.pending_amount,
-        row.over_due_days
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25, // margin top 
+async generatePDFAgain() {
+   
 
 
-    });
+    const result :any = this.coreService.profileData$.value;
+    console.log(result)
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.save('Purchase_Overdue .pdf');
+
+try {
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.addImage(img, "PNG", 86, 5, 31, 10);
+  doc.setFontSize(25);
+  doc.text('Purchase Overdue Report', 52, 25);
+
+// Add details
+doc.setFontSize(12);
+doc.text(`Business Location: ${result?.branch}`, 14, 39);
+doc.text(`From Date: ${this.formatDate(this.purchaseOverDueform.get('date').value)}`, 14, 45);
+doc.text(`User: ${result?.role}`, 172, 33);
+doc.text(`Print Date: ${printDate}`, 153, 39);
+doc.text(`To Date: ${this.formatDate(this.purchaseOverDueform.get('date').value)}`, 157, 45);
+
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'SupplierBill Date', 'Due Date', 'Supplier Bill No.', 'Pending Amount', 'Over Due Days']
+    ],
+    body: this.purchaseOverDueList.map((row: any, index: number) => [
+      index + 1,
+      this.formatDate(row.supplier_bill_date),
+      this.formatDate(row.due_date),
+      row.supplier_bill_no,
+      row.pending_amount,
+      row.over_due_days
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 49,
+    margin: {top :49} // margin top 
+
+
+  });
+
+  doc.save('Purchase_Overdue .pdf');
+} catch (error) {
+  console.error('Error in generating PDF',error)
+}
+
+
+ 
   }
 
 

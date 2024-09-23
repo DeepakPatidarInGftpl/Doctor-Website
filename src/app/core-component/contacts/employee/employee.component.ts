@@ -172,13 +172,13 @@ export class EmployeeComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'add_employee') {
+        if (res.content_type.app_label === 'contacts' && res.content_type.model === 'employee' && res.codename == 'add_employee') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);    
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'change_employee') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'employee' && res.codename == 'change_employee') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);      
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename == 'delete_employee') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'employee' && res.codename == 'delete_employee') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);      
         }
