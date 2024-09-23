@@ -85,7 +85,6 @@
                                     <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">User <i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">Check Gst <i class="fa fa-sort"></i></th>
-                                    <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">Bill Date <i class="fa fa-sort"></i></th>
                                     <th class="thone" style="width:10% ;white-space:pre-wrap">Variant Name </th>
                                     <th class="thone" style="width:10%;padding-left: 55px;
@@ -116,7 +115,6 @@
                                     <th>{{i+1+'.'}}</th>
                                     <td>{{list.user.party_name}}</td>
                                     <td>{{list.check_gst}}</td>
-                                    <td>{{list.total | number:'1.2-2'}}</td>
                                     <td>{{list.bill_date |date:'yy/mm/dd'}}</td>
                                     <td colspan=14>
                                         <table>

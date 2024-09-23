@@ -216,13 +216,13 @@ export class MaterialInwardComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='add_materialinward') {
+        if (res.content_type.app_label === 'purchase' && res.content_type.model === 'materialinward' && res.codename=='add_materialinward') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='change_materialinward') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'materialinward' && res.codename=='change_materialinward') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='delete_materialinward') {
+        } else if (res.content_type.app_label === 'purchase' && res.content_type.model === 'materialinward' && res.codename=='delete_materialinward') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }

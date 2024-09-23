@@ -1,6 +1,7 @@
 import { company } from './../../interfaces/company';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { image } from 'ngx-editor/schema/nodes';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // import { company } from 'src/app/interfaces/company';
 import { environment } from 'src/environments/environment';
@@ -162,12 +163,31 @@ public ProfileData$ = new Subject()
     return this.http.get(url)
   }
 
-  async loadImage(){
+  async loadImage(imges:any = 'assets/logo/pdfLogo.png'){
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = 'assets/logo/pdfLogo.png';
+      const img :any = new Image();
+      img.src = imges;  // Changed 'image' to 'imges' to match the parameter name
       img.onload = () => resolve(img);
-      img.onerror = (err) => reject(err);
+      img.onerror = (err:Error) => reject(err);
+    });
+  }
+  async loadImageReport(imges:any = 'assets/logo/pdfLogo.png'){
+    return new Promise((resolve, reject) => {
+      const img :any = new Image();
+      img.src = imges;  // Changed 'image' to 'imges' to match the parameter name
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = 200;
+        const heigth = 200;
+        canvas.width = width;
+        canvas.height = heigth;
+        ctx.clearRect(0,0,width,heigth); // remove Black Bg from images
+        ctx.drawImage(img,0,0,width,heigth);
+        const compressedImage = canvas.toDataURL('image/png',0.9); 
+        resolve(compressedImage)
+      };
+      img.onerror = (err:Error) => reject(err);
     });
   }
 

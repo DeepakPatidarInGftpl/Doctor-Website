@@ -71,7 +71,7 @@ export class ProductWisePurchaseComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -85,8 +85,7 @@ export class ProductWisePurchaseComponent implements OnInit {
       this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -246,23 +245,30 @@ export class ProductWisePurchaseComponent implements OnInit {
   // convert to pdf
 
   UserName: any;
-  generatePDFAgain() {
-    const doc = new jsPDF('landscape');
-    const subtitle = 'PV';
-    const title = 'Product Wise Purchase Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
-
+ async generatePDFAgain() {
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+  
+    
+    try {
+        // Set up document
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+    doc.addImage(img, "PNG", 86, 5, 31, 10);
+    doc.setFontSize(25);
+    doc.text('Product Wise Purchase Report', 52, 25);
 
-    doc.text('', 10, 25); //,argin x, y
+ // Add details
+ doc.setFontSize(12);
+ doc.text(`Business Location: ${result?.branch}`, 14, 39);
+ doc.text(`From Date: ${this.formatDate(this.productWisePurchaseForm.get('start').value)}`, 14, 45);
+ doc.text(`User: ${result?.role}`, 172, 33);
+ doc.text(`Print Date: ${printDate}`, 153, 39);
+ doc.text(`To Date: ${this.formatDate(this.productWisePurchaseForm.get('end').value)}`, 157, 45);
 
-
+ // Create table
     // Pass tableData to autoTable
     const headers = ['#', 'User', 'Check Gst', 'Total', 'Bill Date', 'Variant Name', 'Qty', 'Unit Cost', 'Mrp', 'Discount', 'Tax', 'Landing Cost', 'Total']
 
@@ -307,15 +313,28 @@ export class ProductWisePurchaseComponent implements OnInit {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32,
+      startY: 49,
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color
-      }
+      },
+      margin: { top: 49 }
     });
 
 
     doc.save('Product_wise_Purchase .pdf');
+      
+    } catch (error) {
+      
+    }
+    
+  
+
+
+
+    
+
+
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {

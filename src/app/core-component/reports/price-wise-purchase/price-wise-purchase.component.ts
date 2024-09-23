@@ -251,21 +251,35 @@ export class PriceWisePurchaseComponent implements OnInit {
 
   // convert to pdf
 
-  generatePDFAgain() {
-    const doc = new jsPDF('landscape');
-    const subtitle = 'PV';
-    const title = 'Price Wise Purchase Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
+    const doc  = new jsPDF('landscape');
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+   // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+    
+     doc.setFontSize(25);
+    // Set up the centered permanent content
+    const pageWidth = doc.internal.pageSize.width;
+  const permanentContent = 'Price Wise Purchase Report';
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const textWidth = doc.getStringUnitWidth(permanentContent) * (doc as any).internal.getFontSize() / doc.internal.scaleFactor;
+  const textX = (pageWidth - textWidth) / 2;
+  doc.text(permanentContent, textX, 25);
+  doc.addImage(img, "PNG", textX+15, 5, 31, 10);
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.priceWisePurchaseForm.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, (pageWidth - textWidth+20), 33);
+  doc.text(`Print Date: ${printDate}`, (pageWidth - textWidth+20), 39);
+  doc.text(`To Date: ${this.formatDate(this.priceWisePurchaseForm.get('end').value)}`, (pageWidth - textWidth+20), 45);
 
-    doc.text('', 10, 25); //,argin x, y
+  
+
 
     // Pass tableData to autoTable
     const headers = ['#', 'User', 'Check Gst', 'Total', 'Bill Date', 'Variant Name', 'Sku', 'Title', 'Category', 'Subcategory', 'Brand', 'Qty', 'Unit Cost', 'Mrp', 'Discount', 'Tax', 'Landing Cost', 'Total']
@@ -296,7 +310,6 @@ export class PriceWisePurchaseComponent implements OnInit {
           res.barcode.sku,
 
           res.barcode.product.title,
-
           res.barcode.product.category,
           res.barcode.product.subcategory,
           res.barcode.product.brand,
@@ -318,15 +331,16 @@ export class PriceWisePurchaseComponent implements OnInit {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32,
+      startY: 49,
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color
-      }
+      },
+      margin : {top :49}
     });
 
 
-    doc.save('Price_wise_Purchase .pdf');
+    doc.save(permanentContent+'.pdf');
   }
 
 

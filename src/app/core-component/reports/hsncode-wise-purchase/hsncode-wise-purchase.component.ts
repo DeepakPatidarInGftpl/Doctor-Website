@@ -68,39 +68,70 @@ export class HsncodeWisePurchaseComponent implements OnInit {
       user_id: new FormControl(),
       payment_type: new FormControl('')
     });
+    this.startDate = this.saleSummaryform.value.start;
+    this.endDate = this.saleSummaryform.value.end;
   }
 
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Hsncode Wise Sale';
-    const heading = `User: ${this?.userDetails?.userName}`;
+ async generatePDFAgain() {
+   
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
+    const doc  = new jsPDF('landscape');
+    const result :any = this._coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+   // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+    
+     doc.setFontSize(25);
+    // Set up the centered permanent content
+    const pageWidth = doc.internal.pageSize.width;
+  const permanentContent = 'Hsncode Wise Sale Report';
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const textWidth = doc.getStringUnitWidth(permanentContent) * (doc as any).internal.getFontSize() / doc.internal.scaleFactor;
+  const textX = (pageWidth - textWidth) / 2;
+  doc.text(permanentContent, textX, 25);
+  doc.addImage(img, "PNG", textX+15, 5, 31, 10);
 
-    doc.text('', 10, 25); //,argin x, y
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.saleSummaryform.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, (pageWidth - textWidth), 33);
+  doc.text(`Print Date: ${printDate}`, (pageWidth - textWidth), 39);
+  doc.text(`To Date: ${this.formatDate(this.saleSummaryform.get('end').value)}`, (pageWidth - textWidth), 45);
+
 
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'Hsncode', 'Total Qty', 'Total Amount']
+        ['#', 'User', 'Total', 'Bill Date','Variant','Sku','Title','HSN Code','Category','Subcategory','Brand','Qty','Unit Cost','MRP','Discount','Tax','Landing Cost']
       ],
       body: this.saleSummaryList.map((row: any, index: number) => [
         index + 1,
-        row.hsncode,
-        row.total_qty,
-        row.total_amount,
+        row?.user?.party_name || '',
+        row.total || '',
+        row.bill_date || '',
+        row.data[0]?.barcode?.variant_name || '',
+        row.data[0]?.barcode?.product.title || '',
+        row.data[0]?.barcode?.product.hsncode || '',
+        row.data[0]?.barcode?.product.category || '',
+        row.data[0]?.barcode?.product.subcategory || '',
+        row.data[0]?.barcode?.product.brand || '',
+        row.data[0]?.qty || '',
+        row.data[0]?.unit_cost || '',
+        row.data[0]?.mrp || '',
+        row.data[0]?.discount || '',
+        row.data[0]?.tax || '',
+        row.data[0]?.landing_cost || '',
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25
+      startY: 49,
+      margin: {top:49}
     });
 
     doc.save('Hsncode Wise Sale.pdf');
