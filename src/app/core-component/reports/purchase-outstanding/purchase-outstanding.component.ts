@@ -41,8 +41,7 @@ export class PurchaseOutstandingComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private contactService: ContactService, private purchaseService: PurchaseServiceService,
+  constructor(private coreService:CoreService,private toastr: ToastrService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase summary form
@@ -70,7 +69,7 @@ export class PurchaseOutstandingComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
+      if (res?.role == 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false;
@@ -168,15 +167,7 @@ export class PurchaseOutstandingComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -239,23 +230,30 @@ export class PurchaseOutstandingComponent implements OnInit {
   // convert to pdf
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Purchase Outstanding Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+  
 
-    doc.text('', 10, 25); //,argin x, y
 
-    // Pass tableData to autoTable
+    try {
+      doc.setFontSize(12);
+      doc.setTextColor(33, 43, 54);
+      doc.addImage(img, "PNG", 86, 5, 31, 10);
+      doc.setFontSize(25);
+      doc.text('Purchase Outstanding Report', 52, 25);
+  
+      // Add details
+      doc.setFontSize(12);
+      doc.text(`Business Location: ${result?.branch}`, 14, 39);
+      doc.text(`From Date: ${this.formatDate(this.purchaseOutstandingform.get('start').value)}`, 14, 45);
+      doc.text(`User: ${result?.role}`, 172, 33);
+      doc.text(`Print Date: ${printDate}`, 153, 39);
+      doc.text(`To Date: ${this.formatDate(this.purchaseOutstandingform.get('end').value)}`, 157, 45);
+          // Pass tableData to autoTable
     autoTable(doc, {
       head: [
         ['#', 'Bill Date', 'Due Date', 'Supplier Bill No.', 'Pending Amount', 'Note']
@@ -272,12 +270,18 @@ export class PurchaseOutstandingComponent implements OnInit {
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25, // margin top 
-
+      startY: 49, // margin top 
+      margin :{top:49}
 
     });
 
     doc.save('Purchase_outstanding.pdf');
+      
+    } catch (error) {
+      console.log('error in pdf download',error)
+    }
+
+
   }
 
 

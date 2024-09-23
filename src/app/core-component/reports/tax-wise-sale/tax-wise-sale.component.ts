@@ -39,9 +39,8 @@ export class TaxWiseSaleComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
+  constructor(
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService,private coreService:CoreService) {
   }
   //purchase register form
   purchaseRegisterForm!: FormGroup;
@@ -67,11 +66,7 @@ export class TaxWiseSaleComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23 
@@ -82,8 +77,6 @@ export class TaxWiseSaleComponent implements OnInit {
     });
 
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -151,15 +144,8 @@ export class TaxWiseSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) =>  f.isSelected = !initChecked)
+   
   }
   //select table row
   allSelected: boolean = false;
@@ -206,23 +192,33 @@ export class TaxWiseSaleComponent implements OnInit {
   // convert to pdf
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF('landscape');
-    const subtitle = 'PV';
-    const title = 'Tax Wise Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
+    const doc  = new jsPDF('landscape');
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+   // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+     doc.setFontSize(25);
+    // Set up the centered permanent content
+    const pageWidth = doc.internal.pageSize.width;
+  const permanentContent = 'Tax Wise Sale Report';
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const textWidth = doc.getStringUnitWidth(permanentContent) * (doc as any).internal.getFontSize() / doc.internal.scaleFactor;
+  const textX = (pageWidth - textWidth) / 2;
+  doc.text(permanentContent, textX, 25);
+  doc.addImage(img, "PNG", textX+15, 5, 31, 10);
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
-
-
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.purchaseRegisterForm.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, (pageWidth - textWidth), 33);
+  doc.text(`Print Date: ${printDate}`, (pageWidth - textWidth), 39);
+  doc.text(`To Date: ${this.formatDate(this.purchaseRegisterForm.get('end').value)}`, (pageWidth - textWidth), 45);
+    // Pass tableData to autoTable
+   
     // Pass tableData to autoTable
     const headers = ['#', 'Date', 'Name', 'Voucher No.', 'Total Amount', 'Date', 'Voucher Type', 'Voucher No.', 'Hsn Code', 'Taxable', 'CGST Rate', 'CGST Amount', 'SGST Rate', 'SGST Amount', 'IGST Rate', 'IGST Amount', 'Tax Amount']
 
@@ -269,7 +265,8 @@ export class TaxWiseSaleComponent implements OnInit {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32,
+      startY: 49,
+      margin: { top: 49 },
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color

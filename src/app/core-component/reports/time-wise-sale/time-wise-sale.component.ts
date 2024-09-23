@@ -13,6 +13,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { ReportService } from 'src/app/Services/report/report.service';
 import * as XLSX from 'xlsx';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 @Component({
   selector: 'app-time-wise-sale',
   templateUrl: './time-wise-sale.component.html',
@@ -40,8 +41,7 @@ export class TimeWiseSaleComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor( private CoreService: CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //Amount Wise Saleform
@@ -69,11 +69,7 @@ export class TimeWiseSaleComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23 
@@ -84,8 +80,7 @@ export class TimeWiseSaleComponent implements OnInit {
     });
 
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+    
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -153,15 +148,7 @@ export class TimeWiseSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -209,21 +196,30 @@ export class TimeWiseSaleComponent implements OnInit {
 
   // convert to pdf
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Time Wise Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+async  generatePDFAgain() {
+    const result :any = this.CoreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
+try {
+  // Set up document
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.addImage(img, "PNG", 86, 5, 31, 10);
+  doc.setFontSize(25);
+  doc.text('Time Wise Sale Report', 52, 25);
+  // Add details
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.amountWiseSaleform.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, 172, 33);
+  doc.text(`Print Date: ${printDate}`, 153, 39);
+  doc.text(`To Date: ${this.formatDate(this.amountWiseSaleform.get('end').value)}`, 157, 45);
+   //,argin x, y
+} catch (error) {
+  console.log('error in pdf download',error);
+}
 
     // Pass tableData to autoTable
     const headers = ['#', 'Date', 'Total Sale', 'Start Time', 'End Time', 'Total Sale'];
@@ -231,14 +227,10 @@ export class TimeWiseSaleComponent implements OnInit {
 
     let customerIndex = 1;
     this.amountWiseSaleList.forEach((list: any) => {
-      console.warn(list);
-
       const date = list.date;
       const total_sale = list.total_sale;
       let isFirstInvoice = true;
       list.time_wise_data.forEach((res: any, index: number) => {
-        console.log(res);
-
         const invoiceNumber = isFirstInvoice ? customerIndex : '';
         data.push([
           invoiceNumber, // row no of each cstmr
@@ -256,7 +248,8 @@ export class TimeWiseSaleComponent implements OnInit {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32,
+      startY: 49,
+      margin:{top:49},
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color

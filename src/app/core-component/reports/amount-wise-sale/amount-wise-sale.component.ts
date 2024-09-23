@@ -13,6 +13,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { ReportService } from 'src/app/Services/report/report.service';
 import * as XLSX from 'xlsx';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 @Component({
   selector: 'app-amount-wise-sale',
   templateUrl: './amount-wise-sale.component.html',
@@ -36,9 +37,8 @@ export class AmountWiseSaleComponent implements OnInit {
   userName: any;
   amountWiseSaleList: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
+  constructor(
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService,private coreService: CoreService) {
   }
   //Amount Wise Saleform
   amountWiseSaleform!: FormGroup;
@@ -65,11 +65,7 @@ export class AmountWiseSaleComponent implements OnInit {
     this.minDate = minDate;
     this.maxDate = maxDate;
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23
@@ -80,8 +76,7 @@ export class AmountWiseSaleComponent implements OnInit {
     });
 
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -149,15 +144,7 @@ export class AmountWiseSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -205,60 +192,76 @@ export class AmountWiseSaleComponent implements OnInit {
 
   // convert to pdf
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Amount Wise Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+async  generatePDFAgain() {
+  
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+    
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.text('', 10, 25); //,argin x, y
 
-    // Pass tableData to autoTable
-    const headers = ['#', 'Date', 'Total Sale', 'Start Amount', 'End Amount', 'Total'];
-    const data: any = [];
+try {
 
-    let customerIndex = 1;
-    this.amountWiseSaleList.forEach((list: any) => {
-      console.warn(list);
+     // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+     doc.addImage(img, "PNG", 86, 5, 31, 10);
+     doc.setFontSize(25);
+     doc.text('Amount Wise Sale Report', 52, 25);
+     // Add details
+     doc.setFontSize(12);
+     doc.text(`Business Location: ${result?.branch}`, 14, 39);
+     doc.text(`From Date: ${this.formatDate(this.amountWiseSaleform.get('start').value)}`, 14, 45);
+     doc.text(`User: ${result?.role}`, 172, 33);
+     doc.text(`Print Date: ${printDate}`, 153, 39);
+     doc.text(`To Date: ${this.formatDate(this.amountWiseSaleform.get('end').value)}`, 157, 45);
+  
+  const headers = ['#', 'Date', 'Total Sale', 'Start Amount', 'End Amount', 'Total'];
+  const data: any = [];
 
-      const date = list.date;
-      const total_sale = list.total_sale;
-      let isFirstInvoice = true;
-      list.amount_wise_data.forEach((res: any, index: number) => {
-        console.log(res);
+  let customerIndex = 1;
+  this.amountWiseSaleList.forEach((list: any) => {
+    console.warn(list);
 
-        const invoiceNumber = isFirstInvoice ? customerIndex : '';
-        data.push([
-          invoiceNumber, // row no of each cstmr
-          isFirstInvoice ? date : '',
-          isFirstInvoice ? total_sale : '',
-          res.start_amount,
-          res.end_amount,
-          res[" total"]
-        ]);
-        isFirstInvoice = false;
-      });
-      customerIndex++;
+    const date = list.date;
+    const total_sale = list.total_sale;
+    let isFirstInvoice = true;
+    list.amount_wise_data.forEach((res: any, index: number) => {
+      console.log(res);
+
+      const invoiceNumber = isFirstInvoice ? customerIndex : '';
+      data.push([
+        invoiceNumber, // row no of each cstmr
+        isFirstInvoice ? date : '',
+        isFirstInvoice ? total_sale : '',
+        res.start_amount,
+        res.end_amount,
+        res[" total"]
+      ]);
+      isFirstInvoice = false;
     });
-    autoTable(doc, {
-      head: [headers],
-      body: data,
-      theme: 'grid',
-      startY: 32,
-      headStyles: {
-        fillColor: [255, 159, 67], // Header color
-        textColor: [255, 255, 255] // Header text color
-      }
-    });
-    doc.save('Amount_Wise_Sale.pdf');
+    customerIndex++;
+  });
+  autoTable(doc, {
+    head: [headers],
+    body: data,
+    theme: 'grid',
+    startY: 49,
+    margin:{top:49},
+    headStyles: {
+      fillColor: [255, 159, 67], // Header color
+      textColor: [255, 255, 255] // Header text color
+    }
+  });
+  doc.save('Amount_Wise_Sale.pdf');
+} catch (error) {
+ console.log(error) 
+}
+
+
+
   }
 
 

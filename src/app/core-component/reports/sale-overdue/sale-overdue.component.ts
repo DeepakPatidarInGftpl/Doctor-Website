@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
@@ -32,9 +33,8 @@ export class SaleOverdueComponent implements OnInit {
   minDate: string = '';
   maxDate: string = '';
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
+  constructor(
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService,private coreService:CoreService) {
   }
   //sale overdue form
   saleOverDueform!: FormGroup;
@@ -53,11 +53,7 @@ export class SaleOverdueComponent implements OnInit {
       this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin'
       this.getBranch();
     });
     //23           
@@ -68,8 +64,6 @@ export class SaleOverdueComponent implements OnInit {
     });
 
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -138,32 +132,55 @@ export class SaleOverdueComponent implements OnInit {
   }
   // convert to pdf
   UserName: any;
-  generatePDF() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Sale Overdue Report';
-    const heading2 = `Date Range From: ${this.date}`
-    const heading = `User: ${this.userName}`;
+ async generatePDF() {
+ 
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
 
-    doc.text('', 10, 25); //,argin x, y
+    try {
+      // Set up document
+   doc.setFontSize(12);
+   doc.setTextColor(33, 43, 54);
+   doc.addImage(img, "PNG", 86, 5, 31, 10);
+   doc.setFontSize(25);
+   doc.text('Sale Overdue Report', 52, 25);
+   // Add details
+   doc.setFontSize(12);
+   doc.text(`Business Location: ${result?.branch}`, 14, 39);
+   doc.text(`From Date: ${this.formatDate(this.saleOverDueform.get('date').value)}`, 14, 45);
+   doc.text(`User: ${result?.role}`, 172, 33);
+   doc.text(`Print Date: ${printDate}`, 153, 39);
+   doc.text(`To Date: ${this.formatDate(this.saleOverDueform.get('date').value)}`, 157, 45);
+   autoTable(doc, {
+    head: [
+      ['#', 'Bill Date', 'Due Date', 'Customer Bill No.', 'Pending Amount', 'Over Due Days']
+    ],
+    body: this.saleOverDueList.map((row: any, index: number) => [
+      index + 1,
+      row.bill_date,
+      row.due_date,
+      row.customer_bill_no,
+      row.pending_amount,
+      row.over_due_days
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 49,
+    margin:{top:49} // margin top 
 
-    autoTable(doc, {
-      html: '#mytable',
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25, // margin top 
-    });
 
-    doc.save('SaleOverdue.pdf');
+  });
+  
+      doc.save('SaleOverdue.pdf');
+    } catch (error) {
+      console.log('error',error)
+    }
+   
   }
 
   generatePDFAgain() {

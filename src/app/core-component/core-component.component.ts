@@ -18,8 +18,7 @@ export class CoreComponentComponent implements OnInit {
   public changeLayout: string = '1';
 
   constructor(private Router: Router, private settings: SettingsService, private coreService: CoreService) {
-    this.getRoutes(this.Router
-    )
+    this.getRoutes(this.Router)
 
     this.settings.changeLayout.subscribe((res: any) => {
       this.changeLayout = res;
@@ -32,12 +31,7 @@ export class CoreComponentComponent implements OnInit {
   }
   ngOnInit(): void {
     this.coreService.loaderBehaveSub.subscribe((res)=> {
-      console.log(res);
-      if(!!res) {
-        this.isSyncLoading = true;
-      } else{
-        this.isSyncLoading = false;
-      }
+      this.isSyncLoading = !!res;
     })
   }
   private getRoutes(data: any): void {
@@ -73,9 +67,7 @@ export class CoreComponentComponent implements OnInit {
     this.LoadScript('assets/js/togglescript.js');
   }
   LoadScript(js: string) {
-    var script = document.createElement('script');
-    script.src = js;
-    script.async = false;
+    const script = Object.assign(document.createElement('script'), { src: js, async: false });
     document.body.appendChild(script);
   }
 }

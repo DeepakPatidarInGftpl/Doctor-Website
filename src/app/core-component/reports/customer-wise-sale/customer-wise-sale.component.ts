@@ -14,6 +14,7 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-customer-wise-sale',
@@ -35,9 +36,8 @@ export class CustomerWiseSaleComponent implements OnInit {
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
-    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
+  constructor(
+    private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService,private coreService:CoreService) {
   }
   //Customer Wise Sale form
   customerWiseSaleForm!: FormGroup;
@@ -69,11 +69,7 @@ export class CustomerWiseSaleComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23 
@@ -83,8 +79,7 @@ export class CustomerWiseSaleComponent implements OnInit {
       this.UserName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+   
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -141,7 +136,7 @@ export class CustomerWiseSaleComponent implements OnInit {
 
   users: any[] = [];
 
-  getUser(query) {
+  getUser(query:any) {
     this.reportService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
       this.filteredusers = this.userControl.valueChanges.pipe(
@@ -179,15 +174,8 @@ export class CustomerWiseSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked)
+   
   }
   //select table row
   allSelected: boolean = false;
@@ -234,43 +222,53 @@ export class CustomerWiseSaleComponent implements OnInit {
   UserName: any;
 
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Customer Wise Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.UserName}`;
+async  generatePDFAgain() {
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
 
-    doc.text('', 10, 25); //,argin x, y
 
+try {
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.addImage(img, "PNG", 86, 5, 31, 10);
+  doc.setFontSize(25);
+  doc.text('Customer Wise Sale Report', 52, 25);
+  // Add details
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.customerWiseSaleForm.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, 172, 33);
+  doc.text(`Print Date: ${printDate}`, 153, 39);
+  doc.text(`To Date: ${this.formatDate(this.customerWiseSaleForm.get('end').value)}`, 157, 45);
+  autoTable(doc, {
+    head: [
+      ['#', 'UserDetail', 'MobileNo.', 'No.Of Bill ', 'Total Amount']
+    ],
+    body: this.customerWiseSaleList.map((row: any, index: number) => [
+      index + 1,
+      row.user_detail.party_name?.name,
+      row.user_detail.party_name?.mobile_no,
+      row.no_of_bill,
+      row.total_amount,
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 49,
+    margin:{top:49}
+  });
+
+  doc.save('Customer_wise_sale.pdf');
+} catch (error) {
+  console.log(error)
+}
     // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'UserDetail', 'MobileNo.', 'No.Of Bill ', 'Total Amount']
-      ],
-      body: this.customerWiseSaleList.map((row: any, index: number) => [
-        index + 1,
-        row.user_detail.party_name?.name,
-        row.user_detail.party_name?.mobile_no,
-        row.no_of_bill,
-        row.total_amount,
-
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25
-    });
-
-    doc.save('Customer_wise_sale.pdf');
+   
   }
 
 

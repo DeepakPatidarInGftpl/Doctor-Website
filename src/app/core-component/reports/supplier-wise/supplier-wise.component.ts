@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {  FormControl, FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
-import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import * as XLSX from 'xlsx';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-supplier-wise',
@@ -35,8 +32,8 @@ export class SupplierWiseComponent implements OnInit {
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(
+    private coreService: CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //Customer Wise Sale form
@@ -69,11 +66,7 @@ export class SupplierWiseComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23 
@@ -83,8 +76,7 @@ export class SupplierWiseComponent implements OnInit {
       this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+  
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -177,15 +169,7 @@ export class SupplierWiseComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -233,21 +217,32 @@ export class SupplierWiseComponent implements OnInit {
 
 
   userName: any;
-  generatePDFAgain() {
-    const doc = new jsPDF('landscape');
-    const subtitle = 'PV';
-    const title = 'Supplier Wise Purchase Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+async  generatePDFAgain() {
+    const doc  = new jsPDF('landscape');
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+   // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+     doc.setFontSize(25);
+    // Set up the centered permanent content
+    const pageWidth = doc.internal.pageSize.width;
+  const permanentContent = 'Supplier Wise Purchase Report';
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const textWidth = doc.getStringUnitWidth(permanentContent) * (doc as any).internal.getFontSize() / doc.internal.scaleFactor;
+  const textX = (pageWidth - textWidth) / 2;
+  doc.text(permanentContent, textX, 25);
+  doc.addImage(img, "PNG", textX+15, 5, 31, 10);
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
+  doc.setFontSize(12);
+  doc.text(`Business Location: ${result?.branch}`, 14, 39);
+  doc.text(`From Date: ${this.formatDate(this.supplierWiseForm.get('start').value)}`, 14, 45);
+  doc.text(`User: ${result?.role}`, (pageWidth - textWidth+20), 33);
+  doc.text(`Print Date: ${printDate}`, (pageWidth - textWidth+20), 39);
+  doc.text(`To Date: ${this.formatDate(this.supplierWiseForm.get('end').value)}`, (pageWidth - textWidth+20), 45);
+    // Pass tableData to autoTable
 
     // Pass tableData to autoTable
     const headers = ['#', 'User', 'Total', 'Check Gst', 'Bill Date', 'Variant Name', 'Sku', 'Title', 'Category', 'Subcategory', 'Brand', 'Qty', 'Unit Cost', 'Mrp', 'Discount', 'Tax', 'Landing Cost', 'Total']
@@ -304,7 +299,8 @@ export class SupplierWiseComponent implements OnInit {
       head: [headers],
       body: data,
       theme: 'grid',
-      startY: 32,
+      startY: 49,
+      margin: { top: 49 },
       headStyles: {
         fillColor: [255, 159, 67], // Header color
         textColor: [255, 255, 255] // Header text color
