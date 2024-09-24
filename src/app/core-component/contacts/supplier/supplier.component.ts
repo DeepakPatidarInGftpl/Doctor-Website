@@ -87,11 +87,17 @@ export class SupplierComponent implements OnInit {
         cancelButton: 'btn btn-danger ml-1',
       },
     }).then((t) => {
+    
       if (t.isConfirmed) {
         this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
+            // this.ngOnInit()
           }
         })
         Swal.fire({
@@ -103,6 +109,7 @@ export class SupplierComponent implements OnInit {
     });
   }
   Active(index: any, id: any) {
+    
     Swal.fire({
       title: 'Are you sure?',
       text: "Do you want to Active this Supplier!",
@@ -120,7 +127,12 @@ export class SupplierComponent implements OnInit {
         this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = true
+              }
+            })
           }
         })
         Swal.fire({

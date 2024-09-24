@@ -497,23 +497,53 @@
                 </div>
 
                 <div class="col-lg-8 col-sm-6 col-12">
+                   
                     <div class="form-group my-1">
                         <label>Product</label>
                         <input type="text" placeholder="search product" class="form-control"
                             (keyup)="searchProduct($event.target)" formArrayName="variant" [(ngModel)]="searchVariant"
                             [ngModelOptions]="{standalone: true}">
+                         
                         <div style="color:#FF9F43;text-align: center; font-size:16px;" *ngIf="isProductLoading">
                             Loading...</div>
-                        <div *ngIf="isproduct">
+                        <div >
                             <ul class="productDetails">
-                                <li *ngFor="let variant of search let i=index;" (click)="SelectedProduct(variant)">
+                                <li *ngFor="let variant of search let i=index;">
                                     <a class="dropdown-item" style="width: 100%;">
-                                        <span>{{variant?.product_title + ' ' + variant?.variant_name}}</span>
+                                       
+                                        <span> <input type="checkbox" (change)="SelectedProduct(variant)" /> {{variant?.product_title + ' ' + variant?.variant_name}}</span>
                                     </a>
+                                    <!-- <button hidden #btns (click)="SelectedProduct(variant)">Add to Table</button> -->
                                 </li>
+                          
                             </ul>
+                            <button class="btn btn-submit me-2 mt-2" (click)="addToTable()">Add to Table</button>
                         </div>
                     </div>
+
+
+                    <!-- <mat-form-field  style="width: 100%;">
+                        <mat-label>Toppings</mat-label>
+                        <mat-select [formControl]="toppings" multiple>
+                          <mat-select-trigger>
+                            {{toppings.value?.[0] || ''}}
+                            <span *ngIf="(toppings.value?.length || 0) > 1" class="example-additional-selection">
+                              (+{{(toppings.value?.length || 0) - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
+                            </span>
+                          </mat-select-trigger>
+                       
+                          <mat-option *ngFor="let variant of search let i=index;" (click)="SelectedProduct(variant)" [value]="variant.id"> {{variant?.product_title + ' ' + variant?.variant_name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+
+
+
+
+
+
+
+
+
                     <div class="row my-3">
                         <div class="table-responsive">
                             <table class="table" style="border: 1px solid #EBEDF3 !important;">
@@ -532,7 +562,7 @@
                                         </td>
                                         <td>
                                             <i data-bs-toggle="tooltip" title="ion-close-circled"
-                                                class="ion-close-circled" (click)="removeVariant(data.id)"
+                                                class="ion-close-circled" (click)="removeVariant(data.id,j)"
                                                 style="color: red; font-size: 20px;"></i>
                                         </td>
                                     </tr>

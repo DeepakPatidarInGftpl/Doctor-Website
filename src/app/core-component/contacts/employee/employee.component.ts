@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 
 @Component({
   selector: 'app-employee',
@@ -32,7 +33,9 @@ export class EmployeeComponent implements OnInit {
   selectActive: any;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,
-    private cs: CompanyService) {
+    private cs: CompanyService,
+    private hrmService:HrmServiceService
+  ) {
     this.QueryService.filterToggle()
   }
 
@@ -95,7 +98,12 @@ export class EmployeeComponent implements OnInit {
         this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
           }
         })
         Swal.fire({
@@ -124,7 +132,12 @@ export class EmployeeComponent implements OnInit {
         this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = true
+              }
+            })
           }
         })
         Swal.fire({
@@ -185,7 +198,8 @@ export class EmployeeComponent implements OnInit {
       });
     });
 
-    this.getGroup()
+    this.getGroup();
+    this.GetAllDepartment();
   }
 
   groupList: any
@@ -463,25 +477,34 @@ export class EmployeeComponent implements OnInit {
 
   // filter data
   selectCredit: any;
-  filterData() {
+  filterData(val?:any,type?:any) {
     let filteredData = this.tableData.slice();
     if (this.roleType) {
       filteredData = filteredData.filter((item) => item?.userid?.role?.name === this.roleType);
     }
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
-      filteredData = filteredData.filter((item) => {
+      filteredData = filteredData.filter((item :any) => {
         const aliasLower = item?.mobile_no?.toString().toLowerCase();
         return aliasLower.includes(searchTerm);
       });
     }
     if (this.selectCredit) {
-      filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
+      filteredData = filteredData.filter((item:any) => item?.opening_balance_type === this.selectCredit);
     }
 
     if (this.selectActive !== undefined && this.selectActive !== null) {
-      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+      filteredData = filteredData.filter((item:any) => item?.is_active === this.selectActive);
     }
+    if (type == 'Employeetype') {
+      filteredData = filteredData.filter((item:any) => item?.employee_type === val);
+    }
+    if (type == 'departmenttyoe') {
+      // console.log(val)
+      filteredData = filteredData.filter((item:any) => item?.department?.id == val);
+    }
+
+
     this.filteredData = filteredData;
   }
   clearFilter() {
@@ -496,5 +519,17 @@ export class EmployeeComponent implements OnInit {
     if (val == -1) {
       this.itemsPerPage = this.filteredData?.length;
     }
+  }
+
+  departmentList:any;
+  GetAllDepartment(){
+    this.hrmService.getDepartment().subscribe({
+      next:(res:any)=>{
+        this.departmentList=res;
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
   }
 }

@@ -54,10 +54,11 @@ export class DetailDealerComponent implements OnInit {
       }
     })
   }
-
-  getCreditLimit(userId) {
+  billable_amount:any;
+  getCreditLimit(userId :any) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
+      this.billable_amount = res?.billable_amount;
     })
   }
 

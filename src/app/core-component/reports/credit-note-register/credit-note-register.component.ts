@@ -38,8 +38,8 @@ export class CreditNoteRegisterComponent implements OnInit {
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(
+    private transactionService: TransactionService,private coreService:CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //Customer Wise Sale form
@@ -62,7 +62,7 @@ export class CreditNoteRegisterComponent implements OnInit {
     //23-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
-      console.warn(JSON.parse(fy));
+      // console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
       this.fyID = fyId;
     }
@@ -73,22 +73,16 @@ export class CreditNoteRegisterComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin'
+    
       this.getBranch();
     });
     //23 
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
-      console.log(userDetails);
       this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -167,15 +161,7 @@ export class CreditNoteRegisterComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -191,7 +177,6 @@ export class CreditNoteRegisterComponent implements OnInit {
   supplierWise: any
   getSupplierWise() {
     this.reportService.getCreditNoteRegister(this.startDate, this.endDate, this.supplierWiseUserId, this.fyID, this.selectData).subscribe((res) => {
-      console.log(res);
       this.supplierWiseList = res;
       this.supplierWise = res
     })
@@ -203,16 +188,14 @@ export class CreditNoteRegisterComponent implements OnInit {
   selectUser(data: any) {
     this.dataId = data;
     this.supplierWiseForm.patchValue({ user_id: this.dataId });
-    console.warn(this.supplierWiseForm.value);
+    // console.warn(this.supplierWiseForm.value);
     this.supplierWiseUserId = this.supplierWiseForm.value?.user_id;
     this?.getSupplierWise();
   }
   getSelectedSupplierWiseDates() {
-    console.log(this.supplierWiseForm.value);
     const start = this.datepipe.transform(this.supplierWiseForm.value.start, 'yyyy-MM-dd');
     const end = this.datepipe.transform(this.supplierWiseForm.value.end, 'yyyy-MM-dd');
-    console.log(start);
-    console.log(end);
+
     this.startDate = start;
     this.endDate = end;
     this?.getSupplierWise();
@@ -223,28 +206,27 @@ export class CreditNoteRegisterComponent implements OnInit {
 
 
   userName: any;
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Credit Note Register Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+async generatePDFAgain() {
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
-
-    // Pass tableData to autoTable
-
-
-
-
-    autoTable(doc, {
+ try {
+     // Set up document
+     doc.setFontSize(12);
+     doc.setTextColor(33, 43, 54);
+     doc.addImage(img, "PNG", 86, 5, 31, 10);
+     doc.setFontSize(25);
+     doc.text('Credit Note Register Report', 52, 25);
+     // Add details
+     doc.setFontSize(12);
+     doc.text(`Business Location: ${result?.branch}`, 14, 39);
+     doc.text(`From Date: ${this.formatDate(this.supplierWiseForm.get('start').value)}`, 14, 45);
+     doc.text(`User: ${result?.role}`, 172, 33);
+     doc.text(`Print Date: ${printDate}`, 153, 39);
+     doc.text(`To Date: ${this.formatDate(this.supplierWiseForm.get('end').value)}`, 157, 45);
+     autoTable(doc, {
       head: [
         ['#', 'User', 'Date', 'Credit Note No.', 'Tax', 'RoundOff', 'Total']
       ],
@@ -256,20 +238,27 @@ export class CreditNoteRegisterComponent implements OnInit {
         row.credi_note.tax,
         row.credi_note.roundoff,
         row.credi_note.total,
-
-
-      ]),
+       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25, // margin top 
-
+      startY: 49, // margin top 
+      margin:{top :49}
 
     });
 
 
     doc.save('Credit_Note_Register .pdf');
+  
+ } catch (error) {
+  console.log('error in pdf download',error)
+ }
+
+
+
+
+    
   }
 
 

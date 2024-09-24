@@ -69,7 +69,7 @@ export class AddSupplierComponent implements OnInit {
     console.log(product);
 
     this.isProductLoading = true;
-    console.log(this.isProductLoading, 'bhbhbhbhbhhb');
+    // console.log(this.isProductLoading, 'bhbhbhbhbhhb');
 
     if (product.value) {
       this.contactService.searchProduct(product.value).subscribe(res => {
@@ -448,16 +448,21 @@ export class AddSupplierComponent implements OnInit {
   getBankName(index: number) {
     return this.getBanks().controls[index].get('bank_name');
   }
-
+  toppings = new FormControl('');
   searchVariant = ''
   selectData: any[] = []
+
+
+
+
   SelectedProduct(variant: any) {
-    console.log('dd');
-    console.log(variant);
-    this.addVariant(variant.id)
+ 
     this.selectData.push(variant)
-    console.log(this.selectData, 'selected data');
-    //close dropdown
+  
+  }
+
+  addToTable(){
+  
     this.search = undefined
     this.isproduct = false;
     this.searchVariant = ''
@@ -467,7 +472,7 @@ export class AddSupplierComponent implements OnInit {
     console.log(event);
     if (event) {
       formArray.push(new FormControl(parseInt(event)));
-      console.log(formArray);
+      // console.log(formArray);
     }
     else {
       let i: number = 0;
@@ -480,21 +485,25 @@ export class AddSupplierComponent implements OnInit {
       });
     }
   }
-  removeVariant(event: any) {
-    const formArray: any = this.supplierForm.get('variant') as FormArray;
-    let i: number = 0;
-    formArray.controls.forEach((ctrl: any) => {
-      if (ctrl.value == event) {
-        formArray.removeAt(i);
-        const selectedIndex = this.selectData.findIndex(item => item.id === event);
-        if (selectedIndex !== -1) {
-          this.selectData.splice(selectedIndex, 1);
-        }
-        console.log(this.selectData);
-        return;
-      }
-      i++;
-    });
+  removeVariant(event: any,index:number) {
+    // console.log(event)
+    // const formArray: any = this.supplierForm.get('variant') as FormArray;
+    // formArray.removeAt(index);
+this.selectData.splice(index,1)
+
+    // let i: number = 0;
+    // formArray.controls.forEach((ctrl: any) => {
+    //   if (ctrl.value == event) {
+    //     formArray.removeAt(i);
+    //     const selectedIndex = this.selectData.findIndex(item => item.id === event);
+    //     if (selectedIndex !== -1) {
+    //       this.selectData.splice(selectedIndex, 1);
+    //     }
+    //     console.log(this.selectData);
+    //     return;
+    //   }
+    //   i++;
+    // });
   }
 }
 

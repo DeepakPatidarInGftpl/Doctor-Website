@@ -5,7 +5,10 @@
 .ng-pristine.ng-invalid.is-invalid.ng-touched {
     border: 1px solid red;
 }
-
+.example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
 select,
 input[type="date"],
 input[type="button"] {

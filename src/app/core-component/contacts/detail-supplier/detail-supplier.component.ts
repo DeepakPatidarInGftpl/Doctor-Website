@@ -58,13 +58,27 @@ export class DetailSupplierComponent implements OnInit {
       }
     })
   }
-
+  billable_amount:any;
   getCreditLimit(userId) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
+      this.billable_amount = res?.billable_amount;
     })
   }
 
+  onChange(address :any){
+    this.supplierDetail?.address.forEach((item:any)=>{
+      if(item.address_type == address.address_type){
+      if(item.is_default){
+        item.is_default = false;
+       }
+      if(item.id == address.id){
+        item.is_default = true;
+       }
+    }
+ })
+
+  }
   formatDate(utcDate: string): string {
     const date = new Date(utcDate);
     return new Intl.DateTimeFormat('en-US', {

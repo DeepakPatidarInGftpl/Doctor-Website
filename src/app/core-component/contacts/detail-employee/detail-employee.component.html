@@ -145,12 +145,46 @@
                                                     '--' }}</h5>
                                             </div>
 
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Wages :</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.wages || 0 }}</h5>
+                                            </div>
+                                            <div class="col-6 mb-2" *ngIf="employeeDetail?.is_sales_head">
+                                                <label class="label-title-wrapper">Incentive :</label>
+                                            </div>
+                                            <div class="col-6 mb-2" *ngIf="employeeDetail?.is_sales_head">
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.incentive || 0 }}</h5>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Discount Limit:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ employeeDetail?.discount_limit || 0 }}</h5>
+                                            </div>
+
+
+
                                             <div class="col-6 mb-2">
                                                 <label class="label-title-wrapper">Credit Limit:</label>
                                             </div>
                                             <div class="col-6 mb-2">
                                                 <h5 class="field-title-wrapper">{{ creditLimit || 0 }}</h5>
                                             </div>
+
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Billable Amount:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ billable_amount || 0 }}</h5>
+                                            </div>
+
+
+
+
 
                                             <div class="col-6 mb-2">
                                                 <label class="label-title-wrapper">User Role:</label>

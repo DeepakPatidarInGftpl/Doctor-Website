@@ -1,3 +1,4 @@
+import { CoreService } from './../../../Services/CoreService/core.service';
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -38,8 +39,8 @@ export class PurchaseRegisterComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(
+    private CoreService : CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //purchase register form
@@ -66,11 +67,7 @@ export class PurchaseRegisterComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23  
@@ -150,15 +147,7 @@ export class PurchaseRegisterComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked);
   }
   //select table row
   allSelected: boolean = false;
@@ -205,45 +194,56 @@ export class PurchaseRegisterComponent implements OnInit {
   // convert to pdf
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = ' Purchase Register Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
+    const result :any = this.CoreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+try {
+   // Set up document
+   doc.setFontSize(12);
+   doc.setTextColor(33, 43, 54);
+   doc.addImage(img, "PNG", 86, 5, 31, 10);
+   doc.setFontSize(25);
+   doc.text('Purchase Register Report', 52, 25);
+   // Add details
+   doc.setFontSize(12);
+   doc.text(`Business Location: ${result?.branch}`, 14, 39);
+   doc.text(`From Date: ${this.formatDate(this.purchaseRegisterForm.get('start').value)}`, 14, 45);
+   doc.text(`User: ${result?.role}`, 172, 33);
+   doc.text(`Print Date: ${printDate}`, 153, 39);
+   doc.text(`To Date: ${this.formatDate(this.purchaseRegisterForm.get('end').value)}`, 157, 45);
+   // Pass tableData to autoTable
+   autoTable(doc, {
+     head: [
+       ['#', 'Supplier Bill Date', 'Supplier Bill NO.', 'Party', 'Total']
+     ],
+     body: this.purchaseRegisterList.map((row: any, index: number) => [
+       index + 1,
+       this.formatDate(row.supplier_bill_date),
+       row.supplier_bill_no,
+       row.party,
+       row.total
 
-    doc.text('', 10, 25); //,argin x, y
+     ]),
+     theme: 'grid',
+     headStyles: {
+       fillColor: [255, 159, 67]
+     },
+     startY: 49, // margin top 
+     margin:{top :49}
 
-    // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'Supplier Bill Date', 'Supplier Bill NO.', 'Party', 'Total']
-      ],
-      body: this.purchaseRegisterList.map((row: any, index: number) => [
-        index + 1,
-        this.formatDate(row.supplier_bill_date),
-        row.supplier_bill_no,
-        row.party,
-        row.total
+   });
+   // Create table
 
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25, // margin top 
+   doc.save('Purchase_register.pdf');
+
+} catch (error) {
+  console.error('error in donload pdf ',error)
+}
 
 
-    });
-
-    doc.save('Purchase_register.pdf');
   }
 
 

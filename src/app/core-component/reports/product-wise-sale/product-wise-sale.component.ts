@@ -46,8 +46,8 @@ export class ProductWiseSaleComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private coreService: CoreService,
+  constructor(
+    private coreService: CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //product Wise Sale form
@@ -77,11 +77,7 @@ export class ProductWiseSaleComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+    this.isAdmin = res?.role == 'admin';
       this.getBranch();
     });
     //23 
@@ -91,8 +87,6 @@ export class ProductWiseSaleComponent implements OnInit {
       this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -191,15 +185,9 @@ export class ProductWiseSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+
+      this.countryList.forEach((f: any) => f.isSelected = !initChecked)
+
   }
   //select table row
   allSelected: boolean = false;
@@ -252,44 +240,56 @@ export class ProductWiseSaleComponent implements OnInit {
 
   UserName: any;
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'Pv Ltd.';
-    const title = 'Product Wise Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
+  
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.text('', 10, 25); //,argin x, y
+
+ try {
+  doc.setFontSize(12);
+   doc.setTextColor(33, 43, 54);
+   doc.addImage(img, "PNG", 86, 5, 31, 10);
+   doc.setFontSize(25);
+   doc.text('Product Wise Sale Report', 52, 25);
+   // Add details
+   doc.setFontSize(12);
+   doc.text(`Business Location: ${result?.branch}`, 14, 39);
+   doc.text(`From Date: ${this.formatDate(this.productWiseSaleForm.get('start').value)}`, 14, 45);
+   doc.text(`User: ${result?.role}`, 172, 33);
+   doc.text(`Print Date: ${printDate}`, 153, 39);
+   doc.text(`To Date: ${this.formatDate(this.productWiseSaleForm.get('end').value)}`, 157, 45);
+   autoTable(doc, {
+    head: [
+      ['#', 'Name', 'Total Qty', 'Total Amount']
+    ],
+    body: this.productWiseSaleList.map((row: any, index: number) =>[
+      index + 1,
+      row.name,
+      row.total_qty,
+      row.total_amount,
+     ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 49,
+    margin:{top:49} // margin top 
+
+
+  });
+
+  doc.save('Product_Wise_Sale.pdf');
+   // Pass tableData to autoTable
+ } catch (error) {
+  
+ }
 
     // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'Name', 'Total Qty', 'Total Amount']
-      ],
-      body: this.productWiseSaleList.map((row: any, index: number) => [
-        index + 1,
-        row.name,
-        row.total_qty,
-        row.total_amount,
-
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25, // margin top 
-
-
-    });
-
-    doc.save('Product_Wise_Sale.pdf');
+   
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {

@@ -49,8 +49,8 @@ export class SaleTaxComponent implements OnInit {
       // this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+    // const month = today.getMonth();
+    // const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 

@@ -39,8 +39,7 @@ export class CustomerOutstandingSaleComponent implements OnInit {
   subCategoryControl: FormControl = new FormControl('');
   userName: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService,
-    private transactionService: TransactionService, private purchaseService: PurchaseServiceService,
+  constructor(
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService,
     private coreService: CoreService, private commonService: CommonServiceService) {
   }
@@ -69,11 +68,7 @@ export class CustomerOutstandingSaleComponent implements OnInit {
     this.maxDate = maxDate;
 
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+     this.isAdmin = res?.role == 'admin'
       this.getBranch();
     });
     //23    
@@ -84,8 +79,6 @@ export class CustomerOutstandingSaleComponent implements OnInit {
     });
 
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -138,15 +131,8 @@ export class CustomerOutstandingSaleComponent implements OnInit {
   }
 
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.countryList.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.countryList.forEach((f: any) => f.isSelected = !initChecked )
+
   }
   //select table row
   allSelected: boolean = false;
@@ -191,45 +177,60 @@ export class CustomerOutstandingSaleComponent implements OnInit {
 
   // convert to pdf
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Customer Outstanding Sale Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
+ async generatePDFAgain() {
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
 
-    doc.text('', 10, 25); //,argin x, y
 
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+
+
+
+
+    try {
+      doc.setFontSize(12);
+   doc.setTextColor(33, 43, 54);
+   doc.addImage(img, "PNG", 86, 5, 31, 10);
+   doc.setFontSize(25);
+   doc.text('Customer Outstanding Sale Report', 52, 25);
+   // Add details
+   doc.setFontSize(12);
+   doc.text(`Business Location: ${result?.branch}`, 14, 39);
+   doc.text(`From Date: ${this.formatDate(this.customerOutstandingForm.get('start').value)}`, 14, 45);
+   doc.text(`User: ${result?.role}`, 172, 33);
+   doc.text(`Print Date: ${printDate}`, 153, 39);
+   doc.text(`To Date: ${this.formatDate(this.customerOutstandingForm.get('end').value)}`, 157, 45);
+   // Pass tableData to autoTable
+      autoTable(doc, {
+        head: [
+          ['#', 'User', 'Credit', 'Debit', 'Closing']
+        ],
+        body: this.customerOutstandingList.map((row: any, index: number) => [
+          index + 1,
+          row.user_detail?.party_name?.name,
+          row.Credit,
+          row.Debit,
+          row.closing
+  
+        ]),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        startY: 49,
+        margin:{top:49} // margin top 
+  
+  
+      });
+  
+      doc.save('Category_outstanding_sale .pdf');
+    } catch (error) {
+      
+    }
     // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'User', 'Credit', 'Debit', 'Closing']
-      ],
-      body: this.customerOutstandingList.map((row: any, index: number) => [
-        index + 1,
-        row.user_detail?.party_name?.name,
-        row.Credit,
-        row.Debit,
-        row.closing
-
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25, // margin top 
-
-
-    });
-
-    doc.save('Category_outstanding_sale .pdf');
+    
   }
 
 

@@ -93,7 +93,12 @@ export class VendorComponent implements OnInit {
         this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
           }
         })
         Swal.fire({
@@ -122,7 +127,12 @@ export class VendorComponent implements OnInit {
         this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = true
+              }
+            })
           }
         })
         Swal.fire({

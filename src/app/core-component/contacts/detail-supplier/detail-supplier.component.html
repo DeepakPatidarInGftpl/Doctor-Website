@@ -4,7 +4,7 @@
             class="card d-flex align-items-center card-container-wrapper justify-content-between">
             <div class="card-body p-0 d-flex align-items-center">
                 <div class="initial logo-title-wrapper me-3">
-                    <h1 class="logo-title">{{ getInitial(supplierDetail?.name) }}</h1>
+                    <h1 class="logo-title">{{ getInitial(supplierDetail?.company_name) }}</h1>
                 </div>
                 <div class="user-title-wrapper text-white px-2">
                     <h5 class="card-title user-title-wrapper text-white mb-0">{{ supplierDetail?.name }}
@@ -153,6 +153,15 @@
                                                 <h5 class="field-title-wrapper">{{ creditLimit || 0 }}</h5>
                                             </div>
 
+
+
+                                            <div class="col-6 mb-2">
+                                                <label class="label-title-wrapper">Billable Amount:</label>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <h5 class="field-title-wrapper">{{ billable_amount || 0 }}</h5>
+                                            </div>
+
                                             <div class="col-6 mb-2">
                                                 <label class="label-title-wrapper">Payment Terms:</label>
                                             </div>
@@ -265,9 +274,11 @@
                                 <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode || '--'}}
                                 </p>
                                 <div class="d-flex align-items-center">
-                                    <mat-checkbox class="example-margin"><span class="primary-color"> Default
-                                            Shipping
-                                            Address</span></mat-checkbox>
+                                    <mat-checkbox color="primary" (change)="onChange(address)" class="example-margin" [(ngModel)]="address.is_default">
+                                        <span
+                                        [ngClass]="{'text-success':address.is_default}"
+                                        class="primary-color"> Default Shipping Address</span>
+                                    </mat-checkbox>
                                 </div>
 
                             </div>
