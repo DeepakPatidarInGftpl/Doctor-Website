@@ -92,7 +92,12 @@ export class CustomerComponent implements OnInit {
         this.contactService.CustomerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
           }
         })
         Swal.fire({
@@ -121,7 +126,12 @@ export class CustomerComponent implements OnInit {
         this.contactService.CustomerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = true
+              }
+            })
           }
         })
         Swal.fire({
@@ -138,9 +148,10 @@ export class CustomerComponent implements OnInit {
   isDelete: any;
   userDetails: any
   ngOnInit(): void {
-    this.contactService.getCustomer().subscribe(res => {
-      // console.log(res);
+    this.contactService.getCustomer().subscribe((res:any[]) => {
+      console.log(res);
       this.tableData = res;
+     
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
@@ -466,7 +477,7 @@ export class CustomerComponent implements OnInit {
   selectCredit: any;
   selectedMember: any
   selectedCustomer: string = '';
-  filterData() {
+  filterData(val?:any,type?:any) {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
@@ -490,6 +501,17 @@ export class CustomerComponent implements OnInit {
     if (this.selectActive !== undefined && this.selectActive !== null) {
       filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
     }
+
+      if(type == 'Customertype') filteredData = filteredData.filter((item :any) => item?.customer_type === val);
+        
+          
+        
+      
+
+
+
+
+
     this.filteredData = filteredData;
   }
 

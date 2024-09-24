@@ -100,6 +100,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Customer Type</label>
+                                    <select  (change)="filterData(val.value ,'Customertype')" #val class="form-select">
+                                        <option value=""  >Select Active Status</option>
+                                        <option >Website</option>
+                                        <option >Store</option>
+                                        <option >Both</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -123,6 +134,7 @@
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Membership <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Customer Type <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
@@ -145,10 +157,11 @@
                         <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//contacts/customerDetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.membership?.title}}</a>
+                                style="line-height: 3;">{{(products?.membership?.title ? products?.membership?.title : '-')}}</a>
                         </td>
                         <td><a routerLink="//contacts/customerDetails/{{products.id}}"
                                 style="line-height: 3;">{{products?.name}}</a></td>
+                        <td>{{products?.customer_type}}</td>
                         <td>{{products?.company_name}}</td>
                         <td>{{products?.mobile_no}}</td>
                         <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
@@ -157,9 +170,21 @@
                         <td>{{products?.address[0]?.city?.city}}</td>
                         <!-- <td>{{products?.pan_no}}</td> -->
                         <td>
-                            <mat-slide-toggle
+                            <!-- <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
-                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                [(ngModel)]="products.is_active"></mat-slide-toggle> -->
+
+                                <div *ngIf="products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active" style="accent-color: var(--primary-color) !important;">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
+                                <div *ngIf="!products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
+
                         </td>
                         <td>
                             <a class="me-1" routerLink="//contacts/customerDetails/{{products.id}}">

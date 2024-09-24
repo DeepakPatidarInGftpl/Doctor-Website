@@ -16,7 +16,7 @@ export class DetailCustomerComponent implements OnInit {
   id: any;
   profileDetails: any;
   creditLimit: any;
-
+  billable_amount:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -63,6 +63,7 @@ export class DetailCustomerComponent implements OnInit {
   getCreditLimit(userId) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
+      this.billable_amount = res?.billable_amount;
     })
   }
 
