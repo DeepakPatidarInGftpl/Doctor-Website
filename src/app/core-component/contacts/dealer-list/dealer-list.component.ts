@@ -88,7 +88,12 @@ export class DealerListComponent implements OnInit {
         this.contactService.DealerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
           }
         })
         Swal.fire({
@@ -117,7 +122,12 @@ export class DealerListComponent implements OnInit {
         this.contactService.DealerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            // this.ngOnInit()
+            this.filteredData.forEach((item) => {
+              if (item.id == id) {
+                item.is_active = false
+              }
+            })
           }
         })
         Swal.fire({

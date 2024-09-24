@@ -55,8 +55,7 @@ export class HsncodeWiseSaleComponent implements OnInit {
       // this.userName = userDetails?.username
     });
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
+ 
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 14);
 
@@ -75,39 +74,51 @@ export class HsncodeWiseSaleComponent implements OnInit {
   }
 
 
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Hsncode Wise Sale';
-    const heading = `User: ${this?.userDetails?.userName}`;
+ async generatePDFAgain() {
+    const result :any = this._coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-
-    doc.text('', 10, 25); //,argin x, y
+    try {
+         // Set up document
+   doc.setFontSize(12);
+   doc.setTextColor(33, 43, 54);
+   doc.addImage(img, "PNG", 86, 5, 31, 10);
+   doc.setFontSize(25);
+   doc.text('Hsncode Wise Sale Report', 52, 25);
+   // Add details
+   doc.setFontSize(12);
+   doc.text(`Business Location: ${result?.branch}`, 14, 39);
+   doc.text(`From Date: ${this.formatDate(this.saleSummaryform.get('start').value)}`, 14, 45);
+   doc.text(`User: ${result?.role}`, 172, 33);
+   doc.text(`Print Date: ${printDate}`, 153, 39);
+   doc.text(`To Date: ${this.formatDate(this.saleSummaryform.get('end').value)}`, 157, 45);
+      autoTable(doc, {
+        head: [
+          ['#', 'Hsncode', 'Total Qty', 'Total Amount']
+        ],
+        body: this.saleSummaryList.map((row: any, index: number) => [
+          index + 1,
+          row.hsncode,
+          row.total_qty,
+          row.total_amount,
+        ]),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        startY: 49,
+        margin :{top:49}
+      });
+  
+      doc.save('Hsncode Wise Sale.pdf');
+    } catch (error) {
+      console.log(error)
+    }
 
     // Pass tableData to autoTable
-    autoTable(doc, {
-      head: [
-        ['#', 'Hsncode', 'Total Qty', 'Total Amount']
-      ],
-      body: this.saleSummaryList.map((row: any, index: number) => [
-        index + 1,
-        row.hsncode,
-        row.total_qty,
-        row.total_amount,
-      ]),
-      theme: 'grid',
-      headStyles: {
-        fillColor: [255, 159, 67]
-      },
-      startY: 25
-    });
-
-    doc.save('Hsncode Wise Sale.pdf');
+ 
   };
 
   private formatDate(date: Date): string {

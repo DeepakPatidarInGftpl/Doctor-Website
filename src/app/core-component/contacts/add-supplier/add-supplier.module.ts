@@ -6,7 +6,7 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddSupplierComponent } from './add-supplier.component';
 import { ToastrModule } from 'ngx-toastr';
-
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [
     AddSupplierComponent
@@ -17,7 +17,8 @@ import { ToastrModule } from 'ngx-toastr';
     DatepickerModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule
+    ToastrModule,
+    MatSelectModule
   ]
 })
 export class AddSupplierModule { }

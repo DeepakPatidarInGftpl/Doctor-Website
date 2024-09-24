@@ -29,6 +29,7 @@ export class AddEmployeeComponent implements OnInit {
       dob: new FormControl('',),
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
+      eligible_for_incentive: new FormControl(''),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
@@ -234,6 +235,7 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('apply_tds', this.employeeForm.get('apply_tds')?.value);
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
+    formdata.append('eligible_for_incentive', this.employeeForm.get('eligible_for_incentive')?.value);
 
     // formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);

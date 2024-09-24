@@ -119,7 +119,7 @@
                                             [formControl]="subCategoryControl" [matAutocomplete]="autosc"
                                             class="form-control">
                                         <mat-autocomplete #autosc="matAutocomplete" [displayWith]="displayFn3">
-                                            <mat-option *ngFor="let supplier of filteredSubCategory | async"
+                                            <mat-option *ngFor="let supplier of (filteredSubCategory | async)"
                                                 [value]="supplier"
                                                 (blur)="oncheckSubCategory( supplier?.id)">{{supplier?.title}}
                                             </mat-option>

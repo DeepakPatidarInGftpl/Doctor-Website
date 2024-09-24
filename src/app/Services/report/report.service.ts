@@ -1362,8 +1362,7 @@ export class ReportService {
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
-      console.log(idString);
-      console.log(idString?.length);
+      
       queryParams.push(`branch=${idString}`);
     }
     //end
@@ -1375,8 +1374,7 @@ export class ReportService {
   getTaxWisePurchaseReturn(start_date: any, end_date: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/purchase/return/tax/summary/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+  
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -1391,8 +1389,7 @@ export class ReportService {
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
-      console.log(idString);
-      console.log(idString?.length);
+
       queryParams.push(`branch=${idString}`);
     }
     //end
@@ -1404,8 +1401,7 @@ export class ReportService {
   getTaxWiseSale(start_date: any, end_date: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/sale/tax/summary/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+   
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -1420,8 +1416,7 @@ export class ReportService {
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
-      console.log(idString);
-      console.log(idString?.length);
+    
       queryParams.push(`branch=${idString}`);
     }
     //end
@@ -1433,8 +1428,7 @@ export class ReportService {
   getSaleReturn(start_date: any, end_date: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/sale/return/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+   
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -1449,8 +1443,7 @@ export class ReportService {
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
-      console.log(idString);
-      console.log(idString?.length);
+      
       queryParams.push(`branch=${idString}`);
     }
     //end
@@ -1462,8 +1455,7 @@ export class ReportService {
   getOutStandingAnalysis(start_date: any, end_date: any, user_id: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/outstanding/analysis/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -1494,8 +1486,7 @@ export class ReportService {
   getCreditNoteRegister(start_date: any, end_date: any, voucher_no: any, fy: any, branch: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/creditnote/register/';
     //22-5
-    console.log(branch, 'branch');
-    console.log(branch.length, 'branch');
+  
     const queryParams: any[] = [];
     // 22-5 nd
     if (start_date) {
@@ -1513,8 +1504,7 @@ export class ReportService {
     }
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
-      console.log(idString);
-      console.log(idString?.length);
+    
       queryParams.push(`branch=${idString}`);
     }
     //end

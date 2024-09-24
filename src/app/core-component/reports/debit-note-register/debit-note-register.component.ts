@@ -42,6 +42,7 @@ export class DebitNoteRegisterComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
+    private coreService: CoreService,
     private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService, private commonService: CommonServiceService) {
   }
   //Customer Wise Sale form
@@ -220,27 +221,33 @@ export class DebitNoteRegisterComponent implements OnInit {
 
 
   userName: any;
-  generatePDFAgain() {
-    const doc = new jsPDF();
-    const subtitle = 'PV';
-    const title = 'Debit Note Register Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
-
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
-
-    // Pass tableData to autoTable
+ async generatePDFAgain() {
 
 
 
 
+    const result :any = this.coreService.profileData$.value;
+    const img :any = await this.cs.loadImageReport();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const printDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+
+
+   try {
+      // Set up document
+      doc.setFontSize(12);
+      doc.setTextColor(33, 43, 54);
+      doc.addImage(img, "PNG", 86, 5, 31, 10);
+      doc.setFontSize(25);
+      doc.text('Debit Note Register Report', 52, 25);
+  
+      // Add details
+      doc.setFontSize(12);
+      doc.text(`Business Location: ${result?.branch}`, 14, 39);
+      doc.text(`From Date: ${this.formatDate(this.supplierWiseForm.get('start').value)}`, 14, 45);
+      doc.text(`User: ${result?.role}`, 172, 33);
+      doc.text(`Print Date: ${printDate}`, 153, 39);
+      doc.text(`To Date: ${this.formatDate(this.supplierWiseForm.get('end').value)}`, 157, 45);
+    
     autoTable(doc, {
       head: [
         ['#', 'Date', 'Debit Note No.', 'Party', 'Total']
@@ -258,10 +265,21 @@ export class DebitNoteRegisterComponent implements OnInit {
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25, // margin top 
+      startY: 49,
+      margin:{top :49} // margin top 
 
 
     });
+   } catch (error) {
+    
+   }
+
+    // Pass tableData to autoTable
+
+
+
+
+
 
 
     doc.save('Debit_Note_Register .pdf');

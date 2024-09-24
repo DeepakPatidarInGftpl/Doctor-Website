@@ -71,10 +71,11 @@ export class DetailVendorComponent implements OnInit {
       }
     })
   }
-
+  billable_amount:any;
   getCreditLimit(userId) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
+      this.billable_amount = res?.billable_amount;
     })
   }
 

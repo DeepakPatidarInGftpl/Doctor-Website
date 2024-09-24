@@ -92,6 +92,27 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Employee type</label>
+                                    <select  (change)="filterData(vals.value,'Employeetype')" #vals class="form-select">
+                                        <option value="">Select Active Status</option>
+                                        <option >Fresher</option>
+                                        <option >Experienced</option>
+                                        <option >Master</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Department type</label>
+                                    <select  (change)="filterData(depvals.value,'departmenttyoe')" #depvals class="form-select">
+                                        <option value="">Select Active Status</option>
+                                        <option  *ngFor="let Department of departmentList" [value]="Department.id">{{Department.title}}</option>
+                                        
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -117,6 +138,7 @@
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Employee Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Email<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Joining <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th> -->
@@ -143,6 +165,7 @@
                         <td>{{products.mobile_no}}</td>
                         <td>{{products?.employee_type}}</td>
                         <td>{{products?.email}}</td>
+                        <td>{{products?.department.title}}</td>
                         <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
                             products?.opening_balance : '') }}</td>
                         <!-- <td>{{products?.date_of_joining}}</td>
@@ -150,9 +173,24 @@
                         <td>{{products?.userid?.user_type}}</td>
                         <td>{{products?.address[0]?.city?.city}}</td>
                         <td>
-                            <mat-slide-toggle
+                            <!-- <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
-                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                [(ngModel)]="products.is_active"></mat-slide-toggle> -->
+
+
+
+
+                                <div *ngIf="products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active" style="accent-color: var(--primary-color) !important;">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
+                                <div *ngIf="!products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
+
                         </td>
                         <td>
                             <a class="me-1" routerLink="//contacts/employeeDetails/{{products.id}}">
