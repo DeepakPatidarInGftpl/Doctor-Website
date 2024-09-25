@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detail-dealer',
@@ -43,16 +44,64 @@ export class DetailDealerComponent implements OnInit {
     document.body.appendChild(script);
   }
   dealerDetail: any
+  userID:number;
   getdata() {
     this.contactService.getDealerById(this?.id).subscribe(res => {
       if (this?.id == res?.id) {
         this.dealerDetail = res;
-        const userId = res?.userid;
-        this.getCreditLimit(userId);
+        this.userID = res?.userid;
+        this.getCreditLimit(this.userID);
         this.filteredData = this.dealerDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
       }
     })
+  };
+
+
+
+  onChange(address :any){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't to make this address as default ??",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, make it default!'
+    }).then((result) => {
+if(result.isConfirmed){ 
+  const formData :any  = new FormData();
+  formData.append('user_id',this.userID)
+  formData.append('address_id',address.id)
+ this.contactService.UpdateDefaultAddress(formData).subscribe({
+    next: (res) => {
+    this.dealerDetail?.address.forEach((item: any) => {
+  if (item.address_type === address.address_type) {
+    item.is_default = item.id === address.id;
+  }
+});
+    },
+    error: (err) => {
+      console.log(err);
+    }
+  })
+}else{
+  this.dealerDetail?.address.forEach((item: any) => {
+    if (item.id === address.id) {
+      item.is_default = false;
+    }
+  });
+}
+
+
+    });
+
+
+   
+
+
+  
+
   }
   billable_amount:any;
   getCreditLimit(userId :any) {

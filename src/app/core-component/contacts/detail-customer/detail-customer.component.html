@@ -207,9 +207,15 @@
                                 <p class="card-text card-description mb-1 pb-1">Pincode - {{address?.pincode || '--'}}
                                 </p>
                                 <div class="d-flex align-items-center">
-                                    <mat-checkbox class="example-margin"><span class="primary-color"> Default
-                                            Shipping
-                                            Address</span></mat-checkbox>
+                                    <mat-checkbox  (change)="onChange(address)" class="example-margin" *ngIf="!(address.is_default)">
+                                        <span
+                                        [ngClass]="{'text-success':address.is_default}"
+                                        class="primary-color"> Default {{address?.address_type}} Address</span>
+                                    </mat-checkbox>
+                                    <span
+                                    *ngIf="address.is_default"
+                                        [ngClass]="{'text-success':address.is_default}"
+                                        > Default {{address?.address_type}} Address</span>
                                 </div>
 
                             </div>

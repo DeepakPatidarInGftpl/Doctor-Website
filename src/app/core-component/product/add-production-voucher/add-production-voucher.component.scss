@@ -99,3 +99,9 @@
   .th{
     white-space: pre-wrap !important;
   }
+
+  .readonly{
+    padding: 9px 18px;
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    border-radius: 5px;
+  }

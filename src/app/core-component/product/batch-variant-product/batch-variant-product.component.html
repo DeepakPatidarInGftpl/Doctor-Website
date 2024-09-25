@@ -1,15 +1,55 @@
 <div class="page-header">
-    <div class="page-title">
-        <h4> Add Batch</h4>
-        <h6>Create new Batch </h6>
-    </div>
+  <div class="page-title">
+    <h4>Add Batch</h4>
+    <h6>Create new Batch</h6>
+  </div>
 </div>
 <!-- /add -->
 <div class="card">
-    <div class="card-body">
-        <form [formGroup]="batchForm" (ngSubmit)="submit()">
-            <div class="row">
-                <!-- <div class="col-lg-3 col-sm-3 col-12" style="display:none">
+  <div class="card-body">
+    <div class="row mb-5">
+      <h2 *ngIf="Show">
+        {{ Show.product_title }}
+      </h2>
+       <!-- <p class="m-0" style="font-size: 18px; font-weight: 600;" >  Tax  </p> -->
+      <p class="m-0" *ngIf="Show && Show?.product?.sale_tax_including">
+       1) Sale Tax Including
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-check"
+        >
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </p>
+      <p *ngIf="Show && Show?.product?.purchase_tax_including">
+        2) Purchase Tax Including
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="feather feather-check"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      </p>
+    </div>
+    <form [formGroup]="batchForm" (ngSubmit)="submit()">
+      <div class="row">
+        <!-- <div class="col-lg-3 col-sm-3 col-12" style="display:none">
                     <div class="form-group">
                         <label>Variant id*</label>
                         <input type="text" formControlName="variant" id="variant" [ngClass]="{
@@ -17,28 +57,53 @@
                         <span class="text-danger" *ngIf="variant && variant.invalid && variant.touched">Enter variant</span>
                     </div>
                 </div> -->
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>MRP*</label>
-                        <input type="number" formControlName="mrp" id="mrp" (blur)="checkCost()" (blur)="checkMrpSelling()" [ngClass]="{'is-invalid': f['mrp'].touched && f['mrp'].invalid}" placeholder="0">
-                        <span class="text-danger" *ngIf="mrp && mrp.invalid && mrp.touched">Enter MRP </span>
-                        <!-- <span class="text-danger" *ngIf="errorMrp">{{errorMrp}}</span> -->
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>MRP*</label>
+            <input
+              type="number"
+              formControlName="mrp"
+              id="mrp"
+              (blur)="checkCost()"
+              (blur)="checkMrpSelling()"
+              [ngClass]="{ 'is-invalid': f['mrp'].touched && f['mrp'].invalid }"
+              placeholder="0"
+            />
+            <span class="text-danger" *ngIf="mrp && mrp.invalid && mrp.touched"
+              >Enter MRP
+            </span>
+            <!-- <span class="text-danger" *ngIf="errorMrp">{{errorMrp}}</span> -->
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Cost Price</label>
-                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" (blur)="checkCostSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}"
-                         [ngStyle]="{'border': errorCost ? '1px solid red' : ''}" placeholder="0">
-                        <span class="text-danger" *ngIf="cost_price && cost_price.invalid && cost_price.touched">Enter Cost Price</span>
-                        <span class="text-danger" *ngIf="errorCost">{{errorCost}}</span>
-                        <br>
-                        <!-- <span class="text-danger" *ngIf="errorCostSell">{{errorCostSell}}</span> -->
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Cost Price</label>
+            <input
+              type="number"
+              formControlName="cost_price"
+              (blur)="checkCost()"
+              (blur)="checkMrpSelling()"
+              (blur)="checkCostSelling()"
+              id="cost_price"
+              [ngClass]="{
+                'is-invalid': f['cost_price'].touched && f['cost_price'].invalid
+              }"
+              [ngStyle]="{ border: errorCost ? '1px solid red' : '' }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="cost_price && cost_price.invalid && cost_price.touched"
+              >Enter Cost Price</span
+            >
+            <span class="text-danger" *ngIf="errorCost">{{ errorCost }}</span>
+            <br />
+            <!-- <span class="text-danger" *ngIf="errorCostSell">{{errorCostSell}}</span> -->
+          </div>
+        </div>
 
-                <!-- <div class="col-lg-3 col-sm-3 col-12">
+        <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Discount %</label>
                         <input type="number" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
@@ -46,96 +111,264 @@
                     </div>
                 </div> -->
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Additional Discount %</label>
-                        <input type="number" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
-                       
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Additional Discount %</label>
+            <input
+              type="number"
+              formControlName="additional_discount"
+              id="additional_discount"
+              [ngClass]="{
+                'is-invalid':
+                  f['additional_discount'].touched &&
+                  f['additional_discount'].invalid
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                additional_discount &&
+                additional_discount.invalid &&
+                additional_discount.touched
+              "
+              >Enter Enter discount (ex:0-100)</span
+            >
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Online</label>
-                        <input type="number" formControlName="selling_price_online" (blur)="checkOnline()" id="selling_price_online" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}"
-                        [ngStyle]="{'border': errorOnline || errorOnlineMrp? '1px solid red' : ''}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_online && selling_price_online.invalid && selling_price_online.touched">Enter Selling Price Online</span>
-                        <span class="text-danger" *ngIf="errorOnline">{{errorOnline}}</span>
-                        <br>
-                        <span class="text-danger" *ngIf="errorOnlineMrp">{{errorOnlineMrp}}</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Selling Price Online</label>
+            <input
+              type="number"
+              formControlName="selling_price_online"
+              (blur)="checkOnline()"
+              id="selling_price_online"
+              [ngClass]="{
+                'is-invalid':
+                  f['selling_price_online'].touched &&
+                  f['selling_price_online'].invalid
+              }"
+              [ngStyle]="{
+                border: errorOnline || errorOnlineMrp ? '1px solid red' : ''
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                selling_price_online &&
+                selling_price_online.invalid &&
+                selling_price_online.touched
+              "
+              >Enter Selling Price Online</span
+            >
+            <span class="text-danger" *ngIf="errorOnline">{{
+              errorOnline
+            }}</span>
+            <br />
+            <span class="text-danger" *ngIf="errorOnlineMrp">{{
+              errorOnlineMrp
+            }}</span>
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Offline</label>
-                        <input type="number" formControlName="selling_price_offline" (blur)="checkOffline()" id="selling_price_offline" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}"
-                        [ngStyle]="{'border': errorOffline || errorOfflineMrp ? '1px solid red' : ''}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_offline && selling_price_offline.invalid && selling_price_offline.touched">Enter Selling Price Offline</span>
-                        <span class="text-danger" *ngIf="errorOffline">{{errorOffline}}</span>
-                        <br>
-                        <span class="text-danger" *ngIf="errorOfflineMrp">{{errorOfflineMrp}}</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Selling Price Offline</label>
+            <input
+              type="number"
+              formControlName="selling_price_offline"
+              (blur)="checkOffline()"
+              id="selling_price_offline"
+              [ngClass]="{
+                'is-invalid':
+                  f['selling_price_offline'].touched &&
+                  f['selling_price_offline'].invalid
+              }"
+              [ngStyle]="{
+                border: errorOffline || errorOfflineMrp ? '1px solid red' : ''
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                selling_price_offline &&
+                selling_price_offline.invalid &&
+                selling_price_offline.touched
+              "
+              >Enter Selling Price Offline</span
+            >
+            <span class="text-danger" *ngIf="errorOffline">{{
+              errorOffline
+            }}</span>
+            <br />
+            <span class="text-danger" *ngIf="errorOfflineMrp">{{
+              errorOfflineMrp
+            }}</span>
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Dealer</label>
-                        <input type="number" formControlName="selling_price_dealer" (blur)="checkDealer()" id="selling_price_dealer" [ngClass]="{'is-invalid': f['selling_price_dealer'].touched && f['selling_price_dealer'].invalid}"
-                        [ngStyle]="{'border': errorDealer || errorDealerMrp? '1px solid red' : ''}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_vendor && selling_price_vendor.invalid && selling_price_vendor.touched">Enter Selling Price Dealer</span>
-                        <span class="text-danger" *ngIf="errorDealer">{{errorDealer}}</span>
-                        <br>
-                        <span class="text-danger" *ngIf="errorDealerMrp">{{errorDealerMrp}}</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Selling Price Dealer</label>
+            <input
+              type="number"
+              formControlName="selling_price_dealer"
+              (blur)="checkDealer()"
+              id="selling_price_dealer"
+              [ngClass]="{
+                'is-invalid':
+                  f['selling_price_dealer'].touched &&
+                  f['selling_price_dealer'].invalid
+              }"
+              [ngStyle]="{
+                border: errorDealer || errorDealerMrp ? '1px solid red' : ''
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                selling_price_vendor &&
+                selling_price_vendor.invalid &&
+                selling_price_vendor.touched
+              "
+              >Enter Selling Price Dealer</span
+            >
+            <span class="text-danger" *ngIf="errorDealer">{{
+              errorDealer
+            }}</span>
+            <br />
+            <span class="text-danger" *ngIf="errorDealerMrp">{{
+              errorDealerMrp
+            }}</span>
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Employee</label>
-                        <input type="number" formControlName="selling_price_employee" (blur)="checkEmployee()" id="selling_price_employee" [ngClass]="{'is-invalid': f['selling_price_employee'].touched && f['selling_price_employee'].invalid}"
-                        [ngStyle]="{'border': errorEmployee||errorEmployeeMrp ? '1px solid red' : ''}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_employee && selling_price_employee.invalid && selling_price_employee.touched">Enter Selling Price Employee</span>
-                        <span class="text-danger" *ngIf="errorEmployee">{{errorEmployee}}</span>
-                        <br>
-                        <span class="text-danger" *ngIf="errorEmployeeMrp">{{errorEmployeeMrp}}</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Selling Price Employee</label>
+            <input
+              type="number"
+              formControlName="selling_price_employee"
+              (blur)="checkEmployee()"
+              id="selling_price_employee"
+              [ngClass]="{
+                'is-invalid':
+                  f['selling_price_employee'].touched &&
+                  f['selling_price_employee'].invalid
+              }"
+              [ngStyle]="{
+                border: errorEmployee || errorEmployeeMrp ? '1px solid red' : ''
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                selling_price_employee &&
+                selling_price_employee.invalid &&
+                selling_price_employee.touched
+              "
+              >Enter Selling Price Employee</span
+            >
+            <span class="text-danger" *ngIf="errorEmployee">{{
+              errorEmployee
+            }}</span>
+            <br />
+            <span class="text-danger" *ngIf="errorEmployeeMrp">{{
+              errorEmployeeMrp
+            }}</span>
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
+        <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Stock*</label>
                         <input type="number" formControlName="stock" id="stock" [ngClass]="{'is-invalid': f['stock'].touched && f['stock'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="stock && stock.invalid && stock.touched">Enter Stock</span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Opening Stock*</label>
-                        <input type="number" formControlName="opening_stock" id="opening_stock" [ngClass]="{'is-invalid': f['opening_stock'].touched && f['opening_stock'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="opening_stock && opening_stock.invalid && opening_stock.touched">Enter opening stock</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Opening Stock*</label>
+            <input
+              type="number"
+              formControlName="opening_stock"
+              id="opening_stock"
+              [ngClass]="{
+                'is-invalid':
+                  f['opening_stock'].touched && f['opening_stock'].invalid
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                opening_stock && opening_stock.invalid && opening_stock.touched
+              "
+              >Enter opening stock</span
+            >
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Minimum Stock Threshold*</label>
-                        <input type="number" formControlName="minimum_stock_threshold" id="minimum_stock_threshold" [ngClass]="{'is-invalid': f['minimum_stock_threshold'].touched && f['minimum_stock_threshold'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="minimum_stock_threshold && minimum_stock_threshold.invalid && minimum_stock_threshold.touched">Enter Minimum Stock Threshold</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Minimum Stock Threshold*</label>
+            <input
+              type="number"
+              formControlName="minimum_stock_threshold"
+              id="minimum_stock_threshold"
+              [ngClass]="{
+                'is-invalid':
+                  f['minimum_stock_threshold'].touched &&
+                  f['minimum_stock_threshold'].invalid
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                minimum_stock_threshold &&
+                minimum_stock_threshold.invalid &&
+                minimum_stock_threshold.touched
+              "
+              >Enter Minimum Stock Threshold</span
+            >
+          </div>
+        </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Max Order Quantity</label>
-                        <input type="number" formControlName="max_order_quantity" id="max_order_quantity" [ngClass]="{'is-invalid': f['max_order_quantity'].touched && f['max_order_quantity'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="max_order_quantity && max_order_quantity.invalid && max_order_quantity.touched">Enter Max Order Quantity</span>
-                    </div>
-                </div>
+        <div class="col-lg-3 col-sm-3 col-12">
+          <div class="form-group">
+            <label>Max Order Quantity</label>
+            <input
+              type="number"
+              formControlName="max_order_quantity"
+              id="max_order_quantity"
+              [ngClass]="{
+                'is-invalid':
+                  f['max_order_quantity'].touched &&
+                  f['max_order_quantity'].invalid
+              }"
+              placeholder="0"
+            />
+            <span
+              class="text-danger"
+              *ngIf="
+                max_order_quantity &&
+                max_order_quantity.invalid &&
+                max_order_quantity.touched
+              "
+              >Enter Max Order Quantity</span
+            >
+          </div>
+        </div>
 
-                <!-- <div class="col-lg-3 col-sm-3 col-12">
+        <!-- <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group row">
                     <div class="col-lg-12">
                         <label>Employee Incentive*</label>
@@ -159,19 +392,29 @@
                 </div>
             </div> -->
 
-                <!-- <div class="col-lg-12">
+        <!-- <div class="col-lg-12">
                     <button class="btn btn-submit me-2">Submit</button>
                     <a routerLink="//product/{{id}}" class="btn btn-cancel">Cancel</a>
                 </div> -->
-                <div class="col-lg-12">    
-                    <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
-                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                    <a (click)="backLoc()" class="btn btn-cancel">Cancel</a>
-                </div>
-
-            </div>
-        </form>
-    </div>
+        <div class="col-lg-12">
+          <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+          <button
+            class="btn btn-submit me-2"
+            type="submit"
+            *ngIf="loader"
+            disabled
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span
+            >Submit
+          </button>
+          <a (click)="backLoc()" class="btn btn-cancel">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 <!-- /add -->

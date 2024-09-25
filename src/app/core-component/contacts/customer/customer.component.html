@@ -137,7 +137,7 @@
                         <th (click)="sort('id')" class="thone">Customer Type <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Current Balance <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Gstin <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">City <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th> -->
@@ -164,8 +164,10 @@
                         <td>{{products?.customer_type}}</td>
                         <td>{{products?.company_name}}</td>
                         <td>{{products?.mobile_no}}</td>
-                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
-                            products?.opening_balance : '') }}</td>
+                        <td *ngIf="products?.closing_balance?.isSuccess">
+                            
+                            {{ products?.closing_balance?.closing_balance_type + (products?.closing_balance?.closing_balance != null ? ' : ' +
+                            products?.closing_balance?.closing_balance : '') }}</td>
                         <td>{{products?.gstin}}</td>
                         <td>{{products?.address[0]?.city?.city}}</td>
                         <!-- <td>{{products?.pan_no}}</td> -->
