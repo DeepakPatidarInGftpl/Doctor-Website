@@ -1,15 +1,22 @@
 <div class="row">
     <div class="col-lg-12 col-sm-12 col-12">
-        <div class="page-header">
+        <div class="page-header" style="display: flex; justify-content: space-between;">
             <div class="page-title">
-                <h4 class="titl">Brand List</h4>
+                <h4 class="titl">Brand List </h4>
                 <h6>Manage your Brand</h6>
             </div>
-            <div class="page-btn" *ngIf="isAdd">
-                <a class="btn btn-added" routerLink="//product/addbrand">
-                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Brand
-                </a>
+            <div class="d-flex justify-content-between gap-2">
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Bulk Price change
+                  </button>
+                <div class="page-btn" *ngIf="isAdd">
+                    
+                    <a class="btn btn-added" routerLink="//product/addbrand">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Brand
+                    </a>
+                </div>
             </div>
+            
         </div>
 
 
@@ -624,6 +631,7 @@
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
+                                    
                                     <a class="me-2" routerLink="//product/branddetails/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
@@ -675,3 +683,65 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> Bulk Price Change </h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bulkPriceForm">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="percentage"> Select Brand</label>
+                        <select class="form-select" formControlName="brand_id">
+                            <option value="">Select Your Brand</option>
+                            <option [value]="brand.id"  *ngFor="let brand of tableData">{{brand.title}}</option>
+                        </select>
+                        <small class="text-danger" *ngIf="bulkPriceForm.get('brand_id')?.invalid  && ck">Please select brand</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="percentage"> Select Type</label>
+                        <select class="form-select" formControlName="type">
+                                <option value="">Select Type</option>
+                                <option >MarkUp </option>
+                                <option >MarkDown </option>
+                        </select>
+                        <small class="text-danger" *ngIf="bulkPriceForm.get('type')?.invalid   && ck">Please select type</small>
+                    </div>
+                  
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="percentage">percentage (%)</label>
+                        <input type="number" formControlName="percentage" placeholder="Enter percentage" class="form-control" id="percentage">
+                        <small class="text-danger" *ngIf="bulkPriceForm.get('percentage')?.invalid   && ck">Please enter percentage</small>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #clos>Close</button>
+          <button type="button" class="btn btn-primary" (click)="submitBulkPrice(clos)">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>

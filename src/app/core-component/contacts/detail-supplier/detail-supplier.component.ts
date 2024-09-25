@@ -1,9 +1,11 @@
+import { filter } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detail-supplier',
@@ -45,12 +47,14 @@ export class DetailSupplierComponent implements OnInit {
     document.body.appendChild(script);
   }
   supplierDetail: any
+  userID:number;
   getdata() {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.supplierDetail = res;
-        const userId = res?.userid?.id;
-        this.getCreditLimit(userId);
+        // const userId = res?.userid?.id;
+        this.userID = res?.userid?.id;
+        this.getCreditLimit(this.userID);
         this.filterProductData = this.supplierDetail?.products.slice();
         this.filteredData = this.supplierDetail?.logs.slice(); // Initialize filteredData with the original data
         this.filterData();
@@ -67,16 +71,47 @@ export class DetailSupplierComponent implements OnInit {
   }
 
   onChange(address :any){
-    this.supplierDetail?.address.forEach((item:any)=>{
-      if(item.address_type == address.address_type){
-      if(item.is_default){
-        item.is_default = false;
-       }
-      if(item.id == address.id){
-        item.is_default = true;
-       }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't to make this address as default ??",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, make it default!'
+    }).then((result) => {
+if(result.isConfirmed){ 
+  const formData :any  = new FormData();
+  formData.append('user_id',this.userID)
+  formData.append('address_id',address.id)
+ this.contactService.UpdateDefaultAddress(formData).subscribe({
+    next: (res) => {
+    this.supplierDetail?.address.forEach((item: any) => {
+  if (item.address_type === address.address_type) {
+    item.is_default = item.id === address.id;
+  }
+});
+    },
+    error: (err) => {
+      console.log(err);
     }
- })
+  })
+}else{
+  this.supplierDetail?.address.forEach((item: any) => {
+    if (item.id === address.id) {
+      item.is_default = false;
+    }
+  });
+}
+
+
+    });
+
+
+   
+
+
+  
 
   }
   formatDate(utcDate: string): string {

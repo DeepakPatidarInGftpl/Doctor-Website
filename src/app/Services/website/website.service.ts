@@ -23,6 +23,10 @@ export class WebsiteService {
     let url = this.apiUrl + '/pv-api/product_variant/';
     return this.http.get(url)
   }
+  getVariantById(id:number) {
+    let url = this.apiUrl + '/pv-api/product_variant/?id=';
+    return this.http.get(`${url}${id}`)
+  }
   getTrendingProducts() {
     let url = this.apiUrl + '/pv-api/trending_product/';
     return this.http.get(url);

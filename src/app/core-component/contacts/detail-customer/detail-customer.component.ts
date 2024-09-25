@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detail-customer',
@@ -45,12 +46,13 @@ export class DetailCustomerComponent implements OnInit {
   }
   productDetail: any;
   firstLatter: any;
+  userID:number;
   getdata() {
     this.contactService.getCustomerById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.productDetail = res;
-        const userId = res?.userid;
-        this.getCreditLimit(userId);
+        this.userID = res?.userid;
+        this.getCreditLimit(this.userID);
         let words = res.name.split(" ");
         let combined = words.map(word => word.charAt(0)).join('');
         this.firstLatter = combined
@@ -58,6 +60,53 @@ export class DetailCustomerComponent implements OnInit {
         this.filterData();
       }
     })
+  }
+
+
+
+  onChange(address :any){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't to make this address as default ??",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, make it default!'
+    }).then((result) => {
+if(result.isConfirmed){ 
+  const formData :any  = new FormData();
+  formData.append('user_id',this.userID)
+  formData.append('address_id',address.id)
+ this.contactService.UpdateDefaultAddress(formData).subscribe({
+    next: (res) => {
+    this.productDetail?.address.forEach((item: any) => {
+  if (item.address_type === address.address_type) {
+    item.is_default = item.id === address.id;
+  }
+});
+    },
+    error: (err) => {
+      console.log(err);
+    }
+  })
+}else{
+  this.productDetail?.address.forEach((item: any) => {
+    if (item.id === address.id) {
+      item.is_default = false;
+    }
+  });
+}
+
+
+    });
+
+
+   
+
+
+  
+
   }
 
   getCreditLimit(userId) {

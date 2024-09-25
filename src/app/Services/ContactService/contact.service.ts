@@ -12,6 +12,15 @@ export class ContactService {
 
   //supplier
 
+    UpdateDefaultAddress(data: any) {
+      let url = this.apiUrl + '/pv-api/make_default_address/';
+     return this.http.post(url, data);
+    }
+
+
+
+
+
   getSupplier() {
     let url = this.apiUrl + '/pv-api/supplier/';
     return this.http.get(url)

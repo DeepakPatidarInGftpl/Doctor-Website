@@ -139,7 +139,7 @@
                         <th (click)="sort('id')" class="thone">Employee Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Email<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone"> Current Balance <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Joining <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">User Role<i class="fa fa-sort"></i></th>
@@ -166,8 +166,12 @@
                         <td>{{products?.employee_type}}</td>
                         <td>{{products?.email}}</td>
                         <td>{{products?.department.title}}</td>
-                        <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
-                            products?.opening_balance : '') }}</td>
+                        <td *ngIf="products?.closing_balance?.isSuccess">
+                            
+                            {{ products?.closing_balance?.closing_balance_type + (products?.closing_balance?.closing_balance != null ? ' : ' +
+                            products?.closing_balance?.closing_balance : '') }}</td>
+                        <!-- <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
+                            products?.opening_balance : '') }}</td> -->
                         <!-- <td>{{products?.date_of_joining}}</td>
                         <td>{{products.pan_no}}</td> -->
                         <td>{{products?.userid?.user_type}}</td>

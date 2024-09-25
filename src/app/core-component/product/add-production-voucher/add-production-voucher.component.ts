@@ -130,6 +130,31 @@ export class AddProductionVoucherComponent implements OnInit {
     }
   }
 
+
+
+
+  hendelChange($event){
+    let id = $event.target.value;
+    this.selectdataForConsumed.forEach((item:any)=>{
+ 
+      item.batch.forEach((element:any) => {
+        if(element.id==id){
+          this.Cost_Price=element.cost_price;
+          this.Online_Price=element.selling_price_online;
+          this.Offline_Price=element.selling_price_offline;
+          this.Employee_Price=element.selling_price_employee;
+          this.Dealer_Price=element.selling_price_dealer;
+          this.Discount=element.discount;
+          this.Additional_Discount=element.additional_discount;
+        }
+      });;
+    });
+    
+  }
+
+
+
+
   closeModalProduct(i: number) {
     console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
@@ -244,11 +269,24 @@ export class AddProductionVoucherComponent implements OnInit {
         });
       }
   }
+  selectdataForConsumed:any[]=[];
+
+
+
+  Cost_Price:number=0;
+  Online_Price:number=0;
+  Offline_Price:number=0;
+  Employee_Price:number=0;
+  Dealer_Price:number=0;
+  Discount:number=0;
+  Additional_Discount:number=0;
+
 
   selectedBatch:any[]=[];
   oncheckVariantConsumed(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
+    this.selectdataForConsumed[index] = event;
     this.selectedBatch[index]=event?.batch;
     const barcode = (this.productionvoucherForm.get('item_consumed_cart') as FormArray).at(index) as FormGroup;
     if (event.batch.length > 0) {
@@ -259,6 +297,15 @@ export class AddProductionVoucherComponent implements OnInit {
           mrp: event.batch[0]?.mrp,
           batch_id:event.batch[0]?.id,
         });
+this.Cost_Price=event.batch[0]?.cost_price;
+this.Online_Price=event.batch[0]?.selling_price_online;
+this.Offline_Price=event.batch[0]?.selling_price_offline;
+this.Employee_Price=event.batch[0]?.selling_price_employee;
+this.Dealer_Price=event.batch[0]?.selling_price_dealer;
+this.Discount=event.batch[0]?.discount;
+this.Additional_Discount=event.batch[0]?.additional_discount;
+
+
     }else{
       barcode.patchValue({
           barcode: selectedItemId,
@@ -273,6 +320,8 @@ export class AddProductionVoucherComponent implements OnInit {
   variantChangedConsumed(value: any, index) {
     this.barcodeConsumed[index] = value.sku;
     this.myControlConsumed.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
+
+    
   };
   addRes: any;
   dateError = null;

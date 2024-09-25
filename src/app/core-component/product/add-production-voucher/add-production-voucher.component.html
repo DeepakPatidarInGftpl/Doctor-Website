@@ -282,9 +282,16 @@
                                         <th></th>
                                         <th>Barcode/SKU</th>
                                         <th>Product Name</th>
+                                        <th style="width: 12%;">Batch</th>
                                         <th style="width: 8%;">QTY</th>
                                         <th>MRP</th>
-                                        <th style="width: 12%;">Batch</th>
+                                        <th class="th">Cost Price</th>
+                                        <th class="th">Online Price</th>
+                                        <th class="th">Offline Price</th>
+                                        <th class="th">Employee Price</th>
+                                        <th class="th">Dealer Price</th>
+                                        <th class="th">Discount</th>
+                                        <th class="th">Additional Discount</th>
                                         <th></th>
                                     </tr>
                                     <tr>
@@ -453,31 +460,69 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                <td>
+                                                    <select formControlName="batch_id"
+                                                    (change)="hendelChange($event)"
+                                                    >
+                                                    <ng-container *ngIf="selectedBatch[i]?.length>0">
+                                                        <option disabled selected>Select Batch</option>
+                                                        <option [value]="batch?.id"
+                                                       
+                                                            *ngFor="let batch of selectedBatch[i]">{{batch?.mrp}}
+                                                        </option>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="selectedBatch[i]?.length==0">
+                                                        <option disabled selected>Batch Not Available</option>
+                                                    </ng-container>
+                                                </select></td>
                                                 <td><input type="number" formControlName="qty" class="input"></td>
                                                 <td><input type="number" formControlName="mrp" class="input"></td>
-                                                <td><select formControlName="batch_id">
-                                                        <ng-container *ngIf="selectedBatch[i]?.length>0">
-                                                            <option disabled selected>Select Batch</option>
-                                                            <option [value]="batch?.id"
-                                                                *ngFor="let batch of selectedBatch[i]">{{batch?.mrp}}
-                                                            </option>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="selectedBatch[i]?.length==0">
-                                                            <option disabled selected>Batch Not Available</option>
-                                                        </ng-container>
-                                                    </select></td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Cost_Price}}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Online_Price}}    
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Offline_Price}}    
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Employee_Price}}    
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Dealer_Price}}    
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Discount}}    
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="readonly">
+                                                        {{Additional_Discount}}    
+                                                    </div>
+                                                </td>
 
                                             </tr>
                                         </ng-container>
                                     </ng-container>
                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-start"><strong>Total</strong></td>
+                                      
+                                        <td colspan="4"></td>
+                                        <td  class="text-start"><strong>Total</strong></td>
                                         <td class="text-start">{{totalQtyConsumed()}}</td>
                                         <td class="text-start">{{totalMrpConsumed()| number:'1.2-2'}}</td>
-                                        <td></td>
+                                        <td colspan="7"></td>
 
                                     </tr>
                                 </tbody>
