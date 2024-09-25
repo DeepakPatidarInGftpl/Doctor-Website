@@ -142,8 +142,14 @@ export class BrandlistComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
-  userDetails: any
+  userDetails: any;
+  bulkPriceForm: FormGroup;
   ngOnInit(): void {
+    this.bulkPriceForm = this.fb.group({
+      brand_id: ['', Validators.required],
+      type: ['', Validators.required],
+      percentage: ['', Validators.required]
+    })
     this.coreService.getBrand().subscribe(res => {
       this.tableData = res;
       this.loader = false
@@ -194,6 +200,27 @@ export class BrandlistComponent implements OnInit {
     this.getSubcategoryGroup()
   }
 
+  ck:boolean = false;
+  submitBulkPrice(btn:any){
+    if(this.bulkPriceForm.invalid){
+      this.ck = true;
+      return;
+    }else{
+      const data:any = new FormData()
+      let val = this.bulkPriceForm.value
+      data.append('brand_id',val.brand_id)
+      data.append('type',val.type)
+      data.append('percentage',val.percentage)
+      this.coreService.BulkUpdateBrand(data).subscribe((res)=>{
+        btn.click()
+        // console.log(res);
+        // this.ngOnInit()
+      })
+    }
+    console.log(this.bulkPriceForm)
+
+   
+  }
 
   categoryList: any
   getCategory() {

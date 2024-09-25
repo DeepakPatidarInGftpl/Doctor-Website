@@ -84,6 +84,22 @@ export class CoreService {
       })
     })
   }
+
+
+  BulkUpdateBrand(data:any){
+    let url = this.apiUrl + '/pv-api/mark_up_mark_down_by_variant/';
+    return this.http.post(url,data )
+   
+  }
+
+
+
+
+
+
+
+
+
   employeeIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/employee/?id=';
     return this.http.patch(`${url}${id}`, data);

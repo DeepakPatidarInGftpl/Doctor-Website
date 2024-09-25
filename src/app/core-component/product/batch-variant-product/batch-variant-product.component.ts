@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { WebsiteService } from 'src/app/Services/website/website.service';
 
 
 @Component({
@@ -28,7 +29,9 @@ export class BatchVariantProductComponent implements OnInit {
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService,
     private router: Router,
     private Arout: ActivatedRoute,
-    public location: Location) {
+    public location: Location,
+    private websiteService: WebsiteService
+  ) {
   }
   id: number;
   vid: number;
@@ -42,7 +45,7 @@ export class BatchVariantProductComponent implements OnInit {
       selling_price_offline: new FormControl(0, ),
       selling_price_dealer: new FormControl(0, ),
       selling_price_employee: new FormControl(0, ),
-      stock: new FormControl(0, [Validators.required, ]),
+      // stock: new FormControl(0, [Validators.required, ]),
       opening_stock: new FormControl(0, [Validators.required, ]),
       minimum_stock_threshold: new FormControl(0, [Validators.required, ]),
       max_order_quantity: new FormControl(0, ),
@@ -53,6 +56,7 @@ export class BatchVariantProductComponent implements OnInit {
     })
 
     this.id = +this.Arout.snapshot.paramMap.get('id');
+    this.getAllProduct()
     // this.vid = +this.Arout.snapshot.paramMap.get('vid');
     // this.getBrand()
   }
@@ -106,6 +110,16 @@ export class BatchVariantProductComponent implements OnInit {
       // this.batchForm.get('selling_price_dealer')?.patchValue(this.brandList?.markup_percentage_wholesale);
     })
   }
+
+Show:any;
+getAllProduct(){
+  this.websiteService.getVariantById(this.id).subscribe((res:any)=>{
+    console.log(res);
+    this.Show=res;
+  })
+}
+
+
   errorCost: any;
   checkCost() {
     let mrp = this.batchForm.value?.mrp;
@@ -297,7 +311,7 @@ export class BatchVariantProductComponent implements OnInit {
           formData.append('selling_price_offline',this.batchForm.get('selling_price_offline')?.value);
           formData.append('selling_price_dealer',this.batchForm.get('selling_price_dealer')?.value);
           formData.append('selling_price_employee',this.batchForm.get('selling_price_employee')?.value);
-          formData.append('stock',this.batchForm.get('stock')?.value);
+          formData.append('stock',this.batchForm.get('opening_stock')?.value);
           formData.append('opening_stock',this.batchForm.get('opening_stock')?.value);
           formData.append('minimum_stock_threshold',this.batchForm.get('minimum_stock_threshold')?.value);
           formData.append('max_order_quantity',this.batchForm.get('max_order_quantity')?.value);
