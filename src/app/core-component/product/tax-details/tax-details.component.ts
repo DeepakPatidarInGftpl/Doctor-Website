@@ -1,3 +1,5 @@
+import { filter } from 'rxjs/operators';
+import { mac } from './../../../../../node_modules/prosemirror-view/src/browser';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,13 +20,14 @@ export class TaxDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.coreService.gettaxById(this.id).subscribe((res:any) => {
-      res.map((res:any)=>{
-        if(res.id==res.id){
-          this.employeeDetails = res;
-          this.filteredData = this.employeeDetails?.logs.slice(); // Initialize filteredData with the original data
+    let new_res = res.filter((item:any)=>item.id == this.id);
+
+    console.log(new_res)
+    // console.log(res)
+           this.employeeDetails = new_res[0];
+          this.filteredData = this.employeeDetails?.logs; // Initialize filteredData with the original data
           this.filterData(); 
-        }
-      })
+   
     })
   }
   goBack() {
@@ -44,7 +47,7 @@ export class TaxDetailsComponent implements OnInit {
   filteredData: any[]; 
   filterOpertion:any;
   filterData() {
-    let filteredData = this.employeeDetails?.logs.slice();
+    let filteredData = this.employeeDetails?.logs?.slice();
     if (this.filterOpertion) {
       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
     }

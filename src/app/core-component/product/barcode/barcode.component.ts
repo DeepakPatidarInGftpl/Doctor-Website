@@ -7,7 +7,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-barcode',
   templateUrl: './barcode.component.html',
@@ -17,7 +17,7 @@ export class BarcodeComponent implements OnInit {
 
   productControl = new FormControl();
   constructor(private coreService: CoreService, private saleService: SalesService, private purchaseService: PurchaseServiceService,
-    private Arout: ActivatedRoute, private router: Router, private toastr: ToastrService) { }
+    private Arout: ActivatedRoute, private router: Router, private toastr: ToastrService, public location:Location) { }
 
   elementType = 'svg';
   value = 'someValue12340987';
@@ -58,6 +58,10 @@ export class BarcodeComponent implements OnInit {
     });
 
 
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   private _filter(value: string | number, include: boolean): any {

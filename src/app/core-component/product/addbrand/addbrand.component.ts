@@ -35,7 +35,8 @@ export class AddbrandComponent implements OnInit {
       title: new FormControl(''),
       code: new FormControl(''),
       image: new FormControl('', [Validators.required]),
-      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      is_featured: new FormControl(false),
       category: new FormArray([],),
       subcategory_group: new FormArray<any>([]),
       subcategory: new FormArray([]),
@@ -55,18 +56,19 @@ export class AddbrandComponent implements OnInit {
   }
 
   url: any;
-  onSelect(event: Event) {
-    const file = (event.target as HTMLInputElement).files![0];
+  onSelect(event: any) {
+    // const file = (event.target as HTMLInputElement).files![0];
+    const file = event.target.files[0];
+    console.log(file)
     if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.url = reader.result as string;
+      reader.onload = (e: any) => {
+        this.url = e.target.result;
       };
+      reader.readAsDataURL(file);
     }
-    this.brandForm.patchValue({
-      image: file
-    });
+    this.brandForm.get('image')?.patchValue(file);
+  
 
     this.brandForm.get('image')?.updateValueAndValidity()
   }
@@ -277,12 +279,15 @@ export class AddbrandComponent implements OnInit {
 
   submit() {
     // console.log(this.brandForm.value);
+
+  
+    // console.log(this.brandForm.value);
     this.brandForm.get('title').setValue(this.brandCtrl.value);
     var formData: any = new FormData();
     formData.append("title", this.brandCtrl.value);
     formData.append("image", this.brandForm.get('image')?.value);
     formData.append("code", this.brandForm.get('code')?.value);
-    formData.append("discount", this.brandForm.get('discount')?.value);
+    formData.append("featured_brand", this.brandForm.get('is_featured')?.value);
     formData.append('category', JSON.stringify(this.brandForm.get('category')?.value));
     formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));

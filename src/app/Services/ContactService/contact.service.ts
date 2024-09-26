@@ -17,7 +17,10 @@ export class ContactService {
      return this.http.post(url, data);
     }
 
-
+GetUsedPoints(id:number){
+  let url = this.apiUrl + '/pv-api/total_use_point/?user_id=';
+  return this.http.get<any>(`${url}${id}`)
+}
 
 
 

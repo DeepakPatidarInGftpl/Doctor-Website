@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4 class="titl">Product List</h4>
+        <h4 class="titl">Product List </h4>
         <h6>Manage your products</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -202,9 +202,11 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td class="productimgname">
+                        <td class="productimgname"
+                        [ngClass]="{'wt': (products.title.length <= 50)}"
+                        >
                             <a routerLink="//product/product-details/{{products.id}}"
-                                class="product-title">{{products.title}}</a>
+                                class="product-title">{{products.title}}954958</a>
                         </td>
                         <td>
                             <select #lab (change)="updateLabel(products?.id,lab.value,products.id)">

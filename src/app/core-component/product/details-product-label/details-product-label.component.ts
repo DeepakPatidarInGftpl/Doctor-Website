@@ -10,7 +10,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailsProductLabelComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private CoreService: CoreService,private location:Location) { }
+  constructor(private Arout: ActivatedRoute, private CoreService: CoreService,public location:Location) { }
   imgUrl = 'https://pv.greatfuturetechno.com';
   id: any
   ngOnInit(): void {

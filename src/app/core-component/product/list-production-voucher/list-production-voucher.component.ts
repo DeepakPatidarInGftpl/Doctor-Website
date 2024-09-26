@@ -254,7 +254,7 @@ export class ListProductionVoucherComponent implements OnInit {
       head: [
             ['#','Production Voucher No.','Date']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
         index + 1,
         row?.material_consumption_no,
         row.material_consumption_date,

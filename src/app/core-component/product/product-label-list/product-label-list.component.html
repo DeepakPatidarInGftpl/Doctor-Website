@@ -2,7 +2,7 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl">Product Label</h4>
+                <h4 class="titl">Product Label </h4>
                 <h6>Manage your Product Label</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
@@ -231,6 +231,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-8 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea formControlName="decription" id="description"
+                                        placeholder="Enter description"
+                                        [ngClass]="{ 'is-invalid': f['decription'].touched && f['decription'].invalid }"></textarea>
+                                   
+                                    <span class="text-danger"
+                                        *ngIf="incentive && incentive.invalid && incentive.touched">Enter
+                                            decription
+                                    </span>
+                                </div>
+                            </div>
 
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
@@ -284,10 +297,28 @@
                                                     Incentive
                                                 </span>
                                             </div>
+                                         
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+<div class="col-lg-8 col-sm-12 col-12">
+    <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="decription" id="description"
+            placeholder="Enter description"
+            [ngClass]="{ 'is-invalid': f['decription'].touched && f['decription'].invalid }"></textarea>
+       
+        <span class="text-danger"
+            *ngIf="incentive && incentive.invalid && incentive.touched">Enter
+                decription
+        </span>
+    </div>
+</div>
+
+
+
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
