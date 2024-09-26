@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
@@ -47,12 +48,14 @@ export class DetailCustomerComponent implements OnInit {
   productDetail: any;
   firstLatter: any;
   userID:number;
+
   getdata() {
     this.contactService.getCustomerById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.productDetail = res;
         this.userID = res?.userid;
         this.getCreditLimit(this.userID);
+        // this.getUsedPoints(this.userID);
         let words = res.name.split(" ");
         let combined = words.map(word => word.charAt(0)).join('');
         this.firstLatter = combined
@@ -109,12 +112,22 @@ if(result.isConfirmed){
 
   }
 
-  getCreditLimit(userId) {
+  getCreditLimit(userId:any) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
       this.billable_amount = res?.billable_amount;
     })
+   
   }
+
+  // getUsedPoints(userId :any) {
+  //   this.contactService.GetUsedPoints(userId).subscribe((res:any)=> {
+  //     this.usePoints.next(res?.total_use_point);
+  //     console.log(this.usePoints,'deepak')
+  //   })
+  // }
+
+
 
   formatDate(utcDate: string): string {
     const date = new Date(utcDate);
@@ -140,6 +153,8 @@ if(result.isConfirmed){
     this.hrmService.getLoyalPoints(this.id).subscribe((res: any) => {
       console.log(res);
       this.LoyaltyList = res;
+
+
     })
   }
   sho = true;

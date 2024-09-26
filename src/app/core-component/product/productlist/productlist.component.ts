@@ -421,7 +421,7 @@ export class ProductlistComponent implements OnInit {
       head: [
         ['#', 'Product Name', 'Product Label', 'Category', 'Subcategory', 'Subcategory group', 'Brand', 'Unit', 'Product Store']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.product_label?.title,

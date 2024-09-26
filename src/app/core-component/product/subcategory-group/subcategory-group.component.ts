@@ -636,7 +636,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       head: [
         ['#', 'Image', 'Sub Category Group', 'Category', 'Subcategories']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.image,
         row.title,

@@ -1,5 +1,5 @@
 import { Location, formatDate } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -15,9 +15,10 @@ import { MatTabGroup } from '@angular/material/tabs';
 @Component({
   selector: 'app-addproduct',
   templateUrl: './addproduct.component.html',
-  styleUrls: ['./addproduct.component.scss']
+  styleUrls: ['./addproduct.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class AddproductComponent implements OnInit {
+export class AddproductComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   selectTab(index: number) {
@@ -28,17 +29,18 @@ export class AddproductComponent implements OnInit {
   productForm!: FormGroup;
 
   public measurable: boolean = false;
+    // "ngx-editor": "^15.3.0",
 
   editordoc = jsonDoc;
-  editor: Editor | any;
+  editor: Editor ;
   toolbar: Toolbar = [
     ['bold', 'italic'],
     ['underline', 'strike'],
     ['code', 'blockquote'],
-    ['ordered_list', 'bullet_list'],
+    // ['ordered_list', 'bullet_list'],
     [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
     ['link', 'image'],
-    // ['text_color', 'background_color'],
+    ['text_color', 'background_color'],
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
 
@@ -50,7 +52,7 @@ export class AddproductComponent implements OnInit {
     return this.productForm.controls;
   }
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
-    private toastr: ToastrService, private location: Location) { }
+    private toastr: ToastrService, private location: Location) {   this.editor = new Editor();}
 
   isDisabled: true;
   productNamme: any
@@ -58,7 +60,7 @@ export class AddproductComponent implements OnInit {
   imgUrl = 'https://pv.greatfuturetechno.com';
 
   ngOnInit(): void {
-    this.editor = new Editor();
+  
     this.productForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
@@ -121,6 +123,9 @@ export class AddproductComponent implements OnInit {
     this.getProductLabel()
   }
 
+  ngOnDestroy(): void {
+    this.editor.destroy();
+  }
   features(): FormGroup {
     return this.fb.group({
       feature_group: (''),

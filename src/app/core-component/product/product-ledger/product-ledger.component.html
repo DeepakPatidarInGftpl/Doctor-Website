@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4 class="titl">Product Ledger</h4>
+        <h4 class="titl">Product Ledger  </h4>
         <h6>Manage your Product Ledger</h6>
     </div>
 
@@ -224,9 +224,10 @@
                         <th (click)="sort('id')">Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Voucher Type <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Voucher No. <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')">Balance<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Price<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">In QTY<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')">Out QTY<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')">Balance<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0 ">
@@ -248,6 +249,7 @@
                         <td>{{products?.price==null?0:products?.price}}</td>
                         <td>{{products?.in_qty}}</td>
                         <td>{{products?.out_qty}}</td>
+                        <td>{{(products?.in_qty - products?.out_qty)}}</td>
                     </tr>
                 </tbody>
                 <tbody *ngIf="filteredData?.length===0 && !loader">

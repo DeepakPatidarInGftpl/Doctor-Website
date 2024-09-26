@@ -312,26 +312,7 @@
 											</span>
 										</div>
 									</div>
-									<div class="col-lg-3 col-sm-4 col-12">
-										<div class="form-group">
-											<label>HSN Code</label>
-											<select class="form-select" formControlName="hsncode"
-												[ngClass]="{'is-invalid': f['hsncode'].touched && f['hsncode'].invalid}">
-												<option value="" selected disabled>Select HSN Code</option>
-												<option value="{{hsn.id}}" *ngFor="let hsn of hsnCodeBysubcatList">
-													{{hsn.hsn_code}}
-												</option>
-											</select>
-											<span class="text-danger"
-												*ngIf="hsncode && hsncode.invalid && hsncode.touched && hsnCodeBysubcatList?.length>0">Select
-												HSN Code
-											</span>
-											<span class="text-danger"
-												*ngIf="subcategory && subcategory.touched && hsnCodeBysubcatList?.length<=0">HSN
-												Code not available
-											</span>
-										</div>
-									</div>
+									
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
 											<label>Product Label*</label>
@@ -424,6 +405,26 @@
 											<span class="text-danger"
 												*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
 												not available
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-3 col-sm-4 col-12">
+										<div class="form-group">
+											<label>HSN Code</label>
+											<select class="form-select" formControlName="hsncode"
+												[ngClass]="{'is-invalid': f['hsncode'].touched && f['hsncode'].invalid}">
+												<option value="" selected disabled>Select HSN Code</option>
+												<option value="{{hsn.id}}" *ngFor="let hsn of hsnCodeBysubcatList">
+													{{hsn.hsn_code}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="hsncode && hsncode.invalid && hsncode.touched && hsnCodeBysubcatList?.length>0">Select
+												HSN Code
+											</span>
+											<span class="text-danger"
+												*ngIf="subcategory && subcategory.touched && hsnCodeBysubcatList?.length<=0">HSN
+												Code not available
 											</span>
 										</div>
 									</div>
@@ -562,16 +563,7 @@
 												Purchase Tax</span>
 										</div>
 									</div>
-									<div *ngIf="product_store?.value === 'Online'" class="col-lg-3 col-sm-4 col-12">
-										<div class="form-group">
-											<label>Return Time (In days)*</label>
-											<input type="text" formControlName="return_time" placeholder="Return Time"
-												[ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
-											<span class="text-danger"
-												*ngIf="return_time && return_time.invalid && return_time.touched">Enter
-												Return Time</span>
-										</div>
-									</div>
+									
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
 											<label>Store*</label>
@@ -586,6 +578,17 @@
 											<span class="text-danger"
 												*ngIf="product_store && product_store.invalid && product_store.touched">Select
 												Product Store </span>
+										</div>
+									</div>
+
+									<div *ngIf="(product_store?.value === 'Online' || product_store?.value === 'Both')" class="col-lg-3 col-sm-4 col-12">
+										<div class="form-group">
+											<label>Return Time (In days)*</label>
+											<input type="text" formControlName="return_time" placeholder="Return Time"
+												[ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
+											<span class="text-danger"
+												*ngIf="return_time && return_time.invalid && return_time.touched">Enter
+												Return Time</span>
 										</div>
 									</div>
 									<div class="col-lg-12 col-sm-12 col-12">

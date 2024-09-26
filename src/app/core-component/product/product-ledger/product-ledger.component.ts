@@ -265,7 +265,7 @@ export class ProductLedgerComponent implements OnInit {
       head: [
         ['#', 'Name.', 'Date', 'Voucher Type', 'Voucher No.', 'Price', 'In QTY', 'Out QTY']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.name,
         row.date,
