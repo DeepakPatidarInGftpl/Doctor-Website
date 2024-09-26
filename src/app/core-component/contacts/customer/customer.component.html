@@ -164,12 +164,18 @@
                         <td>{{products?.customer_type}}</td>
                         <td>{{products?.company_name}}</td>
                         <td>{{products?.mobile_no}}</td>
-                        <td *ngIf="products?.closing_balance?.isSuccess">
-                            
+                        <td >
+                            <span *ngIf="products?.closing_balance?.isSuccess">
+
+                           
                             {{ products?.closing_balance?.closing_balance_type + (products?.closing_balance?.closing_balance != null ? ' : ' +
-                            products?.closing_balance?.closing_balance : '') }}</td>
-                        <td>{{products?.gstin}}</td>
-                        <td>{{products?.address[0]?.city?.city}}</td>
+                            products?.closing_balance?.closing_balance : '') }}
+                        </span>
+                        <span *ngIf="!products?.closing_balance?.isSuccess"> -</span>
+                        
+                        </td>
+                        <td>{{products?.gstin ? products?.gstin :  '-'}}</td>
+                        <td>{{products?.address[0]?.city?.city ? products?.address[0]?.city?.city:' '}}</td>
                         <!-- <td>{{products?.pan_no}}</td> -->
                         <td>
                             <!-- <mat-slide-toggle

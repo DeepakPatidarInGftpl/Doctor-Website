@@ -740,7 +740,7 @@ export class SubcategorylistComponent implements OnInit {
       head: [
         ['#', 'Image', 'Sub Category', 'Category']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.image,
         row.title,

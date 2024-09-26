@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-unit-conversion',
   templateUrl: './unit-conversion.component.html',
@@ -145,7 +146,8 @@ export class UnitConversionComponent implements OnInit {
       alternate_unit: new FormControl('', [Validators.required]),
       quantity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       unit: new FormControl('', [Validators.required])
-    })
+    });
+    this.handleClick()
     // this.dtOptions = {
     //   dom: 'Btlpif',
     //   pagingType: 'numbers',
@@ -217,6 +219,23 @@ export class UnitConversionComponent implements OnInit {
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
+
+handleClick() {
+
+
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+   });
+}
+
+ClosePopover() {
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+   });
+}
+
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -453,7 +472,7 @@ export class UnitConversionComponent implements OnInit {
       head: [
         ['#', 'Alternate Unit', 'Units', 'Quantity']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.alternate_unit.title,
         row.unit.title,

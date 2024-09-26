@@ -590,7 +590,7 @@ export class TaxComponent implements OnInit {
       head: [
         ['#', 'Tax Name', 'Tax %']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.tax_percentage,

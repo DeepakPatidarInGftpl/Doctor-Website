@@ -6,6 +6,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-production-voucher',
@@ -328,13 +329,22 @@ this.Additional_Discount=event.batch[0]?.additional_discount;
   loaders = false;
 
   submit() {
-    const totalItemGenerated = this.calculateTotalMrp();
-    const totalItemConsumed = this.totalMrpConsumed();
-    if(totalItemGenerated < totalItemConsumed) {
-      alert('do you want to proceed.');
-    }
-    console.log(this.productionvoucherForm.value);
-      if (this.productionvoucherForm.valid) {
+    // const totalItemGenerated = this.calculateTotalMrp();
+    // const totalItemConsumed = this.totalMrpConsumed();
+    // if(totalItemGenerated < totalItemConsumed) {
+    //   alert('do you want to proceed.');
+    // }
+    // console.log(this.productionvoucherForm.value);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "do you want to proceed.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Save it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.loaders = true;
         let formdata: any = new FormData();
         formdata.append('material_consumption_date', this.productionvoucherForm.get('material_consumption_date')?.value);
@@ -397,7 +407,7 @@ this.Additional_Discount=event.batch[0]?.additional_discount;
         this.productionvoucherForm.markAllAsTouched()
         this.toastrService.error('Please Fill All The Required Fields')
       }
-    
+    })
   }
   get material_consumption_date() {
     return this.productionvoucherForm.get('material_consumption_date')

@@ -166,10 +166,16 @@
                         <td>{{products?.employee_type}}</td>
                         <td>{{products?.email}}</td>
                         <td>{{products?.department.title}}</td>
-                        <td *ngIf="products?.closing_balance?.isSuccess">
-                            
-                            {{ products?.closing_balance?.closing_balance_type + (products?.closing_balance?.closing_balance != null ? ' : ' +
-                            products?.closing_balance?.closing_balance : '') }}</td>
+                        <td >
+                            <span *ngIf="products?.closing_balance?.isSuccess">
+                                {{ products?.closing_balance?.closing_balance_type + (products?.closing_balance?.closing_balance != null ? ' : ' +
+                                products?.closing_balance?.closing_balance : '') }}
+                            </span>
+                            <span *ngIf="!products?.closing_balance?.isSuccess">-</span>
+                        
+                        
+                        
+                        </td>
                         <!-- <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' +
                             products?.opening_balance : '') }}</td> -->
                         <!-- <td>{{products?.date_of_joining}}</td>

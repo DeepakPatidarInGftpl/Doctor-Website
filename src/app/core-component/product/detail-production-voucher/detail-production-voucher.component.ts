@@ -8,7 +8,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
   styleUrls: ['./detail-production-voucher.component.scss']
 })
 export class DetailProductionVoucherComponent implements OnInit {
-  constructor(private Arout: ActivatedRoute, private CoreService: CoreService,private location:Location) { }
+  constructor(private Arout: ActivatedRoute, private CoreService: CoreService,public location:Location) { }
   imgUrl = 'https://pv.greatfuturetechno.com';
   id: any
   ngOnInit(): void {

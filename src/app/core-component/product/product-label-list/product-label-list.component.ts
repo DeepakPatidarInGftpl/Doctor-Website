@@ -155,6 +155,7 @@ export class ProductLabelListComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       incentive: new FormControl(''),
       incentive_type: new FormControl('%', [Validators.required]),
+      decription: new FormControl(''),
     })
     // permission from profile api
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -219,7 +220,7 @@ export class ProductLabelListComponent implements OnInit {
       formData.append("title", this.addProductForm.get('title')?.value);
       formData.append("incentive", this.addProductForm.get('incentive')?.value);
       formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-
+      formData.append("decription", this.addProductForm.get('decription')?.value);
       this.coreService.addProductLabel(formData).subscribe(res => {
         // console.log(res);
         this.addRes = res
@@ -249,7 +250,7 @@ export class ProductLabelListComponent implements OnInit {
       formData.append("title", this.addProductForm.get('title')?.value);
       formData.append("incentive", this.addProductForm.get('incentive')?.value);
       formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-
+      formData.append("decription", this.addProductForm.get('decription')?.value);
       this.coreService.updateProductLabel(formData, this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.success) {
@@ -355,7 +356,7 @@ export class ProductLabelListComponent implements OnInit {
       head: [
         ['#', 'Title.', 'Incentive']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row?.title,
         row.incentive,

@@ -26,14 +26,14 @@ export class AddTransportComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      telephone_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
+      telephone_no: new FormControl('', [ Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
+      whatsapp_no: new FormControl('', [  Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
       date_of_birth: new FormControl('',),
       anniversary_date: new FormControl('',),
       gst_type: new FormControl('',),
-      gstin: new FormControl('', [Validators.required, Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
+      gstin: new FormControl('', Validators.compose([Validators.required, Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")])),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
       credit_limit: new FormControl('',),
@@ -95,6 +95,14 @@ export class AddTransportComponent implements OnInit {
 
   onGstTypeChange(event: any): void {
     this.selectedGstType = event.target.value;
+
+    // Remove required validator from gstin field if UnRegistered is selected
+    if (this.selectedGstType === 'UnRegistered') {
+      this.transportForm.get('gstin').clearValidators();
+    } else {
+      this.transportForm.get('gstin').setValidators([Validators.required,Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]);
+    }
+    this.transportForm.get('gstin').updateValueAndValidity();
   }
 
   bankAdd(): FormGroup {
@@ -170,6 +178,8 @@ export class AddTransportComponent implements OnInit {
   loader = false;
   mobError: any;
   submit() {
+console.log(this.transportForm)
+    // return
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
     formdata.append('name', this.transportForm.get('name')?.value);

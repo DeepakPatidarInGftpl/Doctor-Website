@@ -359,7 +359,7 @@ export class BrandlistComponent implements OnInit {
       head: [
         ['#', 'Image', 'Brand Name', 'Code', 'Discount', 'Category', 'Subcategory group', 'SubCategory']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
 
         index + 1,
         row.image,

@@ -553,7 +553,7 @@ export class SizeComponent implements OnInit {
       head: [
         ['#', 'Size Name', 'Size Code']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.code,

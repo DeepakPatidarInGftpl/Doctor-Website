@@ -47,7 +47,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
+                    <!-- <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Discount %</label>
                             <input type="text" formControlName="discount" placeholder="Enter Discount" id="discount"
@@ -55,7 +55,7 @@
                             <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter
                                 discount (ex-1-100) </span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Customer*</label>
@@ -209,8 +209,8 @@
                                         </span>
                                     </div> -->
                             <div class="row">
-                                <div class="col-lg-3 col-sm-6 col-12">
-                                    <div class="image-upload">
+                                <div class="col-lg-6 col-sm-6 col-12">
+                                    <div class="image-upload" style="width: 100%;">
                                         <input type="file" formControlName="image" (change)="onSelect($event)" required>
                                         <div class="image-uploads">
                                             <img src="assets/img/icons/upload.svg" alt="img">
@@ -221,7 +221,7 @@
                                         <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="col-lg-6 col-sm-6 col-12">
                                     <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
                                         style="height: 100px; width: 100px;">
@@ -232,8 +232,19 @@
                                     <img [src]="url" *ngIf="url" alt="" class="p_img">
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
+                    <!-- <div class="row"> -->
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="d-flex justify-content-center">
+                                <input type="checkbox" formControlName="is_featured" class="mx-2" id="is_featured">
+                                <label class="text-center">Featured Brand</label>   
+                                
+                            </div>
+                            
+                        </div>
+                    <!-- </div> -->
                     <div class="col-lg-12">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
