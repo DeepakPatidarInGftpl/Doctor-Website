@@ -1,7 +1,9 @@
 <div class="page-header">
     <div class="page-title">
         <h4 (click)="goBack()" ><span class="material-icons" style="vertical-align: middle;cursor: pointer;">keyboard_backspace</span> Print Barcode</h4>
-        <h6>Generate barcode</h6>
+        <h6 class="titl">Generate barcode</h6>
+
+        
     </div>
     <div class="page-btn" *ngIf="isPrint || isPrintProduct">
         <div class="form-group">
@@ -138,7 +140,7 @@
                                         <option [value]="p?.id" *ngFor="let p of data?.barcode?.batch">{{p?.mrp}}
                                         </option>
                                     </select></td>
-                                <td><input type="number" [value]="data?.qty" #qtyVal
+                                <td><input type="number"  #qtyVal
                                         (change)="qtyChangePurchase(j,qtyVal.value)" class="input"></td>
                                 <td>
                                     <p>{{data?.mrp}}</p>
@@ -155,6 +157,7 @@
         </ng-container>
 
         <ng-container *ngIf="isProduct">
+
             <!-- <div class="form-group">
                 <label>Product Name</label>
                 <div class="input-groupicon">
@@ -211,27 +214,41 @@
                    </div>
                  </div>
             </div>  -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Search Product</label>
 
-            <div class="form-group">
-                <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
-                    [formControl]="productControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
-                    style="box-sizing: border-box;" />
-                <mat-autocomplete #autos="matAutocomplete">
-                    <ng-container *ngFor="let option of variantData">
-                        <mat-option *ngIf="option?.is_active==true"
-                            [value]="option?.product_title + ' ' + option?.variant_name"
-                            (onSelectionChange)="onCheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title
-                            + ' ' + option?.variant_name}} </mat-option>
-                    </ng-container>
-                    <mat-option *ngIf="isSearch && searchLength?.toString()?.length >2 "
-                        style="color:#FF9F43">Loading...</mat-option>
-                    <mat-option *ngIf="variantData?.length === 0 && !isSearch" [value]="'No data found'">
-                        <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                    </mat-option>
-                    <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading">Please Enter 3 or more
-                        characters</mat-option>
-                </mat-autocomplete>
+                        <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
+                            [formControl]="productControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
+                            style="box-sizing: border-box;" />
+                        <mat-autocomplete #autos="matAutocomplete">
+                            <ng-container *ngFor="let option of variantData">
+                                <mat-option *ngIf="option?.is_active==true"
+                                    [value]="option?.product_title + ' ' + option?.variant_name"
+                                    (onSelectionChange)="onCheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title
+                                    + ' ' + option?.variant_name}} </mat-option>
+                            </ng-container>
+                            <mat-option *ngIf="isSearch && searchLength?.toString()?.length >2 "
+                                style="color:#FF9F43">Loading...</mat-option>
+                            <mat-option *ngIf="variantData?.length === 0 && !isSearch" [value]="'No data found'">
+                                <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                            </mat-option>
+                            <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading">Please Enter 3 or more
+                                characters</mat-option>
+                        </mat-autocomplete>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Black Sticker</label>
+                        <input placeholder="black sticker" [formControl]="black_stickerControl" class="form-control" type="number" />
+                    </div>
+                </div>
             </div>
+         
+
+           
 
             <div class="row my-3">
                 <div class="table-responsive">
@@ -406,7 +423,8 @@
             </div>
         </ng-container>
     </ng-container>
-    <ng-container *ngIf="selectedPageSize=='a4'">
+
+     <ng-container *ngIf="selectedPageSize=='a4'">
         <div class="row">
             <ng-container *ngFor="let product of cartData">
                 <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">
@@ -457,9 +475,8 @@
                 </div>
             </ng-container>
         </div>
-    </ng-container>
+    </ng-container> 
 </div>
-
 
 <div *ngIf="isPrintProduct" id="print">
     <ng-container *ngIf="selectedPageSize=='50mm x 25mm x 1UP'">
@@ -577,58 +594,69 @@
 
     </ng-container>
     <ng-container *ngIf="selectedPageSize=='a4'">
-        <div class="row">
-            <ng-container *ngFor="let products of productData">
-                <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(products.qty)">
-                    <div fxLayout="column">
-                        <div class="card card_">
-                            <div class="card-header pb-0 pt-0 card_header">
-                                <div class="card-title mb-0 title"
-                                    style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                    {{ products?.product_title.length > 20 ? (products?.product_title | slice:0:20) +
-                                    '...' : products?.product_title }}</div>
-                            </div>
-                            <div class="card-body card_body">
-                                <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                    <p class="p1">MRP : <span>{{products?.mrp |number:'1.2-2'}}</span></p>
-                                    <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all
-                                        taxes':'Exclusive of all taxes'}}</p>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between product">
-                                    <p class="p3">Product : <span> {{products?.variant_name.length > 20 ?
-                                            (products?.variant_name | slice:0:20) + '...' : products?.variant_name
-                                            }}</span></p>
-                                    <P class="p3">Net Qty : <span>{{products?.qty}}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: -3px;">
-                                    <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
-                                    <P class="p3">Size : <span>{{products?.size?.title}}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: 0px;">
-                                    <p class="p3">Price: <span>{{products?.selling_price_offline
-                                            |number:'1.2-2'}}</span></p>
-                                    <P class="p3">Discount : <span>{{products?.discount}}</span></P>
-                                </div>
-                                <div class="text-center">
-                                    <ngx-barcode [bc-element-type]="elementType" [bc-value]="products?.sku"
-                                        [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                        [bc-height]="height" [bc-display-value]="displayValue"
-                                        [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                        [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                        [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                        [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                        [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                    </ngx-barcode>
-                                </div>
+        <div class="container mx-2">
+            <div id="mytable" class="row">
+                <ng-container *ngFor="let product of new_arr">
+                      <div *ngIf="!(product.black_sticker)" class="col-sm-2 col-lg-2 col-12 mt-2 mx-4"  >
+                     
+                          <div fxLayout="column">
+                              <div class="card card_ card_id"  style="width: 48mm !important;height: 28mm !important;">
+                                  <div class="card-header pb-0 pt-0 card_header">
+                                      <div class="card-title mb-0 title"
+                                          style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: center">
+                                          {{ 
+                                            product?.product?.brand?.title.length > 20 ? (product?.product?.brand?.title | slice:0:20) +
+                                          '...' : product?.product?.brand?.title
+                                          
+                                        }}
+                                        </div>
+                                  </div>
+                                  <div class="card-body card_body">
+                                      <div class="pb-0 d-flex justify-content-between align-items-center mrp" style="font-weight: 350 !important;">
+                                          <p class="p1" style="font-weight: 350 !important;">MRP : <span style="font-weight: 350 !important;">{{product?.mrp | number:'1.2-2'}}</span></p>
+                                          <p class="p2 mt-1" style="font-weight: 350 !important;"> {{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</p>
+                                      </div>
+                                      <div class="pb-0 d-flex mt-1 justify-content-between product"  style="font-weight: 350 !important;">
+                                          <p class="p3"  style="font-weight: 350 !important;">Product : <span style="font-weight: 350 !important;"> {{product?.product.subcategory.title.length > 20 ?
+                                                  (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title
+                                                  }}</span></p>
+                                          <P class="p3"  style="font-weight: 350 !important;">Net Qty : <span>{{product?.qty}}</span></P>
+                                      </div>
+                                      <div class="pb-0 d-flex justify-content-between align-items-center "
+                                          style="margin-bottom: -3px;">
+                                          <p class="p3"  style="font-weight: 350 !important;">Style : <span  style="font-weight: 350 !important;">{{product?.product?.article_no}}</span></p>
+                                          <P class="p3"  style="font-weight: 350 !important;">Size : <span  style="font-weight: 350 !important;">{{product?.variant_name}}</span></P>
+                                      </div>
+                                      <div class="pb-0 d-flex justify-content-between align-items-center"
+                                          style="margin-bottom: 0px;">
+                                          <p class="p3"  style="font-weight: 350 !important;">Price: <span  style="font-weight: 350 !important;"> ₹ {{product?.selling_price_offline
+                                                  |number:'1.2-2'}}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;">Discount : <span  style="font-weight: 350 !important;">{{product?.discount?product?.discount:'00'}}</span></p>
+                                      </div>
+                                      
+                                      <div  *ngIf="new_arr.length>0">
+                                        <div class="text-center">
+                                            <app-real-barcode [product]="product">
+                                            </app-real-barcode>
+                                        </div>
+                                      
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+      
+                      </div>  
+                      <div *ngIf="product.black_sticker" class="col-sm-3 col-lg-3 col-12 mt-3"  >
+                        <div fxLayout="column">
+                            <div class="card card_ card_id" style="width: 42mm !important;height: 28mm !important;">
+                               
                             </div>
                         </div>
-                    </div>
-
-                </div>
-            </ng-container>
+                      </div>
+                  </ng-container>
+            </div>
         </div>
+        
     </ng-container>
 </div>
 

@@ -1,6 +1,5 @@
-import { group } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {  Component, OnInit } from '@angular/core';
+import {  FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
@@ -8,6 +7,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-barcode',
   templateUrl: './barcode.component.html',
@@ -15,33 +15,16 @@ import { Location } from '@angular/common';
 })
 export class BarcodeComponent implements OnInit {
 
+
   productControl = new FormControl();
   constructor(private coreService: CoreService, private saleService: SalesService, private purchaseService: PurchaseServiceService,
     private Arout: ActivatedRoute, private router: Router, private toastr: ToastrService, public location:Location) { }
 
-  elementType = 'svg';
-  value = 'someValue12340987';
-  format = 'CODE128';
-  lineColor = '#000000';
-  width = 1;
-  height = 20;
-  displayValue = true;
-  fontOptions = '';
-  font = 'monospace';
-  textAlign = 'center';
-  textPosition = 'bottom';
-  textMargin = 2;
-  fontSize = 10;
-  background = '#ffffff';
-  margin = 0;
-  marginTop = 0;
-  marginBottom = 0;
-  marginLeft = 10;
-  marginRight = 10;
+
 
   purchaseControl = new FormControl();
   filteredPurchase: Observable<any[]>;
-
+  black_stickerControl = new FormControl(0);
   barcodeForm: FormGroup;
 
   ngOnInit(): void {
@@ -59,9 +42,9 @@ export class BarcodeComponent implements OnInit {
 
 
   }
-
+ 
   goBack() {
-    this.location.back();
+  //  window.r
   }
 
   private _filter(value: string | number, include: boolean): any {
@@ -103,9 +86,7 @@ export class BarcodeComponent implements OnInit {
     }
   }
 
-  get values(): string[] {
-    return this.value.split('\n');
-  }
+
   productList: any;
   variantList: any[] = [];
   loader = false;
@@ -255,9 +236,55 @@ export class BarcodeComponent implements OnInit {
       });
     }
   }
-  getQtyArray(quantity: number): number[] {
-    return Array.from({ length: quantity }, (_, index) => index + 1);
+
+
+  createArrayOfLength(data: any, quantity: number): any[] {
+     if(quantity==0){
+      this.new_arr.push(data)
+      return this.new_arr
+    }
+
+    for(let i=1;i<=quantity;i++){
+      this.new_arr.push(data)
+    }
+    this.Black_Sticker(this.black_stickerControl.value)
+    return this.new_arr
   }
+
+
+
+  Black_Sticker(val:number){
+    let obj = {
+      black_sticker:true
+    };
+    for(let i=1;i<=val;i++){
+      this.new_arr.unshift(obj)
+    }
+     console.log(this.new_arr,'new_arr')
+  }
+
+  printPG(): void {
+    // const printElements = document.querySelectorAll('.row'); // Select all rows containing cards
+    // printElements.forEach((row) => {
+    //     const printContents = row.outerHTML;
+    //     const originalContents = document.body.innerHTML;
+    //     document.body.innerHTML = printContents;
+    //     window.addEventListener('afterprint', () => {
+    //         console.log('afterprint');
+    //         window.location.reload();
+    //     });
+    //     window.print();
+    //     document.body.innerHTML = originalContents;
+    // });
+    this.printTable()
+}
+
+
+
+  // getQtyArray(quantity: number): number[] {
+  //   console.log(Array.from({ length: quantity }, (_, index) => index + 1),'hello')
+  //   return Array.from({ length: quantity }, (_, index) => index + 1);
+  // }
   productData: any[] = [];
   onCheckProduct(data: any) {
     console.log(data);
@@ -268,11 +295,16 @@ export class BarcodeComponent implements OnInit {
     } else {
       this.productData.push(productWithQty);
     }
+
+
+
     console.log(this.productData, 'selected data');
     this.productControl.reset();
   }
+  loopQut:number= 0;
   qtyChangeProduct(index: number, newQty: any) {
     const qty = parseInt(newQty, 10);
+    this.loopQut = newQty; 
     if (!isNaN(qty)) {
       this.productData[index].qty = qty;
     } else {
@@ -284,7 +316,9 @@ export class BarcodeComponent implements OnInit {
     console.warn(val, i);
     console.log(this.productData[i]);
     if (this.productData[i]) {
-      const batch = this.productData[i]?.batch as any[]; // Type assertion
+      const batch = this.productData[i]?.batch as any[]; 
+     console.log(batch,'batch deepak')
+      // Type assertion
       batch?.map((res: any) => {
         if (res?.id == val) {
           this.productData[i].mrp = res?.mrp;
@@ -316,13 +350,21 @@ export class BarcodeComponent implements OnInit {
     console.warn(this.cartData, 'cartdata');
     console.warn(this.productData, 'productData');
   }
-  printProduct() {
+  new_arr:any[]= [];
+  printProduct(qtyVl:any) {
     this.isPrint = false;
     this.isPrintProduct = true;
-    console.warn(this.cartData, 'cartdata');
-    console.warn(this.productData, 'productData');
+    // console.warn(this.cartData, 'cartdata');
+    console.warn(this.productData[0], 'productData');
+    console.warn(this.loopQut,'qtyVl')
+
+   this.createArrayOfLength(this.productData[0],this.loopQut)
+ console.log(this.new_arr,'new_arr')
+
   }
 
+
+  
   // printPG(): void {
   //   const printElement = document.getElementById('print');
   //   console.warn(printElement, 'printElement');
@@ -341,20 +383,50 @@ export class BarcodeComponent implements OnInit {
   //     console.error('Element with id "print" not found');
   //   }
   // }
-  printPG(): void {
-    const printElements = document.querySelectorAll('.row'); // Select all rows containing cards
-    printElements.forEach((row) => {
-        const printContents = row.outerHTML;
-        const originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.addEventListener('afterprint', () => {
-            console.log('afterprint');
-            window.location.reload();
-        });
-        window.print();
-        document.body.innerHTML = originalContents;
-    });
+
+
+
+async printTable() {
+    
+  // Get the table element and its HTML content
+  const tableElement = document.getElementById('mytable');
+  if (!tableElement) {
+    console.error("Table element with ID 'mytable' not found.");
+    return;
+  }
+  // Get the title element and its HTML content
+  // const titleElement = document.querySelector('.titl');
+  // if (!titleElement) {
+  //   console.error("Title element with class 'titl' not found.");
+  //   return;
+  // }
+  // this.s = false;
+  // const titleHTML = titleElement.outerHTML;
+  // Clone the table element to manipulate
+  const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+  // Get the modified table's HTML content
+  const modifiedTableHTML = clonedTable.outerHTML;
+  // Apply styles to add some space from the top after the title
+  const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; 
+  margin-left: 10px;
+  margin-right: 10px;
+  }
+  
+  </style>` ;
+  // Combine the title and table content
+  const combinedContent = styledTitleHTML + modifiedTableHTML;
+  // Store the original contents
+  const originalContents = document.body.innerHTML;
+  // Replace the content of the body with the combined content
+  document.body.innerHTML = combinedContent;
+  window.print();
+
+  // Restore the original content of the body 
+  document.body.innerHTML = originalContents;
+
 }
+
+
 
   selectedPageSize: string='a4'; 
   isSelectPg=true;
