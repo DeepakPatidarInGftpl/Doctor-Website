@@ -10,6 +10,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RealBarcodeModule } from '../real-barcode/real-barcode.module';
 @NgModule({
   declarations: [
     BarcodeComponent
@@ -26,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
+    RealBarcodeModule
   ]
 })
 export class BarcodeModule { }

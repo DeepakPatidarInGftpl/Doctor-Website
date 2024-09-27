@@ -199,4 +199,23 @@ select,
 
 
 
+@media print {
+  @page {
+    // margin: 2mm;
+    margin-left: 2mm;
+    margin-right: 2mm;
+     /* Adjust as needed */
+  }
 
+  /* Hide elements that you don’t want to print */
+  header, footer, nav {
+    display: none;
+  }
+
+  /* Additional styles for printed content */
+  body {
+    margin: 0; /* Ensure there's no margin in the body */
+  }
+
+  /* Additional print styles can be added here */
+}
