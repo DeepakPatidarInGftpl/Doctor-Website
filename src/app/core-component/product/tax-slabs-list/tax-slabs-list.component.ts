@@ -192,10 +192,16 @@ export class TaxSlabsListComponent implements OnInit {
     }
   }
 
-  filterData() {
+  filterData(key?:string,value?:any) {
+    console.log(value)
     let filteredData = this.tableData.slice();
     if (this.selectActive !== undefined && this.selectActive !== null) {
-      filteredData = filteredData.filter(item => item?.is_active === this.selectActive);
+      filteredData = filteredData.filter((item:any) => item?.is_active === this.selectActive);
+    }
+    if (key === 'Variable_Tax') {
+      if (value === 'true' || value === 'false') {
+        filteredData = filteredData.filter((item: any) => item.variable_tax === (value === 'true'));
+      }
     }
     this.filteredData = filteredData;
   }

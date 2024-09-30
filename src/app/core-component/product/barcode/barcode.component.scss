@@ -202,8 +202,13 @@ select,
 @media print {
   @page {
     // margin: 2mm;
-    margin-left: 2mm;
-    margin-right: 2mm;
+    margin: 0;
+    padding: 0;
+    background-color: #fff !important; 
+    box-shadow: none !important;
+
+    // margin-left: 2mm;
+    // margin-right: 2mm;
      /* Adjust as needed */
   }
 
@@ -214,8 +219,27 @@ select,
 
   /* Additional styles for printed content */
   body {
-    margin: 0; /* Ensure there's no margin in the body */
+    margin: 0;
+    background-color: #fff !important; 
+    background: #FFF !important;/* Ensure there's no margin in the body */
   }
 
   /* Additional print styles can be added here */
+}
+
+
+
+.grid-container {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  padding-left: 11px;
+  padding-top: 10px;
+  width: 100%;
+
+}
+.grid-item {
+
+
+  width: 42mm !important;
+  height: 28mm !important;
 }

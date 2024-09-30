@@ -423,59 +423,74 @@
             </div>
         </ng-container>
     </ng-container>
-
-     <ng-container *ngIf="selectedPageSize=='a4'">
-        <div class="row">
-            <ng-container *ngFor="let product of cartData">
-                <div class="col-sm-3 col-lg-3 col-12 mt-2" *ngFor="let qty of getQtyArray(product.qty)">
-                    <div fxLayout="column">
-                        <div class="card card_" style="width: 55mm !important;">
-                            <div class="card-header pb-0 pt-0 card_header">
-                                <div class="card-title mb-0 title"
-                                    style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: left">
-                                    {{ product?.barcode?.product_title.length > 20 ?
-                                    (product?.barcode?.barcodeproduct_title | slice:0:20) + '...' :
-                                    product?.barcode?.product_title }}</div>
-                            </div>
-                            <div class="card-body card_body">
-                                <div class="pb-0 d-flex justify-content-between align-items-center mrp">
-                                    <p class="p1">MRP : <span>{{ product?.mrp | number:'1.2-2'}}</span></p>
-                                    <p class="p2">{{ product?.barcode?.product?.sale_tax_including ? 'Inclusive of all
-                                        taxes' : 'Exclusive of all taxes'}}</p>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between product">
-                                    <p class="p3">Product : <span>{{ product?.barcode?.variant_name }}</span></p>
-                                    <P class="p3">Net Qty : <span>{{ product.qty }}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: -3px;">
-                                    <p class="p3">Style : <span>{{ product?.barcode?.product?.article_no }}</span></p>
-                                    <P class="p3">Size : <span>{{ product?.barcode?.size?.title }}</span></P>
-                                </div>
-                                <div class="pb-0 d-flex justify-content-between align-items-center"
-                                    style="margin-bottom: 0px;">
-                                    <p class="p3">Price: <span>{{ product?.selling_price_offline |
-                                            number:'1.2-2'}}</span></p>
-                                    <P class="p3">Discount : <span>{{ product?.discount }}</span></P>
-                                </div>
-                                <div class="text-center">
-                                    <ngx-barcode [bc-element-type]="elementType" [bc-value]="product?.barcode?.sku"
-                                        [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width"
-                                        [bc-height]="height" [bc-display-value]="displayValue"
-                                        [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
-                                        [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
-                                        [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin"
-                                        [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom"
-                                        [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
-                                    </ngx-barcode>
-                                </div>
+    <ng-container *ngIf="selectedPageSize=='a4'">
+        <div class="container mx-2">
+            <div id="mytable" class="row">
+                <ng-container *ngFor="let product of new_arr">
+                
+                      <div *ngIf="!(product.black_sticker)" class="col-sm-2 col-lg-2 col-12 mt-2 mx-4"  >
+                     
+                          <div fxLayout="column">
+                              <div class="card card_ card_id"  style="width: 48mm !important;height: 28mm !important;">
+                                  <div class="card-header pb-0 pt-0 card_header">
+                                      <div class="card-title mb-0 mt-1 title"
+                                          style="font-size: 9px !important;padding:0 !important;height: 15px;text-align: start;text-size-adjust: 100%; ;color: #000;">
+                                          {{ 
+                                           (product?.product?.brand?.title).substring(0,27)
+                                        }}
+                                        <!-- <span *ngIf="product?.product?.brand?.title.length > 27">...</span> -->
+                                        
+                                        </div>
+                                 
+                                  </div>
+                                  <div class="card-body card_body">
+                                      <div class="pb-0 d-flex justify-content-between align-items-center mrp" style="font-weight: 350 !important;">
+                                          <p class="p1" style="font-weight: 350 !important; color: #000;">MRP : <span style="font-weight: 350 !important;">₹ {{product?.mrp | number:'1.2-2'}}</span></p>
+                                          <p class="p2" style="font-weight: 350 !important;color: #000;">  <span style="font-weight: 350 !important; text-align: center;">{{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</span></p>
+                                      </div>
+                                      <div class="pb-0 d-flex mt-1 justify-content-between product"  style="font-weight: 350 !important;">
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Product : <span style="font-weight: 350 !important;"> {{product?.product.subcategory.title.length > 20 ?
+                                                  (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title
+                                                  }}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Net Qty : <span>{{product?.qty}}</span></p>
+                                      </div>
+                                      <div class="pb-0 d-flex justify-content-between align-items-center "
+                                          style="margin-bottom: -3px;">
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Style : <span  style="font-weight: 350 !important;">{{product?.product?.article_no}}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Size : <span  style="font-weight: 350 !important;">{{product?.variant_name}}</span></p>
+                                      </div>
+                                      <div class="pb-0 d-flex justify-content-between align-items-center"
+                                          style="margin-bottom: 0px;">
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Price: <span  style="font-weight: 350 !important;"> ₹ {{product?.selling_price_offline
+                                                  |number:'1.2-2'}}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Discount : <span  style="font-weight: 350 !important;">{{product?.discount?product?.discount:'00'}}</span></p>
+                                      </div>
+                                      
+                                      <div  *ngIf="new_arr.length>0">
+                                        <div class="text-center">
+                                            <app-real-barcode [product]="product">
+                                            </app-real-barcode>
+                                        </div>
+                                      
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+      
+                      </div>  
+                      <div *ngIf="product.black_sticker" class="col-sm-3 col-lg-3 col-12 mt-3"  >
+                        <div fxLayout="column">
+                            <div class="card card_ card_id" style="width: 42mm !important;height: 28mm !important;">
+                               
                             </div>
                         </div>
-                    </div>
-                </div>
-            </ng-container>
+                      </div>
+                  </ng-container>
+            </div>
         </div>
-    </ng-container> 
+        
+    </ng-container>
+  
 </div>
 
 <div *ngIf="isPrintProduct" id="print">
@@ -594,44 +609,46 @@
 
     </ng-container>
     <ng-container *ngIf="selectedPageSize=='a4'">
-        <div class="container mx-2">
-            <div id="mytable" class="row">
-                <ng-container *ngFor="let product of new_arr">
-                      <div *ngIf="!(product.black_sticker)" class="col-sm-2 col-lg-2 col-12 mt-2 mx-4"  >
+        <div id="mytable" class="grid-container">
+            <div  *ngFor="let product of new_arr" class="grid-item">
+                <ng-container >
+                
+                      <div *ngIf="!(product.black_sticker)"   >
                      
                           <div fxLayout="column">
                               <div class="card card_ card_id"  style="width: 48mm !important;height: 28mm !important;">
                                   <div class="card-header pb-0 pt-0 card_header">
-                                      <div class="card-title mb-0 title"
-                                          style="font-size: 12px !important;padding:0 !important;height: 15px;text-align: center">
+                                      <div class="card-title mb-0 mt-1 title"
+                                          style="font-size: 9px !important;padding:0 !important;height: 15px;text-align: start;text-size-adjust: 100%; ;color: #000;">
                                           {{ 
-                                            product?.product?.brand?.title.length > 20 ? (product?.product?.brand?.title | slice:0:20) +
-                                          '...' : product?.product?.brand?.title
-                                          
+                                           (product?.product?.brand?.title).substring(0,27)
                                         }}
+                                        <!-- <span *ngIf="product?.product?.brand?.title.length > 27">...</span> -->
+                                        
                                         </div>
+                                   
                                   </div>
                                   <div class="card-body card_body">
                                       <div class="pb-0 d-flex justify-content-between align-items-center mrp" style="font-weight: 350 !important;">
-                                          <p class="p1" style="font-weight: 350 !important;">MRP : <span style="font-weight: 350 !important;">{{product?.mrp | number:'1.2-2'}}</span></p>
-                                          <p class="p2 mt-1" style="font-weight: 350 !important;"> {{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</p>
+                                          <p class="p1" style="font-weight: 350 !important; color: #000;">MRP : <span style="font-weight: 350 !important;">₹ {{product?.mrp | number:'1.2-2'}}</span></p>
+                                          <p class="p2" style="font-weight: 350 !important;color: #000;">  <span style="font-weight: 350 !important; text-align: center;">{{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</span></p>
                                       </div>
                                       <div class="pb-0 d-flex mt-1 justify-content-between product"  style="font-weight: 350 !important;">
-                                          <p class="p3"  style="font-weight: 350 !important;">Product : <span style="font-weight: 350 !important;"> {{product?.product.subcategory.title.length > 20 ?
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Product : <span style="font-weight: 350 !important;"> {{product?.product.subcategory.title.length > 20 ?
                                                   (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title
                                                   }}</span></p>
-                                          <P class="p3"  style="font-weight: 350 !important;">Net Qty : <span>{{product?.qty}}</span></P>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Net Qty : <span>{{product?.qty}}</span></p>
                                       </div>
                                       <div class="pb-0 d-flex justify-content-between align-items-center "
                                           style="margin-bottom: -3px;">
-                                          <p class="p3"  style="font-weight: 350 !important;">Style : <span  style="font-weight: 350 !important;">{{product?.product?.article_no}}</span></p>
-                                          <P class="p3"  style="font-weight: 350 !important;">Size : <span  style="font-weight: 350 !important;">{{product?.variant_name}}</span></P>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Style : <span  style="font-weight: 350 !important;">{{product?.product?.article_no}}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Size : <span  style="font-weight: 350 !important;">{{product?.variant_name}}</span></p>
                                       </div>
                                       <div class="pb-0 d-flex justify-content-between align-items-center"
                                           style="margin-bottom: 0px;">
-                                          <p class="p3"  style="font-weight: 350 !important;">Price: <span  style="font-weight: 350 !important;"> ₹ {{product?.selling_price_offline
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Price: <span  style="font-weight: 350 !important;"> ₹ {{product?.selling_price_offline
                                                   |number:'1.2-2'}}</span></p>
-                                          <p class="p3"  style="font-weight: 350 !important;">Discount : <span  style="font-weight: 350 !important;">{{product?.discount?product?.discount:'00'}}</span></p>
+                                          <p class="p3"  style="font-weight: 350 !important;color: #000;">Discount : <span  style="font-weight: 350 !important;">{{product?.discount?product?.discount:'00'}}</span></p>
                                       </div>
                                       
                                       <div  *ngIf="new_arr.length>0">
@@ -659,6 +676,21 @@
         
     </ng-container>
 </div>
+
+
+<!-- <div class="grid-container">
+    <div class="grid-item">
+        
+    </div>
+    <div class="grid-item">2</div>
+    <div class="grid-item">3</div>  
+    <div class="grid-item">4</div>
+    <div class="grid-item">5</div>
+    <div class="grid-item">6</div>  
+    <div class="grid-item">7</div>
+    <div class="grid-item">8</div>
+  </div> -->
+
 
 
 <!-- <div class="row">
