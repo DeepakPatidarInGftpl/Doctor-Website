@@ -308,7 +308,7 @@ export class DebitNoteComponent implements OnInit {
       head: [
         ['#', 'Company Name',' Date', 'Debit Note No','Purchase Bill','Reason','Amount','Tax','Total','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.party?.company_name ,

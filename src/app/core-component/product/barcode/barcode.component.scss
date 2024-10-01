@@ -232,14 +232,20 @@ select,
 .grid-container {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  padding-left: 11px;
+  place-items: center;
+  align-items: center;
+  padding-left: 10px!important;
+  padding-right: 10px!important;
+  // margin-right: 20px;
   padding-top: 10px;
   width: 100%;
-
+  // gap: 0 5px;
 }
-.grid-item {
+.grid-item{
 
-
-  width: 42mm !important;
-  height: 28mm !important;
+  // width: 48mm !important;
+  // height: 28mm !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

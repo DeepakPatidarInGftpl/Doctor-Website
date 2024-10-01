@@ -477,7 +477,7 @@ export class FinancialYearComponent implements OnInit {
       head: [
         ['#', 'Start Year', 'Close Year']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
 
         index + 1,
         row.start_year,

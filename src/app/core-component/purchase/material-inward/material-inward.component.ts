@@ -356,7 +356,7 @@ export class MaterialInwardComponent implements OnInit {
       head: [
         ['#', 'Supplier Name ','Purchase Order','PO Date', 'Material Inward Date','Material Inward No','Shipping Note','Recieved By','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
         index + 1,
         row.party?.name,
         row.purchase_order?.order_no,

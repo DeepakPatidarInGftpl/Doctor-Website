@@ -452,7 +452,7 @@ export class AccountlistComponent implements OnInit {
       head: [
         ['#', 'Title/Mobile ', 'Accounts Type', 'Account Sub Type', 'Account Id', 'Opening Balance']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.accounts_type,

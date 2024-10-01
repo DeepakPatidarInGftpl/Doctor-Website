@@ -324,7 +324,7 @@ select=false
     head: [
       ['#','User Name','Sale Order Date', 'Sale Order no.','Payment Terms','Due Date','Estimate','Total']
     ],
-    body: this.tableData.map((row:any, index:number ) => [
+    body: this.filteredData.map((row:any, index:number ) => [
   
       index + 1,
       row?.customer?.name + ' (' + row?.customer?.username + ')',

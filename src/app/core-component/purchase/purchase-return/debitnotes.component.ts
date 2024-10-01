@@ -370,7 +370,7 @@ export class DebitnotesComponent implements OnInit {
       head: [
         ['#', 'Supplier Name ','Return Date','Return No.', 'Reverse Charge','Purchase Bill','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
         index + 1,
         row.party?.name,
         this.formatDate(row?.purchase_return_date),
