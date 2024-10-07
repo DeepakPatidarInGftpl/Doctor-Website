@@ -7,7 +7,8 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { Observable, map, startWith } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 @Component({
   selector: 'app-product-ledger',
   templateUrl: './product-ledger.component.html',
@@ -21,8 +22,13 @@ export class ProductLedgerComponent implements OnInit {
   productVariantList: any;
   productVariantData: any;
   supplierControl: FormControl = new FormControl('');
-
-  constructor(private coreService: CoreService, private contactService: ContactService, private cs: CompanyService) { }
+  shippingDateForm!: FormGroup;
+  minDate: Date;
+  maxDate: Date;
+  constructor(private coreService: CoreService, private contactService: ContactService, private cs: CompanyService
+    ,
+    private commonService: CommonServiceService
+  ) { }
 
   titlee: any;
   p: number = 1
@@ -34,7 +40,7 @@ export class ProductLedgerComponent implements OnInit {
   //24-5
   isAdmin = false;
   fyID: any;
-
+  financialYear:any;
   //
   ngOnInit(): void {
     //24-5
@@ -51,12 +57,19 @@ export class ProductLedgerComponent implements OnInit {
         this.isAdmin = false;
       }
     });
+    this.shippingDateForm = new FormGroup({
+      start: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+      end: new FormControl('', [Validators.required, this.commonService.dateRangeValidator(this.financialYear)]),
+    });
+
+    this.commonService.validateAndClearDates(this.shippingDateForm, this.minDate, this.maxDate);
+
 
     this.getProductLedger();
     this.getVoucher();
     this.getProduct();
     this.getVariant();
-
+    this.financialYear = localStorage.getItem('financialYear');
     this.supplierControl.valueChanges.subscribe((res) => {
       if(res) {
         const filteredData = this._filter(res);
@@ -203,6 +216,21 @@ export class ProductLedgerComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
+
+
+
+    if (this.shippingDateForm.get('start').value && this.shippingDateForm.get('end').value) {
+      const startDate = new Date(this.shippingDateForm.get('start').value);
+      const endDate = new Date(this.shippingDateForm.get('end').value);
+      filteredData = filteredData.filter((item) => {
+        console.log(item,'deepak')
+        const supplierBillDate = new Date(item?.date);
+        return supplierBillDate >= startDate && supplierBillDate <= endDate;
+      });
+    }
+
+
+
     if (this.selectedVoucherType) {
       filteredData = filteredData.filter((item) => item?.voucher_type === this.selectedVoucherType);
     }
@@ -216,6 +244,7 @@ export class ProductLedgerComponent implements OnInit {
     this.selectedVoucherType = null;
     this.date = null;
     this.selectActive = undefined;
+    this.shippingDateForm.reset();
     this.filterData();
   }
 

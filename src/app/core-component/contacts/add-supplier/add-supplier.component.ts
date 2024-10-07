@@ -66,16 +66,17 @@ export class AddSupplierComponent implements OnInit {
   isproduct = false;
   isProductLoading = false;
   searchProduct(product: any) {
-    console.log(product);
+    // console.log(product);
 
     this.isProductLoading = true;
     // console.log(this.isProductLoading, 'bhbhbhbhbhhb');
 
     if (product.value) {
-      this.contactService.searchProduct(product.value).subscribe(res => {
+      this.contactService.searchProduct(product.value).subscribe((res:any) => {
         this.isProductLoading = false;
         this.search = res;
         console.log(this.search);
+        this.variantLists = res
         this.isproduct = true
       });
     } else {
@@ -458,9 +459,15 @@ export class AddSupplierComponent implements OnInit {
   SelectedProduct(variant: any) {
  
     this.selectData.push(variant)
+    console.log(variant)
   
   }
 
+
+ 
+  variantLists:any[] = []
+
+  
   addToTable(){
   
     this.search = undefined

@@ -478,9 +478,11 @@ export class EmployeeComponent implements OnInit {
   // filter data
   selectCredit: any;
   filterData(val?:any,type?:any) {
+   
     let filteredData = this.tableData.slice();
     if (this.roleType) {
-      filteredData = filteredData.filter((item) => item?.userid?.role?.name === this.roleType);
+      filteredData = filteredData.filter((item:any) => item?.userid?.user_type === this.roleType);
+      console.log(filteredData)
     }
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();

@@ -63,10 +63,12 @@ export class DetailSupplierComponent implements OnInit {
     })
   }
   billable_amount:any;
-  getCreditLimit(userId) {
+  closing_bal : string;
+  getCreditLimit(userId :any) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
       this.billable_amount = res?.billable_amount;
+      this.closing_bal = res?.closing_balance_type +" "+res?.closing_balance
     })
   }
 
