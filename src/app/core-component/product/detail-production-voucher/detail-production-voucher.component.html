@@ -1,19 +1,174 @@
 
-<div class="card bg">
-    <div class="card-body">
+
+
+
+<div class="card px-2">
+    <h1 class="text-center fw-500">Production Voucher </h1>
+    <div class="d-flex align-center justify-content-between">
+
+        <h5 class="text-start mx-2">Voucher Number :  <span>{{productionDetail?.material_consumption_no}}</span></h5>
+        <h5 class="text-start mx-2">Date :  <span>{{productionDetail?.material_consumption_date}}</span></h5>
+    </div>
+<div class="row my-3">
+    <h6 class="mx-2">Item Generated</h6>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td class="th">Sr.No.</td>
+                    <td class="th">Item Name</td>
+                    <td class="th">Variant Name</td>
+                    <td class="th">QTY</td>
+                    <td class="th">MRP</td>
+                    <td class="th">Cost Price</td>
+                    <td class="th">Online Price</td>
+                    <td class="th">Offline Price</td>
+                    <td class="th">Employee Price</td>
+                    <td class="th">Dealer Price</td>
+                    <td class="th">Discount</td>
+                    <td class="th">Additional Discount</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cart of productionDetail?.item_generated_cart; index as i">
+                    <td class="td">{{i+1}}</td>
+                    <td class="td">{{cart?.item_name}}</td>
+                    <td class="td">{{cart?.barcode?.variant_name}}</td>
+                    <td class="td">{{cart?.qty}}</td>
+                    <td class="td">{{cart?.mrp}}</td>
+                    <td class="td">{{cart?.cost_price}}</td>
+                    <td class="td">{{cart?.selling_price_online}}</td>
+                    <td class="td">{{cart?.selling_price_offline}}</td>
+                    <td class="td">{{cart?.selling_price_employee}}</td>
+                    <td class="td">{{cart?.selling_price_dealer}}</td>
+                    <td class="td">{{cart?.discount}}</td>
+                    <td class="td">{{cart?.additional_discount}}</td>
+                </tr>
+                <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
+                    <td></td>
+                    <td class="text-start"><strong>Total</strong></td>
+              </tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <h6 class="mx-2">Item Generated</h6>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td class="th">Sr.No.</td>
+                    <td class="th">Item Name</td>
+                    <td class="th">Variant Name</td>
+                    <td class="th">QTY</td>
+                    <td class="th">MRP</td>
+                    <td class="th">Batch</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cart of productionDetail?.item_consumed_cart; index as j">
+                    <td class="td">{{j+1}}</td>
+                    <td class="td">{{cart?.item_name}}</td>
+                    <td class="td">{{cart?.barcode?.variant_name}}</td>
+                    <td class="td">{{cart?.qty}}</td>
+                    <td class="td">{{cart?.mrp}}</td>
+                    <td class="td">{{cart?.batch_id?.mrp}}</td>
+                </tr>
+                <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
+                    <td></td>
+                    <td class="text-start"><strong>Total</strong></td>
+              </tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mt-5" *ngIf="productionDetail?.logs?.length>0">
+    <div class="card">
+        <div class="card-body">
+           <div class="table-responsive">
+               <table class="table datanew">
+           <thead>
+               <tr>
+                   <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                   <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                   <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                   <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+               </tr>
+           </thead>
+           <tbody>
+               <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+               <tr>
+                   <td class="td" (click)="sort('id')">{{i+1}}</td>
+                   <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                   <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                   <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+               </tr> 
+           </ng-container>
+           </tbody>
+           <tbody *ngIf="filteredData?.length==0">
+               <tr>
+                   <td colspan="10">
+                       <p class="center-textt">Data not available</p>
+                   </td>
+               </tr>
+           </tbody>
+       </table>
+       <div class="row">
+           <div class="col-lg-4 col-sm-4 col-12 mt-2">
+               <div class="entries"> Show per page
+                   <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                       <option value="10">10</option>
+                       <option value="20">20</option>
+                       <option value="30">30</option>
+                       <option value="50">50</option>
+                       <option value="100">100</option>
+                       <option value="-1">All</option>
+                   </select>
+               </div>
+           </div>
+           <div class="col-lg-8 col-sm-8 col-12 mt-2">
+               <div class="f-right">
+                   <pagination-controls
+                       (pageChange)="p = $event"></pagination-controls>
+                   <div class="entries f-right">Showing {{itemsPerPage}} to
+                       {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+               </div>
+           </div>
+       </div>
+   </div>
+   </div>
+   </div>
+</div>
+<div class="d-flex align-items-center my-2">
+    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+    <span [ngClass]="{'bg-lightgreen': productionDetail?.is_active === true, 'bg-lightred' : productionDetail?.is_active === false,'bg-lightyellow' : productionDetail?.is_active === 'Partial' }" class="badges">{{productionDetail?.is_active}}</span>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="card bg"> -->
+    <!-- <div class="card-body">
         <div class="page-header">
             <div class="page-title">
                 <h4 (click)="location.back()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>Production Voucher Details</h4>
                 <h6>Full details of a Production Voucher</h6>
             </div>
-            <!-- <div class="page-btn">
-                <a routerLink="//product/editbrand/{{productionDetail?.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img" >Edit Brand
-                </a>
-            </div> -->
-        </div>
+    
+        </div> -->
 
-<mat-tab-group animationDuration="0ms">
+<!-- <mat-tab-group animationDuration="0ms">
     <mat-tab label="General Details">
         <div class="row">
             <div class="col-lg-12 col-sm-12" >
@@ -74,10 +229,7 @@
                         <td class="td">{{cart?.discount}}</td>
                         <td class="td">{{cart?.additional_discount}}</td>
                     </tr>
-                    <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
-                        <td></td>
-                        <td class="text-start"><strong>Total</strong></td>
-                  </tr> -->
+                    
                 </tbody>
             </table>
         </div>
@@ -108,10 +260,7 @@
                         <td></td>
                         <td class="text-start"><strong>Total</strong></td>
                   </tr> -->
-                </tbody>
-            </table>
-        </div>
-    </mat-tab>
+       
     <mat-tab label="Logs" *ngIf="productionDetail?.logs?.length>0">
         <div class="card">
              <div class="card-body">
@@ -169,6 +318,6 @@
         </div>
         </div>
     </mat-tab>
-  </mat-tab-group>
-</div>
-</div>
+
+<!-- </div> -->
+<!-- </div> -->

@@ -6,7 +6,7 @@
     </div>
     <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//product/add-production-voucher" class="btn btn-added">
-            <img src="assets/img/icons/plus.svg" alt="img">Add New Production Voucher
+            <img src="assets/img/icons/plus.svg" alt="img">Add Production Voucher
         </a>
     </div>
 </div>
@@ -97,7 +97,19 @@
                         <td class="productimgname"><a routerLink="//product/detail-production-voucher/{{products.id}}" style="line-height: 3;">{{products?.material_consumption_no}}</a></td>
                         <td>{{products?.material_consumption_date}}</td>
                       
-                        <td><mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle></td>
+                        <td>
+                            <!-- <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle> -->
+                            <div *ngIf="products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                [checked]="products.is_active" style="accent-color: var(--primary-color) !important;">
+                                <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                            </div>
+                            <div *ngIf="!products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)">
+                                <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                [checked]="products.is_active">
+                                <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                            </div>
+                        </td>
                         <td>
                             <a class="me-1" routerLink="//product/detail-production-voucher/{{products?.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">

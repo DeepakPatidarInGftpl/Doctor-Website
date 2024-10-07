@@ -532,7 +532,7 @@ export class AccountSubTypeComponent implements OnInit {
       head: [
         ['#', 'Title ', 'Accounts Type', 'Alias',]
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.title,
         row.accounts_type,

@@ -298,7 +298,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
       head: [
         ['#', 'User','Prefix', 'Date','Consuption Type','Consuption No','Product','Price','QTY','Total','Remark','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.user?.username ,

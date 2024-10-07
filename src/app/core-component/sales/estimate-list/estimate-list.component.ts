@@ -318,7 +318,7 @@ getEstimate(fy:any){
       head: [
         ['#', 'User Name ', 'Estimate Date', 'Estimate no', 'Payment Terms', 'Expire Date', 'Sub Total', 'Total', 'Status']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
 
         index + 1,
         row?.customer?.name + ' (' + row?.customer?.username + ')',

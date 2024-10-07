@@ -248,9 +248,11 @@ export class AddSaleBillComponent implements OnInit {
                 qty: new FormControl(j?.qty),
                 price: new FormControl(j.price),
                 tax: new FormControl(j?.tax || 0),
+                tax_amount: new FormControl(j?.tax_amount || 0),
                 discount: new FormControl(j?.discount),
                 additional_discount: new FormControl(j?.barcode?.batch[0]?.additional_discount),
-                total: new FormControl(j?.total)
+                total: new FormControl(j?.total),
+
               })
             );
           } else {

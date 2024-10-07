@@ -65,6 +65,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Variable Tax</label>
+                                    <select (change)="filterData('Variable_Tax', $event.target.value)" class="form-select">
+                                        <option value="">Select Variable Tax</option>
+                                        <option >true</option>
+                                        <option >false</option>
+                                    </select>
+                                </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto w-25">Clear Filter</a>
@@ -129,9 +140,20 @@
                             <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                 class="badges">{{products.is_active}}</span> -->
 
-                            <mat-slide-toggle
+                            <!-- <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
-                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                [(ngModel)]="products.is_active"></mat-slide-toggle> -->
+
+                                <div *ngIf="products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active" style="accent-color: var(--primary-color) !important;">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
+                                <div *ngIf="!products.is_active" class="status-toggle d-flex justify-content-between align-items-center" (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)">
+                                    <input disabled="true" type="checkbox" id="{{'places.CountryName' + i}}" class="check"
+                                    [checked]="products.is_active">
+                                    <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
+                                </div>
                             <!-- <mat-slide-toggle (click)="Active(i,products.id)" [(ngModel)]="products.is_active" *ngIf="!products.is_active"></mat-slide-toggle> -->
                         </td>
                         <td>
@@ -183,5 +205,6 @@
             </div>
         </div>
     </div>
-</div>
+
+
 <!-- /product list -->

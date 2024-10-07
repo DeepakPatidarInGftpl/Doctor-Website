@@ -147,7 +147,7 @@ export class UnitConversionComponent implements OnInit {
       quantity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       unit: new FormControl('', [Validators.required])
     });
-    this.handleClick()
+ 
     // this.dtOptions = {
     //   dom: 'Btlpif',
     //   pagingType: 'numbers',
@@ -220,21 +220,7 @@ export class UnitConversionComponent implements OnInit {
     this.selectedRows.fill(this.allSelected);
   }
 
-handleClick() {
 
-
-  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl)
-   });
-}
-
-ClosePopover() {
-  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl)
-   });
-}
 
 
   selectAll(initChecked: boolean) {

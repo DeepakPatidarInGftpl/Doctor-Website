@@ -307,7 +307,7 @@ select=false
     head: [
       ['#','User Name','Material Outward Date ', 'Refund Status','Voucher Number','Total Qty','Note','Status']
     ],
-    body: this.tableData.map((row:any, index:number ) => [
+    body: this.filteredData.map((row:any, index:number ) => [
   
       index + 1,
       row?.customer?.name + ' (' + row?.customer?.username + ')',

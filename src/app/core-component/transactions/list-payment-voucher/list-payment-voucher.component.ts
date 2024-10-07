@@ -337,7 +337,7 @@ export class ListPaymentVoucherComponent implements OnInit {
           'Amount',
         ],
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.supplier?.company_name,
         row.payment_type,

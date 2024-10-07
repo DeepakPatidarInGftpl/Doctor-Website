@@ -88,6 +88,7 @@ export class AddSalesReturnComponent implements OnInit {
       total: new FormControl(''),
       status: new FormControl(''),
       note: new FormControl(''),
+
       //2-1
       return_date: new FormControl(defaultDate, [Validators.required])
     });
@@ -316,6 +317,8 @@ export class AddSalesReturnComponent implements OnInit {
       price: (0),
       deduction: (0),
       mrp: (0),
+      // tax:(0),
+      tax_amount:(0),
       // amount: (0),
       // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),

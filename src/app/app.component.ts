@@ -5,6 +5,7 @@ import { SettingsService } from './shared/settings/settings.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+
 })
 export class AppComponent implements OnInit{
   public darkTheme: boolean = false;
@@ -17,8 +18,6 @@ export class AppComponent implements OnInit{
 
     });
   }
-  // login() {
-  //   return !!localStorage.getItem('token');
-  // }
+
 
 }

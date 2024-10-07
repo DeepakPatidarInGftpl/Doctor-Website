@@ -167,7 +167,7 @@
                                                 <select formControlName="tax" class="inp" style="width: 30%;">
                                                     <option value="" selected disabled>Select Tax</option>
                                                     <option value="{{tax.id}}" *ngFor="let tax of taxList">
-                                                        {{tax.tax_percentage + '%'}}</option>
+                                                        {{tax.tax_percentage + '% ' + tax?.title}}</option>
                                                 </select>
                                             </td>
                                         </tr>

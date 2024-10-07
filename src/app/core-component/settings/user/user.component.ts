@@ -330,7 +330,7 @@ select=false
     head: [
       ['#', 'Name','User Name','Mobile Number','Email','User Type','Branch']
     ],
-    body: this.tableData.map((row:any, index:number ) => [
+    body: this.filteredData.map((row:any, index:number ) => [
   
       index + 1,
       row.name,

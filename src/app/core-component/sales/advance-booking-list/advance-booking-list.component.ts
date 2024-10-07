@@ -303,7 +303,7 @@ select=false
     head: [
       ['#', 'Account','Booking Date', 'Booking no','Payment Terms','Due Date','Sub Total','Total','Status']
     ],
-    body: this.tableData.map((row:any, index:number ) => [
+    body: this.filteredData.map((row:any, index:number ) => [
   
       index + 1,
       row.account?.account_id ,

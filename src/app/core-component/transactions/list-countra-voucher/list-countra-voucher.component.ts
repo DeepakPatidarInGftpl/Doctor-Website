@@ -311,7 +311,7 @@ export class ListCountraVoucherComponent implements OnInit {
       head: [
         ['#', 'Countra Voucher No.','From Account', 'To Account','Amount','Date','Description']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.countra_voucher_no,

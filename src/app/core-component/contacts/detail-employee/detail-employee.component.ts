@@ -102,10 +102,12 @@ if(result.isConfirmed){
 
 
   billable_amount:any;
+  Current_Balance : string;
   getCreditLimit(userId) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
       this.billable_amount = res?.billable_amount;
+      this.Current_Balance = res?.closing_balance_type + " " + res?.closing_balance;
     })
   }
 

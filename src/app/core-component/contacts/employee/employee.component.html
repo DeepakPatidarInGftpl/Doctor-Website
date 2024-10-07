@@ -66,8 +66,8 @@
                                 <div class="form-group">
                                     <label>Role Type</label>
                                     <select [(ngModel)]="roleType" (change)="filterData()" class="form-select">
-                                        <option value="" selected disabled>Role Type</option>
-                                        <option value="{{userRole.name}}" *ngFor="let userRole of groupList">
+                                        <option value="" >Role Type</option>
+                                        <option  *ngFor="let userRole of groupList">
                                             {{userRole.name}}</option>
                                     </select>
                                 </div>

@@ -346,7 +346,7 @@ getPurchase(fy:any){
       head: [
         ['#', 'Supplier Name ','Purchase Date','Purchase No.', 'Shipping Date','Shipping Note','Total','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.party?.name,
