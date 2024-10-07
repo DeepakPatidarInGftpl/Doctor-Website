@@ -301,7 +301,7 @@ export class ListJournalVoucherComponent implements OnInit {
       head: [
         ['#', 'Account','Journal Voucher No.', 'Date ',' Total Debit','Total Credit','Description']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.cart[0]?.from_account?.account_id,

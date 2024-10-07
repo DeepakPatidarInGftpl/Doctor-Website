@@ -298,7 +298,7 @@ export class ListExpensesComponent implements OnInit {
       head: [
         ['#', 'Party','Expense Voucher No.','Refrence Bill No.', 'Date ','Sub Total','Total','Reverse Charge']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.party?.name,

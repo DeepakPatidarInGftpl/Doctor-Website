@@ -4,7 +4,7 @@
         <div class="page-header">
             <div class="page-title">
                 <h4 (click)="location.back()"> <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>Product Label Details</h4>
-                <h6>Full details of a Product Label</h6>
+                <h6>Full details of a Product Label </h6>
             </div>
             <div class="page-btn">
                 <a routerLink="//product/product-label" class="btn btn-added">
@@ -32,6 +32,10 @@
                                 <li>
                                     <h4 class="h4">Incentive Type</h4>
                                     <h6>{{productLabelDetail?.incentive_type}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Decription</h4>
+                                    <h6>{{productLabelDetail?.decription}}</h6>
                                 </li>
                             </ul>
                         </div>

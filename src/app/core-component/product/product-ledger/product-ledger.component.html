@@ -171,12 +171,48 @@
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         <div class="row">
+ 
                             <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label>Date</label>
                                     <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                </div> -->
+
+
+
+                                <div class="">
+                                    <label class="mb-1 pb-1"> Date</label>
+                                    <mat-form-field style="width: 97%; border-radius: 5px;" class="border">
+                                        <mat-date-range-input [formGroup]="shippingDateForm"
+                                            [rangePicker]="shippingdatePicker" [min]="minDate" [max]="maxDate">
+                                            <input matStartDate placeholder="Start date" formControlName="start"
+                                                class="mat-input" (dateChange)="filterData()">
+                                            <span class="mat-input-placeholder-wrapper">
+                                                <span class="mat-input-placeholder">to</span>
+                                            </span>
+                                            <input matEndDate placeholder="End date" formControlName="end"
+                                                class="mat-input" (dateChange)="filterData()">
+                                        </mat-date-range-input>
+
+                                        <mat-datepicker-toggle matSuffix [for]="shippingdatePicker"
+                                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #shippingdatePicker></mat-date-range-picker>
+                                    </mat-form-field>
                                 </div>
+
+
+
+
+
+
+
                             </div>
+
+
+
+
+
+
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Voucher Type</label>

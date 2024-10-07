@@ -320,7 +320,7 @@ if (localStorage.getItem('financialYear')) {
       head: [
         ['#', 'Company Name','Credit Note Date', 'Credit Note No','Sale Bill','Reason','Round off','Tax','Total','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row.account?.account_id ,

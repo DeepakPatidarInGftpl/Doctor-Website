@@ -312,7 +312,7 @@ export class SalesReturnListComponent implements OnInit {
       head: [
         ['#','User Name','Bill Date', 'Bill No.','Sales Bill','Sub Total','Total','Status']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
+      body: this.filteredData.map((row:any, index:number ) => [
     
         index + 1,
         row?.customer?.name + ' (' + row?.customer?.username + ')',

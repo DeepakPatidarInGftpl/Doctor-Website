@@ -408,9 +408,10 @@ async printTable() {
   const modifiedTableHTML = clonedTable.outerHTML;
   // Apply styles to add some space from the top after the title
   const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; 
-  margin-left: 10px;
-  margin-right: 10px;
+ 
+ 
   }
+  
   
   </style>` ;
   // Combine the title and table content

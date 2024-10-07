@@ -112,10 +112,13 @@ if(result.isConfirmed){
 
   }
 
+  Current_Bala :string;
+
   getCreditLimit(userId:any) {
     this.contactService.getCreditLimitByUserId(userId).subscribe((res)=> {
       this.creditLimit = res?.credit_Limit;
       this.billable_amount = res?.billable_amount;
+      this.Current_Bala = res?.closing_balance_type + " "+ res?.closing_balance;
     })
    
   }

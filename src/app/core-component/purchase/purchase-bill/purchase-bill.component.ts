@@ -388,7 +388,7 @@ materialList: any;
         head: [
           ['#', 'Supplier Name ','Supplier Bill Date','Supplier Bill No', 'Refrence Bill No','Inward No','Payment Term','Due Date','Reverse Charge','Shipping Date','Status']
         ],
-        body: this.tableData.map((row:any, index:number ) => [
+        body: this.filteredData.map((row:any, index:number ) => [
           index + 1,
           row.party?.name,
           this.formatDate(row?.supplier_bill_date),

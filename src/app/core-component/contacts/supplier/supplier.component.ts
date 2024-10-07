@@ -299,7 +299,7 @@ export class SupplierComponent implements OnInit {
       head: [
         ['#', 'Name', 'Company Name ', 'Mobile Number ', 'Opening Balance', 'GSTIN', 'Supplier Type']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.name,
         row.company_name,

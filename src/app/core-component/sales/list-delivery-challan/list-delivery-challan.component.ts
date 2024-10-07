@@ -310,7 +310,7 @@ select=false
     head: [
           ['#','Account','Date', 'Challan no.','Sale Bill','Transporter Account','Total QTY','Status']
     ],
-    body: this.tableData.map((row:any, index:number ) => [
+    body: this.filteredData.map((row:any, index:number ) => [
       index + 1,
       row?.account?.title + ' (' + row?.account?.account_id + ')',
      this.formatDate( row?.bill_date),

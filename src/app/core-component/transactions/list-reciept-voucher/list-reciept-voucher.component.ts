@@ -339,7 +339,7 @@ export class ListRecieptVoucherComponent implements OnInit {
           'Amount',
         ],
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.payment_account?.account_id,
         row.receipt_type,

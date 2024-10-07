@@ -296,7 +296,7 @@ export class DealerListComponent implements OnInit {
       head: [
         ['#', 'Name ', 'Company Name ', 'Mobile Number', 'GSTIN', 'PanCard', 'Opening Balance']
       ],
-      body: this.tableData.map((row: any, index: number) => [
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
         row.name,
         row.company_name,
