@@ -13,7 +13,7 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
-
+import * as bootstrap from 'bootstrap'
 @Component({
   selector: 'app-addpurchase-bill',
   templateUrl: './addpurchase-bill.component.html',
@@ -66,6 +66,10 @@ export class AddpurchaseBillComponent implements OnInit {
 
   subcategoryList;
 
+
+  taxForm: FormGroup;
+  Measurable_Product_QUT : number =0;
+
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     const today = new Date();
@@ -109,6 +113,21 @@ export class AddpurchaseBillComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value, true))
     );
+
+
+
+    this.taxForm = this.fb.group({
+      items: this.fb.array([]),
+    });
+    
+    this.items.valueChanges.subscribe({
+      next: (value: any[]) => {
+        this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+      },
+    });
+
+
+
 
     this.supplierControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -273,6 +292,7 @@ export class AddpurchaseBillComponent implements OnInit {
         Validators.pattern(/^(100|[0-9]{1,2})$/),
       ]),
       total: 0,
+      description : ''
     });
   }
 
@@ -637,8 +657,38 @@ export class AddpurchaseBillComponent implements OnInit {
   totalDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  oncheckVariant(event: any, index) {
+
+
+  sub_index:number ;
+  ShowModal(i:number){
+    let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+    myModal.show();
+    this.sub_index = i;
+
+  }
+
+  oncheckVariant(event: any, index:number) {
     const selectedItemId = event.id;
+    console.log(event);
+
+
+
+    let is_measurable = event?.product?.is_measurable;
+    // console.log(is_measurable,'deepak')
+    if(is_measurable) {
+      this.ShowModal(index);
+      this.addItem();
+    }
+
+
+
+
+
+
+
+
+
+
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax =
@@ -781,6 +831,64 @@ export class AddpurchaseBillComponent implements OnInit {
     this.updateTotal(index);
     this.updateLandingCost(index);
     this.getgst(index);
+  };
+
+
+  get items():FormArray {
+    return this.taxForm.get('items') as FormArray;
+  }
+
+
+  addItem() {
+    const item = this.fb.group({
+      measurement: ['',Validators.required],
+      quantity: ['',Validators.required],
+    });
+    this.items.push(item);
+    // console.log(this.items)
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+
+   isLastItem(index: number): boolean {
+    const cartControls = this.items.controls;
+    return index === cartControls.length - 1;
+  }
+  ckForm:boolean = false;
+  HendalSubmit(btn:any){
+    if(this.items.invalid){
+      this.ckForm = true;
+       return
+    }
+
+    let str:string = ''
+this.items.controls.forEach((res:any,i :number)=>{
+  let val = res.get('measurement').value;
+  let val2 = res.get('quantity').value;
+  str += val+"*"+val2
+  if (i !== this.items.controls.length -1) {
+    str += ","
+  }
+})
+// console.log(str,'val')
+
+
+
+
+
+    const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(this.sub_index) as FormGroup;
+    barcode.patchValue({
+      qty: this.Measurable_Product_QUT ,
+      description : str
+
+    });
+   btn.click();
+   this.items.reset();
+   this.items.clear()
+  
+
   }
 
   setupValueChanges() {

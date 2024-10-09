@@ -5,7 +5,7 @@
                 <div class="page-title">
                     <h6 class="subhead-color" (click)="goBack()">
                         <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                        Back to Purchase Order
+                        Back to Purchase Order 
                     </h6>
                     <h4>New Purchase Order </h4>
                 </div>
@@ -199,23 +199,18 @@
                                                             class="d-flex justify-content-between align-items-center top-div container">
                                                             <div *ngIf="selectedAddressBilling">
                                                                 <p class="heading">Billing Address</p>
-                                                                <p class="heading2">
+                                                                <p class="heading2 m-0">
                                                                     {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1
-                                                                    + ' , ' +
-                                                                    selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
+                                                                    + ' , ' +  selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
                                                                     }}
                                                                 </p>
-                                                                <br>
-                                                                <p> {{selectedAddressBilling?.city?.city}} </p>
-                                                                <br>
-                                                                <p> {{selectedAddressBilling?.state?.state + ' , ' +
+                                                                <p class="m-0"> {{selectedAddressBilling?.city?.city}} </p>
+                                                                <p class="m-0">  {{selectedAddressBilling?.state?.state + ' , ' +
                                                                     selectedAddressBilling?.country?.country_name}}
                                                                 </p>
-                                                                <br />
-                                                                <p>
+                                                                <p class="m-0">
                                                                     Phone: {{purchaseDetail?.party?.mobile_no}} </p>
-                                                                <br />
-                                                                <p>
+                                                                <p class="m-0">
                                                                     {{purchaseDetail?.party?.email}}
                                                                 </p>
                                                             </div>
@@ -338,17 +333,20 @@
                                                                         <td class="text-center">{{
                                                                             purchaseDetail?.total_qty}}
                                                                         </td>
-                                                                        <td class="text-center">{{
-                                                                            totalPurchaseRate}}</td>
-                                                                        <td class="text-center">{{ totalMrp}}
-                                                                        </td>
-                                                                        <td class="text-center">{{
-                                                                            purchaseDetail?.total_discount+'%'}}</td>
-                                                                        <td class="text-center">{{
-                                                                            purchaseDetail?.total_tax
-                                                                            +'%'}}</td>
                                                                         <td class="text-center">
-                                                                            {{totalLandingCost}}
+                                                                            <!-- {{ totalPurchaseRate}} -->
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <!-- {{ totalMrp}} -->
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <!-- {{purchaseDetail?.total_discount+'%'}} -->
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <!-- {{ purchaseDetail?.total_tax+'%'}} -->
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <!-- {{totalLandingCost}} -->
                                                                         </td>
                                                                         <td class="text-center">
                                                                             {{purchaseDetail?.total}}</td>

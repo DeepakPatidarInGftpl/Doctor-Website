@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-tables-basic',
@@ -6,34 +7,50 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./tables-basic.component.scss']
 })
 export class TablesBasicComponent implements OnInit {
-  allSelected : any;
-  selectedRows :any[] =[]
-  @Input() filteredData :string[][]|any  = [['hello','45','gjg','jfi','irrk','djdj','Received','dksi'],['hello','45','gjg','jfi','irrk','djdj','djdj','dksi']];
-  @Input() HeaderArr : string[];
-  @Input() loader : boolean;
-  @Output() Viewfn = new EventEmitter();
-  @Output() Editfn = new EventEmitter();
-  @Output() Deletefn = new EventEmitter();
-  public itemsPerPage : number = 10;
-  public p : number = 1
-  constructor() { 
-   this.HeaderArr = ['S_No','Po Number','Supplier Name','Po Date','Shipping Date','Po Qty','Total','Status','Is Active','Action']
-  }
+  
+  taxForm: FormGroup;
+  taxRate: number = 1; // For example, 10%
 
+  constructor(private fb: FormBuilder) {
+    this.taxForm = this.fb.group({
+      items: this.fb.array([]),
+    });
+
+    // Recalculate tax whenever the form changes
+    this.taxForm.valueChanges.subscribe(() => {
+      this.calculateTax();
+    });
+  }
   ngOnInit(): void {
+  
   }
-  sort(id:string){};
-  selectAll(){}
-  selectAlll(){}
-  confirmText(index: number,id: number){};
-  ViewBtn(index: number,id: number){
-    this.Viewfn.emit((id )=>{});
-  };
-  EditBtn(index: number,id: number){
-    this.Editfn.emit((id)=>{});
 
-  };
-  DeleteBtn(index: number,id: number){
-    this.Deletefn.emit((id)=>{});
-  };
+  get items() {
+    return this.taxForm.get('items') as FormArray;
+  }
+
+  addItem() {
+    const item = this.fb.group({
+      price: 0,
+      quantity: 1,
+      tax: 0,
+    });
+    this.items.push(item);
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+  calculateTax() {
+    this.items.controls.forEach((control) => {
+      const price = control.get('price')?.value || 0;
+      const quantity = control.get('quantity')?.value || 0;
+      const tax = quantity*price * (this.taxRate / 100);
+      // calculateTax() {
+      //   this.taxAmount = 
+      //   this.totalAmount = this.price + this.taxAmount;
+      // }
+      control.get('tax')?.setValue(tax ,{ emitEvent: false }); // Update the tax value in the tax field
+    });
+  }
 }
