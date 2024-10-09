@@ -196,6 +196,14 @@
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="d-flex justify-content-start align-center " style="margin-top: 2.3rem;">
+                            <input type="checkbox" formControlName="is_featured" style="accent-color: #23eb11; zoom: 1.5;" class="mx-2 " id="is_featured">
+                            <label class="text-center f-300" for="is_featured">Featured Brand</label>   
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Brand Image*</label>
                             <!-- <div class="image-upload">
@@ -208,13 +216,14 @@
                                             image
                                         </span>
                                     </div> -->
+                                   
                             <div class="row">
-                                <div class="col-lg-6 col-sm-6 col-12">
-                                    <div class="image-upload" style="width: 100%;">
+                                <div class="col-lg-6 col-sm-6 col-12 m-0">
+                                    <div class="image-upload " style="width: 100%;">
                                         <input type="file" formControlName="image" (change)="onSelect($event)" required>
                                         <div class="image-uploads">
                                             <img src="assets/img/icons/upload.svg" alt="img">
-                                            <h4>Drag and drop a file to upload</h4>
+                                            <h4>Upload a Image <br> 100 X 100</h4>
                                         </div>
                                         <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
                                             image</span>
@@ -236,14 +245,7 @@
                         </div>
                     </div>
                     <!-- <div class="row"> -->
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="d-flex justify-content-center">
-                                <input type="checkbox" formControlName="is_featured" class="mx-2" id="is_featured">
-                                <label class="text-center">Featured Brand</label>   
-                                
-                            </div>
-                            
-                        </div>
+                      
                     <!-- </div> -->
                     <div class="col-lg-12">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>

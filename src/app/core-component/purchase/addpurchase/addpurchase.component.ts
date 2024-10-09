@@ -333,7 +333,13 @@ export class AddpurchaseComponent implements OnInit {
     if (this.purchase_price > this.coast) {
       this.toastrService.error('Purchase Price not be less than Landing Cost')
     }
-  }
+  };
+
+
+
+
+
+
 
   getCart(): FormArray {
     return this.purchaseForm.get('purchase_cart') as FormArray;
@@ -420,6 +426,9 @@ export class AddpurchaseComponent implements OnInit {
     }
   }
   batchCartIndex: any;
+
+
+
   openModalBatch(i: number) {
     this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
@@ -428,7 +437,46 @@ export class AddpurchaseComponent implements OnInit {
       modal.classList.add('show');
       modal.style.display = 'block';
     }
+  };
+
+  QutData:any[] =[]
+CkqutApi(id:string, mrp:string){
+  this.purchaseService.Ckqut(id,mrp).subscribe({
+    next : (value:any)=> {
+      this.QutData = value
+      console.log(value,'deepak')
+    },
+  })
+}
+
+  openModalCkOUT(i: number) {
+    let li = this.variantList[""][0];
+    const id = li.id;
+    const  Mrp = li.batch[0].mrp;
+    this.CkqutApi(String(id),Mrp)
+
+    this.batchCartIndex = i
+
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('ckqutModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    };
+  };
+
+  closeModalCkOUT() {
+    const modal = document.getElementById('ckqutModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
+
+
+
+
+
 
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;

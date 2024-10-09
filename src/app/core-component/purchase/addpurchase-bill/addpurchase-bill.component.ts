@@ -275,12 +275,19 @@ export class AddpurchaseBillComponent implements OnInit {
     return this.purchaseBillForm.get('additional_charge');
   }
 
-  cart(): FormGroup {
+  cart(item?:any): FormGroup {
+    
+    if (item) {
+      this.barcode.push(item.barcode?.sku);
+      this.myControls.forEach((res:any)=>{
+        res.setValue(item?.barcode?.product_title + " " + item?.barcode?.variant_name)
+      });
+    };
     return this.fb.group({
-      barcode: 0,
-      qty: 0,
+      barcode: item ? item?.barcode?.sku : 0,
+      qty: item ? item?.qty : 0,
       unit_cost: 0,
-      mrp: 0,
+      mrp: item ?  (item?.product_type == "Demo Product" || item?.product_type == "Gift" ) ? 0 :  item?.mrp  : 0,
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: 0,
       landing_cost: 0,
@@ -300,8 +307,9 @@ export class AddpurchaseBillComponent implements OnInit {
     return this.purchaseBillForm.get('purchase_bill') as FormArray;
   }
   isCart = false;
-  addCart() {
-    this.getCart().push(this.cart());
+  addCart(data?:any) {
+    console.log(data,'getByID')
+    this.getCart().push(this.cart(data));
     this.isCart = false;
     const newIndex = this.getCart().controls.length;
     this.taxIntoRupees[newIndex - 1] = 0
@@ -484,10 +492,43 @@ export class AddpurchaseBillComponent implements OnInit {
 
     const userId = data?.userid?.id;
     this.purchaseService.getMaterialByUserId(userId).subscribe((res) => {
-      // console.log(res);
+      console.log(res,'materialList deepak');
       this.materialList = res;
     });
   }
+
+// matrel id get
+materialChange(event:any){
+let id  = event.target.value;
+this.purchaseService.getMaterialById(id)
+.subscribe({
+  next : (value:any) =>{
+
+    this.getCart().clear();
+    this.getCart().reset();
+    value.cart.forEach((el:any) => {
+      el.product_type = value.product_type;
+      this.addCart(el);
+    });
+    
+  
+  },
+  error: (err)=>{
+    throw Error( err)
+  }
+})
+
+}
+
+
+
+
+
+
+
+
+
+
 
   // address
   openModal() {
