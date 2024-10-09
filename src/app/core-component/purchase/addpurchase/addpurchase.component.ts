@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { __values } from 'tslib';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +8,7 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
-
+import  * as bootstrap  from 'bootstrap'
 @Component({
   selector: 'app-addpurchase',
   templateUrl: './addpurchase.component.html',
@@ -56,8 +57,11 @@ export class AddpurchaseComponent implements OnInit {
     return this.purchaseForm.controls;
   }
   searchForm!: FormGroup;
+  taxForm: FormGroup;
   subcategoryList;
 
+
+  Measurable_Product_QUT : number =0;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     const now = new Date();
@@ -85,11 +89,30 @@ export class AddpurchaseComponent implements OnInit {
       sub_total: new FormControl(''),
       round_off: new FormControl(''),
       total: new FormControl(''),
+
     });
 
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
+
+
+    this.taxForm = this.fb.group({
+      items: this.fb.array([]),
+    });
+
+    this.items.valueChanges.subscribe({
+      next: (value: any[]) => {
+        this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+      },
+    });
+
+
+
+
+
+
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -270,6 +293,7 @@ export class AddpurchaseComponent implements OnInit {
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       landing_cost: (0),
       total: (0),
+      description :'',
     })
   }
 
@@ -355,7 +379,7 @@ export class AddpurchaseComponent implements OnInit {
     // console.log(selectedItemId);
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
-      // console.log(res);
+    
       this.supplierAddress = res;
       this.getVariant('', '', '')
       console.log(this.selectedAddressBilling);
@@ -477,12 +501,56 @@ export class AddpurchaseComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  oncheckVariant(event: any, index) {
-    // console.log(event,'deepak')
+
+
+
+
+
+
+
+
+
+
+sub_index:number ;
+ShowModal(i:number){
+  let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+  myModal.show();
+  this.sub_index = i;
+
+}
+  
+
+  
+  oncheckVariant(event: any, index : number) {
+ 
 
     if(event){
     const selectedItemId = event.id;
     console.log(event);
+    let is_measurable = event?.product?.is_measurable;
+    // console.log(is_measurable,'deepak')
+    if(is_measurable) {
+      this.ShowModal(index);
+      this.addItem();
+    }
+    
+   
+  
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
 
@@ -600,6 +668,92 @@ export class AddpurchaseComponent implements OnInit {
   }
 
   }
+
+
+
+
+
+
+
+  get items():FormArray {
+    return this.taxForm.get('items') as FormArray;
+  }
+
+
+  addItem() {
+    const item = this.fb.group({
+      measurement: ['',Validators.required],
+      quantity: ['',Validators.required],
+    });
+    this.items.push(item);
+    // console.log(this.items)
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+
+   isLastItem(index: number): boolean {
+    const cartControls = this.items.controls;
+    return index === cartControls.length - 1;
+  }
+  ckForm:boolean = false;
+  HendalSubmit(btn:any){
+    if(this.items.invalid){
+      this.ckForm = true;
+       return
+    }
+
+    let str:string = ''
+this.items.controls.forEach((res:any,i :number)=>{
+  let val = res.get('measurement').value;
+  let val2 = res.get('quantity').value;
+  str += val+"*"+val2
+  if (i !== this.items.controls.length -1) {
+    str += ","
+  }
+})
+// console.log(str,'val')
+
+
+
+
+
+
+    const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(this.sub_index) as FormGroup;
+    barcode.patchValue({
+      qty: this.Measurable_Product_QUT ,
+      description : str
+
+    });
+   btn.click();
+   this.items.reset();
+   this.items.clear()
+  
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   coastprice: any[] = []
   landingPrice: any[] = []
   isdiscount: any[] = []
@@ -1019,6 +1173,7 @@ export class AddpurchaseComponent implements OnInit {
     const cartControls = this.getCart().controls;
     return index === cartControls.length - 1;
   }
+ 
   search = false;
   clearSearch() {
     this.searchForm.reset()

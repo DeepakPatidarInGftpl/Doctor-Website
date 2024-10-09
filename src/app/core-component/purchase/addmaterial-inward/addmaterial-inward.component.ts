@@ -12,6 +12,7 @@ import { jsPDF } from 'jspdf';
 import { MatDialog } from '@angular/material/dialog';
 import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
+import * as bootstrap from 'bootstrap'
 @Component({
   selector: 'app-addmaterial-inward',
   templateUrl: './addmaterial-inward.component.html',
@@ -63,6 +64,12 @@ export class AddmaterialInwardComponent implements OnInit {
 
   subcategoryList;
   loading: boolean = false;
+
+
+  taxForm: FormGroup;
+  Measurable_Product_QUT : number =0;
+
+
   ngOnInit(): void {
     const now = new Date();
     const year = now.getFullYear();
@@ -92,6 +99,18 @@ export class AddmaterialInwardComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+    
+
+    this.taxForm = this.fb.group({
+      items: this.fb.array([]),
+    });
+    
+    this.items.valueChanges.subscribe({
+      next: (value: any[]) => {
+        this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+      },
+    });
+
 
     const financialYear = localStorage.getItem('financialYear');
 
@@ -176,6 +195,7 @@ export class AddmaterialInwardComponent implements OnInit {
       qty: (0),
       po_qty: (0),
       mrp: (0),
+      description : ''
       // unit_cost:(0)
     })
   }
@@ -381,11 +401,38 @@ export class AddmaterialInwardComponent implements OnInit {
 
   selectedProductName: any;
   productDetails: any[] = [];
-  oncheckVariant(event: any, index) {
+
+
+
+
+
+
+
+
+    sub_index:number ;
+    ShowModal(i:number){
+      let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+      myModal.show();
+      this.sub_index = i;
+
+    }
+  
+  oncheckVariant(event: any, index : number) {
     console.log(event);
     this.productDetails[index] = event
     const selectedItemId = event.id;
     console.log(event);
+
+
+    let is_measurable = event?.product?.is_measurable;
+    // console.log(is_measurable,'deepak')
+    if(is_measurable) {
+      this.ShowModal(index);
+      this.addItem();
+    }
+    
+
+
     this.selectedProductName = event.product_title
     this.selectBatch = event.batch
 
@@ -447,7 +494,75 @@ export class AddmaterialInwardComponent implements OnInit {
         // unit_cost: event.batch[0]?.cost_price || 0,
       });
     }
+  };
+
+
+  get items():FormArray {
+    return this.taxForm.get('items') as FormArray;
   }
+
+
+  addItem() {
+    const item = this.fb.group({
+      measurement: ['',Validators.required],
+      quantity: ['',Validators.required],
+    });
+    this.items.push(item);
+    // console.log(this.items)
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+
+   isLastItem(index: number): boolean {
+    const cartControls = this.items.controls;
+    return index === cartControls.length - 1;
+  }
+  ckForm:boolean = false;
+  HendalSubmit(btn:any){
+    if(this.items.invalid){
+      this.ckForm = true;
+       return
+    }
+
+    let str:string = ''
+this.items.controls.forEach((res:any,i :number)=>{
+  let val = res.get('measurement').value;
+  let val2 = res.get('quantity').value;
+  str += val+"*"+val2
+  if (i !== this.items.controls.length -1) {
+    str += ","
+  }
+})
+// console.log(str,'val')
+
+
+
+
+
+
+    const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(this.sub_index) as FormGroup;
+    barcode.patchValue({
+      qty: this.Measurable_Product_QUT ,
+      description : str
+
+    });
+   btn.click();
+   this.items.reset();
+   this.items.clear()
+  
+
+  }
+
+
+
+
+
+
+
+
+
 
 
   getRes: any;
