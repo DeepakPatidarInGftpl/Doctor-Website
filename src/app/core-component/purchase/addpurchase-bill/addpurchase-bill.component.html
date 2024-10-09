@@ -377,7 +377,9 @@
                     <div class="form-group">
                         <label>Select Material Inward</label>
                         <select formControlName="material_inward_no"
-                            [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}">
+                            [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}"
+                            (change)="materialChange($event)"
+                            >
                             <option value="" selected disabled>Select Material Inward</option>
                             <ng-container *ngFor="let material of materialList">
                                 <option value="{{material.id}}" *ngIf="material?.is_active==true">

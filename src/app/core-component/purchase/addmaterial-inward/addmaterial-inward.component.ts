@@ -12,7 +12,7 @@ import { jsPDF } from 'jspdf';
 import { MatDialog } from '@angular/material/dialog';
 import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
-import * as bootstrap from 'bootstrap'
+import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-addmaterial-inward',
   templateUrl: './addmaterial-inward.component.html',
