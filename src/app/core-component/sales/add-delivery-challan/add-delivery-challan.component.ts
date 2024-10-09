@@ -6,7 +6,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
-
+import * as bootstrap from 'bootstrap'
 @Component({
   selector: 'app-add-delivery-challan',
   templateUrl: './add-delivery-challan.component.html',
@@ -57,6 +57,8 @@ export class AddDeliveryChallanComponent implements OnInit {
   searchForm!: FormGroup;
   subcategoryList;
 
+  taxForm: FormGroup;
+  Measurable_Product_QUT : number =0;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.myControl = new FormArray([]);
@@ -106,7 +108,16 @@ export class AddDeliveryChallanComponent implements OnInit {
           map(value => this._filter(value, true))
         );
       }
-    })
+    });
+    this.taxForm = this.fb.group({
+      items: this.fb.array([]),
+    });
+    
+    this.items.valueChanges.subscribe({
+      next: (value: any[]) => {
+        this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+      },
+    });
 
     this.getAccount();
     this.getCategory();
@@ -299,7 +310,8 @@ export class AddDeliveryChallanComponent implements OnInit {
       barcode: (0),
       item_name: (''),
       qty: (0),
-      mrp: (0)
+      mrp: (0),
+      description : '',
     })
   }
   getCart(): FormArray {
@@ -485,10 +497,31 @@ export class AddDeliveryChallanComponent implements OnInit {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
-  }
+  };
+
+
+
+
+  sub_index:number ;
+  ShowModal(i:number){
+    let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+    myModal.show();
+    this.sub_index = i;
+
+  };
  
-  oncheckVariant(event: any, index) {
+  oncheckVariant(event: any, index:number) {
     const selectedItemId = event.id;
+
+
+    let is_measurable = event?.product?.is_measurable;
+    console.log(is_measurable,'deepak')
+    if(!is_measurable) {
+      this.ShowModal(index);
+      this.addItem();
+    }
+
+
     const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
     currentControl.controls['barcode'].setValue('');
     currentControl.controls['item_name'].setValue('');
@@ -541,7 +574,68 @@ export class AddDeliveryChallanComponent implements OnInit {
         mrp: 0
       });
     }
+  };
+
+
+  get items():FormArray {
+    return this.taxForm.get('items') as FormArray;
   }
+
+
+  addItem() {
+    const item = this.fb.group({
+      measurement: ['',Validators.required],
+      quantity: ['',Validators.required],
+    });
+    this.items.push(item);
+    // console.log(this.items)
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+
+   isLastItem(index: number): boolean {
+    const cartControls = this.items.controls;
+    return index === cartControls.length - 1;
+  }
+  ckForm:boolean = false;
+  HendalSubmit(btn:any){
+    if(this.items.invalid){
+      this.ckForm = true;
+       return
+    }
+
+    let str:string = ''
+    this.items.controls.forEach((res:any,i :number)=>{
+  let val = res.get('measurement').value;
+  let val2 = res.get('quantity').value;
+  str += val+"*"+val2
+  if (i !== this.items.controls.length -1) {
+    str += ","
+  }
+})
+console.log(str,'val')
+// return
+
+
+
+
+
+
+    const barcode = (this.deliveryChallanForm.get('cart') as FormArray).at(this.sub_index) as FormGroup;
+    barcode.patchValue({
+      qty: this.Measurable_Product_QUT ,
+      description : str
+
+    });
+   btn.click();
+   this.items.reset();
+   this.items.clear()
+  
+
+  }
+
 
   getRes: any;
   loader = false;

@@ -17,7 +17,24 @@ export class PurchaseServiceService {
   getSupplier(query) {
     let url = this.apiUrl + '/pv-api/supplier/?search=' + query;
     return this.http.get(url)
-  }
+  };
+
+
+
+Ckqut(id:string,mrp:string){
+  const URL =  this.apiUrl + '/pv-api/stock_check/';
+  const ParemQuery = new URLSearchParams();
+
+  ParemQuery.append('id',id)
+  ParemQuery.append('mrp',mrp);
+
+//  return this.http.get(URL+"?"+ParemQuery.toString())
+return this.http.get<any>(URL + (ParemQuery.toString() ? '?' + ParemQuery.toString() : ''));
+
+}
+
+
+
 
   // purchase 
   // getPurchaseFY(fy:any){

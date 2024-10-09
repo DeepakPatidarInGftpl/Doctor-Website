@@ -528,6 +528,7 @@
                                                                 [formControl]="myControls[i]"
                                                                 (input)="getVariant($event.target.value,i,'')"
                                                                 [matAutocomplete]="autos"
+                                                                #vals
                                                                 style="box-sizing: border-box;width: 200px !important;" 
                                                                 />
                                                             <mat-autocomplete #autos="matAutocomplete">
@@ -651,91 +652,22 @@
                                                         formControlName="qty" class="input" min="1"
                                                         style="width: 100px;"
                                                         >
+                                                        <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        (click)="openModalCkOUT(i)"></i>
+
                                                     <div *ngIf="isCartQtyInvalid(i)" class="error-message space-text">
                                                         Quantity must be a positive number.
                                                     </div>
                                                 </td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="purchase_rate" class="input" style="width: 100px;">
-                                                    <i class="ion-information circle" data-bs-toggle="tooltip"
-                                                        title="ion-information" (click)="openModalBatch(i)"></i>
-                                                    <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
-                                                        aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg modal-dialog-centered"
-                                                            role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h1 class="modal-title fs-5"
-                                                                        id="staticBackdropLabel">Batch</h1>
-                                                                    <button type="button" class="close"
-                                                                        (click)="closeModalBatch()" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div class="form-group" *ngIf="selectBatch">
-                                                                        <div class="row">
-                                                                            <div class="table-responsive">
-                                                                                <table class="table datanew">
-                                                                                    <thead>
-                                                                                        <tr>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                Sr.No.</th>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                MRP</th>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                Purchase Price</th>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                Discount %</th>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                Additional Discount %
-                                                                                            </th>
-                                                                                            <th
-                                                                                                class="boder space-text">
-                                                                                                Action</th>
-                                                                                        </tr>
-                                                                                    </thead>
-                                                                                    <tbody>
-                                                                                        <tr
-                                                                                            *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                            <td class="boder">{{
-                                                                                                ind+1+'.'}}</td>
-                                                                                            <td class="boder">{{
-                                                                                                batch?.mrp }}</td>
-                                                                                            <td class="boder">{{
-                                                                                                batch?.cost_price }}
-                                                                                            </td>
-                                                                                            <td class="boder">{{
-                                                                                                batch?.discount + '%'}}
-                                                                                            </td>
-                                                                                            <td class="boder">{{
-                                                                                                batch?.additional_discount
-                                                                                                + '%'}}</td>
-                                                                                            <td>
-                                                                                                <button type="button"
-                                                                                                    (click)="selecBatchtModel(batch,batchCartIndex)"
-                                                                                                    class="btn btn-primary btn-sm"
-                                                                                                    style="float: right;">Select</button>
-                                                                                            </td>
-
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
+                                                  
                                                 </td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="mrp" class="input" style="width: 100px;">
+                                                        <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                         (click)="openModalBatch(i)"></i>
                                                     </td>
                                                 <td class="p-1"><input type="text"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
@@ -1052,7 +984,123 @@
     </div>
   </div>
 
+<!--CkQutModal-->
+<div class="modal fade " id="ckqutModal" tabindex="-1" role="dialog"
+aria-labelledby="addressModalLabel" aria-hidden="true">
+<div class="modal-dialog  modal-dialog-centered"
+    role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5"
+                id="staticBackdropLabel">Available Stock </h1>
+            <button type="button" class="close"
+                (click)="closeModalCkOUT()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" *ngIf="QutData">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-bordered datanew">
+                         <thead class="border border-1">
+                            <tr class="border border-1">
 
+                                <th class="border-end">Available Qty</th>
+                                <td>{{QutData?.mrp}}</td>
+                            </tr>
+                            <tr class="border border-1">
+
+                                <th class="border-end border-1">Min Qty</th>
+                                <td>{{ QutData?.min_qty }}</td>
+                            </tr>
+                         </thead>
+                          
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+  <!-- Batch Modal-->
+  <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+  aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered"
+      role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h1 class="modal-title fs-5"
+                  id="staticBackdropLabel">Batch</h1>
+              <button type="button" class="close"
+                  (click)="closeModalBatch()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group" *ngIf="selectBatch">
+                  <div class="row">
+                      <div class="table-responsive">
+                          <table class="table datanew">
+                              <thead>
+                                  <tr>
+                                      <th
+                                          class="boder space-text">
+                                          Sr.No.</th>
+                                      <th
+                                          class="boder space-text">
+                                          MRP</th>
+                                      <th
+                                          class="boder space-text">
+                                          Purchase Price</th>
+                                      <th
+                                          class="boder space-text">
+                                          Discount %</th>
+                                      <th
+                                          class="boder space-text">
+                                          Additional Discount %
+                                      </th>
+                                      <th
+                                          class="boder space-text">
+                                          Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr
+                                      *ngFor="let batch of selectBatch;let ind=index;">
+                                      <td class="boder">{{
+                                          ind+1+'.'}}</td>
+                                      <td class="boder">{{
+                                          batch?.mrp }}</td>
+                                      <td class="boder">{{
+                                          batch?.cost_price }}
+                                      </td>
+                                      <td class="boder">{{
+                                          batch?.discount + '%'}}
+                                      </td>
+                                      <td class="boder">{{
+                                          batch?.additional_discount
+                                          + '%'}}</td>
+                                      <td>
+                                          <button type="button"
+                                              (click)="selecBatchtModel(batch,batchCartIndex)"
+                                              class="btn btn-primary btn-sm"
+                                              style="float: right;">Select</button>
+                                      </td>
+
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 
   
