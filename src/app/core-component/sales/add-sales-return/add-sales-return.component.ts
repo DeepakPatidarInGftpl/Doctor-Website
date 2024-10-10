@@ -95,7 +95,7 @@ export class AddSalesReturnComponent implements OnInit {
       total: new FormControl(''),
       status: new FormControl(''),
       note: new FormControl(''),
-
+      additional_discount : new FormControl(0),
       //2-1
       return_date: new FormControl(defaultDate, [Validators.required])
     });
@@ -1258,6 +1258,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total_discount', this.saleReturnForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleReturnForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleReturnForm.get('subtotal')?.value);
+      formdata.append('additional_discount', this.saleReturnForm.get('additional_discount')?.value ?? 0);
       formdata.append('total', this.calculateTotalForAll());
 
       // 22-1

@@ -388,6 +388,16 @@
                         </span>
                     </div>
                 </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Additional Discout</label>
+                      <input type="number" class="input" placeholder="Enter Your Additional Discount" formControlName="additional_discout" />
+                        <span class="text-danger"
+                            *ngIf="additional_discout && additional_discout.invalid && additional_discout.touched">
+                            Enter Your Additional Discount 
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-body">
@@ -816,6 +826,7 @@
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
                                                     <br>
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                                    <input type="hidden" [value]="taxIntoRupees[i]" formControlName="tax_amount" />
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                                 <td class="text-end"> <input type="number" class="input" readonly

@@ -303,6 +303,9 @@
                                                                     <tr>
                                                                         <th>Barcode/SKU</th>
                                                                         <th>Product Name</th>
+                                                                        <th>Sub Category</th>
+                                                                        <th>Brand</th>
+                                                                        <th>HSN Code</th>
                                                                         <th>QTY</th>
                                                                         <th>Cost Price</th>
                                                                         <th>Mrp</th>
@@ -316,6 +319,11 @@
                                                                     <tr *ngFor="let cart of purchaseDetail?.cart">
                                                                         <td>{{cart?.barcode?.sku}}</td>
                                                                         <td>{{cart?.barcode?.product_title}}</td>
+
+                                                                        <td>{{cart?.barcode?.product?.subcategory?.title}}</td>
+                                                                        <td>{{cart?.barcode?.product?.brand?.title}}</td>
+                                                                        <td>{{cart?.barcode?.product?.hsncode?.hsn_code}}</td>
+
                                                                         <td>{{cart?.qty}}</td>
                                                                         <td>{{cart?.purchase_rate}}</td>
                                                                         <td>{{cart?.mrp}}</td>
@@ -327,7 +335,7 @@
                                                                     </tr>
                                                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
 
-                                                                        <td class="text-center" colspan="2">
+                                                                        <td class="text-center" colspan="5">
                                                                             <strong>Total</strong>
                                                                         </td>
                                                                         <td class="text-center">{{

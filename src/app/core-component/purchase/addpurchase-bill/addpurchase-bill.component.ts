@@ -105,7 +105,9 @@ export class AddpurchaseBillComponent implements OnInit {
       note: new FormControl(''),
       total: new FormControl(''),
       additional_charge: new FormControl(''),
-      // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      // new field add on 10-oct-2024
+      total_tax : new FormControl(''),
+      additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       //2-1
       total_qty: new FormControl('', [Validators.required]),
     });
@@ -268,9 +270,14 @@ export class AddpurchaseBillComponent implements OnInit {
   get shipping_date() {
     return this.purchaseBillForm.get('shipping_date');
   }
-  // get additional_discount() {
-  //   return this.purchaseBillForm.get('additional_discount')
-  // }
+
+  get additional_discounts() {
+    return this.purchaseBillForm.get('additional_discount')
+  }
+  get Total_tax() {
+    return this.purchaseBillForm.get('total_tax')
+  }
+
   get additional_charge() {
     return this.purchaseBillForm.get('additional_charge');
   }
@@ -290,6 +297,7 @@ export class AddpurchaseBillComponent implements OnInit {
       mrp: item ?  (item?.product_type == "Demo Product" || item?.product_type == "Gift" ) ? 0 :  item?.mrp  : 0,
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: 0,
+      tax_amount:0,
       landing_cost: 0,
       selling_price_online: 0,
       selling_price_offline: 0,
@@ -1420,6 +1428,14 @@ this.items.controls.forEach((res:any,i :number)=>{
         formdata.append(
           'shipping_date',
           this.purchaseBillForm.get('shipping_date')?.value
+        );
+        formdata.append(
+          'total_tax',
+          this.purchaseBillForm.get('total_tax')?.value
+        );
+        formdata.append(
+          'additional_discount',
+          this.purchaseBillForm.get('additional_discount')?.value
         );
         formdata.append('export', this.purchaseBillForm.get('export')?.value);
 

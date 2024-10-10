@@ -149,6 +149,7 @@ export class AddSaleBillComponent implements OnInit {
       note: new FormControl(''),
       additional_charges: new FormControl(0),
       additional_charge: this.fb.array([]),
+      additional_discount: new FormControl(0),
       // 2-1
       sales_man: new FormControl('', [Validators.required])
     });
@@ -509,12 +510,13 @@ export class AddSaleBillComponent implements OnInit {
       discount: new FormControl(''),
       additional_discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax_amount: new FormControl(0),
       total: (0),
       description:'',
     })
   }
   getCart(): FormArray {
-    return this.saleBillForm.get('sale_bill_cart') as FormArray;
+    return <FormArray>(this.saleBillForm.get('sale_bill_cart') as FormArray);
   }
   isCart = false;
   addCart() {
@@ -1535,6 +1537,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('coupon_code', '');
       //2-1
       formdata.append('sales_man', this.saleBillForm.get('sales_man')?.value);
+      formdata.append('additional_discount', this.saleBillForm.get('additional_discount')?.value);
       //26-04
       const roundOffString = this.saleBillForm.get('roundoff')?.value;
       let roundOffFloat: number;
