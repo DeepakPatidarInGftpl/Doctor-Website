@@ -95,6 +95,7 @@ export class AddDebitnotesComponent implements OnInit {
       // due_date: new FormControl(defaultDateTime, [Validators.required]),
       // shipping_date: new FormControl(defaultDateTime, [Validators.required]),
       status: new FormControl(''),
+      additional_discout: new FormControl(''),
     });
 
     this.getCategory();
@@ -182,7 +183,8 @@ export class AddDebitnotesComponent implements OnInit {
       landing_cost: (0),
       // batch: new FormControl(0, Validators.required),
       total: (0),
-      description:''
+      description:'',
+      tax_amount:new FormControl(0)
     })
   }
   getCart(): FormArray {
@@ -468,7 +470,7 @@ export class AddDebitnotesComponent implements OnInit {
 
     let is_measurable = event?.product?.is_measurable;
     // console.log(is_measurable,'deepak')
-    if(!is_measurable) {
+    if(is_measurable) {
       this.ShowModal(index);
       this.addItem();
     }
@@ -1090,6 +1092,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('sub_total', this.debitNotesForm.get('sub_total')?.value);
       formdata.append('round_off', this.debitNotesForm.get('round_off')?.value);
       formdata.append('total', this.debitNotesForm.get('total')?.value);
+      formdata.append('additional_discout', this.debitNotesForm.get('additional_discout')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

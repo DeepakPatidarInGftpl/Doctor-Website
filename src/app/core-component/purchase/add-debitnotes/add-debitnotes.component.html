@@ -450,6 +450,13 @@
                             [ngClass]="{'is-invalid': f['reason'].touched && f['reason'].invalid}">
                     </div>
                 </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Additional Discout</label>
+                        <input type="number" class="input" formControlName="additional_discout" placeholder="Enter Discount"
+                            [ngClass]="{'is-invalid': f['additional_discout'].touched && f['additional_discout'].invalid}">
+                    </div>
+                </div>
 
                 <!-- <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -803,12 +810,14 @@
                                                     <span class=symbol (click)="amount(i)"
                                                         *ngIf="isAmount[i]">&#8377;</span>
                                                 </td>
-                                                <td style="padding-left: 2%; width: 100px !important;">
+                                                <td style="width: 100px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
                                                     <br>
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                                        <input type="hidden" [value]="taxIntoRupees[i]" formControlName="tax_amount" />
+
                                                 </td>
                                                 <td class="text-end"><input type="text" style="width: 130px !important;" formControlName="landing_cost"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" readonly

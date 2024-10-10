@@ -53,7 +53,7 @@ let row: number = 21;
 if (obj.Type === 'Goods Received' || obj.Type === 'New Stock Transfer' || obj.Type === 'Stock Transfer Request') {
   row = 13;
 } else if (obj.Type === 'Invoice') {
-  row = 19;
+  row = 18;
 } else if (obj.Type === 'Purchase Return') {
   row = 18;
 } else if (obj.Type === 'Scrap Entry') {

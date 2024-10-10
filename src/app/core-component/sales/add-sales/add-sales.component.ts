@@ -129,6 +129,7 @@ export class AddSalesComponent implements OnInit {
       total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
+      additional_discount: new FormControl(0)
     });
 
     this.searchForm = this.fb.group({
@@ -1753,6 +1754,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total_discount', this.saleForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleForm.get('subtotal')?.value);
+      formdata.append('additional_discount', this.saleForm.get('additional_discount')?.value);
       formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');

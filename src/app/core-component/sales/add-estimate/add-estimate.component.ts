@@ -117,6 +117,7 @@ export class AddEstimateComponent implements OnInit {
       total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
+      additional_discout : new FormControl(0)
     });
 
     this.searchForm = this.fb.group({
@@ -378,6 +379,7 @@ export class AddEstimateComponent implements OnInit {
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
       description : '',
+      tax_amount: new FormControl(0)
     })
   }
   getCart(): FormArray {
@@ -1220,6 +1222,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total_discount', this.saleEstimateForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleEstimateForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleEstimateForm.get('subtotal')?.value);
+      formdata.append('additional_discout', this.saleEstimateForm.get('additional_discout')?.value ?? 0);
       formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
@@ -1322,6 +1325,9 @@ this.items.controls.forEach((res:any,i :number)=>{
   }
   get payment_terms() {
     return this.saleEstimateForm.get('payment_terms')
+  }
+  get additional_discout() {
+    return this.saleEstimateForm.get('additional_discout')
   }
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');

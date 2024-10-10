@@ -66,6 +66,18 @@
                         </span>
                     </div>
                 </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Additional Discout </label>
+                      <input type="number" class="input" formControlName="additional_discout" 
+                            placeholder="Enter Your Additional Discout"
+                            [ngClass]="{'is-invalid': f['additional_discout'].touched && f['additional_discout'].invalid}">
+                  
+                        <span class="text-danger" *ngIf="additional_discout && additional_discout.invalid && additional_discout.touched">
+                            Enter additional_discout
+                        </span>
+                    </div>
+                </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -683,6 +695,7 @@
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
                                                     <br>
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                                    <input type="hidden" [value]="taxIntoRupees[i]" formControlName="tax_amount" />
                                                 </td>
                                                 <td class="text-end p-1">
                                                     <input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
