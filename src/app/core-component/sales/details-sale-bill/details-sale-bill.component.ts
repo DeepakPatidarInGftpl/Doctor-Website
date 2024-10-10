@@ -12,7 +12,8 @@ import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
 })
 export class DetailsSaleBillComponent implements OnInit {
 
-  constructor(private companyService: CompanyService,
+  constructor(
+    private companyService: CompanyService,
     private Arout: ActivatedRoute,
     private saleService: SalesService,
     private location: Location,
@@ -162,7 +163,7 @@ console.log(taxpriceRupees)
 let p : number = parseFloat(this.totalMrp +'')
     let arr2 = new Array() ;
     this.BillDetail?.cart.forEach((cart : any,n : number) => {
-     arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.item_name}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`,`${cart?.tax ?? ''}`,`${cart?.total}`])
+     arr2.push([`${n+1}`,`${cart?.barcode?.sku}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`,`${cart?.tax ?? ''}`,`${cart?.total}`])
    });
    const obj = {
    'Type' : 'Invoice',
@@ -170,7 +171,7 @@ let p : number = parseFloat(this.totalMrp +'')
    'Secouand_date' : this.BillDetail?.bill_date ,
    'thead1' : ['Sale Bill No.','Party Name','Payment Terms','Sales Order','Sales Man','Sale Bill Date','Due date'],
    'tbody1' : [`${this.BillDetail?.customer_bill_no}`,`${this.BillDetail?.customer?.name+ ' (' + this.BillDetail?.customer?.user_type + ')'}`,`${this.BillDetail?.payment_terms?.title}`,`${this.BillDetail?.sale_order?.sale_order_no ?? ''}`,`${this.BillDetail?.sales_man?.name}`, `${this.BillDetail?.bill_date}`,`${this.BillDetail?.due_date}`],
-   'table2head' : ['#','Barcode/SKU','Product Name','Price','QTY','Discount(%)','Tax(%)','Total'],
+   'table2head' : ['#','Barcode/SKU','Product Name','Sub_Category','Brand','HSN_Code','Price','QTY','Discount(%)','Tax(%)','Total'],
    'foot2' : [
      [
        {

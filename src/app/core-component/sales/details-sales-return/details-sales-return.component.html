@@ -181,16 +181,17 @@
                                                 </div>
                                             </div>
                                             <div class="page-title">
-                                                <p class="heading">Sales Return Details</p>
+                                                <p class="heading">Sales Return Details </p>
                                             </div>
                                             <div class="pdf-address mb-4">
                                                 <div class="container">
                                                     <div class="col-sm-12">
                                                         <div
                                                             class="d-flex justify-content-between align-items-center top-div container">
-                                                            <div *ngIf="selectedAddressBilling">
+                                                            <div >
                                                                 <p class="heading">Billing Address</p>
                                                                 <p class="heading2">
+                                                                    {{companyDetails?.name}}
                                                                     {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1
                                                                     + ' , ' +
                                                                     selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
@@ -205,9 +206,10 @@
                                                                     {{returnBillDetail?.party?.email}}
                                                                 </p>
                                                             </div>
-                                                            <div *ngIf="selectedAddressShipping">
+                                                            <div >
                                                                 <p class="heading">Shipping Address</p>
                                                                 <p class="heading2">
+                                                                    {{companyDetails?.name}}
                                                                     {{selectedAddressShipping?.address_line_1==null?'':selectedAddressShipping?.address_line_1
                                                                     + ' , ' +
                                                                     selectedAddressShipping?.address_line_2==null?'':selectedAddressShipping?.address_line_2
@@ -298,6 +300,9 @@
                                                                         <th>#</th>
                                                                         <th>Barcode/SKU</th>
                                                                         <th>Product Name</th>
+                                                                        <th>Sub Category</th>
+                                                                        <th>Brand</th>
+                                                                        <th>HSN Code</th>
                                                                         <th>Price</th>
                                                                         <th>QTY</th>
                                                                         <th>Deduction %</th>
@@ -311,6 +316,11 @@
                                                                         <td>{{i+1}}</td>
                                                                         <td>{{cart?.barcode?.sku}}</td>
                                                                         <td>{{cart?.item_name}}</td>
+
+                                                                        <td>{{cart?.barcode?.product?.subcategory?.title}}</td>
+                                                                        <td>{{cart?.barcode?.product?.brand?.title}}</td>
+                                                                        <td>{{cart?.barcode?.product?.hsncode?.hsn_code}}</td>
+
                                                                         <td>{{cart?.price}}</td>
                                                                         <td>{{cart?.qty}}</td>
                                                                         <td>{{cart?.deduction}}</td>
@@ -318,7 +328,7 @@
                                                                         <td>{{cart?.total}}</td>
                                                                     </tr>
                                                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                                                        <td class="text-center" colspan="3">
+                                                                        <td class="text-center" colspan="6">
                                                                             <strong>Total: {{totalItems}}</strong>
                                                                         </td>
                                                                         <!--  <td class="text-center">{{totalMrp}}</td> -->

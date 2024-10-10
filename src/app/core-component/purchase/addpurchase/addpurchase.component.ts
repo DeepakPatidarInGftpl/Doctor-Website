@@ -89,6 +89,7 @@ export class AddpurchaseComponent implements OnInit {
       sub_total: new FormControl(''),
       round_off: new FormControl(''),
       total: new FormControl(''),
+      additional_discout: new FormControl(0)
 
     });
 
@@ -291,6 +292,7 @@ export class AddpurchaseComponent implements OnInit {
       mrp: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax_amount: new FormControl(0),
       landing_cost: (0),
       total: (0),
       description :'',
@@ -1046,6 +1048,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('round_off', this.purchaseForm.get('round_off')?.value);
       formdata.append('sub_total', this.purchaseForm.get('sub_total')?.value);
       formdata.append('total', this.purchaseForm.get('total')?.value);
+      formdata.append('additional_discout', this.purchaseForm.get('additional_discout')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1155,6 +1158,10 @@ this.items.controls.forEach((res:any,i :number)=>{
   get order_no() {
     return this.purchaseForm.get('order_no')
   }
+  get additional_discout() {
+    return this.purchaseForm.get('additional_discout')
+  }
+  
   get order_date() {
     return this.purchaseForm.get('order_date')
   }

@@ -432,28 +432,29 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Additional Charge* </label>
-                        <input type="text" formControlName="additional_charge"
-                            [ngClass]="{'is-invalid': f['additional_charge'].touched && f['additional_charge'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter
-                            Additional Charge
-                        </span>
-                    </div>
-                </div>
+                
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Additional Discount* </label>
-                        <input type="text" formControlName="additional_discount"
+                        <input type="text" formControlName="additional_discount" placeholder="Enter A Discount"
                             [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}">
                         <span class="text-danger"
-                            *ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter
+                            *ngIf="additional_discounts && additional_discounts.invalid && additional_discounts.touched">Enter
                             Additional Discount ex: 1-100
                         </span>
                     </div>
-                </div> -->
+                </div> 
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Total Tax </label>
+                        <input type="text" formControlName="total_tax"
+                            [ngClass]="{'is-invalid': f['total_tax'].touched && f['total_tax'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="Total_tax && Total_tax.invalid && Total_tax.touched">Enter
+                             Total Discount
+                        </span>
+                    </div>
+                </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -904,6 +905,8 @@
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
                                                     <br>
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+
+                                                    <input type="hidden" [value]="taxIntoRupees[i]" formControlName="tax_amount" />
                                                 </td>
                                                 <td class="text-end">
                                                     <input type="text" style="width: 130px !important;" [ngClass]="{'error-border': isFormCartInvalid}"

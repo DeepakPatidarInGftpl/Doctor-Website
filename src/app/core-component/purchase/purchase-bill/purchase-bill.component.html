@@ -218,8 +218,8 @@
                         <th (click)="sort('id')" class="thone">Paid Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Tax Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payment Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
@@ -250,7 +250,7 @@
                         <td>{{products?.paid_amount}}</td>
                         <td>{{products?.pending_amount}}</td>
                         <td>{{products?.totalTaxAmount}}</td>
-
+                        <td><strong>{{products?.payment_status}}</strong></td>
 
                         <td>
                             <span
