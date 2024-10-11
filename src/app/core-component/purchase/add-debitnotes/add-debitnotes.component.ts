@@ -172,28 +172,40 @@ export class AddDebitnotesComponent implements OnInit {
     })
   }
 
-  cart(): FormGroup {
+  cart(item?:any): FormGroup {
+
+    if (item) {
+      this.barcode.push(item?.barcode?.sku);
+      if (!this.myControls.length) {
+        this.myControls.push(new FormControl());
+      }
+      this.myControls.forEach((res: FormControl) => res.setValue(`${item?.barcode?.product_title} ${item?.barcode?.variant_name}`));
+    }
+
+
+
     return this.fb.group({
-      barcode: (0),
-      qty: (0),
-      unit_cost: (0),
-      mrp: (0),
+      barcode: item ? item?.barcode?.sku : (0),
+      qty: item ? item?.qty: (0),
+      unit_cost: item ? item?.unit_cost :(0),
+      mrp: item ? item?.mrp : (0),
       deduction: new FormControl(0),
-      tax: (0),
-      landing_cost: (0),
+      tax: item ? item?.tax : (0),
+      landing_cost: item ? item?.landing_cost :  (0),
       // batch: new FormControl(0, Validators.required),
-      total: (0),
-      description:'',
-      tax_amount:new FormControl(0)
+      total: item ? item?.total : (0),
+      description: item ? item?.description : '',
+      tax_amount:new FormControl(item ? item?.tax_amount : 0)
     })
   }
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
   isCart = false;
-  addCart(i: any) {
-    this.getCart().push(this.cart())
-    console.log(i);
+  addCart(i: any, data?:any) {
+    console.log(data,'deepak');
+
+    this.getCart().push(this.cart(data))
     if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
@@ -211,7 +223,37 @@ export class AddDebitnotesComponent implements OnInit {
     if (this.debitNotesForm?.value?.cart?.length == 0) {
       this.isCart = true
     }
-  }
+  };
+
+
+ // set table data base on a sale bill
+ HendelChange(id : number){
+    
+  this.purchaseService.getPurchaseBillById(id)
+  .subscribe({
+    next : (value :any)=> {
+      let len = value?.cart?.length;
+      if ( len > 0) {
+
+        this.getCart().clear();
+        this.getCart().reset();
+
+        for (let index = 0; index < len; index++) {
+          this.addCart(index,value?.cart[index])
+        }
+        
+      // console.log(value)
+        
+      }
+
+    },
+  })
+  console.log(id)
+};
+
+
+
+
   supplierList: any;
 
   getSuuplier(query) {
@@ -659,6 +701,8 @@ this.items.controls.forEach((res:any,i :number)=>{
 
   }
 
+
+ 
 
 
 

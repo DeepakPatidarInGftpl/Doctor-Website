@@ -1,0 +1,86 @@
+
+<div class="card" >
+    <div class="card-header">
+        <div class="d-flex align-center justify-content-between">
+            <div class="d-flex" style="height: 38px;">
+                <label class="h2 me-2 fw-bold">Pay</label>
+                <div class="img_input">
+                    <img src="https://thumbs.dreamstime.com/b/indian-rupee-icon-symbol-vector-102647761.jpg" />
+                </div>
+                <div class="py-3 px-2 border-top d-flex align-center  justify-content-center border-end border-bottom border-1" style="width: 200px; border-radius: 0 5px 5px 0px;">
+                    <span class="h4 f-500 m-0">{{total.toFixed(2)}}</span>
+                </div>
+            </div>
+            <div>
+                <button class="btn" style="color: #FF9F43;" (click)="AddToCart()">
+                    <svg _ngcontent-nta-c74=""  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" viewBox="0 0 16 16" class="bi bi-plus-circle" style="color: #1881B0;"><path _ngcontent-nta-c74="" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path><path _ngcontent-nta-c74="" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>
+                    Add More Payment
+                </button>
+                <p class="text-danger" *ngIf="showError">You Already Entered Full Amount!</p>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+    <div class="card-body pt-0">
+        <form [formGroup]="paymentForm" >
+            <ng-container  formArrayName="paymentArray">
+        <section class="border border-2 p-3 rounded" *ngFor="let ctrl of PaymentMothod.controls; let i = index " [formGroupName]="i">
+                    <div class="row"  >
+                        <div class="col-md-4">
+                            <label for="Recieved_Amount" class="fw-bold"> Recieved Amount</label>
+                            <input id="Recieved_Amount" formControlName="amount"   placeholder="Enter Recieved Amount" class="input" type="number" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Payment_Method" class="fw-bold">Payment Method  <span class="text-danger">*</span></label>
+                            <select class="form-select" 
+                            (change)="receiptTypeChange($event, i)"
+                             formControlName="payment_mode" #payment_modeID  id="Payment_Method" >
+                                <option value="" disabled selected>Select Method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Bank">Bank</option>
+                                <option value="PayLater">PayLater</option>
+                              </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Payment_Account" class="fw-bold">Payment Account <span class="text-danger">*</span></label>
+                            <select class="form-select"
+                             formControlName="payment_account"
+                            (change)="onSelectPaymentAccount($event.target.value, i)"
+                            id="Payment_Account" aria-label="Default select example">
+                               <option value="" disabled selected>Select Payment Account</option>
+                               <option *ngFor="let account of accountListAlies[i]"
+                                       [value]="account?.id">{{ account.title }}</option>
+                              </select>
+                        </div>
+                        <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
+                            <label for="Transaction_Date" class="fw-bold">Transaction Date</label>
+                            <input id="Transaction_Date" formControlName="transaction_date" class="input"  type="date" />
+                        </div>
+                        <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
+                            <label for="Payment_Mode" class="fw-bold"> Payment Mode</label>
+                            <select class="form-select" formControlName="receipt_type" id="Payment_Mode" >
+                                <option value=""> Payment Mode</option>
+                                <option *ngFor="let item of paymentModeList"
+                                  [value]="item?.id" >{{item?.title}}
+                               </option>
+                              </select>
+                        </div>
+                        <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
+                            <label for="Transaction_Id" class="fw-bold"> Transaction Id</label>
+                            <input id="Transaction_Id" placeholder="Enter Ref No." formControlName="transaction_id" class="input" type="number" />
+                        </div>
+                        <div *ngIf="payment_modeID.value == 'Bank'" class="offset-md-4 col-md-4 offset-md-4">
+                            <label for="Ref_No" class="fw-bold"> Remarks</label>
+                            <input id="Ref_No" formControlName="note" placeholder="Enter Ref No." class="input" type="number" />
+                        </div>
+                    </div>
+                </section>
+            </ng-container>
+        </form>
+    </div>
+    <div class="card-footer">
+      <h3 class="fw-bold text-danger">Note: If you don't pay in full, the remaining amount will be considered as Pay Later</h3> 
+    </div>
+</div>
