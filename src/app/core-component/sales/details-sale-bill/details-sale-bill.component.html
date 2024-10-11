@@ -481,6 +481,268 @@
                         </div>
                     </div>
                 </mat-tab>
+                <mat-tab label="Payment">
+                    <div class="pdf-table2 mb-4" *ngIf="BillDetail?.payment?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Payment Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">Transaction Id</th>
+                                                <th (click)="sort('id')">Receipt Type</th>
+                                                <th (click)="sort('id')">Payment Mode</th>
+                                                <th (click)="sort('id')">Payment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let log of BillDetail?.payment | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{log?.transaction_id}}</td>
+                                                <td>{{log?.receipt_type}}</td>
+                                                <td>{{log?.payment_mode }}</td>
+                                                <td>{{log?.payment }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{BillDetail?.logs?.length}} of {{p}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="BillDetail?.payment?.length==0">
+                        <span class="text-danger">Payment Not Available</span>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Tax Rate">
+                    <div class="pdf-table2 mb-4" *ngIf="BillDetail?.TaxSummary?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">HSNCODE</th>
+                                                <th (click)="sort('id')">IGST</th>
+                                                <th (click)="sort('id')">SGST</th>
+                                                <th (click)="sort('id')">CGST</th>
+                                                <th (click)="sort('id')">TAX</th>
+                                                <th (click)="sort('id')">Total Tax</th>
+                                                <th (click)="sort('id')">Tax Able</th>
+                                                <th (click)="sort('id')">Total Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let tax of BillDetail?.TaxSummary | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{tax?.HSNCODE}}</td>
+                                                <td>{{tax?.igst}}</td>
+                                                <td>{{tax?.sgst}}</td>
+                                                <td>{{tax?.cgst}}</td>
+                                                <td>{{tax?.tax}}</td>
+                                                <td>{{tax?.total_tax}}</td>
+                                                <td>{{tax?.taxable_value}}</td>
+                                                <td>{{tax?.total_amount}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{BillDetail?.logs?.length}} of {{p}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="BillDetail?.TaxSummary?.length==0">
+                        <span class="text-danger">Tax Summary Not Available</span>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Credit Note">
+                    <div class="pdf-table2 mb-4" *ngIf="BillDetail?.sale_bill_for_credit_note?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Credit Note Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">Date</th>
+                                                <th (click)="sort('id')">Credit Note No.</th>
+                                                <th (click)="sort('id')">Branch</th>
+                                                <th (click)="sort('id')">Pending Amount</th>
+                                                <th (click)="sort('id')">Redeem Amount</th>
+                                                <th (click)="sort('id')">Status</th>
+                                                <th (click)="sort('id')">Tax </th>
+                                                <th (click)="sort('id')"> Amount</th>
+                                                <th (click)="sort('id')"> Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let tax of BillDetail?.sale_bill_for_credit_note | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{tax?.date}}</td>
+                                                <td>{{tax?.credit_note_no}}</td>
+                                                <td>{{tax?.branch.title}}</td>
+                                                <td>{{tax?.pending_amount}}</td>
+                                                <td>{{tax?.redeem_amount}}</td>
+                                                <td>{{tax?.status}}</td>
+                                                <td>{{tax?.tax}}</td>
+                                                <td>{{tax?.amount}}</td>
+                                                <td>{{tax?.total}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{BillDetail?.logs?.length}} of {{p}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="BillDetail?.sale_bill_for_credit_note?.length==0">
+                        <span class="text-danger">Credit Note Not Available</span>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Sale Return">
+                    <div class="pdf-table2 mb-4" *ngIf="BillDetail?.sale_bill_for_sale_return?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Sale Return Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">Sale Return Bill No.</th>
+                                                <th (click)="sort('id')">Sale Return Date</th>
+                                                <th (click)="sort('id')">Status</th>
+                                                <th (click)="sort('id')">Sub Total</th>
+                                                <th (click)="sort('id')"> Discount</th>
+                                                <th (click)="sort('id')">Qty</th>
+                                                <th (click)="sort('id')"> Tax </th>
+                                                <th (click)="sort('id')"> Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let tax of BillDetail?.sale_bill_for_sale_return | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{tax?.sale_return_bill_no}}</td>
+                                                <td>{{tax?.return_date}}</td>
+                                                <td>{{tax?.status}}</td>
+                                                <td>{{tax?.subtotal}}</td>
+                                                <td>{{tax?.total_discount}}</td>
+                                                <td>{{tax?.total_qty}}</td>
+                                                <td>{{tax?.total_tax}}</td>
+                                                <td>{{tax?.total}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination" #v
+                                                    (change)="changePg(v.value)">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{BillDetail?.logs?.length}} of {{p}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="BillDetail?.sale_bill_for_sale_return?.length==0">
+                        <span class="text-danger">Sale Return Not Available</span>
+                    </div>
+                </mat-tab>
                 <mat-tab label="Logs">
                     <div class="pdf-table2 mb-4" *ngIf="BillDetail?.logs?.length>0">
                         <div class="container">

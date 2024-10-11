@@ -12,6 +12,9 @@ import { OfferService } from 'src/app/Services/offer/offer.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 import * as bootstrap from 'bootstrap';
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
+
+
 @Component({
   selector: 'app-add-sale-bill',
   templateUrl: './add-sale-bill.component.html',
@@ -74,7 +77,8 @@ export class AddSaleBillComponent implements OnInit {
     private companyService: CompanyService,
     private commonService: CommonServiceService,
     private cdr: ChangeDetectorRef,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private cartService: PosCartService,
   ) {
   }
 
@@ -106,6 +110,8 @@ export class AddSaleBillComponent implements OnInit {
 
   taxForm: FormGroup;
   Measurable_Product_QUT : number =0;
+
+  
   ngOnInit(): void {
 
     // blur bg when modal open
@@ -211,6 +217,7 @@ export class AddSaleBillComponent implements OnInit {
     this.getAdditionalDiscount();
     this.getTax();
     this.getProfile();
+    
   }
 
   updateDueDateMin(selectedDate: string, financialYear) {
@@ -1513,6 +1520,22 @@ this.items.controls.forEach((res:any,i :number)=>{
   loaderCreate = false;
   loaderPrint = false;
   loaderDraft = false;
+  loaderPayment = false;
+
+
+  ShowPaymentModal(type :string){
+    this.loaderPayment = true;
+    var myModal = new bootstrap.Modal(document.getElementById('Payment_Modal'))
+    myModal.show();
+
+
+
+return
+    this.submit(type)
+  }
+
+
+
   submit(type: any) {
     console.log(this.saleBillForm);
     if (this.saleBillForm.valid && !this.isLimitErrorShown) {
@@ -1525,6 +1548,19 @@ this.items.controls.forEach((res:any,i :number)=>{
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+      // else if (type == 'payment') {
+      //   this.loaderPayment = true;
+      //   this.ShowPaymentModal();
+      //   console.log('payment')
+      //   return
+      // }
+
+      
+
+
+
+
+
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
       formdata.append('bill_date', this.saleBillForm.get('bill_date')?.value);
@@ -2662,6 +2698,12 @@ this.items.controls.forEach((res:any,i :number)=>{
     }
     return totaladditionalCharge;
   }
+
+
+
+  
+
+
 
   ngOnDestroy(): void {
     this.unsubscribeAllQty();
