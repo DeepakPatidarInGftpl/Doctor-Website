@@ -417,11 +417,12 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Select Purchase Bill*</label>
-                        <select formControlName="purchase_bill"
+                        <select formControlName="purchase_bill" #bii
+                        (change)="HendelChange(bii.value)"
                             [ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
                             <option value="" selected disabled>Select Purchase Bill</option>
                             <ng-container *ngFor="let purchase of purchaseList">
-                                <option value="{{purchase?.id}}" *ngIf="purchase?.is_active==true">
+                                <option  *ngIf="purchase?.is_active">
                                     {{purchase?.id}}
                                 </option>
                             </ng-container>
@@ -611,7 +612,7 @@
                                                                 <ng-container
                                                                     *ngIf="myControls[i].value?.length >= 1 && myControls[i].value?.length > 0">
                                                                     <ng-container *ngFor="let option of variantList[i]">
-                                                                        <mat-option *ngIf="option.is_active==true"
+                                                                        <mat-option *ngIf="option?.is_active"
                                                                             [value]="option?.product_title + ' ' + option?.variant_name"
                                                                             (onSelectionChange)="oncheckVariant(option,i)"
                                                                             style="color:#FF9F43"> {{

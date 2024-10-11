@@ -286,7 +286,7 @@ export class AddpurchaseBillComponent implements OnInit {
     
     if (item) {
       this.barcode.push(item.barcode?.sku);
-      this.myControls.forEach((res:any)=>{
+      this.myControls.forEach((res:FormControl)=>{
         res.setValue(item?.barcode?.product_title + " " + item?.barcode?.variant_name)
       });
     };
