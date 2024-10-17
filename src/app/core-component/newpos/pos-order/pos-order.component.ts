@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 import { QueryService } from 'src/app/shared/query.service';
@@ -9,13 +9,17 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { DatePipe } from '@angular/common';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-pos-order',
   templateUrl: './pos-order.component.html',
   styleUrls: ['./pos-order.component.scss']
 })
-export class PosOrderComponent implements OnInit {
+export class PosOrderComponent implements OnInit,OnDestroy {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
@@ -37,12 +41,13 @@ export class PosOrderComponent implements OnInit {
   selectedAccountType: string = '';
   selectedAccountSubType: string = '';
   selectedAccountId: string = '';
-
-  constructor(private coreService: CoreService, private QueryService: QueryService, private cs: CompanyService, private cartService: PosCartService) {
+  ProductSerchas : FormControl = new FormControl('');
+  variantList: any[] = [];
+  constructor(private commonService: CommonServiceService,private saleService : SalesService,private datePipe : DatePipe ,private coreService: CoreService, private QueryService: QueryService, private cs: CompanyService, private cartService: PosCartService) {
     this.QueryService.filterToggle()
   }
 
-  delRes: any
+  delRes: any;
 
   confirmText(index: any, id: any) {
     Swal.fire({
@@ -80,6 +85,8 @@ export class PosOrderComponent implements OnInit {
       }
     });
   }
+
+ 
 
   // active deactive
   isActive(index: any, id: any) {
@@ -147,6 +154,10 @@ export class PosOrderComponent implements OnInit {
   //24-5
   isAdmin = false;
   fyID: any;
+  searchLength:number =0;
+  saleBillDateForm: FormGroup;
+  minDate: Date;
+  maxDate: Date;
   //
   ngOnInit(): void {
     //24-5
@@ -157,11 +168,7 @@ export class PosOrderComponent implements OnInit {
       this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res?.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+      this.isAdmin = (res?.role == 'admin')
     });
     // this.coreService.getPosOrder(this.fyID, this.selectData).subscribe(res => {
     //   // console.log(res);
@@ -171,6 +178,16 @@ export class PosOrderComponent implements OnInit {
     //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
     //   this.filterData();
     // });
+    const { minDate, maxDate } = this.commonService.determineMinMaxDates(this.fyID);
+    this.minDate = minDate;
+    this.maxDate = maxDate;
+    this.saleBillDateForm = new FormGroup({
+      start : new FormControl(),
+      end : new FormControl(),
+      
+    });
+
+    this.commonService.validateAndClearDates(this.saleBillDateForm, this.minDate, this.maxDate);
 
     this.cartService.getPOSOrders(this.page, this.pageSize).subscribe({
       next: (response: any) => {
@@ -190,7 +207,47 @@ export class PosOrderComponent implements OnInit {
     })
 
     this.getBranch();
+    this.ProductSerchas.valueChanges.subscribe({
+      next : (value : string) => {
+        this.searchLength = value.length
+        if (value.length >= 3) {
+          this.getProduct(value)
+        }
+       
+      },
+    })
+  
+  
+    
     //24-5
+  }
+
+
+
+
+  getProduct(val:string){
+    this.saleService.filterVariant('','',val).subscribe({
+      next : (value) =>{
+        this.variantList = value
+      },
+    })
+  }
+  variantChanged(val:any){
+    let id = val.id;
+    let s = this.datePipe.transform( this.saleBillDateForm.value.start,'YYYY-MM-dd');
+    let e = this.datePipe.transform(this.saleBillDateForm.value.end,'YYYY-MM-dd');
+    let obj = {s,e}
+    if (s && e) {
+    this.cartService.getPOSOrders(this.page, this.pageSize,id,obj)
+     .subscribe({
+        next : (result :any)=> {
+          this.posOrders = result.data
+          
+        },
+      })
+}
+
+// console.log(val)
   }
 
   allSelected: boolean = false;
@@ -212,25 +269,7 @@ export class PosOrderComponent implements OnInit {
     }
   }
 
-  // search() {
-  //   if (this.titlee == "") {
-  //     this.ngOnInit();
-  //   } else {
-  //     const searchTerm = this.titlee.toLocaleLowerCase();
-  //     this.tableData = this.tableData.filter(res => {
-  //       const nameLower = res?.customer?.name.toLocaleLowerCase();
-  //       const companyNameLower = res.id.toString().toLocaleLowerCase();
-  //       if (nameLower.match(searchTerm)) {
-  //         return true;
-  //       } else if (companyNameLower.match(searchTerm)) {
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  //   }
-  // }
-
-  search() {
+ search() {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
@@ -517,4 +556,7 @@ export class PosOrderComponent implements OnInit {
     }
   }
   //24-5
+  ngOnDestroy(): void {
+    this.saleBillDateForm.removeControl('')
+  }
 }

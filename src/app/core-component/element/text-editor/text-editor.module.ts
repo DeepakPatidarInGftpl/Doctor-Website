@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { TextEditorRoutingModule } from './text-editor-routing.module';
 import { TextEditorComponent } from './text-editor.component';
-import { NgxEditorModule } from 'ngx-editor';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -13,8 +12,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     TextEditorRoutingModule,
-    NgxEditorModule,
     FormsModule
-  ]
+  ],exports : [TextEditorComponent]
 })
 export class TextEditorModule { }

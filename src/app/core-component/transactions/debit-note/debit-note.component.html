@@ -193,10 +193,17 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products?.debit_note_no}}</td>
+                        <td>   <a  style="font-weight: 800;" routerLink="//transaction/detailsdebitnote/{{products.id}}">
+                            {{products?.debit_note_no}}
+                        </a>
+                     </td>
                         <td class="productimgname">
-                            <a routerLink="//transaction/detailsdebitnote/{{products.id}}"
-                                style="line-height: 3;">{{products?.party?.company_name}}</a>
+                            <a 
+                                style="line-height: 3;font-weight: 800;"
+                                [routerLink]="products.url"
+                                
+                                >{{products?.party?.company_name}}
+                            </a>
                         </td>
                         <td>{{products?.date | date: 'dd-MMMM-yyyy'}}</td>
                         <td>{{products.purchase_bill?.supplier_bill_no

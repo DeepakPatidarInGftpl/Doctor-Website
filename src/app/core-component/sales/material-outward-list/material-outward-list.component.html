@@ -172,9 +172,13 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products?.voucher_number}}</td>
+                        <td>
+                            <a style="font-weight: 800;" routerLink="//sales/salesMaterialOutwardDetails/{{products.id}}">
+                                {{products?.voucher_number}}
+                            </a>
+                            </td>
                         <td class="productimgname">
-                            <a routerLink="//sales/salesMaterialOutwardDetails/{{products.id}}"
+                            <a [routerLink]="products?.customer?.url"
                                 style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
                                 + ')'}}</a>
                         </td>

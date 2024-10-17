@@ -6,7 +6,6 @@ import { ProductOrderDetailsComponent } from './product-order-details.component'
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxEditorModule } from 'ngx-editor';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
@@ -23,7 +22,6 @@ import { MatMenuModule } from '@angular/material/menu';
     SharedModuleModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule,
     MatTabsModule,
     MatIconModule,
     MatSelectModule,

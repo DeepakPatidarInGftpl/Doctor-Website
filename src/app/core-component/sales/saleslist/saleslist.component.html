@@ -215,12 +215,21 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products.sale_order_no}}</td>
+                        <td><a style="font-weight: 800;" 
+                            routerLink="//sales/sales-details/{{products.id}}"
+                            >{{products.sale_order_no}}</a> </td>
+
+
                         <td class="productimgname">
-                            <a routerLink="//sales/sales-details/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
+                            <a [routerLink]="products?.customer?.url"
+                                style="line-height: 3; font-weight: 800;">{{products?.customer?.name + ' (' + products?.customer?.username
                                 + ')'}}</a>
                         </td>
+                      
+
+
+
+
                         <td>{{products.sale_order_date}}</td>
                         <td>{{products?.payment_terms?.title}}</td>
                         <td>{{products.due_date}}</td>

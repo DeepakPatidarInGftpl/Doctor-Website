@@ -75,6 +75,10 @@ export class SaleslistComponent implements OnInit {
       }
     });
   }
+
+
+
+  
   // active deactive
   isActive(index: any, id: any) {
     Swal.fire({
@@ -210,10 +214,24 @@ isAdmin=false;
   }
     //18-5
     getSaleOrderFy(fy:any){
-      const idString = JSON.stringify(this.selectData);
-      console.log(idString);
-      console.log(idString?.length);
-      this.saleService.getSalesOrderfy(fy,this.selectData).subscribe(res => {
+      // const idString = JSON.stringify(this.selectData);
+     
+      this.saleService.getSalesOrderfy(fy,this.selectData).subscribe((res : any[]) => {
+        const userMap = {
+          Customer: '//contacts/customerDetails/',
+          Supplier: '//contacts/supplierDetails/',
+          Dealer: '//contacts/detailDealer/',
+          Employee: '//contacts/employeeDetails/',
+          Transport: '//contacts/transportDetails/',
+          Vendor : '//contacts/vendorDetails/'
+        };
+        
+        res.forEach(item => {
+          const url = userMap[item?.customer?.user_type];
+          if (url) item.customer.url = `${url}${item?.customer?.detail?.id}`;
+         });
+
+
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);

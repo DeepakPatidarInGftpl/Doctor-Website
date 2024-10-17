@@ -5,7 +5,6 @@ import { DetailDealerRoutingModule } from './detail-dealer-routing.module';
 import { DetailDealerComponent } from './detail-dealer.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxEditorModule } from 'ngx-editor';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -21,7 +20,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     DetailDealerRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule,
     MatTabsModule,
     MatIconModule,
     MatSelectModule,

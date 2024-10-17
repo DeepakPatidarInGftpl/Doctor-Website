@@ -5,6 +5,7 @@ import { TablesBasicComponent } from './tables-basic.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {  MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TextEditorModule } from '../../element/text-editor/text-editor.module';
 
 
 @NgModule({
@@ -16,8 +17,8 @@ import {  MatSlideToggleModule } from '@angular/material/slide-toggle';
     TablesBasicRoutingModule,
     SharedModuleModule,
     MatCheckboxModule,
-    MatSlideToggleModule
-
+    MatSlideToggleModule,
+    TextEditorModule
   ]
 })
 export class TablesBasicModule { }

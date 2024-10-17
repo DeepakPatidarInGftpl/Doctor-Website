@@ -27,21 +27,24 @@
         <form [formGroup]="paymentForm" >
             <ng-container  formArrayName="paymentArray">
         <section class="border border-2 p-3 rounded" *ngFor="let ctrl of PaymentMothod.controls; let i = index " [formGroupName]="i">
+
                     <div class="row"  >
                         <div class="col-md-4">
                             <label for="Recieved_Amount" class="fw-bold"> Recieved Amount</label>
                             <input id="Recieved_Amount" formControlName="amount"   placeholder="Enter Recieved Amount" class="input" type="number" />
+                            <small class="text-danger" *ngIf="ctrl.controls['amount'].invalid && ckForm">Enter Your Recieved Amount  </small>
                         </div>
                         <div class="col-md-4">
                             <label for="Payment_Method" class="fw-bold">Payment Method  <span class="text-danger">*</span></label>
                             <select class="form-select" 
                             (change)="receiptTypeChange($event, i)"
-                             formControlName="payment_mode" #payment_modeID  id="Payment_Method" >
+                             formControlName="receipt_type" #payment_modeID  id="Payment_Method" >
                                 <option value="" disabled selected>Select Method</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Bank">Bank</option>
-                                <option value="PayLater">PayLater</option>
                               </select>
+                            <small class="text-danger" *ngIf="ctrl.controls['receipt_type'].invalid && ckForm">Select Your Payment Method  </small>
+
                         </div>
                         <div class="col-md-4">
                             <label for="Payment_Account" class="fw-bold">Payment Account <span class="text-danger">*</span></label>
@@ -53,27 +56,33 @@
                                <option *ngFor="let account of accountListAlies[i]"
                                        [value]="account?.id">{{ account.title }}</option>
                               </select>
+                            <small class="text-danger" *ngIf="ctrl.controls['payment_account'].invalid && ckForm">Select Your Payment Account  </small>
+
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
                             <label for="Transaction_Date" class="fw-bold">Transaction Date</label>
                             <input id="Transaction_Date" formControlName="transaction_date" class="input"  type="date" />
+                            <small class="text-danger" *ngIf="ctrl.controls['transaction_date'].invalid && ckForm">Select Your Transaction Date  </small>
+
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
                             <label for="Payment_Mode" class="fw-bold"> Payment Mode</label>
-                            <select class="form-select" formControlName="receipt_type" id="Payment_Mode" >
+                            <select class="form-select" formControlName="payment_mode" id="Payment_Mode" >
                                 <option value=""> Payment Mode</option>
                                 <option *ngFor="let item of paymentModeList"
                                   [value]="item?.id" >{{item?.title}}
                                </option>
                               </select>
+                              <small class="text-danger" *ngIf="ctrl.controls['payment_mode'].invalid && ckForm">Select Your Receipt Type  </small>
+
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
                             <label for="Transaction_Id" class="fw-bold"> Transaction Id</label>
-                            <input id="Transaction_Id" placeholder="Enter Ref No." formControlName="transaction_id" class="input" type="number" />
+                            <input id="Transaction_Id" placeholder="Enter Ref No." formControlName="transaction_id" class="input" type="text" />
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="offset-md-4 col-md-4 offset-md-4">
                             <label for="Ref_No" class="fw-bold"> Remarks</label>
-                            <input id="Ref_No" formControlName="note" placeholder="Enter Ref No." class="input" type="number" />
+                            <input id="Ref_No" formControlName="note" placeholder="Enter Ref No." class="input" type="text" />
                         </div>
                     </div>
                 </section>
@@ -81,6 +90,7 @@
         </form>
     </div>
     <div class="card-footer">
+        <p class="text-danger" *ngIf="showCrError">User Credit Limit Exceed! Please Pay The Balance</p> 
       <h3 class="fw-bold text-danger">Note: If you don't pay in full, the remaining amount will be considered as Pay Later</h3> 
     </div>
 </div>

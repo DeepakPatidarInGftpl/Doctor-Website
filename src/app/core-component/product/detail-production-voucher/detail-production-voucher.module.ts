@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { DetailProductionVoucherRoutingModule } from './detail-production-voucher-routing.module';
 import { DetailProductionVoucherComponent } from './detail-production-voucher.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxEditorModule } from 'ngx-editor';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
@@ -19,7 +18,6 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     DetailProductionVoucherRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule,
     MatTabsModule,
     MatIconModule,
     MatSelectModule,

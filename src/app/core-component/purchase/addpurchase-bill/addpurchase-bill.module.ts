@@ -10,6 +10,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {NgFor, AsyncPipe} from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import { PurchaseBillPaymentModule } from '../purchase-bill-payment/purchase-bill-payment.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {MatInputModule} from '@angular/material/input';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule, 
+    PurchaseBillPaymentModule
   ]
 })
 export class AddpurchaseBillModule { }

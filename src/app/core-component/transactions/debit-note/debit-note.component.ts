@@ -164,8 +164,24 @@ export class DebitNoteComponent implements OnInit {
   isAdmin = false;
 
   ngOnInit(): void {
-    this.transactionService.getDebitNote().subscribe(res => {
+    this.transactionService.getDebitNote().subscribe((res:any[]) => {
       // console.log(res);
+
+      const userMap = {
+        Customer : '//contacts/customerDetails/',
+        Supplier : '//contacts/supplierDetails/',
+        Dealer : '//contacts/detailDealer/',
+        Employee : '//contacts/employeeDetails/',
+        Transport : '//contacts/transportDetails/',
+        Vendor : '//contacts/vendorDetails/'
+      };
+      
+      res.forEach(item => {
+        const url = userMap[item?.party?.userid?.user_type];
+        if (url) item.url = `${url}${item?.party?.id}`;
+       });
+       console.log(res)
+
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);

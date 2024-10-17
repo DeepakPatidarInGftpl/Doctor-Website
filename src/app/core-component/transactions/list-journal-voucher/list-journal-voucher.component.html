@@ -150,8 +150,10 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <!-- <td class="productimgname"><a routerLink="//transaction/detailsjournalvoucher/{{products.id}}" style="line-height: 3;">{{products?.cart[0]?.from_account?.account_id}}</a></td> -->
-                        <td class="text-center">{{products?.journal_voucher_no}}</td>
+                        <td class="productimgname"><a style="font-weight: 800;" routerLink="//transaction/detailsjournalvoucher/{{products.id}}" style="line-height: 3;">
+                            {{products?.journal_voucher_no}}</a>
+                        </td>
+                        <!-- <td class="text-center">{{products?.journal_voucher_no}}</td> -->
                         <td>{{products?.date}}</td>
                         <td class="text-center">{{products?.total_debit}}</td>
                         <!-- <td class="text-center">{{products?.total_credit}}</td> -->
