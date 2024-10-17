@@ -313,7 +313,7 @@ export class ProductlistComponent implements OnInit {
   }
 
   // filter data
-  filterData() {
+  filterData(type?:string, val?:string) {
     let filteredData = this.tableData.slice();
     if(this.createdDate) {
       filteredData = filteredData.filter((item) => item?.created_date === this.createdDate);
@@ -337,6 +337,11 @@ export class ProductlistComponent implements OnInit {
     if (this.selectedLabel) {
       filteredData = filteredData.filter((item) => item?.product_label?.title === this.selectedLabel);
     }
+    
+    if (val) {
+      filteredData = filteredData.filter((item:any) => item?.size_chart_available == val);
+    }
+    
 
     if (this.selectActive !== undefined && this.selectActive !== null) {
       filteredData = filteredData.filter(item => item?.is_active === this.selectActive);

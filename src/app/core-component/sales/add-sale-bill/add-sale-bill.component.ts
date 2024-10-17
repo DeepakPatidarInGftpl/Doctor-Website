@@ -174,7 +174,11 @@ export class AddSaleBillComponent implements OnInit {
       map(value => this._filtr(value, true))
     );
 
-
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * value) / 100 : this.calculateTotalForAll() - value;
+      },
+    });
     this.taxForm = this.fb.group({
       items: this.fb.array([]),
     });
@@ -220,7 +224,16 @@ export class AddSaleBillComponent implements OnInit {
     this.getTax();
     this.getProfile();
     
+  };
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * ctrl_val / 100) : this.calculateTotalForAll() - ctrl_val;
   }
+
 
   updateDueDateMin(selectedDate: string, financialYear) {
     const dateControl = this.saleBillForm.get('due_date');

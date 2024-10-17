@@ -122,6 +122,11 @@ export class AddSalesReturnComponent implements OnInit {
     });
     const financialYear = localStorage.getItem('financialYear');
     this.saleReturnDateValidation(financialYear);
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * value) / 100 : this.calculateTotalForAll() - value;
+      },
+    });
 
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -149,6 +154,14 @@ export class AddSalesReturnComponent implements OnInit {
         console.log(this.selectedBillDate);
       }
     })
+  }
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * ctrl_val / 100) : this.calculateTotalForAll() - ctrl_val;
   }
 
   saleReturnDateValidation(financialYear) {

@@ -110,6 +110,11 @@ export class AddDebitnotesComponent implements OnInit {
       items: this.fb.array([]),
     });
     
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * value) / 100 : this.calculateTotal() - value;
+      },
+    });
     this.items.valueChanges.subscribe({
       next: (value: any[]) => {
         this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
@@ -143,6 +148,14 @@ export class AddDebitnotesComponent implements OnInit {
     this.getprefix();
     this.isPercentage[0] = true;
     this.isAmount[0] = false;
+  }
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * ctrl_val / 100) : this.calculateTotal() - ctrl_val;
   }
 
   get supplier() {
