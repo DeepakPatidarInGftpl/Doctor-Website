@@ -26,7 +26,16 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Color Code</td>
-                                            <td class="td">{{employeeDetails?.color_code}}</td>
+                                            <td class="td">
+                                                <div class="d-flex align-center justify-content-between">
+                                                    <div> {{employeeDetails?.color_code}}</div>
+                                                    <div [style.background]="employeeDetails?.color_code"  style="width: 24px; height: 24px;border-radius: 2px;">
+
+                                                    </div>
+                                                </div>
+                                               
+                                            
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

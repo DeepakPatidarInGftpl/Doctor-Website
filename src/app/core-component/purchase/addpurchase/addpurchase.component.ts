@@ -26,6 +26,7 @@ export class AddpurchaseComponent implements OnInit {
   totalTax: any;
   roundOff: any;
   mrpPurchase: number = 0;
+  
 
   constructor(private purchaseService: PurchaseServiceService, private coreService: CoreService, private fb: FormBuilder,
     private router: Router,
@@ -53,6 +54,11 @@ export class AddpurchaseComponent implements OnInit {
   shippingMinDate: string = '';
   shippingMaxDate: string = '';
 
+
+
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
   get f() {
     return this.purchaseForm.controls;
   }
@@ -62,6 +68,7 @@ export class AddpurchaseComponent implements OnInit {
 
 
   Measurable_Product_QUT : number =0;
+  
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     const now = new Date();
@@ -108,6 +115,12 @@ export class AddpurchaseComponent implements OnInit {
       },
     });
 
+
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * value) / 100 : this.calculateTotal() - value;
+      },
+    });
 
 
 
@@ -156,6 +169,17 @@ export class AddpurchaseComponent implements OnInit {
     const formArray = this.getCart();
     this.userInputEntered = new Array(formArray.length).fill(false);
   }
+
+  contverInFloal(val:any){
+      return parseFloat(val)
+  }
+
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * ctrl_val / 100) : this.calculateTotal() - ctrl_val;
+  }
+
 
   updateShippingDateMin(selectedDate: string, financialYear) {
     const dateControl = this.purchaseForm.get('shipping_date');
@@ -382,6 +406,7 @@ export class AddpurchaseComponent implements OnInit {
   supplierId: any;
   oncheck(event: any) {
     // console.log(event);
+
     const selectedItemId = event;
     this.supplierId = event;
     // console.log(selectedItemId);
@@ -408,6 +433,8 @@ export class AddpurchaseComponent implements OnInit {
     this.purchaseForm.patchValue({
       party: selectedItemId
     });
+
+    this.new_total = this.calculateTotal()
   }
 
   // address 
@@ -1441,16 +1468,13 @@ this.items.controls.forEach((res:any,i :number)=>{
     this.totalAmount = total
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
-    const decimalPart = roundedTotal - Math.floor(roundedTotal);
+    // const decimalPart = roundedTotal - Math.floor(roundedTotal);
     // setTimeout(() => {
       this.calculateRoundoffValue()
     // }, 3000);
-    if (decimalPart >= 0.5) {
-      return Math.floor(roundedTotal) + 1;
-    } else {
-      return Math.floor(roundedTotal);
-    }
+    // return decimalPart >= 0.5 ? Math.floor(roundedTotal) + 1 : Math.floor(roundedTotal);
 
+    return Math.round(roundedTotal);
   }
   roudoffValue: any
   // calculateRoundoffValue(): any {

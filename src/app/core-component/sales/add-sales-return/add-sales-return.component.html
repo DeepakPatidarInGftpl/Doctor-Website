@@ -806,9 +806,32 @@
                                         <!-- <input type="text" formControlName="roundoff" class="input" [ngModel]="0" style="display: none;"> -->
                                     </h5>
                                 </li>
+
+                                <li>
+                                    <h4>Flat Discount</h4>
+                                    <h5>
+                                        <div [align]="'right'" class="input-group mb-3" style="width: 60%;float: inline-end;">
+                                            <button class="btn btn-secondary"  (click)="ShowRupeeAndPer()" type="button" id="button-addon2">{{ showPercentag ? '%' : '&#8377;'}}</button>
+                                            <input type="text" #flat_discounts placeholder="0.00" [formControl]="flat_discount" class="form-control" >
+                                          </div>
+                                    </h5>
+
+                                </li>
+
+
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                    <h5>
+                                         <!-- {{calculateTotalForAll().toFixed(2) | currency:'INR'}} 
+                                           -->
+                                           <span *ngIf="flat_discounts.value">
+                                            {{new_total | currency:'INR'}}
+                                        </span>
+                                        <span *ngIf="showPercentag && !flat_discounts.value">
+                                            {{(calculateTotalForAll().toFixed(0)) | currency:'INR'}}
+                                        </span>
+                                         
+                                         <input type="text"
                                             formControlName="total"
                                             [value]="calculateTotalForAll().toFixed(2) | currency:'INR'" class="input"
                                             style="display: none;"></h5>

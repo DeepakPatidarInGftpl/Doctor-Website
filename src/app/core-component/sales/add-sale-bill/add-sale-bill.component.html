@@ -1074,9 +1074,30 @@
                                         <!-- <input type="text" formControlName="roundoff" class="input" [ngModel]="0" style="display: none;"> -->
                                     </h5>
                                 </li>
+
+                                <li>
+                                    <h4>Flat Discount</h4>
+                                    <h5>
+                                        <div [align]="'right'" class="input-group mb-3" style="width: 60%;float: inline-end;">
+                                            <button class="btn btn-secondary"  (click)="ShowRupeeAndPer()" type="button" id="button-addon2">{{ showPercentag ? '%' : '&#8377;'}}</button>
+                                            <input type="text" #flat_discounts placeholder="0.00" [formControl]="flat_discount" class="form-control" >
+                                          </div>
+                                    </h5>
+
+                                </li>
+
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                    <h5>
+                                         <!-- {{calculateTotalForAll().toFixed(2) | currency:'INR'}} -->
+                                         
+                                         <span *ngIf="flat_discounts.value">
+                                            {{new_total | currency:'INR'}}
+                                        </span>
+                                        <span *ngIf="showPercentag && !flat_discounts.value">
+                                            {{(calculateTotalForAll().toFixed(0)) | currency:'INR'}}
+                                        </span>
+                                         <input type="text"
                                             formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>
@@ -1092,7 +1113,7 @@
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow" (click)="submit('print')" *ngIf="!loaderPrint">Save &
                             Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
@@ -1107,11 +1128,11 @@
 
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow"  *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             &nbsp; Save</button>
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow" *ngIf="!loaderCreate" (click)="submit('new')">Save &
                             Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

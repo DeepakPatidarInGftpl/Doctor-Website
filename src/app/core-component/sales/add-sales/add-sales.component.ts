@@ -143,6 +143,11 @@ export class AddSalesComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     );
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * value) / 100 : this.calculateTotalForAll() - value;
+      },
+    });
 
 
     this.taxForm = this.fb.group({
@@ -186,7 +191,16 @@ export class AddSalesComponent implements OnInit {
     this.getCategory();
     this.getProfile();
     this.getEmployee();
+  };
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * ctrl_val / 100) : this.calculateTotalForAll() - ctrl_val;
   }
+
 
   prefixNo: any;
   getprefix() {

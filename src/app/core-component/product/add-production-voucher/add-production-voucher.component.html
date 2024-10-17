@@ -98,7 +98,9 @@
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                         (keyup)="getVariant(id.value,i,'barcode')"
-                                                        (blur)="hideSearch()">
+                                                        (blur)="hideSearch()"
+                                                        style="width: 160px;"
+                                                        >
                                                 </td>
                                                 <td colspan="1">
                                                     <div class="form-group d-flex align-items-center"
@@ -107,7 +109,7 @@
                                                             aria-label="Search Products" matInput
                                                             [formControl]="myControl.at(i)"
                                                             (input)="getVariant($event.target.value,i,'')"
-                                                            [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                            [matAutocomplete]="autos" style="box-sizing: border-box;width: 160px;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
                                                             <ng-container *ngFor="let option of variantList[i]">
                                                                 <mat-option *ngIf="option?.is_active==true"
@@ -223,20 +225,20 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="mrp" class="input"></td>
-                                                <td><input type="number" formControlName="cost_price" class="input">
+                                                <td><input type="number" style="width: 100px;"  formControlName="qty" class="input"></td>
+                                                <td><input type="number" style="width: 100px;" formControlName="mrp" class="input"></td>
+                                                <td><input type="number" style="width: 100px;" formControlName="cost_price" class="input">
                                                 </td>
-                                                <td><input type="number" formControlName="selling_price_online"
+                                                <td><input type="number" style="width: 100px;" formControlName="selling_price_online"
                                                         class="input"></td>
-                                                <td><input type="number" formControlName="selling_price_offline"
+                                                <td><input type="number" style="width: 100px;" formControlName="selling_price_offline"
                                                         class="input"></td>
-                                                <td><input type="number" formControlName="selling_price_employee"
+                                                <td><input type="number" style="width: 100px;" formControlName="selling_price_employee"
                                                         class="input"></td>
-                                                <td><input type="number" formControlName="selling_price_dealer"
+                                                <td><input type="number" style="width: 100px;" formControlName="selling_price_dealer"
                                                         class="input"></td>
-                                                <td><input type="number" formControlName="discount" class="input"></td>
-                                                <td><input type="number" formControlName="additional_discount"
+                                                <td><input type="number" style="width: 100px;" formControlName="discount" class="input"></td>
+                                                <td><input type="number" style="width: 100px;" formControlName="additional_discount"
                                                         class="input"></td>
 
                                             </tr>
@@ -333,7 +335,9 @@
                                                         [attr.data-index]="i"
                                                         [value]="barcodeConsumed[i] !== undefined ? barcodeConsumed[i] : ''"
                                                         #id (keyup)="getVariantConsumed(id.value,i,'barcode')"
-                                                        (blur)="hideSearch()">
+                                                        (blur)="hideSearch()"
+                                                        style="width: 160px;"
+                                                        >
                                                 </td>
                                                 <td colspan="1">
                                                     <div class="form-group d-flex align-items-center"
@@ -342,7 +346,7 @@
                                                             aria-label="Search Products" matInput
                                                             [formControl]="myControlConsumed.at(i)"
                                                             (input)="getVariantConsumed($event.target.value,i,'')"
-                                                            [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                            [matAutocomplete]="autos" style="box-sizing: border-box;width: 160px;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
                                                             <ng-container *ngFor="let option of variantList2[i]">
                                                                 <mat-option *ngIf="option?.is_active==true"
@@ -463,6 +467,7 @@
                                                 <td>
                                                     <select formControlName="batch_id"
                                                     (change)="hendelChange($event)"
+                                                    style="width: 150px;"
                                                     >
                                                     <ng-container *ngIf="selectedBatch[i]?.length>0">
                                                         <option disabled selected>Select Batch</option>
@@ -475,40 +480,40 @@
                                                         <option disabled selected>Batch Not Available</option>
                                                     </ng-container>
                                                 </select></td>
-                                                <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="mrp" class="input"></td>
+                                                <td><input type="number"  style="width: 100px;" formControlName="qty" class="input"></td>
+                                                <td><input type="number"  style="width: 100px;" formControlName="mrp" class="input"></td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Cost_Price}}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Online_Price}}    
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Offline_Price}}    
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Employee_Price}}    
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Dealer_Price}}    
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Discount}}    
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="readonly">
+                                                    <div class="readonly"  style="width: 100px;">
                                                         {{Additional_Discount}}    
                                                     </div>
                                                 </td>

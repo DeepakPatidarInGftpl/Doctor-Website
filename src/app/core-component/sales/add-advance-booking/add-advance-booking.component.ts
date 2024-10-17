@@ -124,6 +124,11 @@ export class AddAdvanceBookingComponent implements OnInit {
       },
     });
 
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * value) / 100 : this.calculateTotalForAll() - value;
+      },
+    });
     const financialYear = localStorage.getItem('financialYear');
 
     this.dueDateValidation(financialYear);
@@ -158,7 +163,16 @@ export class AddAdvanceBookingComponent implements OnInit {
     this.getprefix();
     this.getProfile();
     this.getEmployee();
+  };
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotalForAll() - (this.calculateTotalForAll() * ctrl_val / 100) : this.calculateTotalForAll() - ctrl_val;
   }
+
 
   updateDueDateMin(selectedDate: string, financialYear) {
     const dateControl = this.saleEstimateForm.get('due_date');

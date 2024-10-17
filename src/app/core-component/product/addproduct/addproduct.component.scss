@@ -215,3 +215,20 @@ input[type="button"] {
     height: 40px;
     border: 1px solid rgba(145, 158, 171, 0.32);
 }
+
+.set_h{
+    float: right;
+    height: 20px;
+    width: 20px;
+}
+.new_dev{
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-end;
+    gap: 8px;
+    -webkit-align-items: center;
+    justify-content: flex-end;
+    -webkit-justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}

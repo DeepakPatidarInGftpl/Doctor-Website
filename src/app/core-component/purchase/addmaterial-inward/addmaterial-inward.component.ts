@@ -111,6 +111,12 @@ export class AddmaterialInwardComponent implements OnInit {
       },
     });
 
+    this.flat_discount.valueChanges.subscribe({
+      next: (value) => {
+        this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * value) / 100 : this.calculateTotal() - value;
+      },
+    });
+
 
     const financialYear = localStorage.getItem('financialYear');
 
@@ -154,6 +160,15 @@ export class AddmaterialInwardComponent implements OnInit {
       //     console.log('error in company');
       //   }
     })
+  };
+
+  flat_discount : FormControl = new FormControl();
+  showPercentag : boolean = true;
+  new_total : number
+  ShowRupeeAndPer(){
+    this.showPercentag = !this.showPercentag;
+    const ctrl_val = this.flat_discount.value;
+    this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * ctrl_val / 100) : this.calculateTotal() - ctrl_val;
   }
 
   materialDateValidation(financialYear) {
