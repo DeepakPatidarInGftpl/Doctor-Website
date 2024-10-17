@@ -1,13 +1,1 @@
-<form [formGroup]="taxForm">
-    <div formArrayName="items">
-      <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
-        <input formControlName="price" placeholder="Price" type="number" />
-        <input formControlName="quantity" placeholder="Quantity" type="number" />
-        <!-- Display the calculated tax in each row -->
-        <input formControlName="tax" placeholder="Tax" type="number" readonly />
-        <button (click)="removeItem(i)">Remove</button>
-      </div>
-    </div>
-    <button (click)="addItem()">Add Item</button>
-</form>
-  
+<app-text-editor></app-text-editor>

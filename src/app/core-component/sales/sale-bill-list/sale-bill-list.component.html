@@ -160,6 +160,40 @@
                                         value)</span>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                               
+                                    <label class="mb-2"> Product Name</label>
+                                  
+                                      <div class="form-group d-flex item-align-center w-100"
+                                      style="margin-bottom: 0;">
+                                      <input type="text" placeholder="Search Product"
+                                          aria-label="Search Products" matInput
+                                          [formControl]="ProductSerchas"
+                                       
+                                          [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                      <mat-autocomplete #autos="matAutocomplete">
+                                          <ng-container *ngFor="let option of variantList">
+                                              <mat-option *ngIf="option?.is_active==true"
+                                                  [value]="option?.product_title + ' ' + option?.variant_name"
+                                                  (onSelectionChange)="variantChanged(option)"
+                                                  style="color:#FF9F43">
+                                                  {{ option?.product_title + ' ' +
+                                                  option?.variant_name}}
+                                              </mat-option>
+                                          </ng-container>
+                                          
+                                          <mat-option *ngIf="searchLength?.toString()?.length < 2"
+                                              class="is-loading">
+                                              Please Enter 3 or more characters
+                                          </mat-option>
+                                      </mat-autocomplete>
+                                      <!-- <i class="ion-information circle ms-2" data-bs-toggle="tooltip"
+                                          title="ion-information" (click)="openModalProduct(i)"></i> -->
+
+                                  </div>
+                                
+                                </div>
+                         
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -182,9 +216,9 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Customer Bill No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sale Bill Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Customer Bill No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sale Order<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th> -->
@@ -207,13 +241,19 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//sales/salesbilldetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
+                            <a [routerLink]="products?.customer?.url"
+                                style="line-height: 3; font-weight: 800;">{{products?.customer?.name + ' (' + products?.customer?.username
                                 + ')'}}</a>
                         </td>
+                        <td>
+                            <a style="font-weight: 800;"
+                            routerLink="//sales/salesbilldetails/{{products.id}}"
+                            >
+                                {{products?.customer_bill_no}}
+                            </a>
+                            </td>
                         <td>{{products?.bill_date}}</td>
                         <td>{{products?.due_date}}</td>
-                        <td>{{products?.customer_bill_no}}</td>
                         <td>{{products?.payment_terms?.title}}</td>
                         <td>{{products?.sale_order?.sale_order_no}}</td>
                         <!-- <td>{{products?.subtotal}}</td> -->

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -14,6 +14,8 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import * as bootstrap from 'bootstrap'
+import { PurchaseBillPaymentComponent } from '../purchase-bill-payment/purchase-bill-payment.component';
+import { creditLimitInterfase } from 'src/app/interfaces/account';
 @Component({
   selector: 'app-addpurchase-bill',
   templateUrl: './addpurchase-bill.component.html',
@@ -29,7 +31,7 @@ export class AddpurchaseBillComponent implements OnInit {
   discount: any;
   totalTax: any;
   roundOff: any;
-
+@ViewChild('child') __component : PurchaseBillPaymentComponent
   constructor(
     private purchaseService: PurchaseServiceService,
     private fb: FormBuilder,
@@ -438,6 +440,8 @@ export class AddpurchaseBillComponent implements OnInit {
   selectBatch: any;
   selectPaymentTerm: any;
   supplierId: any;
+  supplierID : number;
+  userIDs :number
   oncheck(event: any, data: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
@@ -478,6 +482,8 @@ export class AddpurchaseBillComponent implements OnInit {
         .patchValue(this.getPaymentTerms);
       this.supplierAddress = res;
       console.log(res);
+      this.supplierID = res.id
+      this.userIDs = res.userid.id;
 
       this.supplierAddress.address.map((res: any) => {
         this.selectedAddressBilling = res;
@@ -1378,12 +1384,31 @@ this.items.controls.forEach((res:any,i :number)=>{
     const isValid = cartTotal > 0;
     return isValid;
   }
+  loaderPayment = false;
 
-  submit(type: any) {
+  supplierALLData : any
+
+  ShowPaymentModal(type :string){
+    this.loaderPayment = true;
+   let date = this.purchaseBillForm.get('supplier_bill_date').value;
+   let id = this.supplierID;
+   this.supplierALLData = {
+    id ,
+    date
+   }
+   
+    var myModal = new bootstrap.Modal(document.getElementById('Payment_Modal'))
+    myModal.show();
+
+  }
+
+
+async  submit(type: any,btn?:any) {
     this.checkCartValidation();
     console.log(this.purchaseBillForm.value);
     if (this.checkCartValidationSync()) {
       if (this.purchaseBillForm.valid) {
+        const formdata: any = new FormData();
         if (type == 'new') {
           this.loaderCreate = true;
         } else if (type == 'save') {
@@ -1392,8 +1417,20 @@ this.items.controls.forEach((res:any,i :number)=>{
           this.loaderPrint = true;
         } else if (type == 'draft') {
           this.loaderDraft = true;
+        }else if (type == 'payment') {
+          
+       const result =  await this.__component.Submit();
+       console.log(result)
+         if (result?.success == false) {
+            return
+          }
+         formdata.append('payment',JSON.stringify(result));
+         await btn.click();
         }
-        let formdata: any = new FormData();
+
+
+
+        
         formdata.append('party', this.purchaseBillForm.get('party')?.value);
         formdata.append(
           'supplier_bill_date',
@@ -1559,6 +1596,17 @@ this.items.controls.forEach((res:any,i :number)=>{
                   timeOut: 1000,
                 });
                 this.router.navigate(['//purchase/goodsReceivedNote-list']);
+              } else if (type == 'payment') {
+            
+                const myModal = new bootstrap.Modal(document.getElementById('Payment_Modal'))
+                myModal.hide();
+                 console.log('claosss')
+                this.loaderPayment = false;
+                 
+                this.toastrService.success(this.getRes.msg, '', {
+                  timeOut: 1000,
+                });
+                this.router.navigate(['//purchase/goodsReceivedNote-list']);
               } else {
                 this.loader = false;
                 this.toastrService.success(this.getRes.msg, '', {
@@ -1575,6 +1623,8 @@ this.items.controls.forEach((res:any,i :number)=>{
                 this.loaderPrint = true;
               } else if (type == 'draft') {
                 this.loaderDraft = true;
+              } else if (type == 'payment') {
+                this.loaderPayment = true;
               }
             }
           },
@@ -1587,6 +1637,8 @@ this.items.controls.forEach((res:any,i :number)=>{
               this.loaderPrint = true;
             } else if (type == 'draft') {
               this.loaderDraft = true;
+            } else if (type == 'payment') {
+              this.loaderPayment = true;
             }
           }
         );
@@ -2330,7 +2382,20 @@ this.items.controls.forEach((res:any,i :number)=>{
     event.stopPropagation();
   }
 
+  // show credit limit fun
+  creditLimitList :creditLimitInterfase 
+  showCreditLimit(){
+
+    this.contactService.getCreditLimitByUserId(this.userIDs).subscribe({
+      next : (value : creditLimitInterfase) => {
+           
+            this.creditLimitList = value ;
+      },
+    })
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
+

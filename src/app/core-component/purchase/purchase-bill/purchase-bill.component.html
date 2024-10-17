@@ -205,8 +205,8 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Bill date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Invoice No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Bill date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier bill No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Inward No<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Payment Term<i class="fa fa-sort"></i></th> -->
@@ -234,11 +234,17 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//purchase/purchase-billDetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.party?.name}}</a>
+                            <a 
+                            routerLink="//contacts/supplierDetails/{{products?.party?.id}}"
+                                style="line-height: 3; font-weight:800 ;">{{products?.party?.name}}</a>
                         </td>
+                        <td>
+                            <a  routerLink="//purchase/purchase-billDetails/{{products.id}}"
+                           
+                            style="line-height: 3; font-weight: 800;">{{products?.supplier_bill_no}}</a>
+                            
+                            </td>
                         <td>{{products?.supplier_bill_date | date: 'dd-MMMM-yyyy'}}</td>
-                        <td>{{products?.supplier_bill_no}}</td>
                         <td>{{products?.refrence_bill_no}}</td>
                         <td>{{products?.material_inward_no?.material_inward_no}}</td>
                         <!-- <td>{{products?.payment_term?.title}}</td> -->

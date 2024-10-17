@@ -143,10 +143,16 @@ export class SalesService {
   }
 
   // sales bill
-  // getSalesBillfy(fy:any) {
-  //   let url = this.apiUrl + '/pv-api/sale_bill/?financial_year=';
-  //   return this.http.get(`${url}${fy}`)
-  // }
+  getSalesBillfyWithProductId(fy:any,pId: number,date:any) {
+    let url = this.apiUrl + '/pv-api/sale_bill/';
+    const Qurey = new URLSearchParams();
+    Qurey.append('financial_year',fy)
+    Qurey.append('product_id',String(pId))
+    Qurey.append('start_date',date.s)
+    Qurey.append('end_date',date.e)
+    // return this.http.get(url )
+    return this.http.get<any>(url + (Qurey.toString() ? '?' + Qurey.toString() : ''));
+  }
   getSalesBillfy(fy: any, branch: any) {
     console.log(branch, 'branch');
     console.log(branch.length, 'branch');
@@ -155,6 +161,7 @@ export class SalesService {
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
+    
     if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);

@@ -7,6 +7,7 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     SharedModuleModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatAutocompleteModule
   ],
   providers:[
     DatePipe

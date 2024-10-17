@@ -244,9 +244,15 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products?.receipt_voucher_no}}</td>
-                        <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}"
-                                style="line-height: 3;">{{ products?.payer?.company_name }}</a></td>
+                        <td>  <a style="font-weight: 800;" routerLink="//transaction/detailsrecieptVoucher/{{products.id}}">
+                            {{products?.receipt_voucher_no}}
+                        </a></td>
+                        <td class="productimgname">
+                            
+                            <a [routerLink]="products?.payer?.url"
+                                style="line-height: 3;font-weight: 800;">{{ products?.payer?.company_name }}</a>
+                            
+                            </td>
                         <td class="text-center">{{products?.receipt_type}}</td>
                         <td>{{products?.mode_type}}</td>
                         {{ products?.payer?.title && products?.payer?.company_name ? products?.payer?.company_name + ' (' +

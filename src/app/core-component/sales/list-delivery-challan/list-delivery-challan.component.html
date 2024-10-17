@@ -169,10 +169,18 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products.delivery_challan_bill_no}}</td>
+
+
+                        <td>
+                            <a style="font-weight: 800;"
+                            routerLink="//sales/detail-delivery-challan/{{products.id}}"
+                            >
+                            {{products.delivery_challan_bill_no}}
+                        </a>
+                           </td>
                         <td class="productimgname">
-                            <a routerLink="//sales/detail-delivery-challan/{{products.id}}"
-                                style="line-height: 3;">{{products?.account?.company_name ?
+                            <a [routerLink]="products?.account?.url"
+                                style="line-height: 3;font-weight: 800;">{{products?.account?.company_name ?
                                 products?.account?.company_name : (products?.account?.title + ' (' +
                                 products?.account?.account_id + ')')}}</a>
                         </td>

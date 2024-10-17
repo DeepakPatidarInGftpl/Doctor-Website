@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,8 @@ import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 import * as bootstrap from 'bootstrap';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
+import { PaymentsComponent } from '../../payments/payments.component';
+import { creditLimitInterfase } from 'src/app/interfaces/account';
 
 
 @Component({
@@ -67,6 +69,7 @@ export class AddSaleBillComponent implements OnInit {
   isDiscountOnInvoiceSelected = false;
   isQuantityPerPercentageSelected = false;
   isQuantityPerQuantitySelected = false;
+  @ViewChild('child') __childComponent!: PaymentsComponent;
 
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
@@ -78,7 +81,6 @@ export class AddSaleBillComponent implements OnInit {
     private commonService: CommonServiceService,
     private cdr: ChangeDetectorRef,
     private offerService: OfferService,
-    private cartService: PosCartService,
   ) {
   }
 
@@ -703,13 +705,15 @@ export class AddSaleBillComponent implements OnInit {
   selectBatch: any;
   paymentTerms: any;
   userType: any;
-
+  userID :number;
+  userIDs:number
   oncheck(data: any) {
     console.log(data);
+    this.userID = data.detail.account
     const userName = data?.username;
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-
+    this.userIDs = data?.detail?.userid?.id
     let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
     this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
       this.saleOderList = res;
@@ -1528,17 +1532,23 @@ this.items.controls.forEach((res:any,i :number)=>{
     var myModal = new bootstrap.Modal(document.getElementById('Payment_Modal'))
     myModal.show();
 
+  }
+  creditLimitList: creditLimitInterfase
 
+  showCreditLimit(){
 
-return
-    this.submit(type)
+    this.contactService.getCreditLimitByUserId(this.userIDs).subscribe({
+      next : (value : creditLimitInterfase) => {
+         this.creditLimitList = value ;
+      },
+    })
   }
 
 
-
-  submit(type: any) {
-    console.log(this.saleBillForm);
+ async submit(type: any , btn?:any) {
     if (this.saleBillForm.valid && !this.isLimitErrorShown) {
+      let formdata: any = new FormData();
+
       if (type == 'new') {
         this.loaderCreate = true;
       } else if (type == 'save') {
@@ -1548,20 +1558,18 @@ return
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-      // else if (type == 'payment') {
-      //   this.loaderPayment = true;
-      //   this.ShowPaymentModal();
-      //   console.log('payment')
-      //   return
-      // }
-
+      else if (type == 'payment') {
+       
+        const result = await this.__childComponent.Submit();
+        console.log(result)
+      if (result?.success == false) {
+        return
+      }
       
-
-
-
-
-
-      let formdata: any = new FormData();
+      formdata.append('payment', JSON.stringify(result));
+       await  btn.click()
+    
+      }
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
       formdata.append('bill_date', this.saleBillForm.get('bill_date')?.value);
       formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
@@ -1696,7 +1704,7 @@ return
       });
       formdata.append('sale_bill_cart', JSON.stringify(cartData));
 
-      this.saleService.addSalesBill(formdata).subscribe(res => {
+      this.saleService.addSalesBill(formdata).subscribe(async (res) => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
@@ -1713,6 +1721,18 @@ return
             this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesbill-list'])
+          } else if (type == 'payment') {
+            console.log(type ,'pay' )
+           
+            const myModal = new bootstrap.Modal(document.getElementById('Payment_Modal'))
+             await myModal.hide();
+            //  console.log('claosss')
+            this.loaderPayment = false;
+             
+            this.toastrService.success(this.getRes.msg, '', {
+              timeOut: 1000,
+            });
+            this.router.navigate(['//sales/salesbill-list'])
           } else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
@@ -1727,6 +1747,8 @@ return
             this.loaderPrint = false;
           } else if (type == 'draft') {
             this.loaderDraft = false;
+          } else if (type == 'payment'){
+            // this.loaderPayment = false;
           }
           this.toastrService.error(this.getRes.error.status[0])
         }
@@ -1739,6 +1761,8 @@ return
           this.loaderPrint = false;
         } else if (type == 'draft') {
           this.loaderDraft = false;
+        } else if (type == 'payment'){
+          this.loaderPayment = false;
         }
       })
     } else {
@@ -1750,6 +1774,8 @@ return
         this.loaderPrint = false;
       } else if (type == 'draft') {
         this.loaderDraft = false;
+      }else if (type == 'payment'){
+        this.loaderPayment = false;
       }
       this.saleBillForm.markAllAsTouched()
       this.toastrService.error('Please Fill All The Required Fields')

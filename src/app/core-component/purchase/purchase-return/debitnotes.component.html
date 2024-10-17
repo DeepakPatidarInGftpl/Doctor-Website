@@ -180,10 +180,16 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products?.purchase_return_no}}</td>
-                        <td class="productimgname">
+                        <td>
                             <a routerLink="//purchase/details-purchaseReturn/{{products.id}}"
-                                style="line-height: 3;">{{products?.party?.name}}</a>
+                            style="line-height: 3;font-weight: 800;">{{products?.purchase_return_no}}
+                        </a>
+                            
+                            </td>
+                        <td class="productimgname">
+                            <a routerLink="//contacts/supplierDetails/{{products?.party?.id}}"
+                                style="line-height: 3;font-weight: 800;">{{products?.party?.name}}</a>
+                           
                         </td>
                         <td>{{products?.purchase_return_date | date: 'dd-MMMM-yyyy'}}</td>
                         <!-- <td>{{products?.purchase_bill?.supplier_bill_no}}</td> -->
