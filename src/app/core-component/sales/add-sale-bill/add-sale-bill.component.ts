@@ -713,7 +713,8 @@ export class AddSaleBillComponent implements OnInit {
     const userName = data?.username;
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    this.userIDs = data?.detail?.userid?.id
+    this.userIDs = data?.detail?.userid?.id;
+    this.showCreditLimit(this.userIDs)
     let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
     this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
       this.saleOderList = res;
@@ -1533,13 +1534,16 @@ this.items.controls.forEach((res:any,i :number)=>{
     myModal.show();
 
   }
-  creditLimitList: creditLimitInterfase
+  creditLimitList: creditLimitInterfase;
 
-  showCreditLimit(){
-
-    this.contactService.getCreditLimitByUserId(this.userIDs).subscribe({
+  billShow : boolean = false;
+  showCreditLimit(id = this.userIDs){
+   this.contactService.getCreditLimitByUserId(id).subscribe({
       next : (value : creditLimitInterfase) => {
-         this.creditLimitList = value ;
+         this.creditLimitList = value;
+         if (value.billable_amount <= this.calculateTotalForAll()) {
+            this.billShow = true;
+         }
       },
     })
   }

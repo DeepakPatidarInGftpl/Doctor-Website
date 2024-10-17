@@ -1092,7 +1092,7 @@
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow" (click)="submit('print')" *ngIf="!loaderPrint">Save &
                             Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
@@ -1107,11 +1107,11 @@
 
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow"  *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             &nbsp; Save</button>
-                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                        <button class="btn btn-submit me-2 mb-1" [disabled]="billShow" *ngIf="!loaderCreate" (click)="submit('new')">Save &
                             Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
