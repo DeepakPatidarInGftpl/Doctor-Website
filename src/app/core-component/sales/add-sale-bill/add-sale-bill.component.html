@@ -34,6 +34,10 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
+                        <i class="ion-information circle ms-2" 
+                        data-bs-toggle="modal" (click)="showCreditLimit()" data-bs-target="#credit_limit"
+                        
+                        ></i>
                         <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
                             Customer
                         </span>
@@ -1274,16 +1278,64 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Payment</h5>
-          <button type="button" class="btn btn-sm p-0 btn-close" data-bs-dismiss="modal" aria-label="Close">&#10005;</button>
+          <button type="button" class="btn btn-sm p-0 btn-close" data-bs-dismiss="modal" (click)="loaderPayment = false" aria-label="Close">&#10005;</button>
         </div>
       
         <div class="modal-body" *ngIf="loaderPayment">
-            <app-payments [total]="calculateTotalForAll()"></app-payments>
+            <app-payments #child [total]="calculateTotalForAll()" [creditLimits]="userIDs"  [userId]="userID"></app-payments>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" hidden data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Proceed To Pay</button>
+          <button type="button" class="btn btn-secondary" #paymentsclos hidden data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submit('payment',paymentsclos)">Proceed To Pay</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="modal fade" id="credit_limit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+          <button type="button" class="btn btn-sm p-0 btn-close  text-dark" data-bs-dismiss="modal" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <div class="card" *ngIf="creditLimitList">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="border">
+                            <th class="border-end">Credit Limit</th>
+                            <td class="text-center">{{creditLimitList?.credit_Limit| currency : "INR"}}</td>
+                        </tr>
+                       <tr class="border">
+                        <th class="border-end"> Closing Balance</th>
+                        <td class="text-center">{{creditLimitList?.closing_balance_type +"  "+(creditLimitList?.closing_balance | currency : "INR")}}</td>
+                       </tr>
+                        
+                     <tr class="border">
+                        <th class="border-end">Billable Amount</th>
+                        <td class="text-center">{{creditLimitList?.billable_amount| currency : "INR"}}</td>
+                     </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>

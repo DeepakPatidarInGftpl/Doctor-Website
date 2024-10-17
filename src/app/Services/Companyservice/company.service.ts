@@ -1,7 +1,6 @@
 import { company } from './../../interfaces/company';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { image } from 'ngx-editor/schema/nodes';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // import { company } from 'src/app/interfaces/company';
 import { environment } from 'src/environments/environment';

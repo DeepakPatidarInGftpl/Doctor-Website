@@ -18,3 +18,9 @@ export interface Account {
     title:string,
     type_of_customer:string
 }
+export interface creditLimitInterfase{
+    billable_amount : number,
+    closing_balance : number
+    closing_balance_type : string
+    credit_Limit : number
+  }

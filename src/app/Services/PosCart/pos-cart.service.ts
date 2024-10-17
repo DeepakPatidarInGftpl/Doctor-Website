@@ -218,56 +218,40 @@ export class PosCartService {
 
   receiptPayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/receipt_advance_payment_or_againest_bill/';
-    return this.http.post(url, data, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.post(url, data)
   }
 
   purchasePayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/party_advance_payment_or_againest_bill/';
-    return this.http.post(url, data, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.post(url, data)
   }
 
   expensePayment(data: any) {
     let url = this.apiUrl + '/pv-api/pos/expance/';
-    return this.http.post(url, data, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.post(url, data)
   }
 
-  getPOSOrders(page, pageSize) {
-    let url = this.apiUrl + `/pv-api/pos/pos_orders/?page=${page}&page_size=${pageSize}`;
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+  getPOSOrders(page :any, pageSize :any,productId ?: number,data ?: any) {
+    let url = this.apiUrl + `/pv-api/pos/pos_orders/`;
+    const qurey = new URLSearchParams();
+
+    qurey.append('page',page);
+    qurey.append('page_size',pageSize);
+   if (productId) qurey.append('product_id',String(productId));
+   if (data) qurey.append('start_date',String(data.s));
+   if (data) qurey.append('end_date',String(data.e));
+
+    return this.http.get(url + (qurey.toString() ? '?' + qurey.toString() : ''))
   }
 
   getPOSOrderDetails(id: any) {
     let url = this.apiUrl + '/pv-api/pos/pos_order_detail/?order_id=' + id;
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.get(url)
   }
 
   getExpensePayments() {
     let url = this.apiUrl + '/pv-api/pos/expance/';
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.get(url)
   }
 
   getPurchasePayments() {

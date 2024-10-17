@@ -14,6 +14,7 @@
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
+                      
                             <input type="text" placeholder="Search Supplier/Company" aria-label="Company" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
@@ -32,7 +33,12 @@
                                         Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
+                           
                         </mat-form-field>
+                        <!-- <i class="ion-information circle ms-2" 
+                            data-bs-toggle="modal" (click)="showCreditLimit()" data-bs-target="#credit_limit"
+                            
+                            ></i> -->
                         <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
                             supplier
                         </span>
@@ -1222,12 +1228,12 @@
                     Submit</button>
                 <a routerLink="//purchase/goodsReceivedNote-list" class="btn btn-cancel text-white">Cancel</a> -->
                 <div class="row">
-                    <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="col-lg-3 col-sm-4 col-12">
                         <a routerLink="//purchase/goodsReceivedNote-list" class="btn btn-cancel text-white me-2 mb-1"
                             style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
-                    <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="col-lg-5 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save &
                             Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
@@ -1237,7 +1243,17 @@
                             Draft</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                            aria-hidden="true"></span>&nbsp; Save as Draft</button>
+
+
+
+                        <button class="btn btn-submit me-2 mb-1" (click)="ShowPaymentModal('payment')" *ngIf="!loaderPayment">
+                            Save as
+                            payment</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPayment" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Save as Payment</button>
+
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="!loader">Save</button>
@@ -1354,3 +1370,80 @@
       </div>
     </div>
   </div>
+
+
+
+  <!--Payment start Modal -->
+  <div class="modal fade" id="Payment_Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Payment</h5>
+          <button type="button" class="btn btn-sm p-0 btn-close" data-bs-dismiss="modal" (click)="(loaderPayment = false)" aria-label="Close">&#10005;</button>
+        </div>
+      
+        <div class="modal-body" *ngIf="loaderPayment">
+            <app-purchase-bill-payment #child [total]="calculateTotal()" [creditLimits]="userIDs" [userData]="supplierALLData"></app-purchase-bill-payment>
+            <!-- <app-payments  [total]="calculateTotalForAll()" ([paymentData])="submit($event)" [userId]="userID"></app-payments> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" #closed hidden data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submit('payment',closed)">Proceed To Pay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Payment end Modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--Credit limit modal start-->
+  <div class="modal fade" id="credit_limit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn btn-sm p-0 btn-close  text-dark" data-bs-dismiss="modal" aria-label="Close">&#x2715;</button>
+        </div>
+        <div class="modal-body">
+          <div class="card" *ngIf="creditLimitList">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="border">
+                            <th class="border-end">Credit Limit</th>
+                            <td class="text-center">{{creditLimitList.credit_Limit| currency : "INR"}}</td>
+                        </tr>
+                       <tr class="border">
+                        <th class="border-end"> Closing Balance</th>
+                        <td class="text-center">{{creditLimitList.closing_balance_type +"  "+(creditLimitList.closing_balance | currency : "INR")}}</td>
+                       </tr>
+                        
+                     <tr class="border">
+                        <th class="border-end">Billable Amount</th>
+                        <td class="text-center">{{creditLimitList.billable_amount| currency : "INR"}}</td>
+                     </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <!--Credit limit modal end-->

@@ -187,7 +187,7 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Estimate No. <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">User Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Estimate Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Expire Date <i class="fa fa-sort"></i></th>
@@ -208,10 +208,10 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td>{{products.estimate_no}}</td>
+                        <td> <a style="font-weight: 800;line-height: 3px;" routerLink="//sales/salesEstimatedetails/{{products.id}}">{{products.estimate_no}}</a>   </td>
                         <td class="productimgname">
-                            <a routerLink="//sales/salesEstimatedetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
+                            <a [routerLink]="products?.customer?.url"
+                                style="line-height: 3;font-weight: 800;">{{products?.customer?.name + ' (' + products?.customer?.username
                                 + ')'}}</a>
                         </td>
                         <td>{{products?.estimate_date}}</td>

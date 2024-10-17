@@ -141,7 +141,10 @@ isDelete:any;
 userDetails:any;
 isAdmin = false;
 
-
+ProductSerchas : FormControl = new FormControl('')
+variantList: any[] = [];
+searchLength :string;
+fyId :any;
   ngOnInit(): void {
     // this.saleService.getSalesBill().subscribe(res => {
     //   this.tableData = res;
@@ -156,6 +159,7 @@ isAdmin = false;
     let fy = localStorage.getItem('financialYear');
     console.warn(JSON.parse(fy));
     let fyId = JSON.parse(fy);
+    this.fyId = fyId;
     this.getSaleBill(fyId);
   }
   this.cs.userDetails$.subscribe((res: any) => {
@@ -206,16 +210,64 @@ isAdmin = false;
   this.getPaymentTerms();
   this.getEstimate();
   this.getBranch();
+  this.ProductSerchas.valueChanges.subscribe({
+    next : (value : string) => {
+      this.searchLength = value
+      if (value.length >= 3) {
+        this.getProduct(value)
+      }
+     
+    },
+  })
 
 
   }
 
+  getProduct(val:string){
+    this.saleService.filterVariant('','',val).subscribe({
+      next : (value) =>{
+        this.variantList = value
+      },
+    })
+  }
+  variantChanged(val:any){
+    let id = val.id;
+    let s = this.datePipe.transform( this.saleBillDateForm.value.start,'YYYY-MM-dd');
+    let e = this.datePipe.transform(this.saleBillDateForm.value.end,'YYYY-MM-dd');
+    let obj = {s,e}
+    if (s && e) {
+      this.saleService.getSalesBillfyWithProductId(this.fyId,id,obj).subscribe({
+        next : (result)=> {
+ 
+          this.filteredData = result
+        },
+      })
+}
+
+// console.log(val)
+  }
   //18-5
   getSaleBill(fy:any){
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
     console.log(idString?.length);
-    this.saleService.getSalesBillfy(fy,this.selectData).subscribe(res => {
+    this.saleService.getSalesBillfy(fy,this.selectData).subscribe((res:any[]) => {
+      const userMap = {
+        Customer: '//contacts/customerDetails/',
+        Supplier: '//contacts/supplierDetails/',
+        Dealer: '//contacts/detailDealer/',
+        Employee: '//contacts/employeeDetails/',
+        Transport: '//contacts/transportDetails/',
+        Vendor : '//contacts/vendorDetails/'
+      };
+      
+      res.forEach(item => {
+        const url = userMap[item?.customer?.user_type];
+        if (url) item.customer.url = `${url}${item?.customer?.detail?.id}`;
+       });
+
+
+
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -520,6 +572,7 @@ row.total
     this.selectEstimateNo=null;
     this.saleBillDateForm.reset();
     this.dueDateForm.reset();
+    this.ProductSerchas.reset();
     this.filterData();
   }
   changePg(val: any) {

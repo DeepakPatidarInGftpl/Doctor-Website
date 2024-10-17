@@ -154,11 +154,8 @@ export class EstimateListComponent implements OnInit {
     //16-5
    
     this.cs.userDetails$.subscribe((res: any) => {
-      if (res.role == 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
+     
+      this.isAdmin = (res?.role == 'admin')
     });
 
     if (localStorage.getItem('financialYear')) {
@@ -213,7 +210,19 @@ getEstimate(fy:any){
   console.log(idString);
   console.log(idString?.length);
   
-  this.saleService.getSalesEstimatefy(fy,this.selectData).subscribe(res => {
+  this.saleService.getSalesEstimatefy(fy,this.selectData).subscribe((res:any[]) => {
+    const userMap = {
+      Customer: '//contacts/customerDetails/',
+      Supplier: '//contacts/supplierDetails/',
+      Dealer: '//contacts/detailDealer/',
+      Employee: '//contacts/employeeDetails/',
+      Transport: '//contacts/transportDetails/',
+      Vendor : '//contacts/vendorDetails/'
+    };
+    res.forEach(item => {
+      const url = userMap[item?.customer?.user_type];
+      if (url)  item.customer.url = `${url}${item.customer.detail.id}`;
+    });
     this.tableData = res;
     this.loader = false;
     this.selectedRows = new Array(this.tableData.length).fill(false);

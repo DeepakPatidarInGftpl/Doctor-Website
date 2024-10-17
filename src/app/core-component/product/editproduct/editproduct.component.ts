@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
-import { Editor, Toolbar } from 'ngx-editor';
+import { Editor, Toolbar, } from 'ngx-editor';
+import * as eva from 'ngx-editor'
 import jsonDoc from './../../../doc';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Location } from '@angular/common';
@@ -11,7 +12,8 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-editproduct',
   templateUrl: './editproduct.component.html',
-  styleUrls: ['./editproduct.component.scss']
+  styleUrls: ['./editproduct.component.scss'],
+  
 })
 export class EditproductComponent implements OnInit {
 
@@ -41,7 +43,7 @@ export class EditproductComponent implements OnInit {
 
 
   editordoc = jsonDoc;
-  editor: Editor | any;
+  editor: Editor;
   toolbar: Toolbar = [
     ['bold', 'italic'],
     ['underline', 'strike'],
@@ -49,9 +51,19 @@ export class EditproductComponent implements OnInit {
     ['ordered_list', 'bullet_list'],
     [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
     ['link', 'image'],
-    // ['text_color', 'background_color'],
+    ['text_color', 'background_color'],
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
+
+
+
+
+
+
+
+
+
+
 
   get doc(): any {
     return this.productForm.get('description')

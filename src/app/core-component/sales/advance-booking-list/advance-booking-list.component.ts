@@ -560,7 +560,25 @@ getSaleAdvanceBooking(fy:any){
   const idString = JSON.stringify(this.selectData);
   console.log(idString);
   console.log(idString?.length);
-  this.saleService.getAdvanceBookingfy(fy,this.selectData).subscribe(res => {
+  this.saleService.getAdvanceBookingfy(fy,this.selectData).subscribe((res : any[]) => {
+
+
+
+    const userMap = {
+      Customer : '//contacts/customerDetails/',
+      Supplier : '//contacts/supplierDetails/',
+      Dealer : '//contacts/detailDealer/',
+      Employee : '//contacts/employeeDetails/',
+      Transport : '//contacts/transportDetails/',
+      Vendor : '//contacts/vendorDetails/'
+    };
+    
+    res.forEach(item => {
+      const url = userMap[item?.account?.detail?.user_type];
+      if (url) item.account.url = `${url}${item?.account?.detail?.id}`;
+     });
+
+
     this.tableData = res;
     this.loader=false;
     this.selectedRows = new Array(this.tableData.length).fill(false);

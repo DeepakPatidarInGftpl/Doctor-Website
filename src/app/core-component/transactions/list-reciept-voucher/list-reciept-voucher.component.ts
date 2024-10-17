@@ -579,7 +579,24 @@ if (str == 'Is Active') {
 
     this.transactionService
       .getRecieptVoucherFy(fy, this.selectData,date)
-      .subscribe((res : any) => {
+      .subscribe((res : any[]) => {
+
+        const userMap = {
+          Customer : '//contacts/customerDetails/',
+          Supplier : '//contacts/supplierDetails/',
+          Dealer : '//contacts/detailDealer/',
+          Employee : '//contacts/employeeDetails/',
+          Transport : '//contacts/transportDetails/',
+          Vendor : '//contacts/vendorDetails/'
+        };
+        
+        res.forEach(item => {
+          const url = userMap[item?.payer?.detail?.user_type];
+          if (url) item.payer.url = `${url}${item?.payer?.detail?.id}`;
+         });
+
+
+
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
