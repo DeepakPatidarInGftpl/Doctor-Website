@@ -68,11 +68,22 @@ export class DetailspurchaseBillComponent implements OnInit {
   totalSgstAmount = 0;
   total_tax: any[] = [];
   totalTaxAmount=0;
+  totaltaxsummary :any = {};
   getdata() {
-    this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
-      if (this.id == res.id) {
+    this.purchaseService.getPurchaseBillById(this.id).subscribe((res:any) => {
+      // if (this.id == res.id) {
         this.purchaseBillDetail = res
         this.supplierAddress = res;
+
+        if (res.TaxSummary.length > 0) {
+          ['cgst', 'igst', 'sgst', 'tax', 'taxable_value', 'total_tax', 'total_amount'].forEach(key => {
+            this.totaltaxsummary[key] = (this.totaltaxsummary[key] || 0) + res.TaxSummary.reduce((acc:number, element:any) => acc + element[key], 0);
+          });
+          console.log(this.totaltaxsummary);
+        }
+
+
+
         console.log(this.supplierAddress);
         this.supplierAddress?.party?.address.map((res: any) => {
           if (res?.address_type == 'Billing') {
@@ -193,7 +204,7 @@ export class DetailspurchaseBillComponent implements OnInit {
           })
 
         })
-      }
+      // }
     })
   }
   goBack() {

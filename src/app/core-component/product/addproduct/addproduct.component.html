@@ -433,9 +433,12 @@
 										<div class="form-group">
 											<label>Colors</label>
 											<div class="dropdown">
-												<button type="button" class="dropdown-toggle button" type="button"
+												<button type="button" class="dropdown-toggle button" 
 													data-bs-toggle="dropdown" aria-expanded="false">Select
 													Color</button>
+
+
+													
 												<ul class="dropdown-menu"
 													style="width: 100%; max-height: 300px; overflow-y: auto;">
 													<li><input type="text" placeholder="search color"
@@ -452,10 +455,15 @@
 																formArrayName="color" style="margin-right: 5px;"
 																[ngClass]="{'is-invalid': f['color'].touched && f['color'].invalid}"
 																[id]="'checkbox-' + i">
-
-															<label [for]="'checkbox-' + i"
-																(click)="onLabelClick($event)"
-																style="margin-bottom: 0;">{{color.title}}</label>
+																<div class="new_dev">
+																	<label [for]="'checkbox-' + i"
+																	(click)="onLabelClick($event)"
+																	style="margin-bottom: 0;">{{color.title}}</label>
+																 
+																<span  class="d-block" class="set_h" [style.background]="color.color_code"></span>	
+															
+																</div>
+														
 														</a>
 													</li>
 												</ul>
@@ -468,6 +476,13 @@
 												*ngIf="color && color.invalid && color.touched">Select Color </span>
 										</div>
 									</div>
+
+									<!-- Example single danger button -->
+
+
+
+
+
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
 											<label>Size*</label>
