@@ -1673,7 +1673,16 @@ this.items.controls.forEach((res:any,i :number)=>{
         TotalFloat = parseFloat(TotalString.toFixed(2));
       }
       console.warn(typeof (TotalFloat), 'total');
-      formdata.append('total', this.calculateTotalForAll());
+
+      let val = this.flat_discount.value;
+      let vals : number = ((this.calculateTotalForAll() * val) / 100);
+      this.new_total = this.showPercentag ? this.calculateTotalForAll() - vals : this.calculateTotalForAll() - val;
+       formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+      formdata.append('total', val ?  this.new_total : this.calculateTotalForAll());
+        
+
+
+      // formdata.append('total', this.calculateTotalForAll());
       //     formdata.append('total',parseFloat(this.saleBillForm.get('total')?.value));
       //end total 
 

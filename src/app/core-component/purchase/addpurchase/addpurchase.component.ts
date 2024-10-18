@@ -77,7 +77,6 @@ export class AddpurchaseComponent implements OnInit {
     const day = now.getDate().toString().padStart(2, '0');
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-
     const defaultDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
     this.purchaseForm = this.fb.group({
@@ -468,12 +467,21 @@ export class AddpurchaseComponent implements OnInit {
     }
   };
 
-  QutData:any[] =[]
+  QutData:any[] =[];
+
+
 CkqutApi(id:string, mrp:string){
   this.purchaseService.Ckqut(id,mrp).subscribe({
     next : (value:any)=> {
       this.QutData = value
       console.log(value,'deepak')
+    },
+  });
+
+  this.purchaseService.sale_and_purchase_qty_for_purchase_order(Number(id)).subscribe({
+    next : (value :any)=> {
+     this.QutData = {...this.QutData , ...value}
+      console.log(this.QutData)
     },
   })
 }
@@ -1035,6 +1043,7 @@ this.items.controls.forEach((res:any,i :number)=>{
     }
   }
 
+
   isCartQtyInvalid(index: number): boolean {
     const formControl = (this.getCart().controls[index] as FormGroup).get('qty');
     return formControl?.invalid && formControl?.touched;
@@ -1074,8 +1083,21 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total_discount', this.calculateTotalDiscount());
       formdata.append('round_off', this.purchaseForm.get('round_off')?.value);
       formdata.append('sub_total', this.purchaseForm.get('sub_total')?.value);
-      formdata.append('total', this.purchaseForm.get('total')?.value);
-      formdata.append('additional_discout', this.purchaseForm.get('additional_discout')?.value);
+
+
+      let val = this.flat_discount.value;
+        let vals : number = ((this.calculateTotal() * val) / 100);
+        this.new_total = this.showPercentag ? this.calculateTotal() - vals : this.calculateTotal() - val;
+         formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+        formdata.append('total', val ?  this.new_total : this.purchaseForm.get('total')?.value);
+          
+
+      // formdata.append('additional_discout', this.purchaseForm.get('additional_discout')?.value);
+      // formdata.append('total', this.purchaseForm.get('total')?.value);
+
+
+
+
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
