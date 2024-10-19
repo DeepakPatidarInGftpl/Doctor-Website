@@ -25,6 +25,29 @@
     </div>
     <div class="card-body pt-0">
         <form [formGroup]="paymentForm" >
+            <div class="row my-3" *ngIf="TypeOfuser?.ty == 'Customer'">
+                <div class="col-md-4">
+                    <label class="f-500">Total Redeem Points</label>
+                    <div class="py-2 border border-1 text-center" style="border-radius: 5px;">
+                        {{TypeOfuser?.point}}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="f-500"> Type</label>
+                    <select class="form-select" formControlName="point_type" >
+                        <option value="">Select Point Type</option>
+                        <option >Gift</option>
+                        <option >Amount</option>
+                      
+                      </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="f-500">Redeem Point</label>
+                    <input type="number" class="input" formControlName="redeem_point" placeholder="Enter Your Point" />
+                </div>
+                
+    
+            </div>
             <ng-container  formArrayName="paymentArray">
         <section class="border border-2 p-3 rounded" *ngFor="let ctrl of PaymentMothod.controls; let i = index " [formGroupName]="i">
 
@@ -87,7 +110,9 @@
                     </div>
                 </section>
             </ng-container>
-        </form>
+     
+    
+       </form>
     </div>
     <div class="card-footer">
         <p class="text-danger" *ngIf="showCrError">User Credit Limit Exceed! Please Pay The Balance</p> 

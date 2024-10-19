@@ -1,5 +1,5 @@
 import { __values } from 'tslib';
-import { AfterContentInit, AfterViewChecked, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {  Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
@@ -16,12 +16,15 @@ export class PaymentsComponent implements OnInit,OnDestroy {
   paymentModeList:any[] = [];
   accountListAlies: any[] = [];
   sub : Subscription = new Subscription();
+  sub2 : Subscription = new Subscription();
   paymentForm : FormGroup;
  @Input() total :any;
  @Input() userId :number;
  @Input() creditLimits :number;
+ @Input() TypeOfuser :any;
+ new_total :any;
 
-//  @Output() paymentData = new EventEmitter();
+
   constructor(
     private cartService: PosCartService,
     private _fb : FormBuilder,
@@ -31,12 +34,23 @@ export class PaymentsComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.paymentForm = this._fb.group({
-      paymentArray : this._fb.array([])
-    });
+      paymentArray : this._fb.array([]),
+      point_type : [''],
+      redeem_point : ['']
+   });
     this.PaymentMothod.push(this.cart());
        this.PageLoadApiCall();
        this.SetAmountForm(this.total,'amount');
        
+
+   this.new_total = this.total
+
+  this.sub2 = this.paymentForm.get('redeem_point').valueChanges.subscribe({
+        next : (value)=> {
+          this.new_total = this.total;
+          this.SetAmountForm((this.new_total - value),'amount');
+         },
+       })
   }
   
  
@@ -47,7 +61,7 @@ export class PaymentsComponent implements OnInit,OnDestroy {
   
   cart():FormGroup{
     const data = new Date().toLocaleString('en-CA', { timeZone: 'America/Vancouver' }).split(',')[0];
-  return  this._fb.group({
+    return  this._fb.group({
       mode_type: ["AgainstBill",Validators.required],
       user_account_id:[this.userId,Validators.required],
       payment_account:["",Validators.required],
@@ -74,20 +88,28 @@ export class PaymentsComponent implements OnInit,OnDestroy {
   AddToCart(){
     let Recieved_Amount : number = this.calculetPayment();
    
-    if (Recieved_Amount < this.total ) {
+if (this.TypeOfuser?.ty == 'Customer') {
+  
+ let vals : number =  Number(this.GetValue('redeem_point'))
+ this.new_total = this.new_total - vals
+}
+ if (Recieved_Amount < this.new_total ) {
       this.PaymentMothod.push(this.cart());
-      let val = (this.total - Recieved_Amount);
+      let val = (this.new_total - Recieved_Amount);
       let index = this.PaymentMothod.controls.length -1
       this.SetByIndex(Number(index),Number(val))
-    }else{
+    }
+    else{
       this.showError = true;
     }
 
-    console.log(this.paymentForm.value)
     
     
   };
 
+  GetValue(str : string) :string{
+   return this.paymentForm.get(str).value;
+  }
 
 
 ckForm : boolean = false;
@@ -99,13 +121,12 @@ Submit(){
     return {success : false}
   }
   const val = this.paymentForm.value;
-
   if (this.paymentForm.valid) {
     const recieved_Amount : number = this.calculetPayment()
-     if(recieved_Amount == this.total){
-     return val.paymentArray
-    }else if (recieved_Amount < this.total) {
-      let new_total = (this.total - recieved_Amount)
+     if(recieved_Amount == this.new_total){
+      return val.paymentArray
+    }else if (recieved_Amount < this.new_total) {
+      let new_total = (this.new_total - recieved_Amount)
      if (this.creditLimitsList.billable_amount >= new_total) {
          return val.paymentArray
       }else {
@@ -113,9 +134,13 @@ Submit(){
         this.showCrError = true;
         return {success : false}
       }
-     
+      
     }
+   
+
   }
+
+
  
  
 }
@@ -146,12 +171,21 @@ creditLimitsList : creditLimitInterfase
 
   receiptTypeChange(event :any, i : number){
    if (event.target.value == 'Bank'){
+    console.log('if',this.paymentForm)
       this.PaymentMothod.at(i).get('payment_mode').setValidators([Validators.required]);
       this.PaymentMothod.updateValueAndValidity();
+    }else{
+      console.log('else',this.paymentForm)
+
+      this.PaymentMothod.at(i).get('payment_mode').setValidators(null);
+      this.PaymentMothod.updateValueAndValidity();
     }
+    
+    this.PaymentMothod.updateValueAndValidity();
     const aliesType = event.target.value === 'Cash' ? 'cash-in-hand' : 'bank-accounts';
     this.getAccountByAlies(aliesType, i);
   };
+  
   getAccountByAlies(value: string, index: number) {
     this.transactionService.getAccoutAlies(value).subscribe((res: any) => {
       const paymentGroup = this.PaymentMothod.at(index) as FormGroup;
@@ -161,7 +195,8 @@ creditLimitsList : creditLimitInterfase
   };
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe()
+    this.sub.unsubscribe();
+    this.sub2.unsubscribe();
   }
 
 }

@@ -720,14 +720,22 @@ export class AddSaleBillComponent implements OnInit {
   userType: any;
   userID :number;
   userIDs:number
+  userTypes : any;
   oncheck(data: any) {
-    console.log(data);
+    console.log(data,'deepak');
     this.userID = data.detail.account
     const userName = data?.username;
     const selectedItemId = data.id;
     this.userType = data?.user_type;
     this.userIDs = data?.detail?.userid?.id;
+    let point = data?.detail.total_points
+    let ty = data.user_type
+    this.userTypes = {
+      point,
+      ty
+    } 
     this.showCreditLimit(this.userIDs)
+    // console.log()
     let userId = data?.detail?.userid?.id ? data?.detail?.userid?.id : ''
     this.saleService.getSalesOrderByUserId(userId).subscribe(res => {
       this.saleOderList = res;
@@ -1577,13 +1585,21 @@ this.items.controls.forEach((res:any,i :number)=>{
       }
       else if (type == 'payment') {
        
-        const result = await this.__childComponent.Submit();
-        console.log(result)
+        const result =  await  this.__childComponent.Submit();
+        const points = await this.__childComponent.GetValue('redeem_point');
+        const types = await this.__childComponent.GetValue('point_type');
+        console.log(result,'deepak data for old com')
+    // return
       if (result?.success == false) {
         return
       }
       
       formdata.append('payment', JSON.stringify(result));
+      if (this.userTypes.ty == 'Customer') {
+        formdata.append('point_type', types);
+        formdata.append('points', points);
+      }
+     
        await  btn.click()
     
       }

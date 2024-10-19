@@ -43,7 +43,7 @@
     </div>
 </div>
 <!-- /product list -->
-<div class="card">
+<div class="card  "  >
     <div class="card-body">
         <div class="table-top">
             <div class="search-set">
@@ -80,7 +80,7 @@
                 </ul>
             </div>
         </div>
-        <!-- /Filter -->
+        <!-- /Filter start -->
         <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
                 <div class="row">
@@ -168,11 +168,11 @@
                 </div>
             </div>
         </div>
-        <!-- /Filter -->
-        <div class="table-responsive">
-            <table class="table datanew" id="mytable">
-                <thead>
-                    <tr>
+        <!-- /Filter end -->
+        <div class="table-responsive  " style="height: 500px; overflow-x: hidden;" >
+            <table class="table datanew "  id="mytable">
+                <thead style="position: sticky; top: 0px;" >
+                    <tr >
                         <th (click)="sort('id')" class="thone">
                             <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
                                 <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
@@ -255,25 +255,26 @@
             <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
             </div>
-            <div class="row" *ngIf="!loader">
-                <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                    <div class="entries"> Show per page
-                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+        </div>
+       
+        <div class="row"  *ngIf="!loader">
+            <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                <div class="entries"> Show per page
+                    <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
 
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="-1">All</option>
-                        </select>
-                    </div>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">All</option>
+                    </select>
                 </div>
-                <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                    <div class="f-right">
-                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
-                        </div>
+            </div>
+            <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                <div class="f-right">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                    <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries
                     </div>
                 </div>
             </div>
