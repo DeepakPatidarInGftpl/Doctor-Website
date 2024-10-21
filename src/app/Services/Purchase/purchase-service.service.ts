@@ -19,6 +19,10 @@ export class PurchaseServiceService {
     return this.http.get(url)
   };
 
+  sale_and_purchase_qty_for_purchase_order(id:number):Observable<any>{
+    let url = this.apiUrl + '/pv-api/sale_and_purchase_qty_for_purchase_order/?id='+id;
+    return this.http.get(url)
+  }
 
 
 Ckqut(id:string,mrp:string){

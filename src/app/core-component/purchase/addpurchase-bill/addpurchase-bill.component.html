@@ -439,7 +439,7 @@
                 </div>
 
                 
-                <div class="col-lg-3 col-sm-6 col-12">
+                <!-- <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Additional Discount* </label>
                         <input type="text" formControlName="additional_discount" placeholder="Enter A Discount"
@@ -449,7 +449,7 @@
                             Additional Discount ex: 1-100
                         </span>
                     </div>
-                </div> 
+                </div>  -->
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Total Tax </label>
@@ -477,9 +477,14 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'">
-                            <label [for]="'checkboxMeasure-'" class="d_flex"
-                                style="margin-bottom: 0; margin-left: 5px;">Export</label>
+                            <input type="checkbox" formControlName="export" style="zoom: 1.4; accent-color: rgb(246, 131, 24);" [id]="'checkboxMeasure-'">
+                            <label [for]="'checkboxMeasure-'" class="d_flex "
+                                style="margin-bottom: 0; margin-left: 5px; margin-top: 4px;">Export</label>
+
+                                <div class="tooltip5">
+                                    <i class="ion-information tooltip5 circle ms-2" data-bs-toggle="tooltip"></i>
+                                    <span class="tooltiptext"> Mark this True if the Purchase are made from another Country!</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -492,6 +497,10 @@
                                 <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
                             </div>
                         </div>
+
+                     
+                       
+
                         <div class="col-lg-4 col-sm-4 col-12" *ngIf="supplierId">
                             <div class="form-group">
                                 <div class="dropdown">
@@ -502,6 +511,7 @@
                                                 [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
                                                 [ngModelOptions]="{standalone: true}">
                                         </li>
+                                   
                                         <li><a class="dropdown-item"
                                                 *ngFor="let category of filteredCategoryList let i=index;">
                                                 <input type="checkbox" [value]="category.id"
@@ -737,7 +747,11 @@
                                                 </td>
                                                 <td><input type="text" formControlName="qty"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        placeholder="QTY" style="width: 100px !important;" class="input p-0"></td>
+                                                        placeholder="QTY" style="width: 100px !important;" class="input p-0">
+                                                    
+                                                        <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        (click)="openModalCkOUT(i)"></i>
+                                                    </td>
                                                 <td><input type="text" style="width: 100px !important;" formControlName="unit_cost"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         placeholder="Unit Cost" class="input p-0" #price></td>
@@ -905,7 +919,10 @@
                                                         class="input p-0"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         placeholder="Employee Price"></td>
-                                                <td style="width: 100px !important;">
+                                                
+                                                
+                                                
+                                                        <td style="width: 100px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input"> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
@@ -914,6 +931,13 @@
 
                                                     <input type="hidden" [value]="taxIntoRupees[i]" formControlName="tax_amount" />
                                                 </td>
+
+
+
+
+
+
+                                                
                                                 <td class="text-end">
                                                     <input type="text" style="width: 130px !important;" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="landing_cost" class="input"
@@ -1473,3 +1497,45 @@
 
   
   <!--Credit limit modal end-->
+  <!--CkQutModal-->
+<div class="modal fade " id="ckqutModal" tabindex="-1" role="dialog"
+aria-labelledby="addressModalLabel" aria-hidden="true">
+<div class="modal-dialog  modal-dialog-centered"
+    role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5"
+                id="staticBackdropLabel">Available Stock </h1>
+            <button type="button" class="close"
+                (click)="closeModalCkOUT()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" *ngIf="QutData">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-bordered datanew">
+                         <thead class="border border-1">
+                            <tr class="border border-1">
+
+                                <th class="border-end">Available Qty</th>
+                                <td>{{QutData?.mrp}}</td>
+                            </tr>
+                            <tr class="border border-1">
+
+                                <th class="border-end border-1">Min Qty</th>
+                                <td>{{ QutData?.min_qty }}</td>
+                            </tr>
+                                                   
+                         </thead>
+                          
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

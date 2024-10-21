@@ -630,7 +630,18 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('shipping_note', this.materialForm.get('shipping_note')?.value);
       formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
       formdata.append('note', this.materialForm.get('note')?.value);
-      formdata.append('total', this.materialForm.get('total')?.value);
+
+
+      let val = this.flat_discount.value;
+      let vals : number = ((this.calculateTotal() * val) / 100);
+      this.new_total = this.showPercentag ? this.calculateTotal() - vals : this.calculateTotal() - val;
+       formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+      formdata.append('total', val ?  this.new_total : this.materialForm.get('total')?.value);
+        
+
+
+
+      // formdata.append('total', this.materialForm.get('total')?.value);
       formdata.append('product_type', this.materialForm.get('product_type')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');

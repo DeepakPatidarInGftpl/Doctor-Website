@@ -74,6 +74,23 @@ export class DetailspurchaseBillComponent implements OnInit {
       // if (this.id == res.id) {
         this.purchaseBillDetail = res
         this.supplierAddress = res;
+        res.TaxSummary.forEach((element:any) => {
+          element.cgst_amount =  (element.taxable_value * element.cgst)/100;
+          element.igst_amount =  (element.taxable_value * element.igst)/100;
+          element.sgst_amount =  (element.taxable_value * element.sgst)/100;
+          element.sumOfamount = 0;
+          element.sumOfamount += element.cgst_amount;
+          element.sumOfamount += element.sgst_amount;
+          element.sumOfamount += element.igst_amount;
+        });
+        
+
+
+       
+
+        console.log(res,'deepak')
+
+
 
         if (res.TaxSummary.length > 0) {
           ['cgst', 'igst', 'sgst', 'tax', 'taxable_value', 'total_tax', 'total_amount'].forEach(key => {
