@@ -1148,7 +1148,15 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total_deduction', this.debitNotesForm.get('total_deduction')?.value);
       formdata.append('sub_total', this.debitNotesForm.get('sub_total')?.value);
       formdata.append('round_off', this.debitNotesForm.get('round_off')?.value);
-      formdata.append('total', this.debitNotesForm.get('total')?.value);
+
+
+      let val = this.flat_discount.value;
+      let vals : number = ((this.calculateTotal() * val) / 100);
+      this.new_total = this.showPercentag ? this.calculateTotal() - vals : this.calculateTotal() - val;
+       formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+      formdata.append('total', val ?  this.new_total : this.debitNotesForm.get('total')?.value);
+        
+      // formdata.append('total', this.debitNotesForm.get('total')?.value);
       formdata.append('additional_discout', this.debitNotesForm.get('additional_discout')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');

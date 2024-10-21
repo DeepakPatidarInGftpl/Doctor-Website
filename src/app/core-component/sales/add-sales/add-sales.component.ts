@@ -1769,7 +1769,16 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('roundoff', this.saleForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleForm.get('subtotal')?.value);
       formdata.append('additional_discount', this.saleForm.get('additional_discount')?.value);
-      formdata.append('total', this.calculateTotalForAll());
+
+
+      let val = this.flat_discount.value;
+      let vals : number = ((this.calculateTotalForAll() * val) / 100);
+      this.new_total = this.showPercentag ? this.calculateTotalForAll() - vals : this.calculateTotalForAll() - val;
+       formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+      formdata.append('total', val ?  this.new_total : this.calculateTotalForAll());
+        
+
+      // formdata.append('total', this.calculateTotalForAll());
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

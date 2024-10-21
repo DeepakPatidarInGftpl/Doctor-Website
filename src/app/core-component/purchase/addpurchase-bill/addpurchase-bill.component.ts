@@ -109,7 +109,7 @@ export class AddpurchaseBillComponent implements OnInit {
       additional_charge: new FormControl(''),
       // new field add on 10-oct-2024
       total_tax : new FormControl(''),
-      additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       //2-1
       total_qty: new FormControl('', [Validators.required]),
     });
@@ -189,6 +189,45 @@ export class AddpurchaseBillComponent implements OnInit {
     const ctrl_val = this.flat_discount.value;
     this.new_total = this.showPercentag ? this.calculateTotal() - (this.calculateTotal() * ctrl_val / 100) : this.calculateTotal() - ctrl_val;
   }
+
+
+
+  openModalCkOUT(i: number) {
+    let li = this.variantList[""][0];
+    const id = li.id;
+    const  Mrp = li.batch[0].mrp;
+    this.CkqutApi(String(id),Mrp)
+
+    this.batchCartIndex = i
+
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('ckqutModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    };
+  };
+
+  closeModalCkOUT() {
+    const modal = document.getElementById('ckqutModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  };
+
+  QutData:any;
+  CkqutApi(id:string, mrp:string){
+    this.purchaseService.Ckqut(id,mrp).subscribe({
+      next : (value:any)=> {
+        this.QutData = value
+        console.log(value,'deepak')
+      },
+    });
+  }
+  
+
+
 
 
   updateDueDateMin(selectedDate: string, financialYear) {
@@ -880,9 +919,7 @@ this.purchaseService.getMaterialById(id)
       console.log(event.batch);
     } else {
       this.tax[index] = this.apiPurchaseTax;
-      const barcode = (
-        this.purchaseBillForm.get('purchase_bill') as FormArray
-      ).at(index) as FormGroup;
+      const barcode : FormGroup = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
         tax: this.apiPurchaseTax,
@@ -951,7 +988,7 @@ this.items.controls.forEach((res:any,i :number)=>{
     const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(this.sub_index) as FormGroup;
     barcode.patchValue({
       qty: this.Measurable_Product_QUT ,
-      description : str
+      description : String(str)
 
     });
    btn.click();
@@ -1485,10 +1522,12 @@ async  submit(type: any,btn?:any) {
           'total_tax',
           this.purchaseBillForm.get('total_tax')?.value
         );
-        formdata.append(
-          'additional_discount',
-          this.purchaseBillForm.get('additional_discount')?.value
-        );
+
+        let val = this.flat_discount.value;
+        let vals : number = ((this.calculateTotal() * val) / 100);
+        this.new_total = this.showPercentag ? this.calculateTotal() - vals : this.calculateTotal() - val;
+         formdata.append('flat_discount',this.showPercentag ? vals : val ?? 0);
+         formdata.append('total', val ?  this.new_total : this.purchaseBillForm.get('total')?.value);
         formdata.append('export', this.purchaseBillForm.get('export')?.value);
 
         // formdata.append('selling_price_online', this.purchaseBillForm.get('selling_price_online')?.value);
@@ -1497,7 +1536,8 @@ async  submit(type: any,btn?:any) {
         // formdata.append('employee_price', this.purchaseBillForm.get('employee_price')?.value);
         // formdata.append('status', this.purchaseBillForm.get('status')?.value);
         formdata.append('note', this.purchaseBillForm.get('note')?.value);
-        formdata.append('total', this.purchaseBillForm.get('total')?.value);
+        // formdata.append('total', this.purchaseBillForm.get('total')?.value);
+        
         formdata.append(
           'round_off',
           this.purchaseBillForm.get('round_off')?.value
@@ -2331,7 +2371,7 @@ async  submit(type: any,btn?:any) {
   getCategory() {
     this.coreService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
-      this.filteredCategoryList = [...this.categoryList];
+      this.filteredCategoryList = this.categoryList;
     });
   }
   filterCategory() {

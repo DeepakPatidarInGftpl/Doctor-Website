@@ -1303,7 +1303,7 @@
         </div>
       
         <div class="modal-body" *ngIf="loaderPayment">
-            <app-payments #child [total]="calculateTotalForAll()" [creditLimits]="userIDs"  [userId]="userID"></app-payments>
+            <app-payments #child [total]="calculateTotalForAll()" [creditLimits]="userIDs" [TypeOfuser]="userTypes"  [userId]="userID"></app-payments>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" #paymentsclos hidden data-bs-dismiss="modal">Close</button>
