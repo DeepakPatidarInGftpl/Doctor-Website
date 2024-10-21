@@ -212,13 +212,13 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                            <a style="font-weight: 800;"
+                            <a 
                             routerLink="//sales/detail-advance-booking/{{products.id}}"
                             >{{products.booking_no}}</a>
                             </td>
                         <td class="productimgname">
                             <a [routerLink]="products?.account?.url"
-                                style="line-height: 3;font-weight: 800;">{{products?.account?.title + ' (' +
+                                style="line-height: 3;">{{products?.account?.title + ' (' +
                                 products?.account?.account_id + ')'}}</a>
                         </td>
                         <td>{{products?.booking_date}}</td>

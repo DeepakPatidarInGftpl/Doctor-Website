@@ -88,15 +88,16 @@ export class DetailspurchaseBillComponent implements OnInit {
 
        
 
-        console.log(res,'deepak')
+        // console.log(res,'deepak')
 
 
 
         if (res.TaxSummary.length > 0) {
-          ['cgst', 'igst', 'sgst', 'tax', 'taxable_value', 'total_tax', 'total_amount'].forEach(key => {
+          ['cgst','cgst_amount' , 'igst','igst_amount', 'sgst','sgst_amount', 'sumOfamount', 'tax', 'taxable_value', 'total_tax', 'total_amount'].forEach((key:string) => {
             this.totaltaxsummary[key] = (this.totaltaxsummary[key] || 0) + res.TaxSummary.reduce((acc:number, element:any) => acc + element[key], 0);
           });
-          console.log(this.totaltaxsummary);
+          console.log(this.totaltaxsummary,'deepak');
+          console.log(res.TaxSummary,'deepak pa');
         }
 
 

@@ -1216,7 +1216,8 @@
                                 </li>
                                 <li>
                                     <h4>Total Discount</h4>
-                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount()}}</h5>
+                                    <!-- <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount()}}</h5> -->
+                                    <h5>{{ totalDiscounts() | currency :"INR"}}</h5>
                                 </li>
                                 <li>
                                     <h4>Tax Amount</h4>
@@ -1228,17 +1229,17 @@
                                 </li> -->
                                 <li>
                                     <h4>Round Off</h4>
-                                    <h5><input type="text" formControlName="round_off" class="input"
-                                            [ngModel]="calculateRoundoffValue().toFixed(2) " style="width: 34%;"></h5>
+                                    <h5 class="p-0"><input type="number" formControlName="round_off" class="input p-0"
+                                            [ngModel]="calculateRoundoffValue().toFixed(2) " style="width: 60%; "></h5>
                                 </li>
 
 
                                 <li>
                                     <h4>Flat Discount</h4>
-                                    <h5>
-                                        <div [align]="'right'" class="input-group mb-3" style="width: 60%;float: inline-end;">
+                                    <h5 class="p-0">
+                                        <div  class="input-group" style="width: 60%;float: inline-end;">
                                             <button class="btn btn-secondary"  (click)="ShowRupeeAndPer()" type="button" id="button-addon2">{{ showPercentag ? '%' : '&#8377;'}}</button>
-                                            <input type="text" #flat_discounts placeholder="0.00" [formControl]="flat_discount" class="form-control" >
+                                            <input type="number" #flat_discounts placeholder="0.00" [formControl]="flat_discount" class="form-control" >
                                           </div>
                                     </h5>
 
