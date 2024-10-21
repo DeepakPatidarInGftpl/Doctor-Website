@@ -204,12 +204,12 @@
                         <td>{{i+1}}</td>
                         <td>
                             <a routerLink="//purchase/purchaseDetails/{{products?.id}}"
-                            style="line-height: 3; font-weight: 800;">{{products?.order_no}}</a>
+                            style="line-height: 3; ">{{products?.order_no}}</a>
                             
                             </td>
                         <td class="productimgname">
                             <a routerLink="//contacts/supplierDetails/{{products?.party?.id}}"
-                                style="line-height: 3;font-weight: 800;">{{products?.party?.name}}</a>
+                                style="line-height: 3">{{products?.party?.name}}</a>
                         </td>
                         <td>{{products?.order_date | date: 'dd-MMMM-yyyy'}}</td>
                         <td>{{products?.shipping_date | date: 'dd-MMMM-yyyy'}}</td>

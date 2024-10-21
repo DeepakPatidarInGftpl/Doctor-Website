@@ -194,7 +194,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                            <a style="font-weight: 800;"
+                            <a 
                             routerLink="//sales/salesReturnedetails/{{products.id}}"
                             >
                                 {{products?.sale_return_bill_no}}
@@ -202,7 +202,7 @@
                            </td>
                         <td class="productimgname">
                             <a [routerLink]="products?.customer?.url"
-                                style="line-height: 3;font-weight: 800;">{{products?.customer?.name + ' (' + products?.customer?.username
+                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username
                                 + ')'}}</a>
                         </td>
                         <td>{{products?.bill_date}}</td>

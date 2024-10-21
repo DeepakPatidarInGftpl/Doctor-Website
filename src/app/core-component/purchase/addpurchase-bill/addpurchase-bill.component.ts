@@ -1987,16 +1987,25 @@ async  submit(type: any,btn?:any) {
     this.totalAmount = total;
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
-    const decimalPart = roundedTotal - Math.floor(roundedTotal);
-    // setTimeout(() => {
+   
       this.calculateRoundoffValue();
-    // }, 3000);
-    if (decimalPart >= 0.5) {
-      return Math.floor(roundedTotal) + 1;
-    } else {
-      return Math.floor(roundedTotal);
-    }
+   
+    return Math.round(roundedTotal) ;
   }
+
+
+totalDiscounts(): number {
+  const totalDiscount = this.calculateTotalAdditionalDiscount() + this.calculateTotalDiscount();
+  const totalAmounts = this.getCart().controls.reduce((acc, control) => {
+    const purchaseRateControl = control.get('unit_cost').value;
+    return purchaseRateControl ? acc + +purchaseRateControl : acc;
+  }, 0);
+  console.log(totalAmounts, 'deepak');
+  return Math.round((totalAmounts * totalDiscount) / 100);
+}
+
+
+
   roudoffValue: any;
   // calculateRoundoffValue(): any {
   //   const total = this.totalAmount || 0;

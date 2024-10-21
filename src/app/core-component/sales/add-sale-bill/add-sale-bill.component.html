@@ -10,11 +10,12 @@
         <form [formGroup]="saleBillForm">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
-                    <div class="form-group">
-                        <label>Customer*</label>
+                    <label style="margin-bottom: 8px;">Customer*</label>
+                    <div class="form-group" style="display: flex;">
+                        
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
-                        min-width: 100%;border-top: none;">
+                        min-width: 80%;border-top: none;">
                             <input type="text" placeholder="Search Customer" aria-label="customer" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['customer'].touched && f['customer'].invalid}">
@@ -1289,8 +1290,6 @@
 
 
 
-
-
   
   
   <!--Payment Modal -->
@@ -1334,6 +1333,9 @@
         </div>
         <div class="modal-body">
           <div class="card" *ngIf="creditLimitList">
+            <div class="card-header">
+                <h2>Credit Limit</h2>
+            </div>
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead>

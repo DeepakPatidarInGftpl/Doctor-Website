@@ -1062,7 +1062,8 @@ export class AddSaleBillComponent implements OnInit {
     if(event?.batch?.length > 0) {
       this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
     } else {
-      this.apiPurchaseTax = 0;
+      // this.apiPurchaseTax = 0;
+      this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;;
     }
     // this.batchDiscount = event.batch[0]?.discount || 0;
     this.batchDiscount = 0;
@@ -1104,6 +1105,7 @@ export class AddSaleBillComponent implements OnInit {
         console.log(this.taxIntoRupees[index])
         this.originalCoastPrice = getCoastPrice;
       } else {
+      
         let offlineprice = event?.batch[0]?.selling_price_online || 0;
         this.productItemPrice[index] = offlineprice;
         this.originalPrice[index] = event?.batch[0]?.selling_price_online || 0;
@@ -1141,6 +1143,8 @@ export class AddSaleBillComponent implements OnInit {
       this.TotalWithoutTax[index] = ((getCoastPrice * 1) - (taxPrice * 1)).toFixed(2);
     }
     if (event.batch.length > 0) {
+      console.log('calll for d if 1')
+
       const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
@@ -1159,6 +1163,7 @@ export class AddSaleBillComponent implements OnInit {
         taxValue = this.apiPurchaseTax;
 
       } else {
+        console.log('calll for d else 2')
         this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
@@ -1186,7 +1191,8 @@ export class AddSaleBillComponent implements OnInit {
       this.updateTotalDiscount();
       console.log(event.batch);
     } else {
-      this.tax[index] = 0
+      console.log('calll for d else 3')
+      this.tax[index] = this.apiPurchaseTax;
       const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
@@ -1263,7 +1269,7 @@ this.items.controls.forEach((res:any,i :number)=>{
     });
    btn.click();
    this.items.reset();
-   this.items.clear()
+   this.items.clear();
   
 
   }
@@ -1631,6 +1637,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       // formdata.append('roundoff', parseFloat(this.saleBillForm.get('roundoff')?.value));
       //end round off
       //26-04
+      
 
       //26-04
       const totalTaxString = this.saleBillForm.get('total_tax')?.value;

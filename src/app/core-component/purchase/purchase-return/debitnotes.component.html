@@ -182,13 +182,13 @@
                         <td>{{i+1}}</td>
                         <td>
                             <a routerLink="//purchase/details-purchaseReturn/{{products.id}}"
-                            style="line-height: 3;font-weight: 800;">{{products?.purchase_return_no}}
+                            style="line-height: 3;">{{products?.purchase_return_no}}
                         </a>
                             
                             </td>
                         <td class="productimgname">
                             <a routerLink="//contacts/supplierDetails/{{products?.party?.id}}"
-                                style="line-height: 3;font-weight: 800;">{{products?.party?.name}}</a>
+                                style="line-height: 3;">{{products?.party?.name}}</a>
                            
                         </td>
                         <td>{{products?.purchase_return_date | date: 'dd-MMMM-yyyy'}}</td>
