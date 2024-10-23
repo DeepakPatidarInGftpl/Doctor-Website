@@ -7,6 +7,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PurchaseServiceService {
+
+
+
+  
+
+
+
   getBranch() {
     throw new Error('Method not implemented.');
   }
@@ -18,6 +25,16 @@ export class PurchaseServiceService {
     let url = this.apiUrl + '/pv-api/supplier/?search=' + query;
     return this.http.get(url)
   };
+
+
+  CkGstType(id:number){
+    let url = this.apiUrl + '/pv-api/GST-check/?address_id='+id;
+    return this.http.get(url)
+  }
+
+
+
+
 
   sale_and_purchase_qty_for_purchase_order(id:number):Observable<any>{
     let url = this.apiUrl + '/pv-api/sale_and_purchase_qty_for_purchase_order/?id='+id;

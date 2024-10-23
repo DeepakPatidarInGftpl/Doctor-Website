@@ -1212,6 +1212,9 @@ export class AddSaleBillComponent implements OnInit {
         taxPrice: 0
       };
     }
+    const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+    barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+
   };
 
 

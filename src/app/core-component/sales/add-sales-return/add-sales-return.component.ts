@@ -866,6 +866,9 @@ export class AddSalesReturnComponent implements OnInit {
         taxPrice: 0
       };
     }
+
+    const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
+    barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
   };
 
 
