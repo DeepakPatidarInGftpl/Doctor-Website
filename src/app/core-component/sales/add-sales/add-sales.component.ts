@@ -966,6 +966,10 @@ export class AddSalesComponent implements OnInit {
         taxPrice: 0
       };
     }
+
+    const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
+    barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+
   }
 
   get items():FormArray {

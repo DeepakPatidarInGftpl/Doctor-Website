@@ -12,6 +12,9 @@ import { PopoverComponent } from './popover.component';
   imports: [
     CommonModule,
     PopoverRoutingModule
+  ],
+  exports : [
+    PopoverComponent
   ]
 })
 export class PopoverModule { }

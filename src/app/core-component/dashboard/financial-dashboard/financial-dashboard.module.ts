@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { PopoverModule } from '../../element/popover/popover.module';
 const icons = {
   User,
   UserCheck,
@@ -37,7 +38,8 @@ const icons = {
     JsonPipe,
     MatSelectModule,
     NgChartsModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    
   ],
   exports: [
     FeatherModule
