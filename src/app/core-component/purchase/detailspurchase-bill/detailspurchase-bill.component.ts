@@ -54,6 +54,10 @@ export class DetailspurchaseBillComponent implements OnInit {
 
   totalQty: any[] = [];
   totalQTY = 0;
+
+
+
+
   // tax rate
 
   TaxRate: any[] = [];
@@ -75,13 +79,26 @@ export class DetailspurchaseBillComponent implements OnInit {
         this.purchaseBillDetail = res
         this.supplierAddress = res;
         res.TaxSummary.forEach((element:any) => {
-          element.cgst_amount =  (element.taxable_value * element.cgst)/100;
-          element.igst_amount =  (element.taxable_value * element.igst)/100;
-          element.sgst_amount =  (element.taxable_value * element.sgst)/100;
           element.sumOfamount = 0;
-          element.sumOfamount += element.cgst_amount;
-          element.sumOfamount += element.sgst_amount;
-          element.sumOfamount += element.igst_amount;
+          if ( element.igst > 0) {
+            element.igst_amount =  element.igst;
+            element.igst = element.tax;
+            element.sumOfamount += element.total_tax
+            
+          }else{
+
+            const taxs =( element.tax/2) || 0;
+            const total_tax = (element.total_tax /2)
+
+            element.cgst =  taxs;
+            element.sgst =  taxs;
+            element.cgst_amount = total_tax
+            element.sgst_amount = total_tax
+            element.sumOfamount += element.total_tax
+
+          }
+
+  
         });
         
 

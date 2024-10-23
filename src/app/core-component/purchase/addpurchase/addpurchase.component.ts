@@ -746,7 +746,11 @@ ShowModal(i:number){
     this.updateTotal(index);
     this.updateLandingCost(index);
 
-
+    const barcode : FormGroup = (
+      this.purchaseForm.get('purchase_cart') as FormArray
+    ).at(index) as FormGroup;
+   barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+  
 
 
 

@@ -942,6 +942,10 @@ export class AddEstimateComponent implements OnInit {
         taxPrice: 0
       };
     }
+
+
+    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(this.sub_index) as FormGroup;
+    barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
   }
 
 
