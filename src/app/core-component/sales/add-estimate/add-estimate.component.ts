@@ -8,6 +8,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import * as bootstrap from 'bootstrap';
+import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 @Component({
   selector: 'app-add-estimate',
   templateUrl: './add-estimate.component.html',
@@ -46,7 +47,10 @@ export class AddEstimateComponent implements OnInit {
     private contactService: ContactService,
     private commonService: CommonServiceService,
     private coreService: CoreService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private purchaseService : PurchaseServiceService
+    
+  ) {
   }
 
   customerControlName = 'customer';
@@ -117,7 +121,7 @@ export class AddEstimateComponent implements OnInit {
       total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
-      additional_discout : new FormControl(0)
+      // additional_discout : new FormControl(0)
     });
 
     this.searchForm = this.fb.group({
@@ -497,8 +501,10 @@ export class AddEstimateComponent implements OnInit {
     const userName = data?.name;
     const selectedItemId = data.id;
     this.supplierId = data?.id;
+    this.addressId =  data?.detail?.address[data?.detail?.address?.length -1].id ;
+    console.log('addresss',   this.addressId)
     this.userType = data?.user_type;
-    const user = this.employeeList.filter((val) => val?.name === userName);
+    const user = this.employeeList.filter((val :any) => val?.name === userName);
     this.discountLimit = user[0]?.discount_limit;
     //call detail api
     // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
@@ -944,11 +950,94 @@ export class AddEstimateComponent implements OnInit {
     }
 
 
-    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(this.sub_index) as FormGroup;
+    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
     barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+    this.addTaxInTable(event,index)
   }
 
-
+  addressId:number;
+  TaxTableData:any[] = [];
+  addTaxInTable(item : any, i:number){
+  
+    console.log('call tax amount')
+      const hsn_code = item ?.product?.hsncode?.hsn_code;
+      const taxs = this.tax[i];
+      const taxs_Amount = this.taxIntoRupees[i];
+      const taxabelvalue : number = Number(this.TotalWithoutTax[i]);
+      
+  
+      let ckTypeOfGst :any ;
+       this.purchaseService.CkGstType(this.addressId)
+      .subscribe({
+        next : (value:any) => {
+          ckTypeOfGst = value.GST
+          console.log(value,'type of gst')
+        },
+      })
+     
+      
+    
+     const updateTaxTable = (element: any) => {
+      element.igst_amount += taxs_Amount;
+      element.sumOfamount += taxs_Amount;
+      element.taxabelvalue += taxabelvalue;
+    };
+  
+    const addNewTaxTableEntry = () => {
+      this.TaxTableData.push({
+        HSNCODE: hsn_code,
+        sumOfamount: taxs_Amount || 0 ,
+        taxabelvalue,
+        sgst: ckTypeOfGst ? (taxs/2) : 0,
+        sgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
+        cgst: ckTypeOfGst ? (taxs/2) : 0,
+        cgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
+        igst: !ckTypeOfGst ? taxs : 0,
+        igst_amount: !ckTypeOfGst ? taxs_Amount : 0,
+        gst_types: !ckTypeOfGst ? "GST" : 'SGST_CGST'
+      });
+    };
+  
+    if(this.TaxTableData.length > 0) {
+      this.TaxTableData.forEach((element: any) => {
+        if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
+          
+          updateTaxTable(element);
+        } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
+       
+          updateTaxTable(element);
+        } 
+        else{
+          addNewTaxTableEntry();
+        }
+  
+      });
+    } else {
+      addNewTaxTableEntry();
+    }
+  }
+    UpdateTaxTable(i:number){
+    if (this.TaxTableData.length > 0) {
+      const real:any = this.TaxTableData[i];
+      real.sumOfamount = this.taxIntoRupees[i];
+      real.taxabelvalue = this.TotalWithoutTax[i];
+      real.igst_amount = (real.gst_types == "GST" ? this.taxIntoRupees[i] : 0);
+      real.sgst_amount = (real.gst_types == 'SGST_CGST' ? (this.taxIntoRupees[i]/2) : 0);
+      real.cgst_amount = (real.gst_types == 'SGST_CGST' ? (this.taxIntoRupees[i]/2) : 0);
+      // console.log(real)
+      replaceValueAtIndex(this.TaxTableData,i,real)
+    }
+  
+    function replaceValueAtIndex(array :any[], index : number, newValue : any) {
+      if (index >= 0 && index < array.length) {
+        array[index] = newValue; // Replace the value at the specified index
+        return true; // Indicate successful replacement
+      } else {
+        return false; // Handle out-of-bounds case
+      }
+    }
+  
+  }
 
   get items():FormArray {
     return this.taxForm.get('items') as FormArray;

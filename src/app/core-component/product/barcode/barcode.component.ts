@@ -191,17 +191,9 @@ export class BarcodeComponent implements OnInit {
     }
   }
 
-  isGRN = false;
-  isProduct = false;
-  typeBarcode(val: any) {
-    if (val == 'GRN') {
-      this.isGRN = true;
-      this.isProduct = false;
-    } else {
-      this.isGRN = false;
-      this.isProduct = true;
-    }
-  }
+  isGRN = true;
+ 
+
 
   cartData: any[] = [];
   selectedPurchaseBill: any;
@@ -425,6 +417,37 @@ async printTable() {
   // Restore the original content of the body 
   document.body.innerHTML = originalContents;
 
+}
+
+async printPage() {
+  const printContent = document.getElementById('mytable');
+  const WindowPrt = window.open('', '', 'width=800,height=600');
+  if (printContent && WindowPrt) {
+    WindowPrt.document.write(`
+      <html>
+        <head>
+          <title>Print Page</title>
+          <style>
+            @media print {
+              body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>`);
+    WindowPrt.document.close();
+    WindowPrt.focus();
+    WindowPrt.print();
+    WindowPrt.close();
+  }
 }
 
 

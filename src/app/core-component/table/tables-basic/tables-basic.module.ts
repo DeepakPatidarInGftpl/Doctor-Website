@@ -6,7 +6,8 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {  MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TextEditorModule } from '../../element/text-editor/text-editor.module';
-
+import { NgxBarcodeModule } from 'ngx-barcode';
+import { RealBarcodeModule } from '../../product/real-barcode/real-barcode.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { TextEditorModule } from '../../element/text-editor/text-editor.module';
     SharedModuleModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    TextEditorModule
+    TextEditorModule,
+    NgxBarcodeModule,
+    RealBarcodeModule
   ]
 })
 export class TablesBasicModule { }
