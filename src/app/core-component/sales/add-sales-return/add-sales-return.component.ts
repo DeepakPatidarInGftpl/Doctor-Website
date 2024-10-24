@@ -9,6 +9,7 @@ import { CommonServiceService } from 'src/app/Services/commonService/common-serv
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 import * as bootstrap from 'bootstrap'
+import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
 @Component({
   selector: 'app-add-sales-return',
@@ -48,7 +49,9 @@ export class AddSalesReturnComponent implements OnInit {
     private coreService: CoreService,
     private commonService: CommonServiceService,
     private cdr: ChangeDetectorRef,
-  private contactService: ContactService) {
+  private contactService: ContactService,
+  private purchaseService : PurchaseServiceService
+) {
   }
 
   customerControlName = 'customer';
@@ -95,7 +98,7 @@ export class AddSalesReturnComponent implements OnInit {
       total: new FormControl(''),
       status: new FormControl(''),
       note: new FormControl(''),
-      additional_discount : new FormControl(0),
+      // additional_discount : new FormControl(0),
       //2-1
       return_date: new FormControl(defaultDate, [Validators.required])
     });
@@ -435,6 +438,7 @@ export class AddSalesReturnComponent implements OnInit {
     console.log(data);
     const userName = data?.name;
     const selectedItemId = data.id;
+    this.addressId =  data?.detail?.address[data?.detail?.address?.length -1].id ;
     this.supplierId = data.id;
     this.userType = data?.user_type;
     const user = this.employeeList.filter((val) => val?.name === userName);
@@ -869,9 +873,93 @@ export class AddSalesReturnComponent implements OnInit {
 
     const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
     barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+
+    this.addTaxInTable(event,index)
   };
 
-
+  addressId:number;
+  TaxTableData:any[] = [];
+  addTaxInTable(item : any, i:number){
+  
+    console.log('call tax amount')
+      const hsn_code = item ?.product?.hsncode?.hsn_code;
+      const taxs = this.tax[i];
+      const taxs_Amount = this.taxIntoRupees[i];
+      const taxabelvalue : number = Number(this.TotalWithoutTax[i]);
+      
+  
+      let ckTypeOfGst :any ;
+       this.purchaseService.CkGstType(this.addressId)
+      .subscribe({
+        next : (value:any) => {
+          ckTypeOfGst = value.GST
+          console.log(value,'type of gst')
+        },
+      })
+     
+      
+    
+     const updateTaxTable = (element: any) => {
+      element.igst_amount += taxs_Amount;
+      element.sumOfamount += taxs_Amount;
+      element.taxabelvalue += taxabelvalue;
+    };
+  
+    const addNewTaxTableEntry = () => {
+      this.TaxTableData.push({
+        HSNCODE: hsn_code,
+        sumOfamount: taxs_Amount || 0 ,
+        taxabelvalue,
+        sgst: ckTypeOfGst ? (taxs/2) : 0,
+        sgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
+        cgst: ckTypeOfGst ? (taxs/2) : 0,
+        cgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
+        igst: !ckTypeOfGst ? taxs : 0,
+        igst_amount: !ckTypeOfGst ? taxs_Amount : 0,
+        gst_types: !ckTypeOfGst ? "GST" : 'SGST_CGST'
+      });
+    };
+  
+    if(this.TaxTableData.length > 0) {
+      this.TaxTableData.forEach((element: any) => {
+        if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
+          
+          updateTaxTable(element);
+        } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
+       
+          updateTaxTable(element);
+        } 
+        else{
+          addNewTaxTableEntry();
+        }
+  
+      });
+    } else {
+      addNewTaxTableEntry();
+    }
+  }
+    UpdateTaxTable(i:number){
+    if (this.TaxTableData.length > 0) {
+      const real:any = this.TaxTableData[i];
+      real.sumOfamount = this.taxIntoRupees[i];
+      real.taxabelvalue = this.TotalWithoutTax[i];
+      real.igst_amount = (real.gst_types == "GST" ? this.taxIntoRupees[i] : 0);
+      real.sgst_amount = (real.gst_types == 'SGST_CGST' ? (this.taxIntoRupees[i]/2) : 0);
+      real.cgst_amount = (real.gst_types == 'SGST_CGST' ? (this.taxIntoRupees[i]/2) : 0);
+      // console.log(real)
+      replaceValueAtIndex(this.TaxTableData,i,real)
+    }
+  
+    function replaceValueAtIndex(array :any[], index : number, newValue : any) {
+      if (index >= 0 && index < array.length) {
+        array[index] = newValue; // Replace the value at the specified index
+        return true; // Indicate successful replacement
+      } else {
+        return false; // Handle out-of-bounds case
+      }
+    }
+  
+  }
 
   get items():FormArray {
     return this.taxForm.get('items') as FormArray;

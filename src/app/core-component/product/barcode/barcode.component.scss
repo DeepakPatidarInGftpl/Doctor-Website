@@ -213,9 +213,9 @@ select,
   }
 
   /* Hide elements that you don’t want to print */
-  header, footer, nav {
-    display: none;
-  }
+  // header, footer, nav {
+  //   display: none;
+  // }
 
   /* Additional styles for printed content */
   body {
@@ -226,6 +226,19 @@ select,
 
   /* Additional print styles can be added here */
 }
+// @media print {
+//   .print-area {
+//     width: 210mm;
+//     height: 297mm;
+//     padding: 10mm;
+//     box-sizing: border-box;
+//   }
+
+//   /* Remove unnecessary elements like buttons */
+//   button {
+//     display: none;
+//   }
+// }
 
 
 

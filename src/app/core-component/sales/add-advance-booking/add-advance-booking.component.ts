@@ -46,7 +46,9 @@ export class AddAdvanceBookingComponent implements OnInit {
     private contactService: ContactService,
     private commonService: CommonServiceService,
     private cdr: ChangeDetectorRef,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+  
+  ) {
   }
 
   accountControlName = 'account';
@@ -647,7 +649,7 @@ export class AddAdvanceBookingComponent implements OnInit {
 
     let is_measurable = event?.product?.is_measurable;
     console.log(is_measurable,'deepak')
-    if(!is_measurable) {
+    if(is_measurable) {
       this.ShowModal(index);
       this.addItem();
     }
