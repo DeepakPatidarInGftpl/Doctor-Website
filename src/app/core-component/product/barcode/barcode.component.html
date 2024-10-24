@@ -29,26 +29,15 @@
             <h4>Generate Barcode</h4>
         </div>
 
-        <!-- <div class="form-group">
-            <div class="col-lg-3 col-sm-6 col-12">
-                <div class="form-group">
-                    <label>Type of Barcode</label>
-                    <select class="form-select" #val (change)="typeBarcode(val.value)">
-                        <option selected disabled>Select Type</option>
-                        <option value="GRN">GRN</option>
-                        <option value="Product">Product</option>
-                    </select>
-                </div>
-            </div>
-        </div> -->
+      
         <div class="mb-5">
             <div class="row">
                 <div class="col-lg-2 col-sm-3 col-12">
-                    <input type="radio" name="barcodeType" (change)="typeBarcode('GRN')" [id]="'checkboxGRN-'"><label
+                    <input type="radio" name="barcodeType" checked (change)="this.isGRN = !this.isGRN" [id]="'checkboxGRN-'"><label
                         [for]="'checkboxGRN-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">GRN</label>
                 </div>
                 <div class="col-lg-2 col-sm-3 col-12">
-                    <input type="radio" name="barcodeType" (change)="typeBarcode('Product')"
+                    <input type="radio" name="barcodeType" (change)="this.isGRN = !this.isGRN"
                         [id]="'checkboxisPro-'"><label [for]="'checkboxisPro-'" class="d_flex"
                         style="margin-bottom: 0; margin-left: 5px;">PRODUCT</label>
                 </div>
@@ -73,7 +62,7 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div> -->
-            <div class="form-group">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Select GRN</label>
                     <div class="dropdown">
@@ -153,10 +142,10 @@
                     </table>
                 </div>
             </div>
-            <button class="btn btn-submit me-2" (click)="print()">Print GRN Barcode</button>
+            <button class="btn btn-submit me-2" (click)="printPage()">Print GRN Barcode</button>
         </ng-container>
 
-        <ng-container *ngIf="isProduct">
+        <ng-container *ngIf="!isGRN">
 
             <!-- <div class="form-group">
                 <label>Product Name</label>
@@ -684,18 +673,7 @@
 </div>
 
 
-<!-- <div class="grid-container">
-    <div class="grid-item">
-        
-    </div>
-    <div class="grid-item">2</div>
-    <div class="grid-item">3</div>  
-    <div class="grid-item">4</div>
-    <div class="grid-item">5</div>
-    <div class="grid-item">6</div>  
-    <div class="grid-item">7</div>
-    <div class="grid-item">8</div>
-  </div> -->
+
 
 
 

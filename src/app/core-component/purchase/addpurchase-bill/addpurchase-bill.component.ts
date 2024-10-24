@@ -1137,7 +1137,7 @@ this.items.controls.forEach((res:any,i :number)=>{
     });
    btn.click();
    this.items.reset();
-   this.items.clear()
+   this.items.clear();
   
 
   }
