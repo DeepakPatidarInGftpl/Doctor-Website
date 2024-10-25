@@ -442,6 +442,8 @@ export class AddmaterialInwardComponent implements OnInit {
     let is_measurable = event?.product?.is_measurable;
     // console.log(is_measurable,'deepak')
     if(is_measurable) {
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
@@ -524,7 +526,16 @@ export class AddmaterialInwardComponent implements OnInit {
     });
     this.items.push(item);
     // console.log(this.items)
-  }
+  };
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
+  };
 
   removeItem(index: number) {
     this.items.removeAt(index);

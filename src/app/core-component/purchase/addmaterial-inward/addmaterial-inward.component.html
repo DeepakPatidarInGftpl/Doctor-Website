@@ -684,7 +684,10 @@
                                                         formControlName="variant_name" placeholder="Variant Name"
                                                         class="input"></td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
-                                                        formControlName="qty" placeholder="QTY" class="input"></td>
+                                                        formControlName="qty" placeholder="QTY" class="input">
+                                                        <p *ngIf="d?.get('description')?.value"><span style="color: #111;">{{d.get('description')?.value}}</span></p>
+                                                    
+                                                    </td>
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
                                                         formControlName="po_qty" placeholder="PO QTY" class="input">
                                                 </td>
@@ -1047,7 +1050,7 @@
                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                     </svg>
                     <!-- -->
-                    <svg  *ngIf="isLastItem(i)"  (click)="addItem()"
+                    <svg  *ngIf="isLastItem(i)"  (click)="addItem2()"
                     style="color:green" xmlns="http://www.w3.org/2000/svg"
                     width="16" height="16" fill="currentColor"
                     class="bi bi-plus-circle" viewBox="0 0 16 16">

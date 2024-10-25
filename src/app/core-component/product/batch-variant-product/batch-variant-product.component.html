@@ -13,7 +13,6 @@
       </h2>
        <!-- <p class="m-0" style="font-size: 18px; font-weight: 600;" >  Tax  </p> -->
       <p class="m-0" *ngIf="Show && Show?.product?.sale_tax_including">
-       1) Sale Tax Including
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -27,10 +26,10 @@
           class="feather feather-check"
         >
           <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
+        </svg> Sale Tax Including
+       
       </p>
       <p *ngIf="Show && Show?.product?.purchase_tax_including">
-        2) Purchase Tax Including
         <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -44,7 +43,8 @@
         class="feather feather-check"
       >
         <polyline points="20 6 9 17 4 12"></polyline>
-      </svg>
+      </svg> Purchase Tax Including
+       
       </p>
     </div>
     <form [formGroup]="batchForm" (ngSubmit)="submit()">

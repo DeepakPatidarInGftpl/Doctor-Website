@@ -509,14 +509,14 @@
                                                         <input type="text" placeholder="Search Product"
                                                             aria-label="Search Products" matInput
                                                             [formControl]="d.get('item_name')"
-                                                            (input)="getVariant($event.target.value,i,'')"
+                                                            (input)="getVariant($event.target.value,i,''); "
                                                             [matAutocomplete]="autos" style="box-sizing: border-box;width: 200px !important;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
                                                             <ng-container *ngIf="variantList && variantList[i]">
                                                                 <ng-container *ngFor="let option of variantList[i]">
                                                                     <mat-option *ngIf="option?.is_active==true"
                                                                         [value]="option?.product_title + ' ' + option?.variant_name"
-                                                                        (onSelectionChange)="oncheckVariant(option,i)"
+                                                                        (onSelectionChange)="oncheckVariant(option,i);UpdateTaxTable(i)"
                                                                         (onSelectionChange)="variantChanged(option, i)"
                                                                         style="color:#FF9F43">
                                                                         {{ option?.product_title + ' ' +
@@ -626,7 +626,9 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" min="0" class="input" style="width: 100px !important;">
+                                                <td>
+                                                    <input type="number" formControlName="qty" min="0" class="input" style="width: 100px !important;">
+                                                    <p *ngIf="d?.get('description')?.value"><span style="color: #111;">{{d.get('description')?.value}}</span></p>
                                                 </td>
                                                 <td><input type="number" formControlName="price" class="input" #price
                                                         readonly style="width: 100px !important;">
@@ -1100,7 +1102,7 @@
                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                     </svg>
                     <!-- -->
-                    <svg  *ngIf="isLastItem(i)"  (click)="addItem()"
+                    <svg  *ngIf="isLastItem(i)"  (click)="addItem2()"
                     style="color:green" xmlns="http://www.w3.org/2000/svg"
                     width="16" height="16" fill="currentColor"
                     class="bi bi-plus-circle" viewBox="0 0 16 16">
@@ -1114,7 +1116,8 @@
                 </tr>
                 <tr style=" background: rgba(145, 158, 171, 0.32);">
                     <td colspan="1"><strong>Total</strong></td>
-                    <td colspan="2"><strong>{{Measurable_Product_QUT}}</strong></td>
+                    <td colspan="1"><strong>{{Product_Measurable}}</strong></td>
+                    <td colspan="1"><strong>{{Measurable_Product_QUT}}</strong></td>
                 </tr>
              </tbody>
 

@@ -77,6 +77,7 @@ export class AddAdvanceBookingComponent implements OnInit {
 
   taxForm: FormGroup;
   Measurable_Product_QUT : number =0;
+  Product_Measurable : number = 0;
 
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -123,6 +124,7 @@ export class AddAdvanceBookingComponent implements OnInit {
     this.items.valueChanges.subscribe({
       next: (value: any[]) => {
         this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+        this.Product_Measurable = value.reduce((acc, item) => acc + Number(item.measurement), 0);
       },
     });
 
@@ -646,15 +648,16 @@ export class AddAdvanceBookingComponent implements OnInit {
 
   oncheckVariant(event: any, index:number) {
     const selectedItemId = event.id;
-
+    const currentControl = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
     let is_measurable = event?.product?.is_measurable;
     console.log(is_measurable,'deepak')
     if(is_measurable) {
+      currentControl.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
 
-  const currentControl = (this.saleEstimateForm.get('advance_booking_cart') as FormArray).at(index) as FormGroup;
+ 
   currentControl.controls['barcode'].setValue('');
   const priceQtyArray:any = Object.values(this.priceQtyData);
 
@@ -838,6 +841,16 @@ export class AddAdvanceBookingComponent implements OnInit {
     // console.log(this.items)
   }
 
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
+  }
+
   removeItem(index: number) {
     this.items.removeAt(index);
   }
@@ -875,6 +888,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       description : str
 
     });
+    console.warn(barcode)
    btn.click();
    this.items.reset();
    this.items.clear()

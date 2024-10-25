@@ -23,6 +23,7 @@ export class PaymentsComponent implements OnInit,OnDestroy {
  @Input() creditLimits :number;
  @Input() TypeOfuser :any;
  new_total :any;
+@Input() maxPointLimit :number
 
 
   constructor(
@@ -33,10 +34,12 @@ export class PaymentsComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit(): void {
+
+    console.log(this.maxPointLimit,'limit')
     this.paymentForm = this._fb.group({
       paymentArray : this._fb.array([]),
       point_type : [''],
-      redeem_point : ['']
+      redeem_point : ['',Validators.compose([Validators.max(this.maxPointLimit),Validators.pattern("^[0-9]+$")])]
    });
     this.PaymentMothod.push(this.cart());
        this.PageLoadApiCall();
@@ -45,18 +48,42 @@ export class PaymentsComponent implements OnInit,OnDestroy {
 
    this.new_total = this.total
 
+   
   this.sub2 = this.paymentForm.get('redeem_point').valueChanges.subscribe({
         next : (value)=> {
+
           this.new_total = this.total;
-          this.SetAmountForm((this.new_total - value),'amount');
+          if (this.vals == 'Amount') {
+            this.SetAmountForm((this.new_total - value),'amount');
+          }
          },
        })
   }
-  
+
+
+   get redeem_point_number() {
+    return this.paymentForm.get('redeem_point');
+  }
  
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/-/g, '');
+    this.paymentForm.controls['redeem_point'].setValue(input.value);
+    if (this.maxPointLimit >= Number(input.value)) {
+      this.paymentForm.controls['redeem_point'].markAsTouched();
+    }
+
+  }
 
   get PaymentMothod():FormArray {
     return <FormArray>(this.paymentForm.get('paymentArray') as FormArray)
+  }
+
+  vals:string;
+  TypeOfPoint(event :Event){
+    let val = event.target as HTMLInputElement;
+    this.vals = val.value
+    console.log(val.value)
   }
   
   cart():FormGroup{
