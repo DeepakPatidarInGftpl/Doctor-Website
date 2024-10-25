@@ -53,11 +53,56 @@ export class DetailsPurchaseComponent  implements OnInit  {
   totalMrp: any = 0;
   totallanding:any[]=[];
   totalLandingCost: any = 0;
+
+  totaltaxsummary :any = {};
   getdata() : void {
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseDetail = res
         this.supplierAddress = res;
+
+
+        res.TaxSummary.forEach((element:any) => {
+          element.sumOfamount = 0;
+          if ( element.igst > 0) {
+            element.igst_amount =  element.igst;
+            element.igst = element.tax;
+            element.sumOfamount += element.total_tax
+            
+          }else{
+
+            const taxs =( element.tax/2) || 0;
+            const total_tax = (element.total_tax /2)
+
+            element.cgst =  taxs;
+            element.sgst =  taxs;
+            element.cgst_amount = total_tax
+            element.sgst_amount = total_tax
+            element.sumOfamount += element.total_tax
+
+          }
+
+  
+        });
+        
+
+
+       
+
+        // console.log(res,'deepak')
+
+
+
+        if (res.TaxSummary.length > 0) {
+          ['cgst','cgst_amount' , 'igst','igst_amount', 'sgst','sgst_amount', 'sumOfamount', 'tax', 'taxable_value', 'total_tax', 'total_amount'].forEach((key:string) => {
+            this.totaltaxsummary[key] = (this.totaltaxsummary[key] || 0) + res.TaxSummary.reduce((acc:number, element:any) => acc + element[key], 0);
+          });
+          console.log(this.totaltaxsummary,'deepak');
+          console.log(res.TaxSummary,'deepak pa');
+        }
+
+
+
         console.log(this.supplierAddress); 
         this.supplierAddress?.party?.address.map((res: address_type) => {
           if (res?.address_type == 'Billing') {

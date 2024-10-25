@@ -443,60 +443,61 @@
                                                 </div>
                                             </div>
 
-                                            <div class="pdf-table2 mb-4" *ngIf="purchaseBillDetail?.tax_rate?.length>0">
+                                            <div class="pdf-table2 mb-4" *ngIf="purchaseBillDetail?.logs?.length>0">
                                                 <div class="container">
                                                     <div class="page-title">
-                                                        <p style="color:#FF9F43;font-size: 16px;">Tax Rate</p>
+                                                        <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>
                                                     </div>
                                                     <div class="col-sm-12 mb-3">
                                                         <div>
                                                             <table>
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>Sr. No.</th>
-                                                                        <th>Tax Rate %</th>
-                                                                        <th>Taxable Amt</th>
-                                                                        <th>IGST Amount</th>
-                                                                        <th>CGST Amount</th>
-                                                                        <th>SGST amount</th>
-                                                                        <th>Total Tax</th>
+                                                                        <th rowspan="2">HSN/SAC</th>
+                                                                        <th rowspan="2">Taxable Amount</th>
+                                                                        <th colspan="2">State Tax</th>
+                                                                        <th colspan="2">Central Tax</th>
+                                                                        <th colspan="2">Integrated Tax</th>
+                                                                        <th rowspan="2">Total Tax Amount</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Rate</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Rate</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Rate</th>
+                                                                        <th>Amount</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
+                                                                  
                                                                     <tr
-                                                                        *ngFor="let tax of purchaseBillDetail?.tax_rate; let i=index;">
-                                                                        <td>{{i+1}}</td>
-                                                                        <td>{{tax?.tax_rate}}</td>
-                                                                        <td>{{tax?.taxable_amount}}</td>
-                                                                        <td>{{tax?.igst_amount}}</td>
-                                                                        <td>{{tax?.cgst_amount}}</td>
-                                                                        <td>{{tax?.sgst_amount}}</td>
-                                                                        <td>{{tax?.total_tax}}</td>
+                                                                    *ngFor="let tax of purchaseBillDetail?.TaxSummary | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i"
+                                                                    >
+                                                                        <td>{{tax?.HSNCODE}}</td>
+                                                                        <td>{{tax?.taxable_value | currency :"INR" }}</td>
+                                                                        <td>{{tax?.sgst +"%"}}</td>
+                                                                        <td>{{(tax?.sgst_amount | currency :"INR") || 0}}</td>
+                                                                        <td>{{tax?.cgst +"%"}}</td>
+                                                                        <td>{{(tax?.cgst_amount  | currency :"INR") || 0}}</td>
+                                                                        <td>{{tax?.igst +"%"}}</td>
+                                                                        <td>{{(tax?.igst_amount | currency :"INR") || 0}}</td>
+                                                                        <td>{{(tax?.sumOfamount | currency :"INR") || 0  }}</td>
                                                                     </tr>
-                                                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                                                        <td class="text-center"> <strong>Total</strong>
-                                                                        </td>
-                                                                        <td class="text-center">{{totaltaxrate}}</td>
-                                                                        <td class="text-center">{{totalTaxableAmount|
-                                                                            number:'1.2-2'}}</td>
-                                                                        <td class="text-center">{{totalIgstAmount|
-                                                                            number:'1.2-2'}}</td>
-                                                                        <td class="text-center">{{totalCgstAmount|
-                                                                            number:'1.2-2'}}</td>
-                                                                        <td class="text-center">{{totalSgstAmount|
-                                                                            number:'1.2-2'}}</td>
-                                                                        <td class="text-center">{{totalTaxAmount|
-                                                                            number:'1.2-2'}}</td>
+                                                                    <tr style="background: rgba(145, 158, 171, 0.32);">
+                                                                        <td colspan="2" class="text-center"><strong>Total</strong></td>
+                                                                        <td class="text-center">{{totaltaxsummary?.sgst +"%"}}</td>
+                                                                        <td class="text-center">{{(totaltaxsummary?.sgst_amount | currency :"INR") || 0}}</td>
+                                                                        <td class="text-center">{{totaltaxsummary?.cgst +"%" }}</td>
+                                                                        <td class="text-center">{{(totaltaxsummary?.cgst_amount | currency :"INR") || 0}}</td>
+                                                                        <td class="text-center">{{totaltaxsummary?.igst +"%"}}</td>
+                                                                        <td class="text-center">{{(totaltaxsummary?.igst_amount | currency :"INR") || 0}}</td>
+                                                                        <td class="text-center">{{(totaltaxsummary?.sumOfamount | currency :"INR") || 0}}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
+                                                           
                                                         </div>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <p>Please notify us on any disrepancies within 3 days of receipt
-                                                            <br />
-                                                            Overdue invoices will be charged 24% interest.
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -625,6 +626,69 @@
                     </div>
                 </div>
             </div>
+
+            <!-- <div class="pdf-table2 mb-4" *ngIf="purchaseBillDetail?.logs?.length>0">
+                <div class="container">
+                    <div class="page-title">
+                        <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>
+                    </div>
+                    <div class="col-sm-12 mb-3">
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">HSN/SAC</th>
+                                        <th rowspan="2">Taxable Amount</th>
+                                        <th colspan="2">State Tax</th>
+                                        <th colspan="2">Central Tax</th>
+                                        <th colspan="2">Integrated Tax</th>
+                                        <th rowspan="2">Total Tax Amount</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                    <tr
+                                    *ngFor="let tax of purchaseBillDetail?.TaxSummary | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i"
+                                    >
+                                        <td>{{tax?.HSNCODE}}</td>
+                                        <td>{{tax?.taxable_value | currency :"INR" }}</td>
+                                        <td>{{tax?.sgst +"%"}}</td>
+                                        <td>{{(tax?.sgst_amount | currency :"INR") || 0}}</td>
+                                        <td>{{tax?.cgst +"%"}}</td>
+                                        <td>{{(tax?.cgst_amount  | currency :"INR") || 0}}</td>
+                                        <td>{{tax?.igst +"%"}}</td>
+                                        <td>{{(tax?.igst_amount | currency :"INR") || 0}}</td>
+                                        <td>{{(tax?.sumOfamount | currency :"INR") || 0  }}</td>
+                                    </tr>
+                                    <tr style="background: rgba(145, 158, 171, 0.32);">
+                                        <td colspan="2" class="text-center"><strong>Total</strong></td>
+                                        <td class="text-center">{{totaltaxsummary?.sgst +"%"}}</td>
+                                        <td class="text-center">{{(totaltaxsummary?.sgst_amount | currency :"INR") || 0}}</td>
+                                        <td class="text-center">{{totaltaxsummary?.cgst +"%" }}</td>
+                                        <td class="text-center">{{(totaltaxsummary?.cgst_amount | currency :"INR") || 0}}</td>
+                                        <td class="text-center">{{totaltaxsummary?.igst +"%"}}</td>
+                                        <td class="text-center">{{(totaltaxsummary?.igst_amount | currency :"INR") || 0}}</td>
+                                        <td class="text-center">{{(totaltaxsummary?.sumOfamount | currency :"INR") || 0}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            
+            
+            
             <div class="text-center" *ngIf="purchaseBillDetail?.logs?.length==0">
                 <span class="text-danger">Logs Not Available</span>
             </div>

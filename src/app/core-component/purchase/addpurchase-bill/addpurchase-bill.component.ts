@@ -817,6 +817,8 @@ this.purchaseService.getMaterialById(id)
     let is_measurable = event?.product?.is_measurable;
     // console.log(is_measurable,'deepak')
     if(is_measurable) {
+      const barcode : FormGroup = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+      barcode.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
@@ -989,12 +991,13 @@ this.purchaseService.getMaterialById(id)
     this.updateTotal(index);
     this.updateLandingCost(index);
     this.getgst(index);
-    this.addTaxInTable(event,index);
-
+   
     const barcode : FormGroup = (
       this.purchaseBillForm.get('purchase_bill') as FormArray
     ).at(index) as FormGroup;
      barcode.get('tax_amount').setValue(Number(this.taxIntoRupees[index]))
+     this.addTaxInTable(event,index);
+
   };
 
 
@@ -1011,53 +1014,59 @@ addTaxInTable(item : any, i:number){
 
     let ckTypeOfGst :any ;
      this.purchaseService.CkGstType(this.addressId)
-    .subscribe({
+     .subscribe({
       next : (value:any) => {
         ckTypeOfGst = value.GST
-        console.log(value,'type of gst')
+        console.log(ckTypeOfGst,'type of gst');
+        const updateTaxTable = (element: any) => {
+          element.igst_amount += taxs_Amount;
+          element.sumOfamount += taxs_Amount;
+          element.taxabelvalue += taxabelvalue;
+        };
+      
+        const addNewTaxTableEntry = () => {
+         const newtax  = (taxs/2);
+         const newamount  = (taxs_Amount/2);
+         console.warn(newtax,'waran',(typeof ckTypeOfGst ))
+         let obj = {
+          HSNCODE: hsn_code,
+          sumOfamount: taxs_Amount || 0 ,
+          taxabelvalue,
+          sgst: (ckTypeOfGst) ? newtax : 0,
+          sgst_amount: (ckTypeOfGst) ? newamount : 0,
+          cgst: (ckTypeOfGst ) ? newtax : 0,
+          cgst_amount: (ckTypeOfGst) ? newamount : 0,
+          igst: (ckTypeOfGst == false) ? taxs : 0,
+          igst_amount: (ckTypeOfGst == false) ? taxs_Amount : 0,
+          gst_types: (ckTypeOfGst == false) ? "GST" : 'SGST_CGST'
+        }
+
+        this.TaxTableData[i] = obj
+        };
+        console.log(this.TaxTableData,'data')
+      
+        if(this.TaxTableData.length > 0) {
+          this.TaxTableData.forEach((element: any) => {
+            if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
+              
+              updateTaxTable(element);
+            } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
+           
+              updateTaxTable(element);
+            } 
+            else{
+              addNewTaxTableEntry();
+            }
+      
+          });
+        } else {
+          addNewTaxTableEntry();
+        }
+
+
       },
     })
    
-    
-  
-   const updateTaxTable = (element: any) => {
-    element.igst_amount += taxs_Amount;
-    element.sumOfamount += taxs_Amount;
-    element.taxabelvalue += taxabelvalue;
-  };
-
-  const addNewTaxTableEntry = () => {
-    this.TaxTableData.push({
-      HSNCODE: hsn_code,
-      sumOfamount: taxs_Amount || 0 ,
-      taxabelvalue,
-      sgst: ckTypeOfGst ? (taxs/2) : 0,
-      sgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-      cgst: ckTypeOfGst ? (taxs/2) : 0,
-      cgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-      igst: !ckTypeOfGst ? taxs : 0,
-      igst_amount: !ckTypeOfGst ? taxs_Amount : 0,
-      gst_types: !ckTypeOfGst ? "GST" : 'SGST_CGST'
-    });
-  };
-
-  if(this.TaxTableData.length > 0) {
-    this.TaxTableData.forEach((element: any) => {
-      if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
-        
-        updateTaxTable(element);
-      } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
-     
-        updateTaxTable(element);
-      } 
-      else{
-        addNewTaxTableEntry();
-      }
-
-    });
-  } else {
-    addNewTaxTableEntry();
-  }
 }
   UpdateTaxTable(i:number){
   if (this.TaxTableData.length > 0) {
@@ -1097,6 +1106,15 @@ addTaxInTable(item : any, i:number){
     });
     this.items.push(item);
     // console.log(this.items)
+  };
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
   }
 
   removeItem(index: number) {
