@@ -112,6 +112,7 @@ export class AddSaleBillComponent implements OnInit {
 
   taxForm: FormGroup;
   Measurable_Product_QUT : number =0;
+  Product_Measurable : number =0;
 
   
   ngOnInit(): void {
@@ -186,6 +187,7 @@ export class AddSaleBillComponent implements OnInit {
     this.items.valueChanges.subscribe({
       next: (value: any[]) => {
         this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+        this.Product_Measurable = value.reduce((acc, item) => acc + Number(item.measurement), 0);
       },
     });
 
@@ -1020,15 +1022,16 @@ export class AddSaleBillComponent implements OnInit {
 
   oncheckVariant(event: any, index : number) {
     const selectedItemId = event.id;
-
+    const currentControl = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
 
     let is_measurable = event?.product?.is_measurable;
     if(is_measurable) {
+      currentControl.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
 
-    const currentControl = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+    
     currentControl.controls['barcode'].setValue('');
     const priceQtyArray:any = Object.values(this.priceQtyData);
   
@@ -1235,53 +1238,59 @@ export class AddSaleBillComponent implements OnInit {
   
       let ckTypeOfGst :any ;
        this.purchaseService.CkGstType(this.addressId)
-      .subscribe({
+       .subscribe({
         next : (value:any) => {
           ckTypeOfGst = value.GST
-          console.log(value,'type of gst')
+          console.log(ckTypeOfGst,'type of gst');
+          const updateTaxTable = (element: any) => {
+            element.igst_amount += taxs_Amount;
+            element.sumOfamount += taxs_Amount;
+            element.taxabelvalue += taxabelvalue;
+          };
+        
+          const addNewTaxTableEntry = () => {
+           const newtax  = (taxs/2);
+           const newamount  = (taxs_Amount/2);
+           console.warn(newtax,'waran',(typeof ckTypeOfGst ))
+           let obj = {
+            HSNCODE: hsn_code,
+            sumOfamount: taxs_Amount || 0 ,
+            taxabelvalue,
+            sgst: (ckTypeOfGst) ? newtax : 0,
+            sgst_amount: (ckTypeOfGst) ? newamount : 0,
+            cgst: (ckTypeOfGst ) ? newtax : 0,
+            cgst_amount: (ckTypeOfGst) ? newamount : 0,
+            igst: (ckTypeOfGst == false) ? taxs : 0,
+            igst_amount: (ckTypeOfGst == false) ? taxs_Amount : 0,
+            gst_types: (ckTypeOfGst == false) ? "GST" : 'SGST_CGST'
+          }
+
+          this.TaxTableData[i] = obj
+          };
+          console.log(this.TaxTableData,'data')
+        
+          if(this.TaxTableData.length > 0) {
+            this.TaxTableData.forEach((element: any) => {
+              if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
+                
+                updateTaxTable(element);
+              } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
+             
+                updateTaxTable(element);
+              } 
+              else{
+                addNewTaxTableEntry();
+              }
+        
+            });
+          } else {
+            addNewTaxTableEntry();
+          }
+
+
         },
       })
      
-      
-    
-     const updateTaxTable = (element: any) => {
-      element.igst_amount += taxs_Amount;
-      element.sumOfamount += taxs_Amount;
-      element.taxabelvalue += taxabelvalue;
-    };
-  
-    const addNewTaxTableEntry = () => {
-      this.TaxTableData.push({
-        HSNCODE: hsn_code,
-        sumOfamount: taxs_Amount || 0 ,
-        taxabelvalue,
-        sgst: ckTypeOfGst ? (taxs/2) : 0,
-        sgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-        cgst: ckTypeOfGst ? (taxs/2) : 0,
-        cgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-        igst: !ckTypeOfGst ? taxs : 0,
-        igst_amount: !ckTypeOfGst ? taxs_Amount : 0,
-        gst_types: !ckTypeOfGst ? "GST" : 'SGST_CGST'
-      });
-    };
-  
-    if(this.TaxTableData.length > 0) {
-      this.TaxTableData.forEach((element: any) => {
-        if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
-          
-          updateTaxTable(element);
-        } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
-       
-          updateTaxTable(element);
-        } 
-        else{
-          addNewTaxTableEntry();
-        }
-  
-      });
-    } else {
-      addNewTaxTableEntry();
-    }
   }
     UpdateTaxTable(i:number){
     if (this.TaxTableData.length > 0) {
@@ -1322,6 +1331,15 @@ export class AddSaleBillComponent implements OnInit {
     });
     this.items.push(item);
     // console.log(this.items)
+  }
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
   }
 
   removeItem(index: number) {
@@ -1714,7 +1732,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('coupon_code', '');
       //2-1
       formdata.append('sales_man', this.saleBillForm.get('sales_man')?.value);
-      formdata.append('additional_discount', this.saleBillForm.get('additional_discount')?.value);
+      // formdata.append('additional_discount', this.saleBillForm.get('additional_discount')?.value);
       //26-04
       const roundOffString = this.saleBillForm.get('roundoff')?.value;
       let roundOffFloat: number;

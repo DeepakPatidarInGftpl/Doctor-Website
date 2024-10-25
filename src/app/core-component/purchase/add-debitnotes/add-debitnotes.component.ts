@@ -527,6 +527,8 @@ export class AddDebitnotesComponent implements OnInit {
     let is_measurable = event?.product?.is_measurable;
     // console.log(is_measurable,'deepak')
     if(is_measurable) {
+      const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+      barcode.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
@@ -541,6 +543,7 @@ export class AddDebitnotesComponent implements OnInit {
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    console.log(this.apiPurchaseTax,'deepak')
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
@@ -625,7 +628,7 @@ export class AddDebitnotesComponent implements OnInit {
           landing_cost: this.landingCost
         });
       } else {
-        this.tax[index] = 18
+        this.tax[index] = this.apiPurchaseTax
         barcode.patchValue({
           barcode: selectedItemId,
           mrp: event.batch[0]?.mrp,
@@ -638,7 +641,7 @@ export class AddDebitnotesComponent implements OnInit {
       }
       console.log(event.batch);
     } else {
-      this.tax[index] = 18
+      this.tax[index] = this.apiPurchaseTax;
       const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
@@ -673,53 +676,59 @@ this.addTaxInTable(event,index)
   
       let ckTypeOfGst :any ;
        this.purchaseService.CkGstType(this.addressId)
-      .subscribe({
+       .subscribe({
         next : (value:any) => {
           ckTypeOfGst = value.GST
-          console.log(value,'type of gst')
+          console.log(ckTypeOfGst,'type of gst');
+          const updateTaxTable = (element: any) => {
+            element.igst_amount += taxs_Amount;
+            element.sumOfamount += taxs_Amount;
+            element.taxabelvalue += taxabelvalue;
+          };
+        
+          const addNewTaxTableEntry = () => {
+           const newtax  = (taxs/2);
+           const newamount  = (taxs_Amount/2);
+           console.warn(newtax,'waran',(typeof ckTypeOfGst ))
+           let obj = {
+            HSNCODE: hsn_code,
+            sumOfamount: taxs_Amount || 0 ,
+            taxabelvalue,
+            sgst: (ckTypeOfGst) ? newtax : 0,
+            sgst_amount: (ckTypeOfGst) ? newamount : 0,
+            cgst: (ckTypeOfGst ) ? newtax : 0,
+            cgst_amount: (ckTypeOfGst) ? newamount : 0,
+            igst: (ckTypeOfGst == false) ? taxs : 0,
+            igst_amount: (ckTypeOfGst == false) ? taxs_Amount : 0,
+            gst_types: (ckTypeOfGst == false) ? "GST" : 'SGST_CGST'
+          }
+
+          this.TaxTableData[i] = obj
+          };
+          console.log(this.TaxTableData,'data')
+        
+          if(this.TaxTableData.length > 0) {
+            this.TaxTableData.forEach((element: any) => {
+              if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
+                
+                updateTaxTable(element);
+              } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
+             
+                updateTaxTable(element);
+              } 
+              else{
+                addNewTaxTableEntry();
+              }
+        
+            });
+          } else {
+            addNewTaxTableEntry();
+          }
+
+
         },
       })
      
-      
-    
-     const updateTaxTable = (element: any) => {
-      element.igst_amount += taxs_Amount;
-      element.sumOfamount += taxs_Amount;
-      element.taxabelvalue += taxabelvalue;
-    };
-  
-    const addNewTaxTableEntry = () => {
-      this.TaxTableData.push({
-        HSNCODE: hsn_code,
-        sumOfamount: taxs_Amount || 0 ,
-        taxabelvalue,
-        sgst: ckTypeOfGst ? (taxs/2) : 0,
-        sgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-        cgst: ckTypeOfGst ? (taxs/2) : 0,
-        cgst_amount: ckTypeOfGst ? (taxs_Amount/2) : 0,
-        igst: !ckTypeOfGst ? taxs : 0,
-        igst_amount: !ckTypeOfGst ? taxs_Amount : 0,
-        gst_types: !ckTypeOfGst ? "GST" : 'SGST_CGST'
-      });
-    };
-  
-    if(this.TaxTableData.length > 0) {
-      this.TaxTableData.forEach((element: any) => {
-        if (element.HSNCODE == hsn_code && element.gst_types == "GST" && !ckTypeOfGst && element.igst == taxs) {
-          
-          updateTaxTable(element);
-        } else if (element.HSNCODE == hsn_code && element.gst_types == 'SGST_CGST' && ckTypeOfGst && element.cgst == taxs/2) {
-       
-          updateTaxTable(element);
-        } 
-        else{
-          addNewTaxTableEntry();
-        }
-  
-      });
-    } else {
-      addNewTaxTableEntry();
-    }
   }
     UpdateTaxTable(i:number){
     if (this.TaxTableData.length > 0) {
@@ -759,6 +768,15 @@ this.addTaxInTable(event,index)
     });
     this.items.push(item);
     // console.log(this.items)
+  }
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
   }
 
   removeItem(index: number) {
@@ -1248,7 +1266,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       formdata.append('total', val ?  this.new_total : this.debitNotesForm.get('total')?.value);
         
       // formdata.append('total', this.debitNotesForm.get('total')?.value);
-      formdata.append('additional_discout', this.debitNotesForm.get('additional_discout')?.value);
+      // formdata.append('additional_discout', this.debitNotesForm.get('additional_discout')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

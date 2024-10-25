@@ -59,6 +59,8 @@ export class AddDeliveryChallanComponent implements OnInit {
 
   taxForm: FormGroup;
   Measurable_Product_QUT : number =0;
+  Product_Measurable : number =0;
+
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.myControl = new FormArray([]);
@@ -116,6 +118,7 @@ export class AddDeliveryChallanComponent implements OnInit {
     this.items.valueChanges.subscribe({
       next: (value: any[]) => {
         this.Measurable_Product_QUT = value.reduce((acc, item) => acc + Number(item.quantity), 0);
+        this.Product_Measurable = value.reduce((acc, item) => acc + Number(item.measurement), 0);
       },
     });
 
@@ -513,16 +516,18 @@ export class AddDeliveryChallanComponent implements OnInit {
   oncheckVariant(event: any, index:number) {
     const selectedItemId = event.id;
 
-
+    const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
     let is_measurable = event?.product?.is_measurable;
     console.log(is_measurable,'deepak')
     if(!is_measurable) {
+
+      currentControl.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
       this.addItem();
     }
 
 
-    const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
+    // const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
     currentControl.controls['barcode'].setValue('');
     currentControl.controls['item_name'].setValue('');
     const priceQtyArray:any = Object.values(this.priceQtyData);
@@ -589,6 +594,15 @@ export class AddDeliveryChallanComponent implements OnInit {
     });
     this.items.push(item);
     // console.log(this.items)
+  }
+  addItem2() {
+    if (this.taxForm.invalid) {
+      this.ckForm = true;
+      this.taxForm.markAllAsTouched();
+      return;
+    } else {
+      this.addItem();
+    }
   }
 
   removeItem(index: number) {
