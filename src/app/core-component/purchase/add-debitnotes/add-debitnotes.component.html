@@ -726,7 +726,10 @@
                                                 </td>
                                                 <td><input type="text" formControlName="qty"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" placeholder="0"
-                                                        class="input"    style="width: 100px !important;"></td>
+                                                        class="input"    style="width: 100px !important;">
+                                                        <p *ngIf="d?.get('description')?.value"><span style="color: #111;">{{d.get('description')?.value}}</span></p>
+                                                    
+                                                    </td>
                                                 <td><input type="text"
                                                         (input)="UpdateTaxTable(i)"
                                                         style="width: 100px !important;" formControlName="unit_cost" class="input" #price>

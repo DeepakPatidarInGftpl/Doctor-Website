@@ -666,6 +666,7 @@
                                                         >
                                                         <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         (click)="openModalCkOUT(i)"></i>
+                                                        <p *ngIf="d?.get('description')?.value"><span style="color: #111;">{{d.get('description')?.value}}</span></p>
 
                                                     <div *ngIf="isCartQtyInvalid(i)" class="error-message space-text">
                                                         Quantity must be a positive number.

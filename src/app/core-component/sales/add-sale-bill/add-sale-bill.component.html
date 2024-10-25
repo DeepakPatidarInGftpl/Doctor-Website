@@ -1382,11 +1382,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Payment</h5>
+          <!-- <span class="text-end">Maximum Redeem Limit : <span *ngIf="membership_pointes">{{membership_pointes}}</span> </span> -->
           <button type="button" class="btn btn-sm p-0 btn-close" data-bs-dismiss="modal" (click)="loaderPayment = false" aria-label="Close">&#10005;</button>
         </div>
       
         <div class="modal-body" *ngIf="loaderPayment">
-            <app-payments #child [total]="calculateTotalForAll()" [creditLimits]="userIDs" [TypeOfuser]="userTypes"  [userId]="userID"></app-payments>
+            <app-payments #child [total]="calculateTotalForAll()" [creditLimits]="userIDs" [maxPointLimit]="membership_pointes" [TypeOfuser]="userTypes"  [userId]="userID"></app-payments>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" #paymentsclos hidden data-bs-dismiss="modal">Close</button>

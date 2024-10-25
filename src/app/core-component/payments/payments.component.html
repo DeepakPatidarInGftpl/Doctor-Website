@@ -4,13 +4,16 @@
         <div class="d-flex align-center justify-content-between">
             <div class="d-flex" style="height: 38px;">
                 <label class="h2 me-2 fw-bold">Pay</label>
+              
                 <div class="img_input">
                     <img src="https://thumbs.dreamstime.com/b/indian-rupee-icon-symbol-vector-102647761.jpg" />
                 </div>
                 <div class="py-3 px-2 border-top d-flex align-center  justify-content-center border-end border-bottom border-1" style="width: 200px; border-radius: 0 5px 5px 0px;">
                     <span class="h4 f-500 m-0">{{total.toFixed(2)}}</span>
                 </div>
+                
             </div>
+          
             <div>
                 <button class="btn" style="color: #FF9F43;" (click)="AddToCart()">
                     <svg _ngcontent-nta-c74=""  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" viewBox="0 0 16 16" class="bi bi-plus-circle" style="color: #1881B0;"><path _ngcontent-nta-c74="" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path><path _ngcontent-nta-c74="" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>
@@ -20,32 +23,41 @@
             </div>
         </div>
         
+        <p class="h6 mt-2 error" *ngIf="maxPointLimit">Available Redeem Points <strong>{{TypeOfuser?.point}}</strong> </p>
+        <p class="h6 mt-2 error" *ngIf="maxPointLimit">Maximum Redeem Limit <strong>{{maxPointLimit}}</strong> </p>
         
         
     </div>
     <div class="card-body pt-0">
         <form [formGroup]="paymentForm" >
             <div class="row my-3" *ngIf="TypeOfuser?.ty == 'Customer'">
-                <div class="col-md-4">
-                    <label class="f-500">Total Redeem Points</label>
-                    <div class="py-2 border border-1 text-center" style="border-radius: 5px;">
-                        {{TypeOfuser?.point}}
-                    </div>
+             
+               
+                <div class="col-md-4" *ngIf="vals">
+                    <label class="f-500">Redeem Point</label>
+                    <input type="number" class="input"
+                    (input)="onInput($event)"
+                    [ngClass]="{'is-invalid': redeem_point_number?.errors?.max && redeem_point_number.touched || 
+                    redeem_point_number?.errors?.pattern && redeem_point_number.touched}"
+                    formControlName="redeem_point" placeholder="Enter Your Point" />
+              <small *ngIf="redeem_point_number?.errors?.max && redeem_point_number.touched" class="error">Enter Only Limit Point</small>
+              <small *ngIf="redeem_point_number?.errors?.pattern && redeem_point_number.touched" class="error">Only numeric values are allowed.</small>
                 </div>
                 <div class="col-md-4">
-                    <label class="f-500"> Type</label>
-                    <select class="form-select" formControlName="point_type" >
+                    <label class="f-500"> Type Point</label>
+                    <!-- <select class="form-select" formControlName="point_type" (change)="TypeOfPoint()" >
                         <option value="">Select Point Type</option>
                         <option >Gift</option>
                         <option >Amount</option>
                       
-                      </select>
+                      </select> -->
+
+                    <div class="form-group mt-2">
+                          <input type="radio" (input)="TypeOfPoint($event)" formControlName="point_type"  value="Gift" /> Gift
+                           <input type="radio" (input)="TypeOfPoint($event)" formControlName="point_type"  value="Amount" /> Amount
+                    </div>
+                     
                 </div>
-                <div class="col-md-4">
-                    <label class="f-500">Redeem Point</label>
-                    <input type="number" class="input" formControlName="redeem_point" placeholder="Enter Your Point" />
-                </div>
-                
     
             </div>
             <ng-container  formArrayName="paymentArray">

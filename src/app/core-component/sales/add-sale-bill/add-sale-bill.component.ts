@@ -723,8 +723,10 @@ export class AddSaleBillComponent implements OnInit {
   userID :number;
   userIDs:number
   userTypes : any;
+  membership_pointes : number;
   oncheck(data: any) {
     console.log(data,'deepak');
+    this.membership_pointes = data?.detail?.membership?.maximum_redemption_points
     this.addressId =  data?.detail?.address[data?.detail?.address?.length -1].id ;
     console.log(this.addressId,'address')
     this.userID = data.detail.account
@@ -1163,7 +1165,7 @@ export class AddSaleBillComponent implements OnInit {
           qty: 1,
           tax: this.apiPurchaseTax,
           // discount: event.batch[0]?.discount || 0,
-          additional_discount: event.batch[0]?.additional_discount || 0,
+          additional_discount: parseInt(event.batch[0]?.additional_discount || 0),
           price: Number(this.originalCoastPrice).toFixed(2),
         });
         taxValue = this.apiPurchaseTax;
@@ -1177,7 +1179,7 @@ export class AddSaleBillComponent implements OnInit {
           qty: 1,
           tax: this.apiPurchaseTax,
           // discount: event.batch[0]?.discount || 0,
-          additional_discount: event.batch[0]?.additional_discount || 0,
+          additional_discount: parseInt(event.batch[0]?.additional_discount || 0),
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
@@ -1187,7 +1189,7 @@ export class AddSaleBillComponent implements OnInit {
         barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
         qty: 1,
-        additional_discount: event.batch[0]?.additional_discount || 0,
+        additional_discount: parseInt(event.batch[0]?.additional_discount || 0),
         tax: taxValue,
         coastPrice: this.getCoastPrice,
         taxPrice: this.taxPrice
