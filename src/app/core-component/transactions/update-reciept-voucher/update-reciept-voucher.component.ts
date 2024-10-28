@@ -64,7 +64,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       payment_account: new FormControl('', [Validators.required]),
-      customer: new FormControl('', [Validators.required]),
+      // customer: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       receipt_voucher_no: new FormControl('', [Validators.required]),
       mode_type: new FormControl(''),
@@ -146,7 +146,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.getAccountByAlies('bank-accounts');
       } else {
         this.recieptVoucherForm.patchValue(this.editRes);
-        this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
+        this.recieptVoucherForm.get('payment_account').setValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
         setTimeout(() => {
           if(!!this.taxSlabList?.length){
@@ -556,7 +556,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   modeError: any
   onSubmit() {
     this.calculateTaxAmout('cash');
-    console.log(this.recieptVoucherForm.value);
+    console.log(this.recieptVoucherForm);
     const amount = this.recieptVoucherForm.get('amount')?.value;
     if (!amount || Number(amount) < 1) {
       this.toastr.error('Receipt voucher amount must be greater than 0.');

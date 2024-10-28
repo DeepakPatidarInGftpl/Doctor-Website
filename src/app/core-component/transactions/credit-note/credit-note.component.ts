@@ -169,6 +169,7 @@ export class CreditNoteComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); 
+      this.clone_data = this.tableData;
       this.filterData();
     })
 //20-5
@@ -243,29 +244,23 @@ if (localStorage.getItem('financialYear')) {
       })
     }
   }
-  search() {
-    if (this.titlee == "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        const nameLower : string = res?.account?.account_id.toLocaleLowerCase();
+
+  clone_data:any[] = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    this.filteredData = this.clone_data.filter((res :any) => {
+      const nameLower : string = res?.account?.account_id.toLocaleLowerCase();
         const companyNameLower : string = res?.credit_note_no.toLocaleLowerCase();
         const sale_bill = String(res?.sale_bill_no?.customer_bill_no).toLocaleLowerCase();
 
 
         return nameLower.includes(searchTerm) || companyNameLower.includes(searchTerm)||sale_bill.includes(searchTerm)
-    //     if (nameLower.match(searchTerm)) {
-    //       return true;
-    //     } else if (companyNameLower.match(searchTerm)) {
-    //       return true;
-    //     }else if (sale_bill.match(searchTerm)) {
-    //       return true
-    //     }
-    //     return false;
-      });
-    }
+    });
   }
+
+
+
+
   key = 'id'
   reverse: boolean = true;
   sort(key) {

@@ -234,7 +234,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
         formdata.append('journal_voucher_no', this.journalvoucherForm.get('journal_voucher_no')?.value);
         formdata.append('total_credit', this.journalvoucherForm.get('total_credit')?.value);
         formdata.append('total_debit', this.journalvoucherForm.get('total_debit')?.value);
-        formdata.append('description', this.journalvoucherForm.get('description')?.value);
+        formdata.append('description', (this.journalvoucherForm.get('description')?.value) ?? '');
 
         const cartArray = this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
         const cartData = [];

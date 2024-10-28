@@ -182,6 +182,7 @@ export class ListCountraVoucherComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); 
+      this.clone_data = this.tableData
       this.filterData();
     })
     this.getAccount();
@@ -254,16 +255,14 @@ export class ListCountraVoucherComponent implements OnInit {
     }
   }
 
-  search() {
-    if (this.titlee === "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.countra_voucher_no.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
-      });
-    }
+  
+  clone_data:any[] = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    this.filteredData = this.clone_data.filter((res :any) => {
+      const nameLower = res?.countra_voucher_no.toLocaleLowerCase();
+      return nameLower?.includes(searchTerm);
+    });
   }
   
   key = 'id'

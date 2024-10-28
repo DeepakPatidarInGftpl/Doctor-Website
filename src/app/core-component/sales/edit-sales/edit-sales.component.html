@@ -386,7 +386,7 @@
                             <option value="" selected disabled
                                 [ngClass]="{'is-invalid': f['estimate'].touched && f['estimate'].invalid}">Select
                                 Estimate</option>
-                            <option value="{{estimate.id}}" *ngFor="let estimate of estimateList">
+                            <option [value]="estimate.id" *ngFor="let estimate of estimateList">
                                 {{estimate.estimate_no}}</option>
                             <option *ngIf="!estimateList?.length" value="" disabled>Estimate not found</option>
                         </select>
@@ -483,8 +483,8 @@
                                     <ng-container formArrayName="sale_order_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>{{i+1+'.'}}</td>
-                                                <td>
+                                                <td style="width: 10px !important;">{{i+1+'.'}}</td>
+                                                <td style="width: 20px !important;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -509,7 +509,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                    <input class="input"  style="width: 200px !important;" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                         (keyup)="getVariant(id.value,i,'barcode')"
@@ -523,7 +523,7 @@
                                                             aria-label="Search Products" matInput
                                                             [formControl]="d.get('item_name')"
                                                             (input)="getVariant($event.target.value,i,'')"
-                                                            [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                            [matAutocomplete]="autos" style="box-sizing: border-box; width: 200px !important;" />
                                                         <mat-autocomplete #autos="matAutocomplete">
                                                             <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
                                                             <ng-container *ngFor="let option of variantList[i]">
@@ -643,8 +643,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input" #price>
+                                                <td><input type="number" style="width: 100px !important;" formControlName="qty" class="input"></td>
+                                                <td><input type="number" style="width: 100px !important;" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -724,7 +724,7 @@
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
                                                 <td>
-                                                    <input type="text" formControlName="discount" class="input"
+                                                    <input type="text" style="width: 100px !important;" formControlName="discount" class="input"
                                                         (blur)="purchase4(i)" readonly>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalDiscount(i)"></i>
@@ -827,7 +827,7 @@
                                                     </div>
                                                     <!-- <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span> -->
                                                 </td>
-                                                <td>
+                                                <td style="width: 100px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
                                             <span class="text-danger" style="display: block;" *ngIf="taxx(i) && taxx(i).invalid && taxx(i).touched"> Enter Tax ex: 1-100 %</span> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
@@ -837,9 +837,9 @@
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                                 <td class="text-end"> <input type="number" class="input" readonly
-                                                        [value]="TotalWithoutTax[i]"></td>
+                                                        [value]="TotalWithoutTax[i]" style="width: 100px !important;"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total" class="input" readonly>
+                                                    <input type="number" style="width: 100px !important;" formControlName="total" class="input" readonly>
                                                 </td>
                                             </tr>
                                         </ng-container>

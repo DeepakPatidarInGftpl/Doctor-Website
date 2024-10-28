@@ -373,7 +373,7 @@ export class UpdateSalesReturnComponent implements OnInit {
             item_name: new FormControl(j?.item_name),
             qty: new FormControl(j?.qty),
             price: new FormControl(j?.price),
-            tax: new FormControl(j?.tax || 0),
+            tax: new FormControl(parseInt(j?.tax || 0)),
             deduction: new FormControl(j?.deduction),
             total: new FormControl(j?.total),
         })
@@ -384,7 +384,7 @@ export class UpdateSalesReturnComponent implements OnInit {
           item_name: j?.item_name,
           qty: j?.qty,
           price: j.price,
-          tax: j?.tax || 0,
+          tax: parseInt(j?.tax || 0),
           deduction: j?.deduction,
           total: j?.total
         });
@@ -400,7 +400,7 @@ export class UpdateSalesReturnComponent implements OnInit {
         price: Number(j?.price)?.toFixed(2),
         qty: j?.qty,
         additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
-        tax: j?.tax || 0,
+        tax: parseInt(j?.tax || 0),
         coastPrice: j?.price,
         taxPrice: taxPrice 
       };
@@ -1285,7 +1285,8 @@ export class UpdateSalesReturnComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_return_cart', JSON.stringify(cartData));
-      this.saleService.updateSaleReturn(formdata, this.id).subscribe(res => {
+      this.saleService.updateSaleReturn(formdata, this.id)
+      .subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {

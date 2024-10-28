@@ -122,7 +122,7 @@
             <select formControlName="tax" (change)="onChangePercentage($event)">
               <option value="" selected disabled>Select Tax Percentage
               </option>
-              <option *ngFor="let prefix of taxSlabList;" [value]="prefix?.slab_title">
+              <option *ngFor="let prefix of taxSlabList;" >
                 {{prefix?.slab_title}}
               </option>
             </select>

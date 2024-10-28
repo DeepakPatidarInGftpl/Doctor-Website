@@ -57,7 +57,7 @@
                     <div class="dataTables_filter"><label>
                             <input type="search" class="form-control form-control-sm"
                                 placeholder="Search Supplier/Voucher No" [(ngModel)]="titlee"
-                                (ngModelChange)="search()">
+                                (input)="search($event)">
                         </label>
                     </div>
                 </div>
@@ -256,20 +256,37 @@
                                 'bg-lightyellow': ['Pending', 'Sent', 'Ordered', 'Draft'].includes(products.status)
                               }" class="badges">{{products.status}}</span>
                         </td>
-                        <td><mat-slide-toggle
+                        <td>
+                            
+                            <mat-slide-toggle
+                            [disabled]="( products.status == 'Paid')"
+                            
                                 (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)"
                                 [(ngModel)]="products.is_active"></mat-slide-toggle></td>
                         <td>
-                            <a class="me-1" routerLink="//transaction/detailspaymentVoucher/{{products?.id}}">
+                            <a class="me-1"    routerLink="//transaction/detailspaymentVoucher/{{products?.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//transaction/updatepaymentVoucher/{{products?.id}}"
+                            <span *ngIf="( products.status == 'Paid')" style="opacity: 0.5;">
+                                <a class="me-1"   
+                                *ngIf="isEdit">
+                                <img src="assets/img/icons/edit.svg" alt="img">
+                              </a>
+                              <a   class="me-1 confirm-text" *ngIf="isDelete">
+                                <img src="assets/img/icons/delete.svg" alt="img">
+                            </a>
+                            </span>
+                            <span *ngIf=" !(products.status == 'Paid')">
+                                <a class="me-1"   routerLink="//transaction/updatepaymentVoucher/{{products?.id}}"
                                 *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products?.id)" class="me-1 confirm-text" *ngIf="isDelete">
+                            <a  [disabled]="( products.status == 'Paid')" (click)="confirmText(i,products?.id)" class="me-1 confirm-text" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </span>
+                            
+                           
                         </td>
                     </tr>
                 </tbody>

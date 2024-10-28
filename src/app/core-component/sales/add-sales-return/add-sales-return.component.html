@@ -69,7 +69,7 @@
                         <!-- 18-5 -->
                         <select formControlName="sale_return_bill_no">
                             <option value="" selected disabled>Select Sale No</option>
-                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                            <option [value]="prefix.id" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
                         <span class="text-danger"
@@ -84,7 +84,9 @@
                         <label>Sales Bill*</label>
                         <select formControlName="sale_bill">
                             <option value="" selected disabled>Select Sales Bill</option>
-                            <option value="{{bill.id}}" *ngFor="let bill of salesBillList">{{bill?.id}}
+                            <option [value]="bill.id" *ngFor="let bill of salesBillList">{{bill?.
+                                customer_bill_no
+                                }}
                             </option>
                             <option *ngIf="!salesBillList?.length" value="" disabled>Sales Bill not found</option>
                         </select>

@@ -760,7 +760,7 @@
                                         </td>
                                         <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
                                         <td>{{calculateTotalWithoutTax()}}</td>
-                                        <td> {{ calculateTotalForAll()?.toFixed(2) }}</td>
+                                        <td> {{ calculateTotalForAll() }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -823,7 +823,7 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                    <h5> {{calculateTotalForAll() | currency:'INR'}} <input type="text"
                                             formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>

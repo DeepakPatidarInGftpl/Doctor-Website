@@ -375,11 +375,13 @@
                         <label>Material Inward No*</label>
                         <select formControlName="material_inward_no"
                             [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}"
-                            readonly>
-                            <option value="" selected disabled>Select Material Inward</option>
+                            readonly
+                            
+                            >
+                            <!-- <option  selected disabled>Select Material Inward</option> -->
                             <!-- <option value="{{material.id}}" *ngFor="let material of materialList">{{material.material_inward_no}}</option> -->
                             <ng-container *ngFor="let material of materialList">
-                                <option value="{{material.id}}" *ngIf="material?.is_active==true">
+                                <option selected [value]="material.id" *ngIf="material?.is_active==true">
                                     {{material?.material_inward_no}}</option>
                             </ng-container>
                             <ng-container *ngIf="!materialList?.length">
@@ -646,7 +648,7 @@
                                     <ng-container formArrayName="purchase_bill">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>
+                                                <td style="width: 20px !important;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -676,7 +678,9 @@
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                         (keyup)="getVariant(id.value,i,'barcode')"
-                                                        (blur)="hideSearch()">
+                                                        (blur)="hideSearch()"
+                                                        style="width: 200px !important;"
+                                                        >
                                                 </td>
                                                 <td>
                                                     <div class="form-group d-flex align-items-center"
@@ -712,7 +716,7 @@
                                                                 [ngClass]="{'error-border': isFormCartInvalid}"
                                                                 (input)="getVariant($event.target.value,i,'')"
                                                                 [matAutocomplete]="autos"
-                                                                style="box-sizing: border-box;" />
+                                                                style="box-sizing: border-box; width: 200px !important;"/>
                                                             <mat-autocomplete #autos="matAutocomplete">
                                                                 <!-- <ng-container *ngIf="myControls[i].value?.length >= 1 && myControls[i].value?.length > 0"> -->
                                                                 <ng-container *ngFor="let option of variantList[i]">
@@ -830,13 +834,13 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="qty"
+                                                <td><input type="text" style="width: 100px !important;" formControlName="qty"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         class="input p-0"></td>
-                                                <td><input type="text" formControlName="unit_cost"
+                                                <td><input type="text" style="width: 100px !important;" formControlName="unit_cost"
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         class="input p-0" #price></td>
-                                                <td><input type="text" formControlName="mrp"
+                                                <td><input type="text" style="width: 100px !important;" formControlName="mrp"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch(i)"></i>
@@ -976,29 +980,29 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="discount"
+                                                <td><input type="text" style="width: 100px !important;" formControlName="discount"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
                                                         Enter Discount ex: 1-100
                                                     </span>
                                                 </td>
-                                                <td><input type="text" formControlName="additional_discount"
+                                                <td><input type="text" style="width: 100px !important;" formControlName="additional_discount"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                 </td>
-                                                <td> <input type="text" formControlName="selling_price_online"
+                                                <td> <input type="text" style="width: 120px !important;" formControlName="selling_price_online"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                 </td>
-                                                <td><input type="text" formControlName="selling_price_offline"
+                                                <td><input type="text" style="width: 120px !important;" formControlName="selling_price_offline"
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                 </td>
-                                                <td><input type="text" formControlName="dealer_price" class="input"
+                                                <td><input type="text" style="width: 120px !important;" formControlName="dealer_price" class="input"
                                                         [ngClass]="{'error-border': isFormCartInvalid}">
                                                 </td>
-                                                <td><input type="text" formControlName="employee_price" class="input"
+                                                <td><input type="text" style="width: 120px !important;" formControlName="employee_price" class="input"
                                                         [ngClass]="{'error-border': isFormCartInvalid}">
                                                 </td>
-                                                <td>
+                                                <td style="width: 120px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
                                                         tax[i] + ' (' + tax[i] + '%)' }}</span>
@@ -1007,17 +1011,17 @@
                                                 </td>
 
                                                 <td class="text-end">
-                                                    <input type="text" formControlName="landing_cost" readonly
+                                                    <input type="text" style="width: 120px !important;" formControlName="landing_cost" readonly
                                                         [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                                     <!-- <input type="text" formControlName="landing_cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"> -->
                                                 </td>
                                                 <td class="text-end">
-                                                    <input type="text" class="input" readonly
+                                                    <input type="text" class="input" style="width: 120px !important;" readonly
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [value]="TotalWithoutTax[i]">
                                                 </td>
                                                 <td class="text-end">
-                                                    <input type="text" formControlName="total" class="input" readonly
+                                                    <input type="text" formControlName="total" style="width: 120px !important;" class="input" readonly
                                                         [ngClass]="{'error-border': isFormCartInvalid}">
                                                     <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
                                                 </td>
@@ -1292,7 +1296,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 my-1">
+                <div class="offset-lg-6 col-lg-6 my-1">
                     <div class="form-group">
                         <div class="total-order">
                             <ul>
@@ -1302,10 +1306,10 @@
                                 </li>
                                 <li>
                                     <h4>Additional Charges</h4>
-                                    <h5>
+                                    <h5 style="margin: 0; padding: 0;">
                                         <!-- {{totaladditionalCharge | number:'1.2-2' | currency:'INR' }} -->
-                                        <input type="text" formControlName="additional_charge" class="input"
-                                            style="width: 30%;">
+                                        <input type="text" placeholder="0.00" formControlName="additional_charge" class="input"
+                                            style="width: 50%;">
                                     </h5>
                                 </li>
                                 <li>
@@ -1322,14 +1326,14 @@
                                 </li> -->
                                 <li>
                                     <h4>Round Off</h4>
-                                    <h5>
+                                    <h5 style="margin: 0; padding: 0;">
                                         <input type="text" formControlName="round_off" class="input"
-                                            style="width: 34%;">
+                                            style="width: 50%;">
                                     </h5>
                                 </li>
                                 <li>
                                     <h4>Additional Charge</h4>
-                                    <h5>
+                                    <h5 >
                                         {{additionalCharges}}
                                     </h5>
                                 </li>

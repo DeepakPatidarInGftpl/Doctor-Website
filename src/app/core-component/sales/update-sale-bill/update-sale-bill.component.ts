@@ -467,9 +467,9 @@ export class UpdateSaleBillComponent implements OnInit {
                     item_name: new FormControl(j?.item_name),
                     qty: new FormControl(j?.qty),
                     price: new FormControl(j.price),
-                    tax: new FormControl(j?.tax || 0),
-                    discount: new FormControl(j?.discount),
-                    additional_discount: new FormControl(j?.barcode?.batch[0]?.additional_discount),
+                    tax: new FormControl(parseInt(j?.tax || 0)),
+                    discount: new FormControl(parseInt(j?.discount)),
+                    additional_discount: new FormControl(parseInt(j?.barcode?.batch[0]?.additional_discount)),
                     total: new FormControl(j?.total)
                 })
             );
@@ -479,9 +479,9 @@ export class UpdateSaleBillComponent implements OnInit {
                 item_name: j?.item_name,
                 qty: j?.qty,
                 price: j.price,
-                tax: j?.tax || 0,
-                discount: j?.discount,
-                additional_discount: j?.barcode?.batch[0]?.additional_discount,
+                tax: parseInt( j?.tax || 0),
+                discount:parseInt( j?.discount),
+                additional_discount: parseInt( j?.barcode?.batch[0]?.additional_discount),
                 total: j?.total
             });
         }
@@ -519,7 +519,7 @@ export class UpdateSaleBillComponent implements OnInit {
             price: Number(j?.price)?.toFixed(2),
             qty: j?.qty,
             additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
-            tax: j.tax || 0,
+            tax: parseInt ( j.tax || 0),
             coastPrice: j.price,
             taxPrice: taxPrice
         };
@@ -600,7 +600,7 @@ export class UpdateSaleBillComponent implements OnInit {
       this.TotalWithoutTax[index] = (totalWithoutTax * value).toFixed(2);
       barcode.patchValue({
         qty: value,
-        tax: totalProductQty === 0 ? 0 : taxPercentage,
+        tax: totalProductQty === 0 ? 0 : parseInt(''+taxPercentage),
         additional_discount: discount
       });
     }
@@ -2000,30 +2000,47 @@ export class UpdateSaleBillComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_bill_cart', JSON.stringify(cartData));
-      this.saleService.updateSalesBill(formdata, this.id).subscribe(res => {
-        // console.log(res);
-        this.getRes = res;
-        if (this.getRes.success) {
-          if (type == 'new') {
-            this.loaderCreate = false;
-            this.saleBillForm.reset()
-            this.ngOnInit()
-            this.userControl.reset()
-          } else if (type == 'print') {
-            this.toastrService.success(this.getRes?.msg);
-            this.loaderPrint = false;
-            this.router.navigate(['//sales/salesbilldetails/' + this.id]);
-          } else if (type == 'draft') {
-            this.toastrService.success(this.getRes.msg);
-            this.loaderDraft = false;
-            this.router.navigate(['//sales/salesbill-list'])
+      this.saleService.updateSalesBill(formdata, this.id)
+      
+      .subscribe({
+        next : (res :any) =>{
+          this.getRes = res;
+          if (this.getRes.success) {
+            if (type == 'new') {
+              this.loaderCreate = false;
+              this.saleBillForm.reset()
+              this.ngOnInit()
+              this.userControl.reset()
+            } else if (type == 'print') {
+              this.toastrService.success(this.getRes?.msg);
+              this.loaderPrint = false;
+              this.router.navigate(['//sales/salesbilldetails/' + this.id]);
+            } else if (type == 'draft') {
+              this.toastrService.success(this.getRes.msg);
+              this.loaderDraft = false;
+              this.router.navigate(['//sales/salesbill-list'])
+            }
+            else {
+              this.loader = false;
+              this.toastrService.success(this.getRes.msg);
+              this.router.navigate(['//sales/salesbill-list'])
+            }
+          } else {
+            
+            this.toastrService.error(res?.msg)
+            if (type == 'new') {
+              this.loaderCreate = false;
+            } else if (type == 'save') {
+              this.loader = false;
+            } else if (type == 'print') {
+              this.loaderPrint = false;
+            } else if (type == 'draft') {
+              this.loaderDraft = false;
+            }
           }
-          else {
-            this.loader = false;
-            this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//sales/salesbill-list'])
-          }
-        } else {
+        },
+        error : (err)=> {
+          this.toastrService.error(err?.error?.errors)
           if (type == 'new') {
             this.loaderCreate = false;
           } else if (type == 'save') {
@@ -2033,19 +2050,15 @@ export class UpdateSaleBillComponent implements OnInit {
           } else if (type == 'draft') {
             this.loaderDraft = false;
           }
-        }
-      }, err => {
-        this.toastrService.error(err?.error?.error?.due_date[0])
-        if (type == 'new') {
-          this.loaderCreate = false;
-        } else if (type == 'save') {
-          this.loader = false;
-        } else if (type == 'print') {
-          this.loaderPrint = false;
-        } else if (type == 'draft') {
-          this.loaderDraft = false;
-        }
+        },
       })
+
+
+
+
+
+
+     
     } else {
       if (type == 'new') {
         this.loaderCreate = false;

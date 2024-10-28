@@ -216,6 +216,7 @@ return this.http.get<any>(URL + (ParemQuery.toString() ? '?' + ParemQuery.toStri
   }
 
   getPurchaseBillByUserId(id: number): Observable<any> {
+    // /pv-api/purchase_bill/?user_id=1
     let url = this.apiUrl + '/pv-api/purchase_bill/?user_id='
     return this.http.get<any>(`${url}${id}`)
   }

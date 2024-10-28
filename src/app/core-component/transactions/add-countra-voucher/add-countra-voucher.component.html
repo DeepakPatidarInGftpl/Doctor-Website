@@ -39,9 +39,12 @@
                         <select formControlName="from_account" id="from_account"
                             [ngClass]="{'is-invalid': f['from_account'].touched && f['from_account'].invalid}">
                             <option value="" selected disabled>Select From Account</option>
-                            <option value="{{account?.id}}" *ngFor="let account of accountList">
-                                {{account?.company_name ? account?.company_name :
-                                account?.title }}</option>
+                            <option [value]="account?.id" *ngFor="let account of accountList">
+                                {{account?.company_name ? account?.company_name + '(' + account?.account_id
+                                + ')' : account?.title + "("+ account?.account_id  +")" }}
+                            
+                            
+                            </option>
                         </select>
 
                         <!-- <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
@@ -77,9 +80,9 @@
                         <select formControlName="to_account" id="to_account"
                             [ngClass]="{'is-invalid': f['to_account'].touched && f['to_account'].invalid}">
                             <option value="" selected disabled>Select From Account</option>
-                            <option value="{{account?.id}}" *ngFor="let account of accountList">
-                                {{account?.company_name ? account?.company_name :
-                                account?.title }}</option>
+                            <option [value]="account?.id" *ngFor="let account of accountList">
+                                {{account?.company_name ? account?.company_name + '(' + account?.account_id
+                                + ')' : account?.title + "("+ account?.account_id  +")" }}</option>
                         </select>
 
                         <!-- <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">

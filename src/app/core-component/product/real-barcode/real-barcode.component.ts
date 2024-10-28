@@ -13,13 +13,13 @@ export class RealBarcodeComponent implements OnInit,AfterViewInit {
   format = 'CODE128';
   lineColor = '#000000';
   width = 0.86;
-  height = 26;
+  height = 27;
   displayValue = true;
   fontOptions = '';
   font = 'monospace';
   textAlign = 'center';
   textPosition = 'bottom';
-  textMargin = 1;
+  textMargin = 0;
   fontSize = 7;
   background = '#ffffff';
   margin = 0;

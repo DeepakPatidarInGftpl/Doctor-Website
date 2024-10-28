@@ -411,8 +411,8 @@ export class UpdateEstimateComponent implements OnInit {
                     item_name: new FormControl(j?.item_name),
                     qty: new FormControl(j?.qty),
                     price: new FormControl(j.price),
-                    tax: new FormControl(j?.tax || 0),
-                    discount: new FormControl(j?.discount),
+                    tax: new FormControl(parseInt( j?.tax || 0)),
+                    discount: new FormControl(parseInt( j?.discount)),
                     total: new FormControl(j?.total)
                 })
             );
@@ -422,8 +422,8 @@ export class UpdateEstimateComponent implements OnInit {
                 item_name: j?.item_name,
                 qty: j?.qty,
                 price: j.price,
-                tax: j?.tax || 0,
-                discount: j?.discount,
+                tax: parseInt( j?.tax || 0),
+                discount: parseInt(j?.discount),
                 total: j?.total
             });
         }
@@ -736,7 +736,7 @@ export class UpdateEstimateComponent implements OnInit {
       mrp: address?.mrp,
       qty: address?.stock,
       tax: address?.sale_tax,
-      discount: address?.discount,
+      discount: parseInt(address?.discount),
       price: address?.cost_price,
       landing_cost: landingCost
       // additional_discount: address?.additional_discount,
@@ -1435,7 +1435,7 @@ export class UpdateEstimateComponent implements OnInit {
           amount: event.batch[0]?.mrp,
           qty: 1,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          discount: parseInt(event.batch[0]?.discount || 0),
           price: Number(this.originalCoastPrice).toFixed(2),
         });
         taxValue = this.apiPurchaseTax;
@@ -1692,7 +1692,7 @@ export class UpdateEstimateComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   submit(type: any) {
-    console.log(this.saleEstimateForm.value);
+    console.log(this.saleEstimateForm);
     if (this.saleEstimateForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -2071,7 +2071,7 @@ export class UpdateEstimateComponent implements OnInit {
     let totalDiscountAmount = 0;
     cartArray.controls.forEach((val, index)=> {
       const totalAmount = Number(val.get('total').value);
-      console.log(totalAmount);
+      // console.log(totalAmount);
       const discount = val.get('discount').value;
       if (this.excludeDiscountIndexes.includes(index)) {
         total = total - Number(this.totalDefaultDiscount);

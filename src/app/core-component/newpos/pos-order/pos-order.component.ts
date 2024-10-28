@@ -196,6 +196,7 @@ export class PosOrderComponent implements OnInit,OnDestroy {
         this.selectedRows = new Array(this.posOrders.length).fill(false);
         console.log(this.posOrders);
         this.posOrderData = response?.data;
+        this.clone_data =response?.data;
         this.loader = false;
         this.totalRecords = response?.total_data;
         this.data = Math.min(this.itemsPerPage * this.page, this.totalRecords);
@@ -242,6 +243,7 @@ export class PosOrderComponent implements OnInit,OnDestroy {
      .subscribe({
         next : (result :any)=> {
           this.posOrders = result.data
+          this.clone_data = result.data
           
         },
       })
@@ -258,28 +260,28 @@ export class PosOrderComponent implements OnInit,OnDestroy {
 
   select = false
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.posOrders.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.posOrders.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.posOrders.forEach((f: any) => {
+      f.isSelected = !initChecked;
+    });
   }
 
- search() {
-    if (this.titlee === "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee?.toLocaleLowerCase();
-      this.posOrders = this.posOrders?.filter(res => {
-        const nameLower = res?.customer?.name?.toLocaleLowerCase();
-        return nameLower?.includes(searchTerm);
-      });
-    }
+
+ 
+
+
+  clone_data:any[] = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    
+    this.posOrders = this.clone_data.filter((res :any) => {
+      const nameLower = res?.customer?.name?.toLocaleLowerCase();
+      const bill = res?.products?.bill_no.toLocaleLowerCase();
+
+      return nameLower?.includes(searchTerm) || bill?.includes(searchTerm);
+    });
   }
+
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {

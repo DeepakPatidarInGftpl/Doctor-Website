@@ -7,6 +7,7 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import * as bootstrap from 'bootstrap'
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-add-delivery-challan',
   templateUrl: './add-delivery-challan.component.html',
@@ -519,7 +520,7 @@ export class AddDeliveryChallanComponent implements OnInit {
     const currentControl = (this.deliveryChallanForm.get('cart') as FormArray).at(index) as FormGroup;
     let is_measurable = event?.product?.is_measurable;
     console.log(is_measurable,'deepak')
-    if(!is_measurable) {
+    if(is_measurable) {
 
       currentControl.get('qty').disable({emitEvent : false})
       this.ShowModal(index);
@@ -700,50 +701,61 @@ console.log(str,'val')
         }
       });
       formdata.append('cart', JSON.stringify(cartData));
-      this.saleService.addDelivryChallan(formdata).subscribe(res => {
-        // console.log(res);
-        this.getRes = res;
-        if (this.getRes.success) {
-          if (type == 'new') {
-            this.loaderCreate = false;
-            this.deliveryChallanForm.reset()
-            this.ngOnInit()
-            this.userControl.reset()
-          } else if (type == 'print') {
-            this.toastrService.success(this.getRes.msg);
-            this.loaderPrint = false;
-            this.router.navigate(['//sales/detail-delivery-challan/' + this?.getRes?.id]);
-          } else if (type == 'draft') {
-            this.toastrService.success(this.getRes.msg);
-            this.loaderDraft = false;
-            this.router.navigate(['//sales/delivery-challan-list'])
+      this.saleService.addDelivryChallan(formdata)
+      .subscribe({
+        next : (res) => {
+          this.getRes = res;
+          if (this.getRes.success) {
+            if (type == 'new') {
+              this.loaderCreate = false;
+              this.deliveryChallanForm.reset()
+              this.ngOnInit()
+              this.userControl.reset()
+            } else if (type == 'print') {
+              this.toastrService.success(this.getRes.msg);
+              this.loaderPrint = false;
+              this.router.navigate(['//sales/detail-delivery-challan/' + this?.getRes?.id]);
+            } else if (type == 'draft') {
+              this.toastrService.success(this.getRes.msg);
+              this.loaderDraft = false;
+              this.router.navigate(['//sales/delivery-challan-list'])
+            } else {
+              this.loader = false;
+              this.toastrService.success(this.getRes.msg);
+              this.router.navigate(['//sales/delivery-challan-list'])
+            }
           } else {
-            this.loader = false;
-            this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//sales/delivery-challan-list'])
+            if (type == 'new') {
+              this.loaderCreate = false;
+            } else if (type == 'save') {
+              this.loader = false;
+            } else if (type == 'print') {
+              this.loaderPrint = false;
+            } else if (type == 'draft') {
+              this.loaderDraft = false;
+            }
           }
-        } else {
+        },
+        error : (err ) => {
+        this.toastrService.error(err.error.error)
+    
           if (type == 'new') {
-            this.loaderCreate = false;
-          } else if (type == 'save') {
-            this.loader = false;
-          } else if (type == 'print') {
-            this.loaderPrint = false;
-          } else if (type == 'draft') {
-            this.loaderDraft = false;
-          }
-        }
-      }, err => {
-        if (type == 'new') {
-          this.loaderCreate = false;
-        } else if (type == 'save') {
-          this.loader = false;
-        } else if (type == 'print') {
-          this.loaderPrint = false;
-        } else if (type == 'draft') {
-          this.loaderDraft = false;
-        }
+                this.loaderCreate = false;
+              } else if (type == 'save') {
+                this.loader = false;
+              } else if (type == 'print') {
+                this.loaderPrint = false;
+              } else if (type == 'draft') {
+                this.loaderDraft = false;
+              }
+        },
       })
+      
+    
+
+
+
+
     } else {
       if (type == 'new') {
         this.loaderCreate = false;

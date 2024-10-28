@@ -66,7 +66,6 @@ export class UpdatepurchaseBillComponent implements OnInit {
   selectedAddress: string = ''
   isStatusDraft = false; //21-5
   companyName!: string;
-
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -111,8 +110,13 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
     this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
       const userId = res?.party?.userid?.id;
-      this.purchaseService.getMaterialByUserId(userId).subscribe((res) => {
-      this.materialList = res;
+      this.purchaseService.getMaterialByUserId(userId).subscribe((result :any[] ) => {
+      this.materialList = result;
+      
+
+      
+
+
       });
       // console.log(res);
       this.getresbyId = res;
@@ -121,7 +125,17 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.additionalCharges = res?.additional_charge;
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
-      this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
+      if (res?.material_inward_no) {
+      this.puchaseBillForm.get('material_inward_no')?.setValue(res?.material_inward_no.id);
+        
+      }else{
+        this.materialList.forEach((item:any)=>{
+          if (item.is_active) {
+            this.puchaseBillForm.get('material_inward_no')?.setValue(res.id);
+          }
+        })
+      }
+     
       // this.puchaseBillForm.get('supplier_bill_no')?.patchValue(res?.supplier_bill_no);
 
 
@@ -217,6 +231,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.getTax();
     this.getCategory()
   }
+
+
+
 
   displaySupplierName(supplierId: number): void {
     // this.filteredSuppliers
@@ -1228,7 +1245,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
   submit(type: any) {
     this.checkCartValidation();
     if(this.checkCartValidationSync()) {
-    console.log(this.puchaseBillForm.value);
+    console.log(this.puchaseBillForm);
     if (this.puchaseBillForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -1264,8 +1281,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // formdata.append('status', this.puchaseBillForm.get('status')?.value);
       formdata.append('note', this.puchaseBillForm.get('note')?.value);
       formdata.append('total', this.puchaseBillForm.get('total')?.value);
-      formdata.append('round_off', this.puchaseBillForm.get('round_off')?.value);
-      formdata.append('additional_charge', this.puchaseBillForm.get('additional_charge')?.value);
+      formdata.append('round_off', this.puchaseBillForm.get('round_off')?.value ?? 0);
+      formdata.append('additional_charge', this.puchaseBillForm.get('additional_charge')?.value ?? 0);
       //2-1
       formdata.append('total_qty', this.puchaseBillForm.get('total_qty')?.value);
       //17-02

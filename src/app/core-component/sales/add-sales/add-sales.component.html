@@ -382,11 +382,13 @@
                     <div class="form-group">
                         <label>Select Estimate</label>
                         <!-- <input type="text" formControlName="estimate" [ngClass]="{'is-invalid': f['estimate'].touched && f['estimate'].invalid}"> -->
-                        <select formControlName="estimate">
+                        <select formControlName="estimate"
+                        (change)="EstimateChange($event)"
+                        >
                             <option value="" selected disabled
                                 [ngClass]="{'is-invalid': f['estimate'].touched && f['estimate'].invalid}">Select
                                 Estimate</option>
-                            <option value="{{estimate.id}}" *ngFor="let estimate of estimateList">
+                            <option [value]="estimate.id" *ngFor="let estimate of estimateList">
                                 {{estimate.estimate_no}}</option>
                             <option *ngIf="!estimateList?.length" value="" disabled>EstimateList Not found</option>
                         </select>

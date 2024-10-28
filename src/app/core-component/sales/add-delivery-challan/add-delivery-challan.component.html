@@ -56,7 +56,7 @@
                         <label>Select Sale Bill*</label>
                         <select formControlName="sale_bill">
                             <option value="" selected disabled>Select Sales Bill</option>
-                            <option value="{{bill.id}}" *ngFor="let bill of saleBillList">{{bill?.id}}
+                            <option [value]="bill.id" *ngFor="let bill of saleBillList">{{bill?.customer_bill_no}}
                             </option>
                             <option *ngIf="!saleBillList?.length" value="" disabled>Sales Bill not found</option>
                         </select>

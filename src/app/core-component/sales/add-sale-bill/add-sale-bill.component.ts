@@ -263,9 +263,9 @@ export class AddSaleBillComponent implements OnInit {
 
   changeSaleOrder(value) {
       this.saleService.getSalesOrder().subscribe((res:any) => {
-      const saleOrderData = res?.filter((val)=> val.id === Number(value));
-      const cart = saleOrderData[0]?.cart;
-        this.addCart(); 
+      const [saleOrderData] = res?.filter((val)=> val.id === Number(value));
+      const cart = saleOrderData?.cart;
+        this.getCart().clear(); 
         const formArr = this.saleBillForm.get('sale_bill_cart') as FormArray;
         
         cart.forEach((j: any, i) => {
@@ -283,6 +283,7 @@ export class AddSaleBillComponent implements OnInit {
           totalDiscount += parseFloat(j?.discount);
           
           if (!formArr.at(i)) {
+            console.log('call 1')
             formArr.push(
               new FormGroup({
                 barcode: new FormControl(j?.barcode.id),
@@ -298,6 +299,7 @@ export class AddSaleBillComponent implements OnInit {
               })
             );
           } else {
+            console.log('call 2')
             formArr.at(i).patchValue({
               barcode: j?.barcode.id,
               item_name: j?.item_name,
@@ -311,6 +313,7 @@ export class AddSaleBillComponent implements OnInit {
           }
           
           if (j?.barcode?.batch[0]?.discount) {
+            console.log('call 3')
             j.barcode.batch[0].discount.forEach((discount: any) => {
               if (!this.discountTyp[i]) {
                 this.discountTyp[i] = [];

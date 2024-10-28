@@ -477,7 +477,7 @@
                             <ng-container formArrayName="purchase_cart">
                                 <ng-container *ngFor="let d of getCart().controls; let i=index">
                                     <tr [formGroupName]="i">
-                                        <td>
+                                        <td style="width: 20px !important;">
                                             <div>
                                                 <div class="me-2">
                                                     <svg (click)="removeCart(i)" style="color:red"
@@ -500,7 +500,7 @@
                                             </div>
                                         </td>
                                         <td class="p-1">
-                                            <input class="input" type="text" placeholder="Search Barcode"
+                                            <input class="input" style="width: 200px !important;" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i" [ngClass]="{'error-border': isFormCartInvalid}"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                 (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
@@ -514,7 +514,7 @@
                                                         [ngClass]="{'error-border': isFormCartInvalid}"
                                                         [formControl]="myControls[i]"
                                                         (input)="getVariant($event.target.value,i,'')"
-                                                        [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                        [matAutocomplete]="autos" style="box-sizing: border-box; width: 200px !important;" />
                                                     <mat-autocomplete #autos="matAutocomplete">
                                                         <!-- <ng-container *ngIf="myControls[i]?.value?.length >= 1 && myControls[i]?.value?.length > 0"> -->
                                                         <ng-container *ngFor="let option of variantList[i]">
@@ -627,12 +627,14 @@
                                         </td>
                                         <td class="p-1"><input type="number"
                                                 [ngClass]="{'error-border': (isFormCartInvalid || isCartQtyInvalid(i))}"
-                                                formControlName="qty" class="input" min="1">
+                                                formControlName="qty" class="input" min="1"
+                                                style="width: 100px !important;"
+                                                >
                                             <div *ngIf="isCartQtyInvalid(i)" class="error-message">
                                                 Quantity must be a positive number.
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="purchase_rate"
+                                        <td><input type="text" style="width: 100px !important;" formControlName="purchase_rate"
                                                 [ngClass]="{'error-border': isFormCartInvalid}" class="input">
                                             <i class="ion-information circle" data-bs-toggle="tooltip"
                                                 title="ion-information" (click)="openModalBatch(i)"></i>
@@ -702,31 +704,31 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="mrp"
+                                        <td><input type="text" style="width: 100px !important;" formControlName="mrp"
                                                 [ngClass]="{'error-border': isFormCartInvalid}" class="input"></td>
-                                        <td class="p-1"><input type="text" formControlName="discount"
+                                        <td class="p-1"><input type="text" style="width: 100px !important;" formControlName="discount"
                                                 [ngClass]="{'error-border': isFormCartInvalid}" class="input"
                                                 (blur)="purchase(i)">
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                 Discount ex: 1-100 % </span>
                                         </td>
-                                        <td class="p-1">
+                                        <td class="p-1" style="width: 120px !important;">
                                             <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' ('
                                                 + tax[i] + '%)' }}</span>
                                             <br>
                                             <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                         </td>
-                                        <td class="text-end p-1"><input type="text" formControlName="landing_cost"
+                                        <td class="text-end p-1"><input style="width: 120px !important;" type="text" formControlName="landing_cost"
                                                 [ngClass]="{'error-border': isFormCartInvalid}" readonly
                                                 (change)="priceValidation()" class="input p-1"></td>
                                         <td class="text-end p-1">
-                                            <input type="text" class="input p-1" readonly
+                                            <input style="width: 120px !important;" type="text" class="input p-1" readonly
                                                 [ngClass]="{'error-border': isFormCartInvalid}"
                                                 [value]="TotalWithoutTax[i]">
                                         </td>
                                         <td class="text-end p-1">
-                                            <input type="text" formControlName="total"
+                                            <input type="text" style="width: 130px !important;" formControlName="total"
                                                 [ngClass]="{'error-border': isFormCartInvalid}" class="input p-1"
                                                 readonly>
                                         </td>
