@@ -412,7 +412,7 @@ export class UpdateEstimateComponent implements OnInit {
                     qty: new FormControl(j?.qty),
                     price: new FormControl(j.price),
                     tax: new FormControl(j?.tax || 0),
-                    discount: new FormControl(j?.discount),
+                    discount: new FormControl(parseInt(j?.discount)),
                     total: new FormControl(j?.total)
                 })
             );
@@ -423,7 +423,7 @@ export class UpdateEstimateComponent implements OnInit {
                 qty: j?.qty,
                 price: j.price,
                 tax: j?.tax || 0,
-                discount: j?.discount,
+                discount: parseInt(j?.discount),
                 total: j?.total
             });
         }
@@ -479,7 +479,8 @@ export class UpdateEstimateComponent implements OnInit {
       price: (0),
       // amount: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      // tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(0),
       total: (0),
     })
   }
@@ -1692,7 +1693,7 @@ export class UpdateEstimateComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   submit(type: any) {
-    console.log(this.saleEstimateForm.value);
+    console.log(this.saleEstimateForm);
     if (this.saleEstimateForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;

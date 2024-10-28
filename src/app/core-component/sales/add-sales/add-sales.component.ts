@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -364,7 +365,11 @@ export class AddSalesComponent implements OnInit {
         product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
       );
     }
-  }
+  };
+
+
+
+
   selectData: any[] = []
   SelectedProduct(variant: any) {
     // this.selectData.push(variant)
@@ -393,14 +398,18 @@ export class AddSalesComponent implements OnInit {
     return this.saleForm.get('customer') as FormControl;
   }
 
-  cart(): FormGroup {
+  cart(item?:any , index ?:number): FormGroup {
+  this.barcode[index] = item ? item?.barcode?.sku :0;
+  this.tax[index] = item ? item?.tax : 0;
+  this.taxIntoRupees[index] =  item ? item?.tax_amount : 0;
+    console.log(item,'deepak')
     return this.fb.group({
-      barcode: (0),
-      item_name: (''),
-      qty: (0),
-      price: (0),
-      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      barcode: (item ? item?.barcode?.sku :0),
+      item_name: ( item ? item?.item_name : ''),
+      qty: (item ? item?.qty :0),
+      price: (item ? item?.price : 0),
+      discount: new FormControl( item ? parseInt(item.discount) : 0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(item ? item?.tax :  0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
       tax_amount: (0),
       description :'',
@@ -409,9 +418,27 @@ export class AddSalesComponent implements OnInit {
   getCart(): FormArray {
     return this.saleForm.get('sale_order_cart') as FormArray;
   }
+
+  setCardValue(event: Event) {
+    const target = event.target as HTMLInputElement;
+const [cart] = this.estimateList.filter((element:any) => element.id== target.value);
+
+const len = cart?.cart;
+this.getCart().reset();
+this.getCart().clear()
+for (let index = 0; index < len.length; index++) this.addCart(len[index],index)
+
+
+  }
+
+
+
+
+
+
   isCart = false;
-  addCart() {
-    this.getCart().push(this.cart());
+  addCart(data?:any , i ?: number) {
+    this.getCart().push(this.cart(data,i));
     this.isCart = false;
     const cartControl = this.cart();
     this.getCart().controls.forEach((control, index) => {
@@ -2067,7 +2094,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       modal.style.display = 'none';
     }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
-    console.log(value);
+    // console.log(value);
     // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
@@ -2264,7 +2291,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       }
 
       this.totalDiscountAmount = this.totalDiscountAmount - discountAmount + addDiscountAmount;
-      console.log(this.totalDiscountAmount);
+      // console.log(this.totalDiscountAmount);
       
       // total = totalAmount- discountAmount;
       total = (total + discountAmount - addDiscountAmount);

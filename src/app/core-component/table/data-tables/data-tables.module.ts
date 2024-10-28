@@ -7,6 +7,7 @@ import { DataTablesComponent } from './data-tables.component';
 
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 @NgModule({
   declarations: [
     DataTablesComponent
@@ -17,7 +18,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     DataTablesModule,
     NgxBarcodeModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    AngularEditorModule
+  ],
+  exports : [DataTablesComponent]
 })
 export class DataTableSModule { }
