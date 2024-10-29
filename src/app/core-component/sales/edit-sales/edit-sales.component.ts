@@ -143,8 +143,9 @@ export class EditSalesComponent implements OnInit {
       this.saleForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id, { emitEvent: true })
 
       let userId = res?.customer?.detail?.userid?.id ? res?.customer?.detail?.userid?.id : ''
-      this.saleService.getSalesEstimateByUserId(userId).subscribe(res => {
+      this.saleService.getSalesEstimateByUserId(userId).subscribe((res : any) => {
         this.estimateList = res
+        this.saleForm.get('estimate')?.setValue(this?.estimateList[0]?.id);
       })
 
       if (this.editRes?.cart.length > 0) {
@@ -153,7 +154,11 @@ export class EditSalesComponent implements OnInit {
         this.isCart = true;
       }
       this.saleForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id);
+
+      if(this?.editRes?.estimate){
+        this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id);
+      }
+    
       // this.saleForm.get('sale_order_no')?.patchValue(this?.editRes?.sale_order_no?.id); //20-5
       // 21-5
       if (this.editRes.status == 'Draft' || this.editRes.status == null) {
@@ -426,8 +431,8 @@ export class EditSalesComponent implements OnInit {
                     item_name: new FormControl(j?.item_name),
                     qty: new FormControl(j?.qty),
                     price: new FormControl(j.price),
-                    tax: new FormControl(j?.tax || 0),
-                    discount: new FormControl(j?.discount),
+                    tax: new FormControl(parseInt(j?.tax || 0)),
+                    discount: new FormControl(parseInt(j?.discount)),
                     total: new FormControl(j?.total)
                 })
             );
@@ -437,8 +442,8 @@ export class EditSalesComponent implements OnInit {
                 item_name: j?.item_name,
                 qty: j?.qty,
                 price: j.price,
-                tax: j?.tax || 0,
-                discount: j?.discount,
+                tax: parseInt(j?.tax || 0),
+                discount: parseInt(j?.discount),
                 total: j?.total
             });
         }
@@ -1775,7 +1780,7 @@ export class EditSalesComponent implements OnInit {
     let totalDiscountAmount = 0;
     cartArray.controls.forEach((val, index)=> {
       const totalAmount = Number(val.get('total').value);
-      console.log(totalAmount);
+      // console.log(totalAmount);
       const discount = val.get('discount').value;
       if (this.excludeDiscountIndexes.includes(index)) {
         total = total - Number(this.totalDefaultDiscount);
@@ -1825,7 +1830,7 @@ export class EditSalesComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   submit(type: any) {
-    console.log(this.saleForm.value);
+    console.log(this.saleForm);
     const totalMrp = this.calculateSubtotal();
     const totalTax = this.calculateTotalTax();
     const totalTaxAmout = (Number(totalMrp) * Number(totalTax)) / 100;
@@ -1858,7 +1863,7 @@ export class EditSalesComponent implements OnInit {
       formdata.append('total_qty', this.saleForm.get('total_qty')?.value);
       formdata.append('total_tax', this.saleForm.get('total_tax')?.value);
       formdata.append('total_discount', this.saleForm.get('total_discount')?.value);
-      formdata.append('roundoff', this.saleForm.get('roundoff')?.value?.toFixed(2));
+      formdata.append('roundoff', this.saleForm.get('roundoff')?.value ?? 0);
       formdata.append('subtotal', this.saleForm.get('subtotal')?.value);
       formdata.append('total', this.calculateTotalForAll());
       formdata.append('mrp', totalMrp);
@@ -1920,7 +1925,7 @@ export class EditSalesComponent implements OnInit {
           }
         }
       }, err => {
-        this.toastrService.error(err?.error?.error?.due_date[0])
+        this.toastrService.error(err?.error?.errors)
         if (type == 'new') {
           this.loaderCreate = false;
         } else if (type == 'save') {

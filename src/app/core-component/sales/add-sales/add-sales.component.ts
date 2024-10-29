@@ -398,21 +398,45 @@ export class AddSalesComponent implements OnInit {
     return this.saleForm.get('customer') as FormControl;
   }
 
-  cart(item?:any , index ?:number): FormGroup {
-  this.barcode[index] = item ? item?.barcode?.sku :0;
-  this.tax[index] = item ? item?.tax : 0;
-  this.taxIntoRupees[index] =  item ? item?.tax_amount : 0;
-    console.log(item,'deepak')
+
+
+  EstimateChange($event : Event){
+    const id = ($event.target as HTMLInputElement).value;
+    this.saleService.getSalesEstimateById(Number(id)).subscribe({
+      next:(value :any)=> {
+        const arrs = value?.cart;
+        this.getCart().reset()
+         this.getCart().clear()
+        for (let index = 0; index < arrs.length; index++) {
+         this.addCart(arrs[index] , index)
+       }
+      },
+    })
+
+
+  }
+
+
+
+  cart(item ?:any,i?:number): FormGroup {
+    if (item) {
+      this.tax[i]= item ? item.tax : '';
+      this.barcode[i] = item ? item?.barcode?.sku : '';
+      this.taxIntoRupees[i]= item ? item.tax_amount : '';
+  }
+    console.warn(item)
+ 
     return this.fb.group({
-      barcode: (item ? item?.barcode?.sku :0),
+      barcode: (item ? item?.barcode?.sku : 0),
       item_name: ( item ? item?.item_name : ''),
-      qty: (item ? item?.qty :0),
+      qty: (item ? item?.qty : 0),
       price: (item ? item?.price : 0),
-      discount: new FormControl( item ? parseInt(item.discount) : 0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(item ? item?.tax :  0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      total: (0),
-      tax_amount: (0),
-      description :'',
+      discount: new FormControl( item ? item?.discount :0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl( item ? item.tax : 0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      total: (item ? item?.total : 0),
+      tax_amount: (item ? item.tax_amount : 0),
+      description :item ? item.description : '',
+
     })
   }
   getCart(): FormArray {
@@ -437,7 +461,9 @@ for (let index = 0; index < len.length; index++) this.addCart(len[index],index)
 
 
   isCart = false;
-  addCart(data?:any , i ?: number) {
+
+  addCart(data?:any,i?:number) {
+
     this.getCart().push(this.cart(data,i));
     this.isCart = false;
     const cartControl = this.cart();

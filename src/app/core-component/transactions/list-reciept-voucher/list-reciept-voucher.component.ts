@@ -261,18 +261,16 @@ export class ListRecieptVoucherComponent implements OnInit {
     }
   }
 
-  search() {
-    if (!this.titlee) {
-      this.ngOnInit();
-      return;
-    }
-  
-    const searchTerm = this.titlee.toLocaleLowerCase();
-    this.filteredData = this.filteredData.filter(res => {
+
+  clone_data:any[] = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    this.filteredData = this.clone_data.filter((res :any) => {
       const nameLower = res?.customer?.account_id?.toLocaleLowerCase() || '';
       const companyNameLower = res?.receipt_voucher_no?.toLocaleLowerCase() || '';
       const mobile_number = res?.payer.title?.toLocaleLowerCase() || '';
-      return nameLower.includes(searchTerm) || companyNameLower.includes(searchTerm) ||  mobile_number.includes(searchTerm);
+    
+      return nameLower?.includes(searchTerm) || companyNameLower?.includes(searchTerm) || mobile_number?.includes(searchTerm);
     });
   }
   
@@ -320,7 +318,14 @@ export class ListRecieptVoucherComponent implements OnInit {
     const title = 'Receipt Voucher ';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
-    doc.text(title, 82, 10);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Calculate the width of the title
+    const titleWidth = doc.getTextWidth(title);
+    
+    // Calculate the x position to center the title
+    const xPosition = (pageWidth - titleWidth) / 2;
+    doc.text(title, xPosition, 10);
     doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
@@ -601,7 +606,7 @@ if (str == 'Is Active') {
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-
+         this.clone_data =this.tableData
         res.forEach((item : any) => {
 
           console.log(item.mode_type)

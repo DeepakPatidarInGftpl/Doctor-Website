@@ -243,17 +243,18 @@ export class ListJournalVoucherComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  search() {
-    if (this.titlee === "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.journal_voucher_no.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
-      });
-    }
+ 
+
+  clone_data:any[] = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    this.filteredData = this.clone_data.filter((res :any) => {
+      const nameLower = res?.journal_voucher_no.toLocaleLowerCase();
+    
+      return nameLower?.includes(searchTerm);
+    });
   }
+
 
   key = 'id'
   reverse: boolean = true;
@@ -500,6 +501,7 @@ export class ListJournalVoucherComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+     this.clone_data = this.tableData
       this.filterData();
     })
   }

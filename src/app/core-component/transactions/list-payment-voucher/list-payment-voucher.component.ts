@@ -253,27 +253,27 @@ export class ListPaymentVoucherComponent implements OnInit {
       });
     }
   }
-
-  search() {
-    if (this.titlee == '') {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter((res) => {
-        console.log(res);
-        const nameLower = res?.supplier?.company_name?.toLocaleLowerCase();
-        const companyNameLower = res?.payment_voucher_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          console.log(nameLower.match(searchTerm));
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          console.log(companyNameLower.match(searchTerm));
-          return true;
-        }
-        return false;
-      });
-    }
+clone_data :any = []
+  search(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    this.filteredData = this.clone_data.filter((res :any) => {
+      const nameLower = res?.supplier?.company_name?.toLocaleLowerCase();
+      const companyNameLower = res?.payment_voucher_no.toLocaleLowerCase();
+      return nameLower?.includes(searchTerm) || companyNameLower?.includes(searchTerm);
+    });
   }
+
+
+
+  // if (this.titlee === "") {
+  //   this.ngOnInit();
+  // } else {
+  //   const searchTerm = this.titlee.toLocaleLowerCase(); 
+  //   this.tableData = this.tableData.filter((res:any) => {
+  //     const nameLower = res?.user?.detail?.company_name?.toLocaleLowerCase(); 
+  //     return nameLower?.includes(searchTerm); 
+  //   });
+  // }
 
   key = 'id';
   reverse: boolean = true;
@@ -318,8 +318,18 @@ export class ListPaymentVoucherComponent implements OnInit {
     const title = 'Payment Voucher ';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
-    doc.text(title, 82, 10);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Calculate the width of the title
+    const titleWidth = doc.getTextWidth(title);
+    
+    // Calculate the x position to center the title
+    const xPosition = (pageWidth - titleWidth) / 2;
+    // doc.text(title, xPosition, 30);
+    doc.text(title, xPosition, 10);
     doc.text('', 10, 15);
+
+
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
@@ -587,7 +597,7 @@ if (str == 'Is Active') {
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      
+      this.clone_data = this.tableData;
       
         res.forEach((item : any) => {
 

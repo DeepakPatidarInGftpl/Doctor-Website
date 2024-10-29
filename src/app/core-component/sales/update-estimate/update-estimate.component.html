@@ -469,8 +469,10 @@
                                     <ng-container formArrayName="estimate_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td style="width: 10px !important;">{{i+1+'.'}}</td>
-                                                <td style="width: 20px !important;">
+
+                                                <td style="width: 10px" >{{i+1+'.'}}</td>
+                                                <td style="width: 20px" >
+
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -494,7 +496,7 @@
                                                         </svg>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td  style="width: 200px !important;">
                                                     <input class="input" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
@@ -824,7 +826,9 @@
                                                 <td class="text-end"> <input type="number" class="input" readonly
                                                         [value]="TotalWithoutTax[i] || 0"  style="width: 130px !important;"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total"  style="width: 130px !important;" class="input" readonly>
+
+                                                    <input type="number" formControlName="total" class="input" readonly  style="width: 130px !important;">
+
                                                 </td>
                                             </tr>
                                         </ng-container>

@@ -21,7 +21,7 @@
                                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
                                     <mat-option *ngIf="supplier.is_active==true"
                                         [value]="supplier?.name + ' - ' +  supplier?.company_name "
-                                        (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{
+                                        (onSelectionChange)="oncheck(supplier.id,supplier)" style="color:#FF9F43">{{
                                         supplier?.name + ' - ' + supplier?.company_name }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
@@ -422,8 +422,8 @@
                             [ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
                             <option value="" selected disabled>Select Purchase Bill</option>
                             <ng-container *ngFor="let purchase of purchaseList">
-                                <option  *ngIf="purchase?.is_active">
-                                    {{purchase?.id}}
+                                <option  *ngIf="purchase?.is_active" [value]="purchase?.id">
+                                    {{purchase?.supplier_bill_no }}
                                 </option>
                             </ng-container>
                         </select>

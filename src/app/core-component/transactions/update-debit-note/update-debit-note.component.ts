@@ -81,6 +81,7 @@ export class UpdateDebitNoteComponent implements OnInit {
         const taxTitle = this.getTaxTitleByPercentage(res?.tax);
         if (taxTitle) {
           this.debitNoteForm.controls['tax'].setValue(taxTitle);
+          this.calculateTaxAmout();
         }
       }
     }, 2000);
@@ -214,6 +215,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       const taxPercentage = this.selectedPercentageData?.amount_tax_slabs[0]?.tax?.tax_percentage;
       this.selectedTaxPercentage = taxPercentage;
     }
+    console.warn(this.selectedTaxPercentage)
   }
 
   purchaseList: any[] = []
@@ -273,6 +275,8 @@ export class UpdateDebitNoteComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
+    console.log(this.debitNoteForm.value)
+    console.log(this.debitNoteForm)
     const totalAmount = this.debitNoteForm.get('amount')?.value;
     const total = this.debitNoteForm.get('total')?.value;
     if(!totalAmount || Number(totalAmount) < 1) {
@@ -294,7 +298,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
       formdata.append('amount', this.debitNoteForm.get('amount')?.value);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
-      formdata.append('tax', this.selectedTaxPercentage);
+      formdata.append('tax', (this.selectedTaxPercentage ?? 0));
       formdata.append('total', this.debitNoteForm.get('total')?.value);
       this.transactionService.updateDebitNote(formdata, this.id).subscribe(res => {
         // console.log(res);

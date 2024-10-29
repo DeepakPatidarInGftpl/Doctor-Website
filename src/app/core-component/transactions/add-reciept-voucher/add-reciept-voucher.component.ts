@@ -531,9 +531,12 @@ this.recieptVoucherForm.get('receipt_voucher_cart').valueChanges.subscribe((res:
   loaders = false;
   addRes: any;
   onSubmit() {
+    
     this.calculateTaxAmout('cash');
     console.log(this.recieptVoucherForm.value);
     const amount = this.recieptVoucherForm.get('amount')?.value;
+
+
     if (!amount || amount < 1) {
       this.toastr.error('Receipt voucher amount must be greater than 0.');
       return;

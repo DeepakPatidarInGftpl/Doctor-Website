@@ -35,6 +35,7 @@ export class UpdateCreditNoteComponent implements OnInit {
   billControl = new FormControl();
 
   id: any;
+  account_id : number;
   ngOnInit(): void {
     this.id = this.Aroute.snapshot.paramMap.get('id');
     this.fromAccountControl.setValue('Loading...');
@@ -64,8 +65,11 @@ export class UpdateCreditNoteComponent implements OnInit {
         res?.account?.company_name) ?
         (res?.account?.company_name + ' (' +
           res?.account?.account_id + ')') : res?.account?.account_id);
+
+          this.account_id = res.account.id
       this.debitNoteForm.get('sale_bill_no').patchValue(res?.sale_bill_no?.id);
-      // this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no?.id); // 20-5
+      this.debitNoteForm.get('credit_note_no').patchValue(res?.credit_note_no); // 20-5
+      // this.prefixNo = res?.credit_note_no
       this.fromAccountControl.setValue((res?.account?.account_id &&
         res?.account?.company_name) ?
         (res?.account?.company_name + ' (' +
@@ -144,6 +148,8 @@ export class UpdateCreditNoteComponent implements OnInit {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.data;
+        this.debitNoteForm.get('credit_note_no').patchValue(res.data)
+        console.warn(res.data)
       } else {
         this.toastr.error(res.msg)
       }
@@ -215,9 +221,14 @@ export class UpdateCreditNoteComponent implements OnInit {
 }
 
   oncheck(event: any) {
-    this.debitNoteForm.patchValue({
-      account: event.id
-    })
+
+
+    // this.debitNoteForm.patchValue({
+    //   account: event.id
+    // })
+console.warn(event)
+    // this.debitNoteForm.get('account').setValue(event.id)
+    this.account_id = event.id
 
     const userId = event?.user ? event?.user : '';
     this.saleService.getSalesBillByUserId(userId).subscribe((res: any) => {
@@ -245,15 +256,15 @@ export class UpdateCreditNoteComponent implements OnInit {
     if (this.debitNoteForm.valid) {
       this.loaders = true;
 
-      const formdata = new FormData();
-      formdata.append('account', this.debitNoteForm.get('account')?.value);
+      const formdata :any = new FormData();
+      formdata.append('account', this.account_id);
       formdata.append('sale_bill_no', this.debitNoteForm.get('sale_bill_no')?.value);
       formdata.append('date', this.debitNoteForm.get('date')?.value);
       formdata.append('credit_note_no', this.debitNoteForm.get('credit_note_no')?.value);
       formdata.append('reason', this.debitNoteForm.get('reason')?.value);
-      formdata.append('roundoff', this.debitNoteForm.get('roundoff')?.value);
+      formdata.append('roundoff', this.debitNoteForm.get('roundoff')?.value ?? 0);
       formdata.append('note', this.debitNoteForm.get('note')?.value);
-      formdata.append('tax', this.selectedTaxPercentage);
+      formdata.append('tax', this.selectedTaxPercentage ?? 0);
       formdata.append('total', this.debitNoteForm.get('total')?.value);
       formdata.append('pos_bill', '');
       formdata.append('type', '');

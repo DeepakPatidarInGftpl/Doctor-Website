@@ -66,7 +66,7 @@
                         <!-- 18-5 -->
                         <select formControlName="customer_bill_no">
                             <option value="" selected disabled>Select Bill No</option>
-                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                            <option [value]="prefix.id" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
                         <!-- end 18-5 -->
                         <span class="text-danger"
@@ -395,9 +395,11 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Sales Order</label>
-                        <select formControlName="sale_order" (change)="changeSaleOrder($event?.target?.value)">
+                        <select formControlName="sale_order"
+                        
+                        (change)="changeSaleOrder($event?.target?.value)">
                             <option value="" selected disabled>Select Sales Order</option>
-                            <option value="{{estimate.id}}" *ngFor="let estimate of saleOderList">
+                            <option [value]="estimate.id" *ngFor="let estimate of saleOderList">
                                 {{estimate?.sale_order_no}}</option>
                             <option *ngIf="!saleOderList?.length" value="" disabled>Sales Order not found </option>
                         </select>

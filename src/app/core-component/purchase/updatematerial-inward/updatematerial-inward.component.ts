@@ -244,12 +244,13 @@ export class UpdatematerialInwardComponent implements OnInit {
     })
   }
   udateCart(add: any): FormArray {
+    console.warn(add)
     // let formarr = new FormArray([]);
     const formarr = this.materialForm.get('material_inward_cart') as FormArray;
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
-        variant_name: j?.variant_name,
+        variant_name: j?.barcode?.variant_name,
         qty: j.qty,
         po_qty: j?.po_qty,
         // unit_cost: j?.unit_cost ||0,

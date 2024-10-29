@@ -143,7 +143,7 @@ export class AddDebitnotesComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     // this.getVariants();
-    this.getPurchaseBill();
+    // this.getPurchaseBill();
     this.getPaymentTerms();
     this.getprefix();
     this.isPercentage[0] = true;
@@ -308,10 +308,16 @@ export class AddDebitnotesComponent implements OnInit {
     })
   }
   purchaseList: any;
-  getPurchaseBill() {
-    this.purchaseService.getPurchaseBill().subscribe(res => {
-      this.purchaseList = res;
-      // console.log(this.purchaseList);
+  getPurchaseBill(id: number) {
+
+
+    this.purchaseService.getPurchaseBillByUserId(id).subscribe({
+      next : (res) =>{
+        this.purchaseList = res;
+      },
+      error(err) {
+        console.log(err?.error?.errors)
+      },
     })
   }
   paymentList: any;
@@ -328,8 +334,11 @@ export class AddDebitnotesComponent implements OnInit {
   selectPaymentTerm: any
   variantId: any;
   supplierId: any
-  oncheck(event: any) {
-    // console.log(event);
+  oncheck(event: any,alldata?:any) {
+    console.log(alldata);
+
+
+    this.getPurchaseBill(alldata?.userid?.id);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
     this.supplierId = event

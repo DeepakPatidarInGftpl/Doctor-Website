@@ -382,7 +382,11 @@
                     <div class="form-group">
                         <label>Select Estimate</label>
                         <!-- <input type="text" formControlName="estimate" [ngClass]="{'is-invalid': f['estimate'].touched && f['estimate'].invalid}"> -->
-                        <select formControlName="estimate" (change)="setCardValue($event)">
+
+                        <select formControlName="estimate"
+                        (change)="EstimateChange($event)"
+                        >
+
                             <option value="" selected disabled
                                 [ngClass]="{'is-invalid': f['estimate'].touched && f['estimate'].invalid}">Select
                                 Estimate</option>

@@ -1,76 +1,7 @@
-<!-- <app-data-tables></app-data-tables> -->
-
-
-
-
-
-
-
-
-
-
-
-<!-- 
-<table>
-    <thead>
-        <tr>
-            <th rowspan="2">HSN/SAC</th>
-            <th rowspan="2">Taxable Value</th>
-            <th colspan="2">State Tax</th>
-            <th colspan="2">Central Tax</th>
-            <th rowspan="2">Total Taxable Amount</th>
-        </tr>
-        <tr>
-            <th>Rate</th>
-            <th>Amount</th>
-            <th>Rate</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>62039110</td>
-            <td>1600.00</td>
-            <td>6%</td>
-            <td>96.00</td>
-            <td>6%</td>
-            <td>96.00</td>
-            <td>192.00</td>
-        </tr>
-        <tr>
-            <td>54789110</td>
-            <td>2210.00</td>
-            <td>2.5%</td>
-            <td>55.25</td>
-            <td>2.5%</td>
-            <td>55.25</td>
-            <td>110.50</td>
-        </tr>
-        <tr>
-            <td>61099110</td>
-            <td>3400.00</td>
-            <td>6%</td>
-            <td>204.00</td>
-            <td>6%</td>
-            <td>204.00</td>
-            <td>408.00</td>
-        </tr>
-        <tr>
-            <td colspan="2">Total</td>
-            <td></td>
-            <td>355.25</td>
-            <td></td>
-            <td>355.25</td>
-            <td>710.50</td>
-        </tr>
-    </tbody>
-</table> -->
-
-
 
 <div class="print-area" id="printContent">
     <div class="main-container">
-        <div class="label-container">
+        <div *ngFor="let cart of array" class="label-container">
             <div class="label-header">
               Hello Brother
             </div>
@@ -85,7 +16,8 @@
               </div>
               <div class="label-row">
                 <span>Style : W024-119</span>
-                <span>Size : Pink - 32</span>
+                <span>Variant : Pink - 32</span>
+                
               </div>
               <div class="label-row">
                 <span>Price: ₹ 1,500.00</span>
@@ -96,114 +28,10 @@
               </div>
             </div>
         </div>
-        <div class="label-container">
-            <div class="label-header">
-              Hello Brother
-            </div>
-            <div class="label-body">
-              <div class="label-row">
-                <span>MRP : ₹ 2,000.00</span>
-                <span>Incl. all taxes</span>
-              </div>
-              <div class="label-row">
-                <span>Product : Clothing Sets</span>
-                <span>Net Qty : 1</span>
-              </div>
-              <div class="label-row">
-                <span>Style : W024-119</span>
-                <span>Size : Pink - 32</span>
-              </div>
-              <div class="label-row">
-                <span>Price: ₹ 1,500.00</span>
-                <span>Discount : 00</span>
-              </div>
-              <div class="label-barcode">
-                <app-real-barcode [product]="obj"></app-real-barcode>
-              </div>
-            </div>
-        </div>
-        <div class="label-container">
-            <div class="label-header">
-              Hello Brother
-            </div>
-            <div class="label-body">
-              <div class="label-row">
-                <span>MRP : ₹ 2,000.00</span>
-                <span>Incl. all taxes</span>
-              </div>
-              <div class="label-row">
-                <span>Product : Clothing Sets</span>
-                <span>Net Qty : 1</span>
-              </div>
-              <div class="label-row">
-                <span>Style : W024-119</span>
-                <span>Size : Pink - 32</span>
-              </div>
-              <div class="label-row">
-                <span>Price: ₹ 1,500.00</span>
-                <span>Discount : 00</span>
-              </div>
-              <div class="label-barcode">
-                <app-real-barcode [product]="obj"></app-real-barcode>
-              </div>
-            </div>
-        </div>
-        <div class="label-container">
-            <div class="label-header">
-              Hello Brother
-            </div>
-            <div class="label-body">
-              <div class="label-row">
-                <span>MRP : ₹ 2,000.00</span>
-                <span>Incl. all taxes</span>
-              </div>
-              <div class="label-row">
-                <span>Product : Clothing Sets</span>
-                <span>Net Qty : 1</span>
-              </div>
-              <div class="label-row">
-                <span>Style : W024-119</span>
-                <span>Size : Pink - 32</span>
-              </div>
-              <div class="label-row">
-                <span>Price: ₹ 1,500.00</span>
-                <span>Discount : 00</span>
-              </div>
-
-              <div class="label-barcode" >
-               <app-real-barcode [product]="obj"></app-real-barcode>
-              </div>
-            </div>
-        </div>
-        <div class="label-container">
-            <div class="label-header">
-              Hello Brother
-            </div>
-            <div class="label-body">
-              <div class="label-row">
-                <span>MRP : ₹ 2,000.00</span>
-                <span>Incl. all taxes</span>
-              </div>
-              <div class="label-row">
-                <span>Product : Clothing Sets</span>
-                <span>Net Qty : 1</span>
-              </div>
-              <div class="label-row">
-                <span>Style : W024-119</span>
-                <span>Size : Pink - 32</span>
-              </div>
-              <div class="label-row">
-                <span>Price: ₹ 1,500.00</span>
-                <span>Discount : 00</span>
-              </div>
-              <div class="label-barcode">
-                <app-real-barcode [product]="obj"></app-real-barcode>
-              </div>
-            </div>
-        </div>
+   
     </div>
     
       
       
   </div>
-  <button (click)="printPage()">Print</button>
+<button (click)="printPage()">Print</button>

@@ -10,6 +10,8 @@ export class TablesBasicComponent implements OnInit {
   obj = {
     sku : 'someValue12340987'
   }
+
+  array :any[] = new Array(6)
   
 
   constructor(private fb: FormBuilder) {
@@ -35,69 +37,77 @@ export class TablesBasicComponent implements OnInit {
                         box-sizing: border-box;
                       }
 
-                     .main-container{
-                      
-                        display: grid !important;
-                        grid-template-columns: repeat(4, 1fr) !important;
-                      // row-gap: 3px;
-                        column-gap: 2px;
 
-                        width: 100%;
-                      }
-                    /* Container */
-                    .label-container {
-                      width: 48mm;
-                      height: 28mm;
-                      border: 1px solid #ddd;
-                      border-radius: 5px;
-                      background-color: #fff;
-                      font-family: Arial, sans-serif;
-                      box-sizing: border-box;
-                      overflow: hidden;
-                      
-                    }
+ .main-container{
 
-                    /* Header */
-                    .label-header {
-                      background-color: #f59d33;
-                      color: #000;
-                      text-align: center;
-                      font-weight: bold;
-                      padding: 3px;
-                      font-size: 10px;
-                      border-radius: 4px 4px 0 0;
-                    }
+  display: grid;
+  grid-template-columns: repeat(4, 48mm); /* Four columns each 48mm wide */
+   column-gap: 1.5mm;
+  margin-top: 5mm;
+  margin-left: 5mm;
+}
+/* Container */
+.label-container {
 
-                    /* Body */
-                    .label-body {
-                      padding: 0 5px;
-                      font-size: 8px;
-                      line-height: 1.2;
-                    }
+  height: 26mm;
+  // border: 1px solid #ccc;
+  margin: 0px;
+  padding: 0px;
+  
+  border-radius: 5px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+  
+}
 
-                    /* Row styling */
-                    .label-row {
-                      display: flex;
-                      justify-content: space-between;
-                      margin: 2px 0;
-                    }
 
-                    /* Barcode section */
-                    // .label-barcode {
-                    //   text-align: center;
-                    //   margin-top: 5px;
-                    // }
+/* Header */
+.label-header {
+  // background-color: #f59d33;
+  color: #000;
+  text-align: center;
+  font-weight: bold;
+  padding-left: 1mm;
+    padding-right: 1mm;
+    padding-top:1mm ;
+  font-size: 10px;
+  border-radius: 4px 4px 0 0;
+}
 
-                    // .label-barcode img {
-                    //   width: 90%;
-                    //   height: auto;
-                    // }
+/* Body */
+.label-body {
+ padding-left: 1mm;
+  padding-right: 1mm;
+  padding-bottom: 1mm;
+  font-size: 8px;
+  line-height: 1.2;
+}
 
-                    // .label-barcode p {
-                    //   margin-top: 2px;
-                    //   font-size: 7px;
-                    //   letter-spacing: 1px;
-                    // }
+/* Row styling */
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.1mm 0;
+}
+
+/* Barcode section */
+.label-barcode {
+  text-align: center;
+  margin-top: 1mm;
+}
+
+.label-barcode img {
+  width: 70%; /* Adjust width to fit inside the card */
+  height: auto;
+}
+
+.label-barcode p {
+  margin-top: 0.5mm;
+  font-size: 8px; /* Smaller font for the barcode text */
+  letter-spacing: 1px;
+}
 
               }
             </style>

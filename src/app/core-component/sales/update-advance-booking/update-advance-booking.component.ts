@@ -377,8 +377,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
             item_name: new FormControl(j?.item_name),
             qty: new FormControl(j?.qty),
             price: new FormControl(j?.price),
-            tax: new FormControl(j?.tax || 0),
-            discount: new FormControl(j?.discount),
+            tax: new FormControl(parseInt(j?.tax || 0)),
+            discount: new FormControl(parseInt(j?.discount)),
             total: new FormControl(j?.total),
         })
         ); 
@@ -388,8 +388,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
           item_name: j?.item_name,
           qty: j?.qty,
           price: j.price,
-          tax: j?.tax || 0,
-          discount: j?.discount,
+          tax: parseInt(j?.tax || 0),
+          discount: parseInt( j?.discount),
           total: j?.total
         });
       }
@@ -1107,7 +1107,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   loaderPrint = false;
   loaderDraft = false;
   submit(type: any) {
-    console.log(this.saleEstimateForm.value);
+    console.warn(this.saleEstimateForm);
     if (this.saleEstimateForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
@@ -1158,9 +1158,10 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('advance_booking_cart', JSON.stringify(cartData));
-      this.saleService.updateAdvanceBooking(formdata, this.id).subscribe(res => {
-        // console.log(res);
-        this.getRes = res;
+      this.saleService.updateAdvanceBooking(formdata, this.id)
+      .subscribe({
+        next : (res) =>{
+          this.getRes = res;
         if (this.getRes.success) {
           if (type == 'new') {
             this.loaderCreate = false;
@@ -1182,6 +1183,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
             this.router.navigate(['//sales/advance-booking-list'])
           }
         } else {
+
           if (type == 'new') {
             this.loaderCreate = false;
           } else if (type == 'save') {
@@ -1192,18 +1194,24 @@ export class UpdateAdvanceBookingComponent implements OnInit {
             this.loaderDraft = false;
           }
         }
-      }, err => {
-        this.toastrService.error(err.error.msg)
-        if (type == 'new') {
-          this.loaderCreate = false;
-        } else if (type == 'save') {
-          this.loader = false;
-        } else if (type == 'print') {
-          this.loaderPrint = false;
-        } else if (type == 'draft') {
-          this.loaderDraft = false;
+        },
+        error : (err) =>{
+          // console.log(err)
+          this.toastrService.error(err.error.errors)
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
+      
       })
+
+      
     } else {
       if (type == 'new') {
         this.loaderCreate = false;
