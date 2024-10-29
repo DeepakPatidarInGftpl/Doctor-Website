@@ -10,7 +10,8 @@ import { Editor, Toolbar } from 'ngx-editor';
 import jsonDoc from './../../../doc';
 
 import { MatTabGroup } from '@angular/material/tabs';
-
+import editorConfig from '../../../helpers/AngularEditorConfig';
+import { DataTablesComponent } from '../../table/data-tables/data-tables.component';
 
 @Component({
   selector: 'app-addproduct',
@@ -20,7 +21,10 @@ import { MatTabGroup } from '@angular/material/tabs';
 })
 export class AddproductComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('components') _component: DataTablesComponent;
 
+
+  config = editorConfig
   selectTab(index: number) {
     this.tabGroup.selectedIndex = index;
   }
@@ -37,7 +41,7 @@ export class AddproductComponent implements OnInit, OnDestroy {
     ['bold', 'italic'],
     ['underline', 'strike'],
     ['code', 'blockquote'],
-    ['ordered_list', 'bullet_list'],
+    // ['ordered_list', 'bullet_list'],
     [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
     ['link', 'image'],
     ['text_color', 'background_color'],
@@ -493,6 +497,9 @@ export class AddproductComponent implements OnInit, OnDestroy {
 
   loader = false
   submit() {
+
+
+ 
     // console.log(this.productForm.value);
     let formdata: any = new FormData();
     formdata.append('title', this.productForm.get('title')?.value);
@@ -503,7 +510,7 @@ export class AddproductComponent implements OnInit, OnDestroy {
     formdata.append('subcategory_group', this.productForm.get('subcategory_group')?.value);
     formdata.append('unit', this.productForm.get('unit')?.value);
     // formdata.append('hsncode', this.productForm.get('hsncode')?.value);
-    formdata.append('description', this.productForm.get('description')?.value);
+    formdata.append('description',  this.productForm.get('description')?.value );
     formdata.append('product_store', this.productForm.get('product_store')?.value);
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
@@ -935,8 +942,12 @@ export class AddproductComponent implements OnInit, OnDestroy {
     imageGroup.get('file')?.updateValueAndValidity();
   }
 
-  saveAndNext() {
+ async saveAndNext() {
     // Check if all form fields are valid
+    const vals = this._component.ok()
+
+    this.productForm.get('description').setValue(vals?.texts)
+
     if (this.isFormValid()) {
       this.tabGroup.selectedIndex = 1;
     } else {

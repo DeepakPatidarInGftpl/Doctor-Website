@@ -123,5 +123,7 @@ export class TablesBasicComponent implements OnInit {
     }
   }
 
+  
+
 
 }

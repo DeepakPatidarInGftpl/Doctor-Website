@@ -365,7 +365,11 @@ export class AddSalesComponent implements OnInit {
         product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
       );
     }
-  }
+  };
+
+
+
+
   selectData: any[] = []
   SelectedProduct(variant: any) {
     // this.selectData.push(variant)
@@ -393,6 +397,7 @@ export class AddSalesComponent implements OnInit {
   get customer() {
     return this.saleForm.get('customer') as FormControl;
   }
+
 
 
   EstimateChange($event : Event){
@@ -431,13 +436,34 @@ export class AddSalesComponent implements OnInit {
       total: (item ? item?.total : 0),
       tax_amount: (item ? item.tax_amount : 0),
       description :item ? item.description : '',
+
     })
   }
   getCart(): FormArray {
     return this.saleForm.get('sale_order_cart') as FormArray;
   }
+
+  setCardValue(event: Event) {
+    const target = event.target as HTMLInputElement;
+const [cart] = this.estimateList.filter((element:any) => element.id== target.value);
+
+const len = cart?.cart;
+this.getCart().reset();
+this.getCart().clear()
+for (let index = 0; index < len.length; index++) this.addCart(len[index],index)
+
+
+  }
+
+
+
+
+
+
   isCart = false;
+
   addCart(data?:any,i?:number) {
+
     this.getCart().push(this.cart(data,i));
     this.isCart = false;
     const cartControl = this.cart();
@@ -2094,7 +2120,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       modal.style.display = 'none';
     }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
-    console.log(value);
+    // console.log(value);
     // this.barcode[index] = value.sku;
     this.v_id = value.id;
     const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
@@ -2291,7 +2317,7 @@ this.items.controls.forEach((res:any,i :number)=>{
       }
 
       this.totalDiscountAmount = this.totalDiscountAmount - discountAmount + addDiscountAmount;
-      console.log(this.totalDiscountAmount);
+      // console.log(this.totalDiscountAmount);
       
       // total = totalAmount- discountAmount;
       total = (total + discountAmount - addDiscountAmount);
