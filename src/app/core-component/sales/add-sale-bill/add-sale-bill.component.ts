@@ -261,10 +261,14 @@ export class AddSaleBillComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
-  changeSaleOrder(value) {
-      this.saleService.getSalesOrder().subscribe((res:any) => {
-      const [saleOrderData] = res?.filter((val)=> val.id === Number(value));
-      const cart = saleOrderData?.cart;
+  changeSaleOrder(id :string) {
+
+
+    
+      this.saleService.getSalesOrderById(Number(id)).subscribe((res:any) => {
+
+
+      const cart = res?.cart;
         this.getCart().clear(); 
         const formArr = this.saleBillForm.get('sale_bill_cart') as FormArray;
         

@@ -269,13 +269,27 @@
                         <td>
                             <a class="me-1" routerLink="//sales/salesbilldetails/{{products.id}}"><img
                                     src="assets/img/icons/eye.svg" alt="img"> </a>
-                            <a class="me-1" routerLink="//sales/updatesalesbill/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
-                                *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+                                    <span
+                                    *ngIf="(products.status === 'Partially-Return' || products.status === 'Return')"
+                                    style="opacity: 0.5;">
+                                        <a class="me-1"  *ngIf="isEdit">
+                                            <img src="assets/img/icons/edit.svg" alt="img">
+                                        </a>
+                                        <a  class="me-1 confirm-text" href="javascript:void(0);"
+                                            *ngIf="isDelete">
+                                            <img src="assets/img/icons/delete.svg" alt="img">
+                                        </a>
+                                    </span>
+                                    <span *ngIf="!(products.status === 'Partially-Return' || products.status === 'Return')">
+                                        <a class="me-1" routerLink="//sales/updatesalesbill/{{products.id}}" *ngIf="isEdit">
+                                            <img src="assets/img/icons/edit.svg" alt="img">
+                                        </a>
+                                        <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                            *ngIf="isDelete">
+                                            <img src="assets/img/icons/delete.svg" alt="img">
+                                        </a>
+                                    </span>
+                           
                         </td>
                     </tr>
                 </tbody>

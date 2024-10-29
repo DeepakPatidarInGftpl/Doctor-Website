@@ -276,6 +276,12 @@ export class AddSalesReturnComponent implements OnInit {
     }
   }
 
+
+
+  
+
+
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
@@ -342,29 +348,56 @@ export class AddSalesReturnComponent implements OnInit {
     return this.saleReturnForm.get('customer') as FormControl;
   }
 
-  cart(): FormGroup {
+
+  Sales_Bill_Change($event:Event){
+    const id = ($event.target as HTMLInputElement).value;
+    this.saleService.getSalesBillById(+id).subscribe({
+      next : (value)=> {
+        console.log(value)
+        const arr = value.cart;
+        this.getCart().reset();
+        this.getCart().clear();
+        for (let index = 0; index < arr.length; index++) {
+ 
+          this.addCart(index,arr[index])
+        }
+      },
+    })
+
+  }
+
+
+
+  cart(item?:any,i?:number): FormGroup {
+    if (item) {
+      this.tax[i] = item ? item?.tax : 0;
+      this.taxIntoRupees[i] = item ? item?.tax_amount : 0;
+      this.barcode[i] = item ? item?.barcode?.sku : 0;
+      this.TotalWithoutTax[i] = item ? ( item?.price * item?.qty) : 0;
+    }
+    console.warn(item)
     return this.fb.group({
-      barcode: (0),
-      item_name: (''),
-      qty: (0),
-      price: (0),
+      barcode: (item ? item?.barcode?.sku : 0),
+      item_name: (item? item?.item_name :''),
+      qty: (item ? item?.qty :0),
+      price: (item ? item?.price : 0),
       deduction: (0),
-      mrp: (0),
+      mrp: (item ? item?.mrp : 0),
       // tax:(0),
-      tax_amount:(0),
+      tax_amount:(item ? item?.tax_amount :0),
       // amount: (0),
       // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      total: (0),
-      description:''
+      tax: new FormControl(item ? item?.tax : 0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      total: ( item ? item ?.total :0),
+      description: ''
     })
   }
   getCart(): FormArray {
     return this.saleReturnForm.get('sale_return_cart') as FormArray;
   }
   isCart = false;
-  addCart(i) {
-    this.getCart().push(this.cart());
+  addCart(i:number, data?:any) {
+    this.getCart().push(this.cart(data,i));
     this.isCart = false;
     if (i > 0) {
       this.isPercentage[i] = true;

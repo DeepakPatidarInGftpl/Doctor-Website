@@ -69,14 +69,18 @@ export class TablesBasicComponent implements OnInit {
   color: #000;
   text-align: center;
   font-weight: bold;
-  padding: 0 5px;
+  padding-left: 1mm;
+    padding-right: 1mm;
+    padding-top:1mm ;
   font-size: 10px;
   border-radius: 4px 4px 0 0;
 }
 
 /* Body */
 .label-body {
-  padding: 0 5px;
+ padding-left: 1mm;
+  padding-right: 1mm;
+  padding-bottom: 1mm;
   font-size: 8px;
   line-height: 1.2;
 }

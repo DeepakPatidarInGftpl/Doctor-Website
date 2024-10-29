@@ -309,21 +309,49 @@ export class AddDeliveryChallanComponent implements OnInit {
     return this.deliveryChallanForm.get('account') as FormControl;
   }
 
-  cart(): FormGroup {
+  cart(item?:any ,i?:number): FormGroup {
+      if (item) {
+        this.barcode[i] = item ? item?.barcode?.sku : ''
+      }
     return this.fb.group({
-      barcode: (0),
-      item_name: (''),
-      qty: (0),
-      mrp: (0),
+      barcode: (item ? item?.barcode?.sku :0),
+      item_name: ( item ? item?.item_name :''),
+      qty: (item ? item?.qty :0),
+      mrp: (item ? item?.mrp :0),
       description : '',
     })
   }
   getCart(): FormArray {
     return this.deliveryChallanForm.get('cart') as FormArray;
   }
+
+  Sale_Bill_change($event : Event){
+
+    const id = ($event.target as HTMLInputElement).value;
+    this.saleService.getSalesBillById(Number(id)).subscribe({
+      next : (value)=> {
+        this.getCart().clear();
+        this.getCart().reset();
+      const arr = value?.cart;
+      for (let index = 0; index < arr.length; index++) {
+      this.addCart(arr[index],index)
+        
+      }
+
+   
+      },
+    })
+  }
+
+
+
+
+
+
+
   isCart = false;
-  addCart() {
-    this.getCart().push(this.cart());
+  addCart(item?:any,i?:number) {
+    this.getCart().push(this.cart(item,i));
     this.isCart = false;
   }
   removeCart(i: any) {
@@ -587,6 +615,7 @@ export class AddDeliveryChallanComponent implements OnInit {
     return this.taxForm.get('items') as FormArray;
   }
 
+ 
 
   addItem() {
     const item = this.fb.group({

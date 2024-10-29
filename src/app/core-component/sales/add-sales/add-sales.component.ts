@@ -397,16 +397,17 @@ export class AddSalesComponent implements OnInit {
 
   EstimateChange($event : Event){
     const id = ($event.target as HTMLInputElement).value;
+    this.saleService.getSalesEstimateById(Number(id)).subscribe({
+      next:(value :any)=> {
+        const arrs = value?.cart;
+        this.getCart().reset()
+         this.getCart().clear()
+        for (let index = 0; index < arrs.length; index++) {
+         this.addCart(arrs[index] , index)
+       }
+      },
+    })
 
-   const [obj] =  this.estimateList.filter((item:any)=>item.id == id);
-  
- const arrs = obj?.cart;
- this.getCart().reset()
-this.getCart().clear()
- for (let index = 0; index < arrs.length; index++) {
-  this.addCart(arrs[index] , index)
-  
- }
 
   }
 

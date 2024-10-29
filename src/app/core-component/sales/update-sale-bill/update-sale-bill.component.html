@@ -867,6 +867,10 @@
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="additionaldiscountt(i) && additionaldiscountt(i).invalid && additionaldiscountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
+
+                                                        <span class="text-danger" style="display: block;"
+                                                        *ngIf="(additionaldiscountt(i)?.value > discountLimit)">Your
+                                                        maximum discount Limit is {{discountLimit}}</span>
                                                 </td>
                                                 <td style="width: 130px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
@@ -1049,7 +1053,8 @@
                                 <li>
                                     <h4>Sub Total</h4>
                                     <h5>
-                                        {{calculateTotalWithoutTax() | currency:'INR'}}
+                                        {{calculateTotalWithoutTax().toFixed(2) | currency :'INR' }}
+                                 
                                         <input type="text" formControlName="subtotal" class="input"
                                             [ngModel]="calculateTotalWithoutTax().toFixed(2)" style="display: none;">
                                     </h5>
@@ -1084,7 +1089,7 @@
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5> {{calculateTotalForAll().toFixed(2) | currency:'INR'}} <input type="text"
+                                    <h5> {{calculateTotalForAll().toFixed(2) | currency :"INR" }} <input type="text"
                                             formControlName="total" class="input" style="display: none;"></h5>
                                 </li>
                             </ul>

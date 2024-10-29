@@ -54,7 +54,9 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Select Sale Bill*</label>
-                        <select formControlName="sale_bill">
+                        <select formControlName="sale_bill"
+                        (change)="Sale_Bill_change($event)"
+                        >
                             <option value="" selected disabled>Select Sales Bill</option>
                             <option [value]="bill.id" *ngFor="let bill of saleBillList">{{bill?.customer_bill_no}}
                             </option>

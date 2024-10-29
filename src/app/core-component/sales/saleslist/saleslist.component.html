@@ -246,13 +246,26 @@
                             <a class="me-1" routerLink="//sales/sales-details/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//sales/edit-sales/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
-                                *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+
+                            <span *ngIf="(products.status === 'Converted to Invoice' || products.status === 'Partially Converted to Invoice')" style="opacity: 0.5;">
+                                <a class="me-1"  *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a  class="me-1 confirm-text" href="javascript:void(0);"
+                                    *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                            <span *ngIf="!(products.status === 'Converted to Invoice' || products.status === 'Partially Converted to Invoice')" >
+                                <a class="me-1" routerLink="//sales/edit-sales/{{products.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                    *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                          
                         </td>
                     </tr>
                 </tbody>
