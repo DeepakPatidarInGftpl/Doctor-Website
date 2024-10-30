@@ -148,7 +148,7 @@
                                                 </div>
                                             </div>
                                             <div class="page-title">
-                                                <p class="heading">Sales Material Outward Details</p>
+                                                <p class="heading">Sales Material Outward Details </p>
                                             </div>
                                             <div class="pdf-address mb-4">
                                                 <div class="container">
@@ -164,8 +164,8 @@
                                                                     + ' , ' +
                                                                     selectedAddressBilling?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? '' + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ? selectedAddressBilling?.country?.country_name : ''}}
                                                                     <br />
                                                                     Phone: {{returnBillDetail?.customer?.phone_number}}
                                                                     <br />
@@ -181,8 +181,8 @@
                                                                     +' , ' +
                                                                     selectedAddressShipping?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? '' + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ?  selectedAddressBilling?.country?.country_name : ''}}
                                                                     <br />
                                                                     Phone: {{returnBillDetail?.customer?.phone_number}}
                                                                     <br />

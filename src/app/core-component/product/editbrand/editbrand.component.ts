@@ -81,11 +81,11 @@ export class EditbrandComponent implements OnInit {
         this.brandForm.patchValue({
           title: res?.title,
           code: res?.code,
-          discount: res?.discount,
-          markup_percentage_customer:res?.markup_percentage_customer,
-          markup_percentage_wholesale:res?.markup_percentage_wholesale,
-          markup_percentage_online:res?.markup_percentage_online,
-          markup_percentage_employee:res?.markup_percentage_employee
+          discount: parseInt(res?.discount),
+          markup_percentage_customer:parseInt(res?.markup_percentage_customer),
+          markup_percentage_wholesale:parseInt(res?.markup_percentage_wholesale),
+          markup_percentage_online:parseInt(res?.markup_percentage_online),
+          markup_percentage_employee:parseInt(res?.markup_percentage_employee)
         })
         if (res?.category.length > 0) {
           // console.log('categry');

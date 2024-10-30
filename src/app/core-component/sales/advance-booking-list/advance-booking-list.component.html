@@ -232,21 +232,47 @@
                                 'bg-lightyellow': ['Pending', 'Converted to order', 'Expired', 'Draft'].includes(products.status)
                               }" class="badges">{{products?.status}}</span></td>
                         <td>
-                            <mat-slide-toggle
+
+                            <span  *ngIf="(products.status === 'Booked')">
+                                <mat-slide-toggle
+                            
+                                disabled
+                               
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            </span>
+                            <span  *ngIf="!(products.status === 'Booked')">
+                                <mat-slide-toggle
+                            
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            </span>
+                           
                         </td>
                         <td>
                             <a class="me-1" routerLink="//sales/detail-advance-booking/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//sales/update-advance-booking//{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
-                                *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+
+                            <span *ngIf="(products.status === 'Booked')" style="opacity: 0.5;">
+                                <a class="me-1"  *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a  class="me-1 confirm-text" href="javascript:void(0);"
+                                    *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                            <span *ngIf="!(products.status === 'Booked')">
+                                <a class="me-1" routerLink="//sales/update-advance-booking//{{products.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                    *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+
+                            
                         </td>
                     </tr>
                 </tbody>

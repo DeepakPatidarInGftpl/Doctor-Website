@@ -49,7 +49,7 @@ export class TablesBasicComponent implements OnInit {
 /* Container */
 .label-container {
 
-  height: 26mm;
+  height: 24mm;
   // border: 1px solid #ccc;
   margin: 0px;
   padding: 0px;
@@ -81,7 +81,7 @@ export class TablesBasicComponent implements OnInit {
  padding-left: 1mm;
   padding-right: 1mm;
   padding-bottom: 1mm;
-  font-size: 8px;
+  font-size: 6px;
   line-height: 1.2;
 }
 

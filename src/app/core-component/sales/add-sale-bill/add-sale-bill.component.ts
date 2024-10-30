@@ -261,8 +261,10 @@ export class AddSaleBillComponent implements OnInit {
     this.maxDate = formattedMaxDate;
   }
 
+  waitOfApicall:boolean = false;
   changeSaleOrder(id :string) {
 
+    this.waitOfApicall = true;
 
     
       this.saleService.getSalesOrderById(Number(id)).subscribe((res:any) => {
@@ -342,6 +344,8 @@ export class AddSaleBillComponent implements OnInit {
           };
           this.subscribeToQtyChanges(formArr.at(i) as FormGroup, i);
         });
+    this.waitOfApicall = false;
+
         return formArr;
       })
   }

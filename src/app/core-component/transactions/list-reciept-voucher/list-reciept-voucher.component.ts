@@ -269,8 +269,9 @@ export class ListRecieptVoucherComponent implements OnInit {
       const nameLower = res?.customer?.account_id?.toLocaleLowerCase() || '';
       const companyNameLower = res?.receipt_voucher_no?.toLocaleLowerCase() || '';
       const mobile_number = res?.payer.title?.toLocaleLowerCase() || '';
+      const Namenumber = res?.payer?.company_name?.toLocaleLowerCase() || '';
     
-      return nameLower?.includes(searchTerm) || companyNameLower?.includes(searchTerm) || mobile_number?.includes(searchTerm);
+      return nameLower?.includes(searchTerm) || companyNameLower?.includes(searchTerm) || mobile_number?.includes(searchTerm) || Namenumber?.includes(searchTerm);
     });
   }
   

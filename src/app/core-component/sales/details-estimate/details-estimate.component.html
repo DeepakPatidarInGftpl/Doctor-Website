@@ -357,7 +357,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="pdf-table2 mb-4" *ngIf="estimateDetail?.logs?.length>0">
+                                            <div class="pdf-table2 mb-4" *ngIf="estimateDetail?.TaxSummary?.length>0">
                                                 <div class="container">
                                                     <div class="page-title">
                                                         <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>
@@ -392,7 +392,7 @@
                                                                         <td>{{tax?.taxable_value | currency :"INR" }}</td>
                                                                         <td>{{tax?.sgst +"%"}}</td>
                                                                         <td>{{(tax?.sgst_amount | currency :"INR") || 0}}</td>
-                                                                        <td>{{tax?.cgst +"%"}}</td>
+                                                                        <td>{{tax?.cgst == undefined ? 0 : tax?.cgst  +"%"}}</td>
                                                                         <td>{{(tax?.cgst_amount  | currency :"INR") || 0}}</td>
                                                                         <td>{{tax?.igst +"%"}}</td>
                                                                         <td>{{(tax?.igst_amount | currency :"INR") || 0}}</td>

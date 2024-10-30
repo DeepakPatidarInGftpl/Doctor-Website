@@ -1034,7 +1034,7 @@ this.items.controls.forEach((res:any,i :number)=>{
   }
 
   changePurchaseOrder(value) {
-    debugger
+  
     this.purchaseService.getPurchaseById(value).subscribe((res:any) => {
       const saleOrderData = res?.cart;
       // this.addCart(); 

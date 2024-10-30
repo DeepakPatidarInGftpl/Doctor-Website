@@ -9,6 +9,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressBarModule
   ],
 
  bootstrap: [AddSalesComponent]

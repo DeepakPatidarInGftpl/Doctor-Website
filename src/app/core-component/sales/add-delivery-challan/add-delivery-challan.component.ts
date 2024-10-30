@@ -325,8 +325,9 @@ export class AddDeliveryChallanComponent implements OnInit {
     return this.deliveryChallanForm.get('cart') as FormArray;
   }
 
+  waitOfApicall:boolean = false;
   Sale_Bill_change($event : Event){
-
+this.waitOfApicall = true
     const id = ($event.target as HTMLInputElement).value;
     this.saleService.getSalesBillById(Number(id)).subscribe({
       next : (value)=> {
@@ -337,6 +338,7 @@ export class AddDeliveryChallanComponent implements OnInit {
       this.addCart(arr[index],index)
         
       }
+      this.waitOfApicall = false
 
    
       },

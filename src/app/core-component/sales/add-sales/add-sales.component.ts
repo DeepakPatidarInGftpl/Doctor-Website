@@ -398,18 +398,22 @@ export class AddSalesComponent implements OnInit {
     return this.saleForm.get('customer') as FormControl;
   }
 
+  waitOfApicall:boolean = false;
 
 
   EstimateChange($event : Event){
+    this.waitOfApicall = true;
     const id = ($event.target as HTMLInputElement).value;
     this.saleService.getSalesEstimateById(Number(id)).subscribe({
       next:(value :any)=> {
+
         const arrs = value?.cart;
-        this.getCart().reset()
+         this.getCart().reset()
          this.getCart().clear()
         for (let index = 0; index < arrs.length; index++) {
          this.addCart(arrs[index] , index)
        }
+       this.waitOfApicall = false
       },
     })
 
