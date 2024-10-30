@@ -188,7 +188,7 @@
                         <!-- <td>{{products?.note}}</td> -->
                         <td>
                             <span
-                                [ngClass]="{'bg-lightgreen': products?.status === 'Received', 'bg-lightred' : products?.status === 'Pending','bg-lightyellow' : products?.status === 'Draft' || products?.status === 'New'}"
+                                [ngClass]="{'bg-lightgreen': products?.status === 'Received', 'bg-lightred' : products?.status === 'Pending','bg-lightyellow' : products?.status === 'Draft' || products?.status === 'New' , 'bg-success' : products?.status ===  'Completed'}"
                                 class="badges">{{products?.status}}</span>
                         </td>
                         <!-- <td>
@@ -202,10 +202,20 @@
                                 *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                            <span style="opacity: 0.5;" *ngIf="(products?.status ===  'Completed')">
+                                <a  class="me-1 confirm-text" href="javascript:void(0);"
                                 *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </span>
+
+                            <span  *ngIf="!(products?.status ===  'Completed')">
+                                <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                *ngIf="isDelete">
+                                <img src="assets/img/icons/delete.svg" alt="img">
+                            </a>
+                            </span>
+                           
                         </td>
                     </tr>
                 </tbody>

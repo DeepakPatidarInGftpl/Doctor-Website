@@ -159,6 +159,10 @@
                                                     data-bs-target="#reject_modal">
                                                     Reject
                                                 </button>
+                                                <button class="btn approve-status-badge" data-bs-toggle="modal"
+                                                    data-bs-target="#complete_modal">
+                                                    Complete
+                                                </button>
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <button data-bs-toggle="tooltip" class="me-3 d-flex border-0 bg-white"
@@ -628,7 +632,6 @@
         </div>
     </div>
 </div>
-
 <div id="reject_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -641,6 +644,23 @@
                 <div class="mt-2 d-flex justify-content-end align-items-center">
                     <button class="btn btn-primary me-3" (click)="reject()">Submit</button>
                     <button class="btn btn-danger m-0" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="complete_modal" [ngClass]="!!isSyncLoading ? 'blur-modal' : ''" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header approve-modal-wrapper">
+                <button type="button" class="btn-close closeRejectModal close-wrapper" data-bs-dismiss="modal"
+                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h5 class="modal-title">Are you sure you want to Complete this purchase return?</h5>
+            </div>
+            <div class="modal-body approve-modal-wrapper">
+                <div class="mt-2 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-primary me-3" (click)="Completed(btn)">Submit</button>
+                    <button class="btn btn-danger m-0" data-bs-dismiss="modal" #btn aria-label="Close">Cancel</button>
                 </div>
             </div>
         </div>

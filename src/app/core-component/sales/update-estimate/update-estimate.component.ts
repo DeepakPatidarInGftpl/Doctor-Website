@@ -398,7 +398,7 @@ export class UpdateEstimateComponent implements OnInit {
             this.taxIntoRupees[i] = taxPrice;
             let totalWithoutTaxPrice = j.price - taxPrice;
             let TotalWithoutTax = (totalWithoutTaxPrice* j.qty);
-            this.TotalWithoutTax[i] = TotalWithoutTax.toFixed(2);
+            this.TotalWithoutTax[i] = parseFloat(''+TotalWithoutTax);
             console.log(this.TotalWithoutTax[i]);
         
         let totalDiscount: any = 0;
@@ -1600,15 +1600,15 @@ export class UpdateEstimateComponent implements OnInit {
       this.calculateRoundoffValue()
     // }, 2000);
   }
-  calculationDiscountCostPrice(index) {
-    console.log(this.costPrice);
+  calculationDiscountCostPrice(index:number) {
+    console.log(index,'costPrice');
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('price');
     const taxPercentageControl = cartItem.get('tax');
     const discountPercentageControl = cartItem.get('discount');
     const QtyControl = cartItem.get('qty');
     this.batchCostPrice[index] = this.coastprice[index];
-    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
+    if (purchaseRateControl.value && taxPercentageControl.value && discountPercentageControl.value) {
       if (this.isTaxAvailable[index] == true) {
         const discountPercentage = +discountPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
@@ -1658,7 +1658,8 @@ export class UpdateEstimateComponent implements OnInit {
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
         let getCoastPrice = this.costPrice - getDiscountPrice;
-        this.TotalWithoutTax[index] = (getCoastPrice * qty).toFixed(2) || 0
+        let calu = (getCoastPrice * qty).toFixed(2)
+        this.TotalWithoutTax[index] = calu || 0
         console.log(this.TotalWithoutTax[index]);
         let taxprice = ((getCoastPrice * purchaseTax) / 100) || 0
         this.taxIntoRupees[index] = taxprice || 0;

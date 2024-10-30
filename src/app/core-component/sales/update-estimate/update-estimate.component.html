@@ -819,8 +819,16 @@
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
-                                                <td class="text-end"> <input type="number" class="input" readonly
-                                                        [value]="TotalWithoutTax[i] || 0"  style="width: 130px !important;"></td>
+                                                <td style="width: 130px !important;" class="text-end">
+                                                    <div class="border text-center py-2 px-5"
+                                                    style="border-radius: 5px;"
+                                                    >
+                                                            {{TotalWithoutTax[i] || 0}}
+                                                    </div>
+                                                     <!-- <input type="number" class="input" readonly
+                                                        [value]=""  style="width: 130px !important;"> -->
+                                                    
+                                              </td>
                                                 <td class="text-end">
                                                     <input type="number" formControlName="total" class="input" readonly  style="width: 130px !important;">
                                                 </td>

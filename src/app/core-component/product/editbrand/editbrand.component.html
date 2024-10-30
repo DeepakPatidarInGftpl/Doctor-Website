@@ -225,7 +225,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label> Brand Image*</label>
                             <!-- <div class="image-upload">
@@ -239,19 +239,19 @@
                                 </span>
                             </div> -->
                             <div class="row">
-                                <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="image-upload">
                                         <input type="file" formControlName="image" (change)="onSelect($event)">
                                         <div class="image-uploads">
                                             <img src="assets/img/icons/upload.svg" alt="img">
-                                            <h4>Drag and drop a file to upload</h4>
+                                            <h4> Upload A Image <br> 100 X 100</h4>
                                         </div>
                                         <span class="text-danger"
                                             *ngIf="image && image.invalid && image.touched">Select image</span>
                                         <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="col-lg-6 col-sm-6 col-12">
                                     <img [src]="url" *ngIf="url" alt="" class="p_img">
                                     <img [src]="imgUrl+updateData?.image" *ngIf="!url" alt="" class="p_img">
                                 </div>

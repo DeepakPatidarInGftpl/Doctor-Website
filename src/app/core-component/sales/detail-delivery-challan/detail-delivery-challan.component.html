@@ -125,8 +125,8 @@
                                                                     +' , ' +
                                                                     selectedAddressBilling?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? '' + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ?  selectedAddressBilling?.country?.country_name : ''}}
                                                                     <br />
                                                                     Phone:
                                                                     {{deliveryChallanDetail?.customer?.phone_number}}
@@ -144,8 +144,8 @@
                                                                     +' , ' +
                                                                     selectedAddressShipping?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? '' + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ?  selectedAddressBilling?.country?.country_name : ''}}
                                                                     <br />
                                                                     Phone:
                                                                     {{deliveryChallanDetail?.customer?.phone_number}}
@@ -236,7 +236,7 @@
                                                                     <tr
                                                                         *ngFor="let cart of deliveryChallanDetail?.cart; let i =index">
                                                                         <td>{{i+1}}</td>
-                                                                        <td>{{cart?.barcode}}</td>
+                                                                        <td>{{cart?.barcode.sku}}</td>
                                                                         <td>{{cart?.item_name}}</td>
                                                                         <td>{{cart?.barcode?.product?.subcategory?.title}}</td>
                                                                         <td>{{cart?.barcode?.product?.brand?.title}}</td>

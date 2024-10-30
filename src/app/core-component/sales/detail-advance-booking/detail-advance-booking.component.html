@@ -199,14 +199,14 @@
                                                                 <p class="heading">Billing Address</p>
                                                                 <p class="heading2">
                                                                     {{companyDetails?.name}}
-                                                                    {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1
+                                                                    {{selectedAddressBilling?.address_line_1 == null ? '' : selectedAddressBilling?.address_line_1
                                                                     + ' , ' +
                                                                     selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2
                                                                     +' , ' +
                                                                     selectedAddressBilling?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? '' + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ? selectedAddressBilling?.country?.country_name : '' }}
                                                                     <br />
                                                                     Phone: {{estimateDetail?.customer?.phone_number}}
                                                                     <br />
@@ -223,8 +223,8 @@
                                                                     +' , ' +
                                                                     selectedAddressShipping?.city?.city}}
                                                                     <br>
-                                                                    {{selectedAddressBilling?.state?.state + ' , ' +
-                                                                    selectedAddressBilling?.country?.country_name}}
+                                                                    {{selectedAddressBilling?.state?.state ?? ''  + ' , ' +
+                                                                    selectedAddressBilling?.country?.country_name ? selectedAddressBilling?.country?.country_name : ''}}
                                                                     <br />
                                                                     Phone: {{estimateDetail?.customer?.phone_number}}
                                                                     <br />

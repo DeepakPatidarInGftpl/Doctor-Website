@@ -261,7 +261,7 @@ export class DetailsRecieptVoucherComponent implements OnInit {
     let id: any = Number(this.id)
     const formData = new FormData();
     formData.append('id', id)
-    formData.append('status', 'Approved')
+    formData.append('status', 'Receive')
     this.transactionService.receiptVoucherStatusUpdate(formData).subscribe((res)=> {
       console.log(res);
       setTimeout(() => {
