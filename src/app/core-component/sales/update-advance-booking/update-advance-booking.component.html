@@ -473,8 +473,8 @@
                                     <ng-container formArrayName="advance_booking_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
-                                                <td>{{i+1+'.'}}</td>
-                                                <td>
+                                                <td style="width: 10px !important;">{{i+1+'.'}}</td>
+                                                <td style="width: 20px !important;">
                                                     <div>
                                                         <div class="me-2">
                                                             <svg (click)="removeCart(i)" style="color:red"
@@ -499,7 +499,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                    <input class="input" style="width: 200px !important;" type="text" placeholder="Search Barcode"
                                                         [attr.data-index]="i"
                                                         [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                         (keyup)="getVariant(id.value,i,'barcode')"
@@ -515,7 +515,7 @@
                                                                 [formControl]="d.get('item_name')"
                                                                 (input)="getVariant($event.target.value,i,'')"
                                                                 [matAutocomplete]="autos"
-                                                                style="box-sizing: border-box;" />
+                                                                style="box-sizing: border-box; width: 200px !important;" />
                                                             <mat-autocomplete #autos="matAutocomplete">
                                                                 <!-- <ng-container *ngIf="d.get('item_name')?.value?.length >= 1 && d.get('item_name')?.value?.length > 0"> -->
                                                                 <ng-container *ngFor="let option of variantList[i]">
@@ -637,8 +637,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="number" formControlName="qty" class="input"></td>
-                                                <td><input type="number" formControlName="price" class="input" #price>
+                                                <td><input type="number" style="width: 100px !important;" formControlName="qty" class="input"></td>
+                                                <td><input type="number" style="width: 100px !important;" formControlName="price" class="input" #price>
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch()"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -716,13 +716,13 @@
                                                     </div>
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                                <td><input type="number" formControlName="discount" class="input"
+                                                <td><input type="number" style="width: 100px !important;" formControlName="discount" class="input"
                                                         readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter
                                                         Discount ex: 1-100 % </span>
                                                 </td>
-                                                <td>
+                                                <td style="width: 130px !important;">
                                                     <!-- <input type="text" formControlName="tax" class="input" readonly>
                                             <span class="text-danger" style="display: block;" *ngIf="taxx(i) && taxx(i).invalid && taxx(i).touched"> Enter Tax ex: 1-100 %</span> -->
                                                     <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' +
@@ -731,10 +731,10 @@
                                                     <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                                 </td>
                                                 <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
-                                                <td class="text-end"> <input type="number" class="input" readonly
+                                                <td class="text-end"> <input type="number" style="width: 130px !important;" class="input" readonly
                                                         [value]="TotalWithoutTax[i]"></td>
                                                 <td class="text-end">
-                                                    <input type="number" formControlName="total" class="input" readonly>
+                                                    <input type="number" style="width: 130px !important;" formControlName="total" class="input" readonly>
                                                 </td>
                                             </tr>
                                         </ng-container>

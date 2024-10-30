@@ -9,6 +9,7 @@ import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AddDeliveryChallanComponent } from './add-delivery-challan.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [AddDeliveryChallanComponent],
@@ -22,6 +23,7 @@ import { AddDeliveryChallanComponent } from './add-delivery-challan.component';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressBarModule
   ]
 })
 export class AddDeliveryChallanModule { }

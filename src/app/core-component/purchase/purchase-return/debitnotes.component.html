@@ -198,6 +198,7 @@
                             <span [ngClass]="{
                                 'bg-lightgreen': products.status === 'Approved',
                                 'bg-lightred': products.status === 'Rejected',
+                                'bg-success': products.status === 'Completed',
                                 'bg-lightyellow': ['Pending', 'Sent', 'Draft'].includes(products.status)
                               }" class="badges">{{products.status}}</span>
                         </td>

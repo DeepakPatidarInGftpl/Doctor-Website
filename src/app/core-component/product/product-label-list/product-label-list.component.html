@@ -99,22 +99,22 @@
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr
                                 *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                                <td>
+                                <td style="width: 30px !important;">
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td>{{i+1}}</td>
-                                <td><a class="product-img"
+                                <td style="width: 10px !important;">{{i+1}}</td>
+                                <td style="width: 80px !important;"><a class="product-img"
                                         routerLink="//product/detail-product-label/{{products?.id}}">{{products.title}}</a>
                                 </td>
-                                <td>
+                                <td style="width: 50px !important;">
                                     {{ products.incentive_type === '%' ? products.incentive + products.incentive_type :
                                     products.incentive_type+ ' ' + products.incentive }}
                                 </td>
 
-                                <td>
+                                <td style="width: 20px !important;">
                                     <!-- <mat-slide-toggle
                                         (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle> -->

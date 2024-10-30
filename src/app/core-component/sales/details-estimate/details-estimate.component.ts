@@ -59,18 +59,19 @@ export class DetailsEstimateComponent implements OnInit {
       if (this.id == res.id) {
 
         this.estimateDetail = res;
-
+        console.warn(res)
 
 
         res.TaxSummary.forEach((element:any) => {
           element.sumOfamount = 0;
           if ( element.igst > 0) {
+           
             element.igst_amount =  element.igst;
             element.igst = element.tax;
             element.sumOfamount += element.total_tax
             
           }else{
-
+           
             const taxs =( element.tax/2) || 0;
             const total_tax = (element.total_tax /2)
 

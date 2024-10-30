@@ -191,6 +191,26 @@ export class DetailsDebitnotesComponent implements OnInit {
       this.coreService.loaderBehaveSub.next(false);
     })
   }
+  Completed(btn:any) {
+    this.isSyncLoading = true;
+    this.coreService.loaderBehaveSub.next(true);
+    let id: any = Number(this.id)
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('status', 'Completed')
+    this.purchaseService.purchaseReturnStatusUpdate(formData).subscribe((res)=> {
+      console.log(res);
+      setTimeout(() => {
+        this.coreService.loaderBehaveSub.next(false);
+        this.isSyncLoading = false;
+        this.getdata();
+       btn.click()
+      }, 500);
+    }, (err) => {
+      this.isSyncLoading = false;
+      this.coreService.loaderBehaveSub.next(false);
+    })
+  }
 
   
 

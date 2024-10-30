@@ -28,7 +28,7 @@
                                     (account?.company_name + ' (' +
                                     account?.account_id + ')') : account?.account_id"
                                         (onSelectionChange)="oncheck(account)" style="color:#FF9F43">
-                                        {{ account?.company_name  + ' (' + account?.account_id + ')'
+                                        {{ account?.company_name ? account?.company_name : ''  + ' (' + account?.account_id + ')'
                                         }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredFromAccount | async) as accounts">

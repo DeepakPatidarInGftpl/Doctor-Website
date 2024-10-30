@@ -349,7 +349,10 @@ export class AddSalesReturnComponent implements OnInit {
   }
 
 
+  waitOfApicall:boolean = false;
+
   Sales_Bill_Change($event:Event){
+    this.waitOfApicall = true;
     const id = ($event.target as HTMLInputElement).value;
     this.saleService.getSalesBillById(+id).subscribe({
       next : (value)=> {
@@ -361,6 +364,7 @@ export class AddSalesReturnComponent implements OnInit {
  
           this.addCart(index,arr[index])
         }
+        this.waitOfApicall = false;
       },
     })
 

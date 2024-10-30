@@ -10,6 +10,7 @@ import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PaymentsModule } from '../../payments/payments.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     AddSaleBillComponent
@@ -24,7 +25,8 @@ import { PaymentsModule } from '../../payments/payments.module';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
-    PaymentsModule
+    PaymentsModule,
+    MatProgressBarModule
   ]
 })
 export class AddSaleBillModule { }
