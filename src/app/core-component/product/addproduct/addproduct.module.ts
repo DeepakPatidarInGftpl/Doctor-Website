@@ -11,6 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { DataTableSModule } from '../../table/data-tables/data-tables.module';
 @NgModule({
   declarations: [
     AddproductComponent
@@ -62,7 +63,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     MatIconModule,
     MatSelectModule,
     MatCheckboxModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    DataTableSModule
   ]
 })
 export class AddproductModule { }

@@ -411,8 +411,10 @@ export class UpdateEstimateComponent implements OnInit {
                     item_name: new FormControl(j?.item_name),
                     qty: new FormControl(j?.qty),
                     price: new FormControl(j.price),
+
                     tax: new FormControl(parseInt( j?.tax || 0)),
                     discount: new FormControl(parseInt( j?.discount)),
+
                     total: new FormControl(j?.total)
                 })
             );
@@ -422,7 +424,9 @@ export class UpdateEstimateComponent implements OnInit {
                 item_name: j?.item_name,
                 qty: j?.qty,
                 price: j.price,
+
                 tax: parseInt( j?.tax || 0),
+
                 discount: parseInt(j?.discount),
                 total: j?.total
             });
@@ -479,7 +483,8 @@ export class UpdateEstimateComponent implements OnInit {
       price: (0),
       // amount: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      // tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(0),
       total: (0),
     })
   }
