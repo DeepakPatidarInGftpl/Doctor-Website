@@ -1993,8 +1993,8 @@ export class UpdateSaleBillComponent implements OnInit {
       formdata.append('note', this.saleBillForm.get('note')?.value);
       formdata.append('total_qty', this.saleBillForm.get('total_qty')?.value);
       formdata.append('total_tax', this.saleBillForm.get('total_tax')?.value);
-      formdata.append('total_discount', this.saleBillForm.get('total_discount')?.value);
-      formdata.append('roundoff', this.saleBillForm.get('roundoff')?.value);
+      formdata.append('total_discount', parseFloat(this.saleBillForm.get('total_discount')?.value ).toFixed(2));
+      formdata.append('roundoff', parseFloat(this.saleBillForm.get('roundoff')?.value).toFixed(2));
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
       formdata.append('total', this.calculateTotalForAll());
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);

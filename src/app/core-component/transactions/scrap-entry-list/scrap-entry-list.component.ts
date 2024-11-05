@@ -97,30 +97,27 @@ isAdmin = false;
 
 select=false
   selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false
-      })
-    }
+    this.tableData.forEach((f: any) => {
+      f.isSelected = !initChecked;
+    });
   }
   
-  search() {
-    if (this.titlee === "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
+  search(event : Event) {
+    const searchTerm = (event.target as HTMLInputElement).value?.toLocaleLowerCase();
+    this.tableData = this.dalaCloneForFilter;
+
+
+
+     
       this.tableData = this.tableData.filter((res:any) => {
-        const nameLower = res?.voucher_no.toLocaleLowerCase() || "";
-        if (nameLower.includes(searchTerm) ) {
-          return true;
-        } 
-        return false;
+        const voucher_no = res?.voucher_no.toLocaleLowerCase() || "";
+        const updaterName = res?.updater_name.toLocaleLowerCase() || "";
+        const date = res?.date.toLocaleLowerCase() || "";
+        const status = res?.status.toLocaleLowerCase() || "";
+        return voucher_no.includes(searchTerm) ||  updaterName.includes(searchTerm) || status.includes(searchTerm) || date.includes(searchTerm)
+       
       });
-    }
+  
   }
   
 
@@ -291,15 +288,17 @@ select=false
     }
   }
 //20-5
+dalaCloneForFilter:any[] = []
 getEstimate(fy:any){
   const idString = JSON.stringify(this.selectData);
   console.log(idString);
   console.log(idString?.length);
   
-  this.transactionService.getScrapEntryFy(fy,this.selectData).subscribe(res => {
+  this.transactionService.getScrapEntryFy(fy,this.selectData).subscribe((res:any) => {
     this.tableData = res;
     this.loader = false;
     this.selectedRows = new Array(this.tableData.length).fill(false);
+    this.dalaCloneForFilter = res
    
   })
 }

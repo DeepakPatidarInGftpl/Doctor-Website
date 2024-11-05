@@ -9,7 +9,18 @@
                     <h4>New Sales Estimate</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/updatesalesEstimate/{{estimateDetail ?.id}}" class="btn btn-added">
+                    <span
+                    *ngIf="(estimateDetail?.status == 'Converted to order' ||estimateDetail?.status == 'Partially Converted to Order' )"
+                    style="opacity: 0.5;"
+                    >
+                    <a  class="btn btn-added">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Estimate
+                    </a>
+
+                    </span>
+                    <a
+                    *ngIf="!(estimateDetail?.status == 'Converted to order' || estimateDetail?.status == 'Partially Converted to Order' )"
+                    routerLink="//sales/updatesalesEstimate/{{estimateDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Estimate
                     </a>
                 </div>

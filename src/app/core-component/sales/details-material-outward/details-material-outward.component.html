@@ -9,7 +9,13 @@
                     <h4>New Sales Material Outward</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/updatesalesMaterialOutward/{{returnBillDetail ?.id}}" class="btn btn-added">
+
+                    <a *ngIf="(returnBillDetail?.status ===  'Completed')" class="btn btn-added" style="opacity: 0.5;">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Material Outward
+                    </a>
+                    <a
+                    *ngIf="!(returnBillDetail?.status ===  'Completed')"
+                    routerLink="//sales/updatesalesMaterialOutward/{{returnBillDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Material Outward
                     </a>
                 </div>

@@ -4,10 +4,10 @@
         <div class="page-header">
             <div class="page-title">
                 <h4 (click)="location.back()"> <mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>Product Label Details</h4>
-                <h6>Full details of a Product Label </h6>
+                <h6>Full details of a Product Label ki </h6>
             </div>
             <div class="page-btn">
-                <a routerLink="//product/product-label" class="btn btn-added">
+                <a [routerLink]="'//product/product-label/edit/'+id" class="btn btn-added">
                     <img src="assets/img/icons/edit.svg" class="me-1" alt="img" >Edit Product Label
                 </a>
             </div>

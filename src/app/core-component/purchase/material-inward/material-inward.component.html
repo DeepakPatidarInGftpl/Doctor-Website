@@ -211,7 +211,7 @@
                         <td>{{products?.recieved_by}}</td>
                         <td>
                             <span
-                                [ngClass]="{'bg-lightgreen': products?.status === 'Completed', 'bg-lightred' : products?.status === 'Inprogress','bg-lightyellow' : products?.status === 'Draft'}"
+                                [ngClass]="{'bg-lightgreen': products?.status === 'Completed', 'bg-success' : products?.status === 'Received' , 'bg-lightred' : products?.status === 'Inprogress','bg-lightyellow' : products?.status === 'Draft'}"
                                 class="badges">{{products?.status}}</span>
                         </td>
                         <!-- <td>

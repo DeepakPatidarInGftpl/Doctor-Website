@@ -208,7 +208,7 @@ export class AddmaterialInwardComponent implements OnInit {
       barcode: (0),
       variant_name: (''),
       qty: (0),
-      po_qty: (0),
+      po_qty: new FormControl(0,Validators.required),
       mrp: (0),
       description : ''
       // unit_cost:(0)
@@ -616,10 +616,11 @@ this.items.controls.forEach((res:any,i :number)=>{
       this.isFormCartInvalid = false;
     }
   }
-
+  ckCartForm: boolean = false;
   submit(type: any) {
     this.checkCartValidation();
     if(this.checkCartValidationSync()){
+      
     this.formDetails = this.materialForm.value;
     console.log(this.formDetails);
     if (this.materialForm.valid) {
@@ -695,7 +696,7 @@ this.items.controls.forEach((res:any,i :number)=>{
         }
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
-      this.purchaseService.addMaterial(formdata).subscribe(res => {
+      this.purchaseService.addMaterial(formdata).subscribe((res : any) => {
         this.getRes = res;
         if (this.getRes.success) {
           // this.router.navigate(['//purchase/material-Inward-list'])
@@ -726,6 +727,10 @@ this.items.controls.forEach((res:any,i :number)=>{
             this.router.navigate(['//purchase/material-Inward-list'])
           }
         } else {
+          if (res?.error?.po_qty[0] == 'This field is required.') {
+            this.toastrService.error( 'PO QTY field is required ' )
+          }
+        
           if (type == 'new') {
             this.loaderCreate = false;
           } else if (type == 'save') {
@@ -748,6 +753,8 @@ this.items.controls.forEach((res:any,i :number)=>{
         }
       })
     } else {
+      this.ckCartForm = true;
+      this.materialForm.markAsDirty()
       this.materialForm.markAllAsTouched()
       this.toastrService.error('Please Fill All The Required Fields', '', { timeOut: 1000 })
     }
