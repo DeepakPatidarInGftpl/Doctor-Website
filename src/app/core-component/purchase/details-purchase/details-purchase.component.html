@@ -10,7 +10,14 @@
                     <h4>New Purchase Order </h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//purchase/editpurchase/{{purchaseDetail ?.id}}" class="btn btn-added">
+                    <span style="opacity: 0.5;">
+                        <a  class="btn btn-added" *ngIf="(purchaseDetail?.status === 'Cancelled' || purchaseDetail?.status === 'Used' || purchaseDetail?.status === 'Partially Used' )">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Purchase Order
+                        </a>
+                    </span>
+                    <a
+                    *ngIf="!(purchaseDetail?.status === 'Cancelled' || purchaseDetail?.status === 'Used' || purchaseDetail?.status === 'Partially Used' )"
+                    routerLink="//purchase/editpurchase/{{purchaseDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Purchase Order
                     </a>
                 </div>
@@ -373,7 +380,7 @@
                                             </div>
 
 
-                                            <div class="pdf-table2 mb-4" *ngIf="purchaseDetail?.logs?.length>0">
+                                            <div class="pdf-table2 mb-4" *ngIf="purchaseDetail?.TaxSummary?.length>0">
                                                 <div class="container">
                                                     <div class="page-title">
                                                         <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>
@@ -406,8 +413,8 @@
                                                                     >
                                                                         <td>{{tax?.HSNCODE}}</td>
                                                                         <td>{{tax?.taxable_value | currency :"INR" }}</td>
-                                                                        <td>{{tax?.sgst +"%"}}</td>
-                                                                        <td>{{(tax?.sgst_amount | currency :"INR") || 0}}</td>
+                                                                        <td>{{tax  ? tax?.sgst :  0  +"%"}}</td>
+                                                                        <td>{{(tax?.sgst_amount ?? 0) | currency :"INR"}}</td>
                                                                         <td>{{tax?.cgst +"%"}}</td>
                                                                         <td>{{(tax?.cgst_amount  | currency :"INR") || 0}}</td>
                                                                         <td>{{tax?.igst +"%"}}</td>

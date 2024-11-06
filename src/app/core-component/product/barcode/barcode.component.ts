@@ -1,4 +1,4 @@
-import {  Component, OnInit } from '@angular/core';
+import {  Component, OnInit, ViewChild } from '@angular/core';
 import {  FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { Location } from '@angular/common';
+import { TablesBasicComponent } from '../../table/tables-basic/tables-basic.component';
 
 @Component({
   selector: 'app-barcode',
@@ -20,6 +21,7 @@ export class BarcodeComponent implements OnInit {
   constructor(private coreService: CoreService, private saleService: SalesService, private purchaseService: PurchaseServiceService,
     private Arout: ActivatedRoute, private router: Router, private toastr: ToastrService, public location:Location) { }
 
+    @ViewChild('compont') _component : TablesBasicComponent
 
 
   purchaseControl = new FormControl();
@@ -44,6 +46,7 @@ export class BarcodeComponent implements OnInit {
   }
  
   goBack() {
+    
   //  window.r
   }
 
@@ -255,20 +258,9 @@ export class BarcodeComponent implements OnInit {
      console.log(this.new_arr,'new_arr')
   }
 
-  printPG(): void {
-    // const printElements = document.querySelectorAll('.row'); // Select all rows containing cards
-    // printElements.forEach((row) => {
-    //     const printContents = row.outerHTML;
-    //     const originalContents = document.body.innerHTML;
-    //     document.body.innerHTML = printContents;
-    //     window.addEventListener('afterprint', () => {
-    //         console.log('afterprint');
-    //         window.location.reload();
-    //     });
-    //     window.print();
-    //     document.body.innerHTML = originalContents;
-    // });
-    this.printTable()
+  printPG() {
+  
+    this._component.printPage()
 }
 
 
@@ -279,9 +271,8 @@ export class BarcodeComponent implements OnInit {
   // }
   productData: any[] = [];
   onCheckProduct(data: any) {
-    console.log(data);
     this.variantData = [];
-    const productWithQty = { ...data, qty: 1, mrp: data?.batch[0]?.mrp, selling_price_offline: data?.batch[0]?.selling_price_offline, };
+    const productWithQty = { ...data, qty: 1, mrp: data?.batch[0]?.mrp, additional_discount : data?.batch[0]?.additional_discount, selling_price_offline: data?.batch[0]?.selling_price_offline, };
     if (this.productData.some(item => item.id === data.id)) {
       this.toastr.warning('Product is already selected');
     } else {
@@ -346,6 +337,7 @@ export class BarcodeComponent implements OnInit {
   printProduct(qtyVl:any) {
     this.isPrint = false;
     this.isPrintProduct = true;
+    this.isSelectPg=true;
     // console.warn(this.cartData, 'cartdata');
     console.warn(this.productData[0], 'productData');
     console.warn(this.loopQut,'qtyVl')
@@ -419,7 +411,12 @@ async printTable() {
 
 }
 
+backBtn : boolean = false;
+
 async printPage() {
+
+  this.backBtn = true;
+  console.log(this.backBtn)
   const printContent = document.getElementById('mytable');
   const WindowPrt = window.open('', '', 'width=800,height=600');
   if (printContent && WindowPrt) {
@@ -453,7 +450,7 @@ async printPage() {
 
 
   selectedPageSize: string='a4'; 
-  isSelectPg=true;
+  isSelectPg=false;
   selectPG(size: string): void {
     this.selectedPageSize = size;
     console.log(this.selectedPageSize);

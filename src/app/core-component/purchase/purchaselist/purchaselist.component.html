@@ -219,12 +219,20 @@
                             <!-- <span [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span> -->
                             <span [ngClass]="{
                                         'bg-lightgreen': products?.status === 'Completed',
+                                        'bg-lightred': products?.status === 'Used',
+                                        'bg-lightyellow': products?.status === 'Pending' || products?.status === 'New'|| products?.status === 'Draft',
+                                        'bg-lightblue': products?.status === 'Partially Used' || products?.status === 'Approved',
+                                        'bg-lightorange': products?.status === 'Received' || products?.status === 'Partially Received' || products?.status === 'Exceed',
+                                        'bg-lightgray': products?.status === 'Cancelled'
+                                      }" class="badges">{{ products?.status }}</span>
+                            <!-- <span [ngClass]="{
+                                        'bg-lightgreen': products?.status === 'Completed',
                                         'bg-lightred': products?.status === 'Overdue',
                                         'bg-lightyellow': products?.status === 'Pending' || products?.status === 'New'|| products?.status === 'Draft',
                                         'bg-lightblue': products?.status === 'Inprogress' || products?.status === 'Approved',
                                         'bg-lightorange': products?.status === 'Received' || products?.status === 'Partially Received' || products?.status === 'Exceed',
                                         'bg-lightgray': products?.status === 'Cancel'
-                                      }" class="badges">{{ products?.status }}</span>
+                                      }" class="badges">{{ products?.status }}</span> -->
 
                         </td>
                         <!-- <td>
@@ -234,12 +242,23 @@
                             <a class="me-1" routerLink="//purchase/purchaseDetails/{{products?.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/editpurchase/{{products?.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products?.id)" class="me-1 confirm-text" *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+                            <span style="opacity: 0.5;" *ngIf="(products?.status === 'Cancelled' || products?.status === 'Used' || products?.status === 'Partially Used' )">
+                                <a class="me-1"  *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a  class="me-1 confirm-text" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                            <span *ngIf="!(products?.status === 'Cancelled' || products?.status === 'Used' || products?.status === 'Partially Used' )">
+                                <a class="me-1" routerLink="//purchase/editpurchase/{{products?.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a (click)="confirmText(i,products?.id)" class="me-1 confirm-text" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                           
                         </td>
                     </tr>
                 </tbody>

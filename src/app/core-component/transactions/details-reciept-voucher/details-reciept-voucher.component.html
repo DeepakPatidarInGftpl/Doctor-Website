@@ -9,10 +9,19 @@
                     <h4>Reciept Voucher Details</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//transaction/updaterecieptVoucher/{{recieptVoucherDetail?.id}}"
+                    <span style="opacity: 0.5;" *ngIf="(recieptVoucherDetail.status === 'Received')">
+                        <a 
                         class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Reciept Voucher
                     </a>
+                    </span>
+                    <span  *ngIf="!(recieptVoucherDetail.status === 'Received')">
+                        <a routerLink="//transaction/updaterecieptVoucher/{{recieptVoucherDetail?.id}}"
+                        class="btn btn-added">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Reciept Voucher
+                    </a>
+                    </span>
+                    
                 </div>
             </div>
             <div class="receipt-voucher-wrapper company-details-card card" *ngIf="recieptVoucherDetail">

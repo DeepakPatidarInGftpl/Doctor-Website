@@ -1,26 +1,20 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+
 
 @Component({
   selector: 'app-tables-basic',
   templateUrl: './tables-basic.component.html',
-  styleUrls: ['./tables-basic.component.scss']
+  styleUrls: ['./tables-basic.component.scss'],
+  encapsulation :  ViewEncapsulation.None
+
 })
-export class TablesBasicComponent implements OnInit {
-  obj = {
-    sku : 'someValue12340987'
-  }
+export class TablesBasicComponent implements OnInit  {
+ 
+@Input() data : any[]
 
-  array :any[] = new Array(6)
-  
-
-  constructor(private fb: FormBuilder) {
-   
-  }
-  ngOnInit(): void {
-  
-  }
-
+ngOnInit(): void {
+  console.log(this.data)
+}
   printPage() {
     const printContent = document.getElementById('printContent');
     const WindowPrt = window.open('', '', 'width=800,height=600');
@@ -78,8 +72,8 @@ export class TablesBasicComponent implements OnInit {
 
 /* Body */
 .label-body {
- padding-left: 1mm;
-  padding-right: 1mm;
+ padding-left: 2mm;
+  padding-right: 2mm;
   padding-bottom: 1mm;
   font-size: 6px;
   line-height: 1.2;

@@ -9,10 +9,20 @@
                     <h4>Expense Voucher Details</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//transaction/updateexpensesVoucher/{{journelVoucherDetail ?.id}}"
-                        class="btn btn-added">
-                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Expense Voucher
-                    </a>
+                    <span *ngIf="(journelVoucherDetail.status === 'Approved' || journelVoucherDetail.status === 'Rejected')" style="opacity: 0.5;" >
+
+                        <a 
+                            class="btn btn-added">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Expense Voucher
+                        </a>
+                    </span>
+                    <span *ngIf="!(journelVoucherDetail.status === 'Approved' || journelVoucherDetail.status === 'Rejected')" >
+
+                        <a routerLink="//transaction/updateexpensesVoucher/{{journelVoucherDetail ?.id}}"
+                            class="btn btn-added">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Expense Voucher
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="expanse-voucher-wrapper company-details-card card" *ngIf="journelVoucherDetail">

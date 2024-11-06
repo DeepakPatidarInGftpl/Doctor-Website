@@ -1,5 +1,73 @@
 
 <div class="print-area" id="printContent">
+    <div class="main-container" >
+        <div  *ngFor="let product of data"  class="label-container">
+          <ng-container *ngIf="!(product.black_sticker)">
+
+         
+          
+            <div class="label-header">
+              {{(product?.product?.brand?.title).substring(0,32)}}
+            </div>
+            <div class="label-body">
+              <div class="label-row">
+                <span>MRP : ₹ {{product?.mrp | number:'1.2-2'}}</span>
+                <span>{{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</span>
+              </div>
+              <div class="label-row">
+                <span>Product : {{product?.product.subcategory.title.length > 20 ? (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title}}</span>
+                <span>Net Qty : 1 {{product?.product?.unit?.title}}</span>
+              </div>
+              <div class="label-row">
+                <span>Style : {{product?.product?.article_no}}</span>
+                <span>Variant : {{(product?.variant_name).substring(0,12)}}</span>
+                
+              </div>
+              <div class="label-row">
+                <span>Price: ₹ {{product?.selling_price_offline | number:'1.2-2'}}</span>
+                <span>Discount : {{product?.additional_discount || '00'}}</span>
+              </div>
+              <div class="label-barcode">
+                <app-real-barcode [product]="product"></app-real-barcode>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="(product.black_sticker)">
+                <div class="label-header">
+                
+                </div>
+                <div class="label-body">
+                  <div class="label-row">
+                    <!-- <span>MRP : ₹ {{product?.mrp | number:'1.2-2'}}</span>
+                    <span>{{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</span> -->
+                  </div>
+                  <div class="label-row">
+                    <!-- <span>Product : {{product?.product.subcategory.title.length > 20 ? (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title}}</span>
+                    <span>Net Qty : 1 {{product?.product?.unit?.title}}</span> -->
+                  </div>
+                  <div class="label-row">
+                    <!-- <span>Style : {{product?.product?.article_no}}</span>
+                    <span>Variant : {{(product?.variant_name).substring(0,12)}}</span>
+                    -->
+                  </div>
+                  <div class="label-row">
+                    <!-- <span>Price: ₹ {{product?.selling_price_offline | number:'1.2-2'}}</span>
+                    <span>Discount : {{product?.additional_discount || '00'}}</span>
+                  </div> -->
+                  <div class="label-barcode">
+                    <!-- <app-real-barcode [product]="product"></app-real-barcode> -->
+                  </div>
+                </div>
+                </div>
+          </ng-container>
+        </div>
+   
+    </div>
+    
+      
+      
+  </div>
+<!-- <div class="print-area" id="printContent">
     <div class="main-container">
         <div *ngFor="let cart of array" class="label-container">
             <div class="label-header">
@@ -33,5 +101,5 @@
     
       
       
-  </div>
-<button (click)="printPage()">Print</button>
+  </div> -->
+<!-- <button (click)="printPage()">Print</button> -->
