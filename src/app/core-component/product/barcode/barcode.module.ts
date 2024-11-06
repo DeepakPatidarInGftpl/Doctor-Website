@@ -11,6 +11,7 @@ import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RealBarcodeModule } from '../real-barcode/real-barcode.module';
+import { TablesBasicModule } from '../../table/tables-basic/tables-basic.module';
 @NgModule({
   declarations: [
     BarcodeComponent
@@ -27,7 +28,8 @@ import { RealBarcodeModule } from '../real-barcode/real-barcode.module';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
-    RealBarcodeModule
+    RealBarcodeModule,
+    TablesBasicModule
   ]
 })
 export class BarcodeModule { }

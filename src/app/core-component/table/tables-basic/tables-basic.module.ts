@@ -8,7 +8,7 @@ import {  MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TextEditorModule } from '../../element/text-editor/text-editor.module';
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { RealBarcodeModule } from '../../product/real-barcode/real-barcode.module';
-// import { DataTablesModule } from 'angular-datatables';
+
 import { DataTableSModule } from '../data-tables/data-tables.module';
 @NgModule({
   declarations: [
@@ -18,12 +18,12 @@ import { DataTableSModule } from '../data-tables/data-tables.module';
     CommonModule,
     TablesBasicRoutingModule,
     SharedModuleModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    TextEditorModule,
+  
+  
     NgxBarcodeModule,
     RealBarcodeModule,
-    DataTableSModule
-  ]
+  
+  ],
+  exports : [TablesBasicComponent]
 })
 export class TablesBasicModule { }

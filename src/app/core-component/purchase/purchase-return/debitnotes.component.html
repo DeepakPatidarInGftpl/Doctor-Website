@@ -209,12 +209,28 @@
                             <a class="me-1" routerLink="//purchase/details-purchaseReturn/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/edit-purchaseReturn/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a>
+                            <span style="opacity: 0.5;"
+                            *ngIf="(products.status === 'Approved' || products.status === 'Rejected' || products.status === 'Cancelled' ||  products.status === 'Completed')"
+                            >
+                                <a class="me-1"  *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a  class="me-1 confirm-text" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                            <span
+                            *ngIf="!(products.status === 'Approved' || products.status === 'Rejected' || products.status === 'Cancelled' ||  products.status === 'Completed')"
+                            
+                            >
+                                <a class="me-1" routerLink="//purchase/edit-purchaseReturn/{{products.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                                <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">
+                                    <img src="assets/img/icons/delete.svg" alt="img">
+                                </a>
+                            </span>
+                            
                         </td>
                     </tr>
                 </tbody>

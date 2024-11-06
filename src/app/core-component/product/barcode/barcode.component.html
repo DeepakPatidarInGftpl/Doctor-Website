@@ -1,13 +1,15 @@
 <div class="page-header">
     <div class="page-title">
-        <h4 (click)="goBack()" ><span class="material-icons" style="vertical-align: middle;cursor: pointer;">keyboard_backspace</span> Print Barcode</h4>
+        <h4 (click)="goBack()" >
+            <!-- <span class="material-icons" *ngIf="" style="vertical-align: middle;cursor: pointer;">keyboard_backspace</span>  -->
+            Print Barcode</h4>
         <h6 class="titl">Generate barcode</h6>
 
         
     </div>
     <div class="page-btn" *ngIf="isPrint || isPrintProduct">
         <div class="form-group">
-            <label>Select Print Size</label>
+            <label class="p-0 m-0">Select Print Size</label>
             <select class="form-select" #pgVal (change)="selectPG(pgVal.value)">
                 <option disabled>Select Paper Size</option>
                 <option value="a4" selected>A4 Size</option>
@@ -416,6 +418,9 @@
     <ng-container *ngIf="selectedPageSize=='a4'">
         <div class="container mx-2">
             <div id="mytable" class="row">
+
+
+
                 <ng-container *ngFor="let product of new_arr">
                 
                       <div *ngIf="!(product.black_sticker)" class="col-sm-2 col-lg-2 col-12 mt-2 mx-4"  >
@@ -476,6 +481,20 @@
                         </div>
                       </div>
                   </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  
             </div>
         </div>
         
@@ -598,78 +617,17 @@
         </ng-container>
 
     </ng-container>
-    <ng-container *ngIf="selectedPageSize=='a4'">
-        <div id="mytable" class="grid-container">
-            <div  *ngFor="let product of new_arr" class="grid-item" style="">
-                <ng-container >
-                
-                      <div *ngIf="!(product.black_sticker)">
-                     
-                          <!-- <div fxLayout="column"> -->
-                              <div class="card card_ card_id"  style="width: 50mm !important;height: 28mm !important;box-shadow: none; border: none; margin: 0px;">
-                                  <div class="card-header card_header" style="padding: 0px !important;">
-                                      <div class="card-title mb-0 title"
-                                          style="
-                                          font-size: 9px !important;
-                                          padding:0 !important;
-                                          height: 15px;
-                                          text-align: center;
-                                          text-size-adjust: 100%; 
-                                          ;color: #000;">
-                                          {{ 
-                                           (product?.product?.brand?.title)
-                                           .substring(0,32)
-                                        }}
-                                        <!-- <span *ngIf="product?.product?.brand?.title.length > 27">...</span> -->
-                                        
-                                        </div>
-                                   
-                                  </div>
-                                  <div class="card-body card_body">
-                                      <div class="pb-0 d-flex justify-content-between align-items-center mrp m-0" style="font-weight: 100 !important; padding: 0px !important;">
-                                          <p class="p1" style="color: #000; font-weight: 100 !important; font-size: 8px;margin: 0px; margin-top: 4px; letter-spacing: 0px;">MRP : ₹ {{product?.mrp | number:'1.2-2'}}</p>
-                                          <p class="p2" style="color: #000; font-weight: 100 !important; font-size: 8px;margin: 0px; margin-top: 4px;">  <span style="font-weight: 350 !important; text-align: center;">{{product?.product?.sale_tax_including?'Incl. all taxes':'Excl. all taxes'}}</span></p>
-                                      </div>
-                                      <div class="pb-0 d-flex  justify-content-between product"  style="font-weight: 350 !important;">
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000;margin-top: 2px;">Product : <span style="font-weight: 350 !important;"> {{product?.product.subcategory.title.length > 20 ?
-                                                  (product?.product.subcategory.title | slice:0:20) + '...' : product?.product.subcategory.title
-                                                  }}</span></p>
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000; margin-top: 2px;">Net Qty : <span>{{product?.qty}}</span></p>
-                                      </div>
-                                      <div class="pb-0 d-flex justify-content-between align-items-center "
-                                          style="margin-bottom: -3px;">
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000; margin-top: 2px;">Style : <span  style="font-weight: 350 !important;">{{product?.product?.article_no}}</span></p>
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000; margin-top: 2px;">Size : <span  style="font-weight: 350 !important;">{{(product?.variant_name).substring(0,12)}}</span></p>
-                                      </div>
-                                      <div class="pb-0 d-flex justify-content-between align-items-center"
-                                          style="margin-bottom: 0px;">
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000; margin-top: 2px;">Price: <span  style="font-weight: 350 !important;"> ₹ {{product?.selling_price_offline
-                                                  |number:'1.2-2'}}</span></p>
-                                          <p class="p3"  style="font-weight: 350 !important;color: #000; margin-top: 2px;">Discount : <span  style="font-weight: 350 !important;">{{product?.discount?product?.discount:'00'}}</span></p>
-                                      </div>
-                                      
-                                      <div  *ngIf="new_arr.length>0" style="margin-top: 2px;">
-                                        <div class="text-center">
-                                            <app-real-barcode [product]="product">
-                                            </app-real-barcode>
-                                        </div>
-                                      
-                                      </div>
-                                  </div>
-                              </div>
-                          <!-- </div> -->
-      
-                      </div>  
-                      <div *ngIf="product.black_sticker"   >
-                            <div class="card card_ card_id"  style="box-shadow: none; border: none; margin: 0px;">
-                                
-                            </div>
-                      </div>
-                  </ng-container>
-            </div>
-        </div>
-        
-    </ng-container>
+
+
+
+ <ng-container *ngIf="selectedPageSize=='a4'">
+  <ng-container >
+
+      <app-tables-basic #compont [data]="new_arr"></app-tables-basic>
+    
+</ng-container>
+</ng-container>
+   
 </div>
 
 
