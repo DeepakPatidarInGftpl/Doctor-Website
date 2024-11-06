@@ -9,7 +9,17 @@
                     <h4>New Material Inward</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//purchase/editmaterial-Inward/{{materialDetail ?.id}}" class="btn btn-added">
+                    <span style="opacity: 0.5;"
+                    *ngIf="(materialDetail?.status === 'Received'|| materialDetail?.status === 'Cancelled' || materialDetail?.status === 'Partially Received')"
+                    
+                    >
+                        <a  class="btn btn-added">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Material Inward
+                        </a>
+                    </span>
+                    <a *ngIf="!(materialDetail?.status === 'Received'|| materialDetail?.status === 'Cancelled' || materialDetail?.status === 'Partially Received')"
+                    
+                    routerLink="//purchase/editmaterial-Inward/{{materialDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Material Inward
                     </a>
                 </div>

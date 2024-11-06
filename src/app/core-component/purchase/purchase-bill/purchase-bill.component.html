@@ -270,13 +270,16 @@
                             <a class="me-1" routerLink="//purchase/purchase-billDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/edit-goodsReceivedNote/{{products.id}}"
+                            <span *ngIf="products.payment_status == 'Payment Pending' ">
+                                <a class="me-1" routerLink="//purchase/edit-goodsReceivedNote/{{products.id}}"
                                 *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </span>
+                            
                         </td>
                     </tr>
                 </tbody>

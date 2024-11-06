@@ -5,6 +5,8 @@ import { DatePipe, Location } from '@angular/common';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-detailspurchase-bill',
@@ -263,11 +265,19 @@ export class DetailspurchaseBillComponent implements OnInit {
   //   }
   // }
 
+
+
+
+
+
+
+
+
   generatePdf() {
 
-    let mi_date = this._dpipe.transform(this.purchaseBillDetail?.supplier_bill_date, 'dd-MMMM-yyyy');
-    let due_date = this._dpipe.transform(this.purchaseBillDetail?.due_date , 'dd-MMMM-yyyy');
-    let shipping_date = this._dpipe.transform(this.purchaseBillDetail?.shipping_date , 'dd-MMMM-yyyy');
+    let mi_date = this._dpipe.transform(this.purchaseBillDetail?.supplier_bill_date, 'dd-MMM-yyyy');
+    let due_date = this._dpipe.transform(this.purchaseBillDetail?.due_date , 'dd-MMM-yyyy');
+    let shipping_date = this._dpipe.transform(this.purchaseBillDetail?.shipping_date , 'dd-MMM-yyyy');
 
         let arr2 = new Array() ;
         this.purchaseBillDetail?.cart.forEach((cart : any,n : number) => {
@@ -279,8 +289,9 @@ export class DetailspurchaseBillComponent implements OnInit {
 
        // table 3 data set 
         let arr3 = new Array() ;
-        this.purchaseBillDetail?.tax_rate.forEach((tax : any,n : number) => {
-         arr3.push([`${n+1}`,`${tax?.tax_rate ?? ''}`,`${tax?.taxable_amount ?? '' }`,`${tax?.igst_amount ?? ''}`, `${tax?.cgst_amount ?? ''}`,`${tax?.sgst_amount ?? '' }`,`${tax?.total_tax ?? ''}`])
+        console.warn(this.purchaseBillDetail)
+        this.purchaseBillDetail?.TaxSummary.forEach((tax : any,n : number) => {
+         arr3.push([`${tax.HSNCODE}`,`${tax?.taxable_value  }`,`${tax?.sgst_amount ? tax?.sgst_amount : 0  + '('+ tax?.sgst +"%)"}`, `${tax?.cgst_amount ? tax?.cgst_amount : 0 +"("+ tax?.cgst +"%"  +")"}`,`${(tax?.igst_amount ? tax?.igst_amount : 0 )+ "("+ tax?.igst +"%)" }`,`${tax?.sumOfamount ?? ''}`])
        });
 
 
@@ -294,8 +305,9 @@ shows = true;
 
 
        const obj = {
+        'Thead3' : [['HSN/SAC	','Taxable Amount','State Tax','Central Tax','Integrated Tax','Total Tax Amount']],
         "show" : shows,
-       'Type' : 'Goods Received',
+       'Type' : 'Invoice',
        'Fist_date' : (this.purchaseBillDetail?.purchase_return_date == null) ? '' : this.purchaseBillDetail?.purchase_return_date,
        'Secouand_date' : this.purchaseBillDetail?.shipping_date ?? '',
        'thead1' : ['Return No.','Supplier Name','Refrensh Bill No.','Material Inward No.','Payment Term','Reverse Charge','Bill Date','Due Date','Shipping Date'],
@@ -312,44 +324,37 @@ shows = true;
       ],
 
       
-      'Thead3' : [['Sr. No.','Tax Rate %','Taxable Amt','IGST Amount','CGST Amount','SGST amount','Total Tax']],
+      
+     
+     
       'Tbody3' : arr3,
       'Tfoot3' : [
         [
           {
             content : 'Total',
-            colSpan:3,
+            colSpan:2,
             styles: { halign: 'center' }
           },
           {
-            content : `${this.totaltaxrate}`,
+            content : `${(this.totaltaxsummary?.sgst_amount ? this.totaltaxsummary?.sgst_amount : 0 ) +'('+ this.totaltaxsummary?.sgst +'%)' }`,
             styles: { halign: 'center' }
           },
           {
-            content : `${this.totalTaxableAmount}`,
+            content : `${(this.totaltaxsummary?.cgst_amount ? this.totaltaxsummary?.cgst_amount : 0) +'('+ this.totaltaxsummary?.cgst +'%)'}`,
             styles: { halign: 'center' }
             
           },
           {
-            content : `${this.totalIgstAmount}%`,
+            content : `${(this.totaltaxsummary?.igst_amount ? this.totaltaxsummary?.igst_amount : 0)  + "("+ this.totaltaxsummary?.igst+"%)"}`,
             styles: { halign: 'center' }
             
           },
           {
-            content : `${this.totalCgstAmount}%`,
+            content : `${this.totaltaxsummary?.sumOfamount }`,
             styles: { halign: 'center' }
             
           },
-          {
-            content : `${this.totalSgstAmount}%`,
-            styles: { halign: 'center' }
-            
-          },
-          {
-            content : `${this.totalTaxAmount}`,
-            styles: { halign: 'center' }
-            
-          }
+         
         ],
       ],
 
@@ -388,21 +393,7 @@ shows = true;
              styles: { halign: 'center' }
              
            },
-          //  {
-          //    content : `${this.totalOnlinePrice}`,
-          //    styles: { halign: 'center' }
-             
-          //  },
-          //  {
-          //    content : `${this.totalOfflinePrice}`,
-          //    styles: { halign: 'center' }
-             
-          //  },
-          //  {
-          //    content : `${this.totalEmployeePrice}`,
-          //    styles: { halign: 'center' }
-             
-          //  },
+          
            {
              content : `${this.totalTax}%`,
              styles: { halign: 'center' }
@@ -428,28 +419,13 @@ shows = true;
            }
            
          ],
-        //  [
-        //    {
-        //      content : ``,
-        //      colSpan : 9,
-        //    },
-        //    {
-        //      content : ``,
-        //      colSpan : 1,
-        //      styles : {halign : 'right'}
-        //    },
-        //    {
-        //      content : '',
-        //      colSpan : 1,
-        //      styles : {halign : 'left'}
-        //    }
+        
        
-        //  ],
          [
            {
              content : '',
              colSpan : 9,
-             // styles : {halign : 'left'}
+          
            },
           { content : 'Round Off',
            colSpan : 1,
@@ -475,16 +451,7 @@ shows = true;
            styles : {halign : 'left'}
          },
          ],
-        //  [
-        //    {
-        //      content : '',
-        //    colSpan :4,
-        //    },
-        //    {
-        //      content : '',
-        //    colSpan : 2,
-        //    },
-        //  ]
+      
        ],
        'company_name' : this.companyDetails?.name,
        'company_gst' : this.companyDetails?.gst,

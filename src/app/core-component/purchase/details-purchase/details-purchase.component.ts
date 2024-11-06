@@ -82,9 +82,11 @@ export class DetailsPurchaseComponent  implements OnInit  {
 
           }
 
+          
+
   
         });
-        
+        // console.log(res.TaxSummary)
 
 
        

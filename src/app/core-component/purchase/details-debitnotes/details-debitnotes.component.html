@@ -9,7 +9,18 @@
                     <h4>New Purchase Return</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//purchase/edit-purchaseReturn/{{purchaseBillDetail ?.id}}" class="btn btn-added">
+                    <span style="opacity: 0.5;"
+                    *ngIf="(purchaseBillDetail.status === 'Approved' ||  purchaseBillDetail.status === 'Completed' || purchaseBillDetail.status === 'Rejected' || purchaseBillDetail.status === 'Cancelled')"
+                    
+                    >
+                        <a  class="btn btn-added">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Purchase Return
+                        </a>
+                    </span>
+                    <a
+                    *ngIf="!(purchaseBillDetail.status === 'Approved' ||  purchaseBillDetail.status === 'Completed' || purchaseBillDetail.status === 'Rejected' || purchaseBillDetail.status === 'Cancelled')"
+                    
+                    routerLink="//purchase/edit-purchaseReturn/{{purchaseBillDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Purchase Return
                     </a>
                 </div>
@@ -421,7 +432,7 @@
                                             </div>
 
 
-                                            <div class="pdf-table2 mb-4" *ngIf="purchaseBillDetail?.logs?.length>0">
+                                            <div class="pdf-table2 mb-4" *ngIf="purchaseBillDetail?.TaxSummary?.length>0">
                                                 <div class="container">
                                                     <div class="page-title">
                                                         <p style="color:#FF9F43;font-size: 16px;">Tax Summary Details</p>

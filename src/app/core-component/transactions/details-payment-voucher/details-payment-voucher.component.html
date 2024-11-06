@@ -9,7 +9,18 @@
                     <h4>Payment Voucher Details</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//transaction/updatepaymentVoucher/{{paymentVoucherDetail?.id}}"
+                    <span
+                    *ngIf="( paymentVoucherDetail.status == 'Paid')"
+                    style="opacity: 0.5;"
+                    >
+                    <a
+                    class="btn btn-added">
+                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Payment Voucher
+                </a>
+                    </span>
+                    <a
+                    *ngIf="!( paymentVoucherDetail.status == 'Paid')"
+                    routerLink="//transaction/updatepaymentVoucher/{{paymentVoucherDetail?.id}}"
                         class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Payment Voucher
                     </a>
