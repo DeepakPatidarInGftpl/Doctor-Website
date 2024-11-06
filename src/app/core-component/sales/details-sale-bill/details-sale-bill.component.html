@@ -9,7 +9,15 @@
                     <h4>New Sales Bill</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/updatesalesbill/{{BillDetail ?.id}}" class="btn btn-added">
+                    <ng-container *ngIf="(BillDetail?.status === 'Partially-Return' || BillDetail?.status === 'Return')" >
+                        <a  class="btn btn-added" style="opacity: 0.5;">
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Bill
+                        </a>
+                    </ng-container>
+                    
+                    <a 
+                    *ngIf="!(BillDetail?.status === 'Partially-Return' || BillDetail?.status === 'Return')"
+                    routerLink="//sales/updatesalesbill/{{BillDetail?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Bill
                     </a>
                 </div>

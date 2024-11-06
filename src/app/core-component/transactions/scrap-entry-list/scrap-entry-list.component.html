@@ -56,7 +56,7 @@
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
                             <input type="search" class="form-control form-control-sm" placeholder="Search Voucher No."
-                                [(ngModel)]="titlee" (ngModelChange)="search()">
+                                [(ngModel)]="titlee" (input)="search($event)">
                         </label>
                     </div>
                 </div>

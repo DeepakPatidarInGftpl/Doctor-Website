@@ -2,7 +2,7 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl">Product Label </h4>
+                <h4 class="titl">Product Label  </h4>
                 <h6>Manage your Product Label</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
@@ -131,7 +131,7 @@
                                         </div>
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//product/detail-product-label/{{products?.id}}">
+                                    <a class="me-1" [routerLink]="'//product/detail-product-label/'+products?.id">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
                                     <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
@@ -181,47 +181,45 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
+    <div class="col-lg-5 col-sm-5 col-12" >
         <div class="page-header">
-            <div class="page-title" *ngIf="addForm">
-                <div *ngIf="isAdd">
-                    <h4> Product Label </h4>
-                    <h6>Create new Product Label </h6>
-                </div>
-            </div>
-            <div class="page-title" *ngIf="!addForm">
-                <div *ngIf="isEdit">
-                    <h4> Update Product Label </h4>
-                    <h6>Edit Product Label </h6>
+            <div class="page-title" >
+                <div >
+                    <h4> {{addForm ? 'Product' : 'Update Product'}}  Label </h4>
+                    <h6> {{addForm ? 'Create new' : 'Edit'}}  Product Label </h6>
                 </div>
             </div>
         </div>
         <div class="card">
             <div *ngIf="isAdd">
-                <div class="card-body" *ngIf="addForm">
-                    <form [formGroup]="addProductForm" (ngSubmit)="submit()">
+                <div class="card-body" >
+                    <form [formGroup]="addProductForm" (ngSubmit)="submit() ">
                         <div class="row">
-                            <div class="col-lg-8 col-sm-12 col-12">
+                            <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" placeholder="Enter Title"
+                                    <label>Title<span class="text-danger">*</span></label>
+                                    <input type="text" required formControlName="title" class="plase_color" id="title" placeholder="Enter Title"
                                         [ngClass]="{
-                                                'is-invalid': f['title'].touched && f['title'].invalid}">
+                                                'is-invalid': f['title'].touched && f['title'].invalid,
+                                                'plase_color' : f['title'].touched && f['title'].invalid
+                                            }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Brand
+                                        Brand Name
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="col-lg-8 col-sm-12 col-12">
+                            <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group row">
                                     <div class="col-lg-12">
-                                        <label>Incentive*</label>
+                                        <label>Incentive<span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <div>
+                                            <div  style="width: 100px;">
                                                 <select formControlName="incentive_type" class=" border hov" required
                                                     id="incentive_type"
-                                                    [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
+                                                    [ngClass]="{
+                                                    'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid
+                                                   }">
                                                     <option class="unhov" value="%" selected>%</option>
                                                     <option class="unhov" value="Rs">Rs</option>
                                                 </select>
@@ -229,10 +227,14 @@
                                                     *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select
                                                     Incentive Type</span>
                                             </div>
-                                            <div>
+                                            <div style="width: 100%;">
                                                 <input type="number" formControlName="incentive" id="incentive"
                                                     placeholder="Enter incentive"
-                                                    [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
+                                                    class="input plase_color"
+                                                    [ngClass]="{ 
+                                                    'is-invalid': f['incentive'].touched && f['incentive'].invalid ,
+                                                    'plase_color' : f['incentive_type'].touched && f['incentive_type'].invalid
+                                                }">
                                                 <span class="text-danger"
                                                     *ngIf="incentive && incentive.invalid && incentive.touched">Enter
                                                     Incentive
@@ -242,33 +244,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 col-sm-12 col-12">
+                            <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Description</label>
+                                    <!-- [ngClass]="{ 'is-invalid': f['decription'].touched && f['decription'].invalid }" -->
                                     <textarea formControlName="decription" id="description"
                                         placeholder="Enter description"
-                                        [ngClass]="{ 'is-invalid': f['decription'].touched && f['decription'].invalid }"></textarea>
+                                        
+                                        ></textarea>
                                    
-                                    <span class="text-danger"
+                                    <!-- <span class="text-danger"
                                         *ngIf="incentive && incentive.invalid && incentive.touched">Enter
                                             decription
-                                    </span>
+                                    </span> -->
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
-                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">  {{ addForm ? 'Submit' : 'Update'}}</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                    {{ addForm ? 'Submit' : 'Update'}}
+                                
+                                </button>
                             </div>
 
                         </div>
                     </form>
                 </div>
             </div>
-            <div *ngIf="isEdit">
+            <!-- <div *ngIf="isEdit">
                 <div class="card-body" *ngIf="!addForm">
                     <form [formGroup]="addProductForm" (ngSubmit)="update()">
                         <div class="row">
@@ -341,7 +347,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

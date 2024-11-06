@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -24,7 +24,7 @@ export class ProductLabelListComponent implements OnInit {
 
   imgUrl = 'https://pv.greatfuturetechno.com';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService,private _actv :ActivatedRoute) {
     this.QueryService.filterToggle();
   }
 
@@ -141,22 +141,44 @@ export class ProductLabelListComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
-  userDetails: any
+  userDetails: any;
+  update_id : number
   ngOnInit(): void {
-    this.coreService.getProductLabel().subscribe(res => {
+
+this.update_id = Number(this._actv.snapshot.paramMap.get('id'));
+// console.log(this.update_id,'update_id')
+
+// Form Ins
+this.addProductForm = new FormGroup({
+  title: new FormControl('', [Validators.required]),
+  incentive: new FormControl('',Validators.required),
+  incentive_type: new FormControl('%', [Validators.required]),
+  decription: new FormControl(''),
+});
+
+
+    this.coreService.getProductLabel().subscribe((res : any[]) => {
       this.tableData = res;
       this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
+
+      if (this.update_id) {
+        const [obj] = res.filter((item:any)=>item.id == this.update_id);
+        console.log(obj)
+        this.addProductForm.patchValue(obj)
+        this.addForm = false;
+      }
+    
     });
 
-    this.addProductForm = new FormGroup({
-      title: new FormControl('', [Validators.required]),
-      incentive: new FormControl(''),
-      incentive_type: new FormControl('%', [Validators.required]),
-      decription: new FormControl(''),
-    })
+  
+
+
+
+
+
     // permission from profile api
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
@@ -214,61 +236,60 @@ export class ProductLabelListComponent implements OnInit {
 
   loaders = false
   submit() {
-    if (this.addProductForm.valid) {
+   if (this.addProductForm.valid) {
       this.loaders = true;
       var formData: any = new FormData();
-      formData.append("title", this.addProductForm.get('title')?.value);
-      formData.append("incentive", this.addProductForm.get('incentive')?.value);
-      formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-      formData.append("decription", this.addProductForm.get('decription')?.value);
-      this.coreService.addProductLabel(formData).subscribe(res => {
-        // console.log(res);
-        this.addRes = res
-        if (this.addRes.success) {
-          this.loaders = false;
-          this.toastr.success(this.addRes.msg)
-          this.addProductForm.reset()
-          // window.location.reload();
-          this.ngOnInit()
-        } else {
-          this.toastr.error(this.addRes.tax_percentage)
-        }
-      }, err => {
-        // console.log(err.error.gst);
-      })
+      ['title', 'incentive', 'incentive_type', 'decription'].forEach((key: string) => {
+        formData.append(key, this.addProductForm.get(key)?.value);
+      });
 
-    } else {
+      // Add Product Lable
+      if (this.addForm) {
+        this.coreService.addProductLabel(formData).subscribe({
+          next :(res)  =>{
+            this.addRes = res
+            if (this.addRes.success) {
+              this.loaders = false;
+              this.toastr.success(this.addRes.msg)
+              this.addProductForm.reset()
+              this.ngOnInit()
+            } else {
+              this.toastr.error(this.addRes.tax_percentage)
+            }
+          },
+          error :(err)=> {
+             console.log(err.error.errors);
+          },
+        })
+      }else{
+  // Update Product Lable
+  this.coreService.updateProductLabel(formData, this.id)
+  .subscribe({
+    next :(res) =>{
+      this.addRes = res
+      if (this.addRes.success) {
+        this.loaders = false;
+        this.addForm = true
+        this.toastr.success(this.addRes.msg)
+        this.addProductForm.reset();
+        this.ngOnInit()
+      }
+    }})
+      }
+    
+     
+     
+
+    } 
+    
+    
+    else {
       this.addProductForm.markAllAsTouched()
       this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
-  update() {
-    if (this.addProductForm.valid) {
-      this.loaders = true;
-      var formData: any = new FormData();
-      formData.append("title", this.addProductForm.get('title')?.value);
-      formData.append("incentive", this.addProductForm.get('incentive')?.value);
-      formData.append("incentive_type", this.addProductForm.get('incentive_type')?.value);
-      formData.append("decription", this.addProductForm.get('decription')?.value);
-      this.coreService.updateProductLabel(formData, this.id).subscribe(res => {
-        this.addRes = res
-        if (this.addRes.success) {
-          this.loaders = false;
-          this.addForm = true
-          this.toastr.success(this.addRes.msg)
-          this.addProductForm.reset();
-          this.ngOnInit()
-        }
-      }, err => {
-        // console.log(err.error.gst);
-      })
 
-    } else {
-      this.addProductForm.markAllAsTouched()
-      this.toastr.error('Please Fill All The Required Fields')
-    }
-  }
   get title() {
     return this.addProductForm.get('title')
   }
@@ -284,17 +305,20 @@ export class ProductLabelListComponent implements OnInit {
   editFormdata: any
   editForm(id: number) {
     this.id = id
-    this.coreService.getProductLabelById(id).subscribe(res => {
-      if (id == res.id) {
+    let [obj] = this.filteredData.filter((item:any)=>item.id == id);
         this.addForm = false
-        this.addProductForm.patchValue(res);
-        this.editFormdata = res
-      }
-    })
+        this.addProductForm.patchValue(obj);
+        this.editFormdata = obj
+    
   }
   openaddForm() {
+    if (this.update_id) {
+      this.router.navigate(['//product/product-label'])
+   }
     this.addForm = true;
     this.addProductForm.reset();
+    this.addProductForm.get('incentive_type').setValue('%')
+    
   }
 
 

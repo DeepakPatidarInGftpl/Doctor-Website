@@ -9,14 +9,21 @@
                     <h4>New Delivery Challan</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/update-delivery-challan/{{deliveryChallanDetail ?.id}}"
+
+                    <a 
+                    *ngIf="(deliveryChallanDetail?.status === 'Delivered')"
+                        class="btn btn-added" style="opacity: 0.5;">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Delivery Challan
+                    </a>
+                    <a
+                    *ngIf="!(deliveryChallanDetail?.status === 'Delivered')"
+                    routerLink="//sales/update-delivery-challan/{{deliveryChallanDetail ?.id}}"
                         class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Delivery Challan
                     </a>
                 </div>
             </div>
-
-            <mat-tab-group animationDuration="0ms" #tabGroup>
+    <mat-tab-group animationDuration="0ms" #tabGroup>
                 <mat-tab label="Delivery Challan">
                     <div class="company-details-card card" *ngIf="deliveryChallanDetail">
                         <div class="sub-card row">

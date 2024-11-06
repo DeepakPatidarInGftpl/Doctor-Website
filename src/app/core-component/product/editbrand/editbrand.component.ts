@@ -47,10 +47,10 @@ export class EditbrandComponent implements OnInit {
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
             // 3-1
-            markup_percentage_customer: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-            markup_percentage_wholesale: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-            markup_percentage_online: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-            markup_percentage_employee: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+            markup_percentage_customer: new FormControl(0, Validators.required),
+            markup_percentage_wholesale: new FormControl(0,Validators.required),
+            markup_percentage_online: new FormControl(0, Validators.required),
+            markup_percentage_employee: new FormControl(0, Validators.required),
          
     })
 

@@ -8,7 +8,19 @@
                     <h4>New Sales Order</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/edit-sales/{{orderDetail?.id}}" class="btn btn-added">
+
+                    <ng-container *ngIf="(orderDetail?.status === 'Converted to Invoice' || orderDetail?.status === 'Partially Converted to Invoice')" >
+                        <a  class="btn btn-added"
+                        style="opacity: 0.5 !important; "
+
+                        >
+                            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Bill
+                        </a>
+                    </ng-container>
+
+                    <a
+                    *ngIf="!(orderDetail?.status === 'Converted to Invoice' || orderDetail?.status === 'Partially Converted to Invoice')"
+                    routerLink="//sales/edit-sales/{{orderDetail?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Sales Order
                     </a>
                 </div>
