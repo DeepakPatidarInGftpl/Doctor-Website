@@ -121,3 +121,42 @@ h5 {
   background: white;
 }
 
+
+.tooltip5 {
+  position: relative !important;
+  display: inline-block !important;
+  // border-bottom: 1px dotted black !important;
+}
+
+.circle{
+ 
+  display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #FF9F43;
+    text-align: center;
+    line-height: 16px;
+    color: #FF9F43;
+}
+
+.tooltip5 .tooltiptext {
+  visibility: hidden;
+  width: 180px;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip5:hover .tooltiptext {
+  visibility: visible;
+}
+.space{
+  white-space: pre-line !important;
+}

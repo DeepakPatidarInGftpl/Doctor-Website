@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Supplier/Company Name*</label>
+                        <label>Supplier/Company Name<span class="text-danger">*</span></label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
@@ -68,7 +68,7 @@
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Material Inward Date* </label>
+                        <label>Material Inward Date<span class="text-danger">*</span> </label>
                         <input type="datetime-local" formControlName="material_inward_date" [attr.min]="materialMinDate"
                             [attr.max]="materialMaxDate" placeholder="Select Material Inward Date"
                             [ngClass]="{'is-invalid': f['material_inward_date'].touched && f['material_inward_date'].invalid}">
@@ -410,8 +410,10 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Recieved By* </label>
-                        <input type="text" formControlName="recieved_by" placeholder="Enter Recieved By">
+                        <label>Recieved By<span class="text-danger">*</span> </label>
+                        <input type="text" formControlName="recieved_by"
+                        [ngClass]="{'is-invalid' :recieved_by && recieved_by.invalid && recieved_by.touched  }"
+                        placeholder="Enter Recieved By">
                         <span class="text-danger"
                             *ngIf="recieved_by && recieved_by.invalid && recieved_by.touched">Enter Recieved by
                         </span>
@@ -430,11 +432,16 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <div class="d-flex mt-4">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'">
+                    <div class="form-group" style="margin-top: 39px;">
+                        <div class="d-flex  mt-4">
+                            <input type="checkbox" formControlName="export" style="zoom: 1.5; accent-color: rgb(246, 131, 24);" [id]="'checkboxMeasure-'">
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Export</label>
+
+                                <div class="tooltip5">
+                                    <i class="ion-information tooltip5 circle ms-2" data-bs-toggle="tooltip"></i>
+                                    <span class="tooltiptext"> Mark this True if the Purchase are made from another Country!</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -688,8 +695,17 @@
                                                         <p *ngIf="d?.get('description')?.value"><span style="color: #111;">{{d.get('description')?.value}}</span></p>
                                                     
                                                     </td>
-                                                <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"
+                                                <td><input type="text" [ngClass]="{
+                                                    
+                                                    'error-border': isFormCartInvalid,
+                                                    'is-invalid' : d?.get('po_qty')?.errors && ckCartForm
+                                                
+                                                }"
                                                         formControlName="po_qty" placeholder="PO QTY" class="input">
+
+                                                        <p class="text-danger" 
+                                                        *ngIf="d?.get('po_qty')?.errors && ckCartForm"
+                                                        >Enter Your PO QTY</p>
                                                 </td>
                                                 <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
                                                 <td><input type="text" [ngClass]="{'error-border': isFormCartInvalid}"

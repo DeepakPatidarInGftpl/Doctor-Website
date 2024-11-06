@@ -146,19 +146,21 @@
                             address</span>
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-lg-4" style="height: 30px;">
                     <div class="form-group">
                         <label>Logo</label>
                         <input type="file" class="d-none" (change)="selectedFile($event)" #fileInput>
-                        <div class="image-uploads d-flex img-upload-btn-wrapper" (click)="fileInput.click()">
+                        <div style="height: 120px;" class="image-uploads d-flex align-center justify-content-center img-upload-btn-wrapper" (click)="fileInput.click()">
                             <img src="assets/img/icons/upload.svg" alt="img">
-                            <h4 class="btn-text-wrapper">Drag and drop a file to upload</h4>
+                            <h4 class="btn-text-wrapper"> Upload a Image  <br/> 100 X 100
+
+                            </h4>
                         </div>
                         <div *ngIf="fileError" class="error-message">{{ fileError }}</div>
                     </div>
                 </div>
 
-                <div class="col-3">
+                <div class="col-lg-6">
                     <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         class="bi bi-image mx-5 svg" viewBox="0 0 16 16" style="height: 100px; width: 100px;">
                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />

@@ -351,17 +351,17 @@ export class AddpurchaseBillComponent implements OnInit {
     return this.fb.group({
       barcode: item ? item?.barcode?.sku : 0,
       qty: item ? item?.qty : 0,
-      unit_cost: 0,
+      unit_cost: item ? item?.barcode?.batch[0]?.cost_price :0,
       mrp: item ?  (item?.product_type == "Demo Product" || item?.product_type == "Gift" ) ? 0 :  item?.mrp  : 0,
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: 0,
       tax_amount:0,
-      landing_cost: 0,
-      selling_price_online: 0,
-      selling_price_offline: 0,
-      dealer_price: 0,
-      employee_price: 0,
-      additional_discount: new FormControl(0, [
+      landing_cost: item ? item?.barcode?.batch[0]?.cost_price :0,
+      selling_price_online:  item ? item?.barcode?.batch[0]?.selling_price_online:0, 
+      selling_price_offline: item ? item?.barcode?.batch[0]?.selling_price_offline : 0,
+      dealer_price: item ? item?.barcode?.batch[0]?.selling_price_dealer : 0,
+      employee_price: item ? item?.barcode?.batch[0]?.selling_price_employee : 0,
+      additional_discount: new FormControl( item ? parseInt(item?.barcode?.batch[0]?.additional_discount) : 0, [
         Validators.pattern(/^(100|[0-9]{1,2})$/),
       ]),
       total: 0,
@@ -593,9 +593,11 @@ this.purchaseService.getMaterialById(id)
 
     this.getCart().clear();
     this.getCart().reset();
-    value.cart.forEach((el:any) => {
+    value.cart.forEach((el:any,i:number) => {
       el.product_type = value.product_type;
       this.addCart(el);
+      console.warn(el,'el for deepak')
+      this.oncheckVariant(el?.barcode, i)
     });
     
   
@@ -810,7 +812,7 @@ this.purchaseService.getMaterialById(id)
 
   oncheckVariant(event: any, index:number) {
     const selectedItemId = event.id;
-    console.log(event,'selectedProduct Id');
+    console.warn(event,'selectedProduct Id');
 
    
 
@@ -840,7 +842,7 @@ this.purchaseService.getMaterialById(id)
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.batchAdditionalDiscount = event.batch[0]?.additional_discount || 0;
     this.totalDiscount = this.batchDiscount + this.batchAdditionalDiscount;
-    console.warn(this.totalDiscount,'deepak discount %')
+    // console.warn(this.totalDiscount,'deepak discount %')
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
   
@@ -943,14 +945,14 @@ this.purchaseService.getMaterialById(id)
           mrp: event.batch[0]?.mrp,
           qty: 1,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          discount: parseInt(event.batch[0]?.discount )|| 0,
           unit_cost: this.originalCoastPrice.toFixed(2),
           landing_cost: this.landingCost,
           dealer_price: event.batch[0]?.selling_price_dealer,
           employee_price: event.batch[0]?.selling_price_employee,
           selling_price_offline: event.batch[0]?.selling_price_offline,
           selling_price_online: event.batch[0]?.selling_price_online,
-          additional_discount: event.batch[0]?.additional_discount,
+          additional_discount: parseInt(event.batch[0]?.additional_discount),
         });
       } else {
         this.tax[index] = this.apiPurchaseTax;
@@ -959,14 +961,14 @@ this.purchaseService.getMaterialById(id)
           mrp: event.batch[0]?.mrp,
           qty: 1,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          discount: parseInt(event.batch[0]?.discount ) || 0,
           unit_cost: event.batch[0]?.cost_price,
           landing_cost: this.landingCost,
           dealer_price: event.batch[0]?.selling_price_dealer,
           employee_price: event.batch[0]?.selling_price_employee,
           selling_price_offline: event.batch[0]?.selling_price_offline,
           selling_price_online: event.batch[0]?.selling_price_online,
-          additional_discount: event.batch[0]?.additional_discount,
+          additional_discount: parseInt(event.batch[0]?.additional_discount),
         });
       }
       console.log(event.batch);
@@ -978,14 +980,14 @@ this.purchaseService.getMaterialById(id)
         tax: this.apiPurchaseTax,
         mrp: event.batch[0]?.mrp || 0,
         qty: 1 || 0,
-        discount: event.batch[0]?.discount || 0,
+        discount:parseInt( event.batch[0]?.discount ) || 0,
         unit_cost: event.batch[0]?.cost_price || 0,
         landing_cost: this.landingCost || 0,
         dealer_price: event.batch[0]?.selling_price_dealer || 0,
         employee_price: event.batch[0]?.selling_price_employee || 0,
         selling_price_offline: event.batch[0]?.selling_price_offline || 0,
         selling_price_online: event.batch[0]?.selling_price_online || 0,
-        additional_discount: event.batch[0]?.additional_discount || 0,
+        additional_discount: parseInt(event.batch[0]?.additional_discount || 0),
       });
     }
     this.updateTotal(index);
@@ -1644,7 +1646,7 @@ this.items.controls.forEach((res:any,i :number)=>{
 
 async  submit(type: any,btn?:any) {
     this.checkCartValidation();
-    console.log(this.purchaseBillForm.value);
+    console.log(this.purchaseBillForm);
     if (this.checkCartValidationSync()) {
       if (this.purchaseBillForm.valid) {
         const formdata: any = new FormData();

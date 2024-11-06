@@ -264,7 +264,9 @@ const routes: Routes = [
   { path: 'batchUpdate/:id/:v_id', loadChildren: () => import('./batch-variant-product-update/batch-variant-product-update.module').then((m) => m.BatchVariantProductUpdateModule) },
   { path: 'batchList/:id', loadChildren: () => import('./batch-variant-product-list/batch-variant-product-list.module').then((m) => m.BatchVariantProductListModule) },
   { path: 'batchDetails/:id', loadChildren: () => import('./batch-variant-product-details/batch-variant-product-details.module').then((m) => m.BatchVariantProductDetailsModule) },
-{ path: 'product-Ledger', loadChildren: () => import('./product-ledger/product-ledger.module').then((m) => m.ProductLedgerModule) },
+   
+  
+  { path: 'product-Ledger', loadChildren: () => import('./product-ledger/product-ledger.module').then((m) => m.ProductLedgerModule) },
 
   { path: 'category-details/:id', loadChildren: () => import('./category-details/category-details.module').then((m) => m.CategoryDetailsModule) },
   { path: 'color-details/:id', loadChildren: () => import('./color-details/color-details.module').then((m) => m.ColorDetailsModule) },
@@ -278,7 +280,11 @@ const routes: Routes = [
 
   // prouct label
 { path: 'product-label', loadChildren: () => import('./product-label-list/product-label-list.module').then((m) => m.ProductLabelListModule) },
- { path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
+{ path: 'product-label/edit/:id', loadChildren: () => import('./product-label-list/product-label-list.module').then((m) => m.ProductLabelListModule) },
+ 
+
+
+{ path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
  { path: 'analysis/:query', loadChildren: () => import('./analysis-inventory-list/analysis-inventory-list.module').then((m) => m.AnalysisInventoryListModule) },
 
  //production voucher
