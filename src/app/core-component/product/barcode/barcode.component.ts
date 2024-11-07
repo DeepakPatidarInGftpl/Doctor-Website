@@ -2,7 +2,7 @@ import {  Component, OnInit, ViewChild } from '@angular/core';
 import {  FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -17,7 +17,8 @@ import { TablesBasicComponent } from '../../table/tables-basic/tables-basic.comp
 export class BarcodeComponent implements OnInit {
 
 
-  productControl = new FormControl();
+  productControl : FormControl ;
+  apiService: any;
   constructor(private coreService: CoreService, private saleService: SalesService, private purchaseService: PurchaseServiceService,
     private Arout: ActivatedRoute, private router: Router, private toastr: ToastrService, public location:Location) { }
 
@@ -28,26 +29,68 @@ export class BarcodeComponent implements OnInit {
   filteredPurchase: Observable<any[]>;
   black_stickerControl = new FormControl(0);
   barcodeForm: FormGroup;
+  private searchSubject = new Subject<string>();
+  results: any[] = [];
 
   ngOnInit(): void {
-    // this.getProduct();
-
+    this.productControl =  new FormControl()
     this.getPurchase();
     this.filteredPurchase = this.purchaseControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
 
-    this.barcodeForm = new FormGroup({
+    this.barcodeForm = new FormGroup({});
 
-    });
 
+ this.productControl.valueChanges.pipe(
+  debounceTime(300),      // Wait 300ms
+  distinctUntilChanged(), // Only emit when value changes
+  switchMap(term => 
+    term ?  this.coreService.searchProduct(term) : of([]) // Make the API call
+  ),       
+  catchError(error => {
+    console.error(error);
+    return of([]);                  // Handle errors gracefully
+  })
+ ).subscribe({
+  next :(value :any)=> {
+
+    this.isSearch = false;
+    this.variantData = value;
+  },
+ })
+
+
+
+    // this.searchSubject.pipe(
+    //   debounceTime(300),               // Wait 300ms after each keystroke
+    //   distinctUntilChanged(),           // Ignore if next search term is same as previous
+    //   switchMap(term => 
+    //     console.log(term)
+    //     // term ? this.coreService.searchProduct(term) : of([]) // Switch to new search observable
+    //   ),
+    //   catchError( async(error)=> {
+    //     console.error(error);
+    //     return of([]);                  // Handle errors gracefully
+    //   })
+    // ).subscribe({
+    //   next :(value :any) => {
+    //   // this.results = value.results || []
+    //   console.log(value)
+    //   },
+    // });
 
   }
  
-  goBack() {
-    
-  //  window.r
+
+ goBack():void {
+    this.isPrintProduct = false;
+    this.isGRN= false;
+    this.productControl.reset();
+    this.new_arr = [];
+    this.coreService.Pages_type.next('a4');
+   
   }
 
   private _filter(value: string | number, include: boolean): any {
@@ -160,16 +203,17 @@ export class BarcodeComponent implements OnInit {
   getVariant(search: any,) {
     this.searchLength = search
     this.isSearch = true;
-    if (search.toString().length >= 2) {
-      if (this.search.toString().length >= 2) {
-        this.coreService.searchProduct(search).subscribe((res: any) => {
-          // this.saleService.filterVariant('', '', search).subscribe((res: any) => {
-          console.log(res);
-          this.isSearch = false;
-          this.variantData = res;
-        });
-      }
-    }
+    // if (search.toString().length >= 2) {
+    //   this.searchSubject.next(search)
+    //   if (this.search.toString().length >= 2) {
+    //     this.coreService.searchProduct(search).subscribe((res: any) => {
+    //       // this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    //       console.log(res);
+    //       this.isSearch = false;
+    //       this.variantData = res;
+    //     });
+    //   }
+    // }
   }
   selectData: any[] = []
   oncheckVariant(data: any, id: any) {
@@ -271,6 +315,15 @@ export class BarcodeComponent implements OnInit {
   // }
   productData: any[] = [];
   onCheckProduct(data: any) {
+ 
+    if (data.batch.length == 0    ) {
+      // console.log('deepla if')
+      this.toastr.error('Batch not available, Kindly Add Batch to Print Barcodes!');
+      this.productControl.reset()
+      return
+    }
+
+   
     this.variantData = [];
     const productWithQty = { ...data, qty: 1, mrp: data?.batch[0]?.mrp, additional_discount : data?.batch[0]?.additional_discount, selling_price_offline: data?.batch[0]?.selling_price_offline, };
     if (this.productData.some(item => item.id === data.id)) {
@@ -316,6 +369,7 @@ export class BarcodeComponent implements OnInit {
       this.cartData.splice(selectedIndex, 1);
     }
     console.log(this.cartData, 'selected data');
+    
   }
   removeVariant(event: any) {
     const selectedIndex = this.productData.findIndex(item => item.id === event);
@@ -339,10 +393,15 @@ export class BarcodeComponent implements OnInit {
     this.isPrintProduct = true;
     this.isSelectPg=true;
     // console.warn(this.cartData, 'cartdata');
-    console.warn(this.productData[0], 'productData');
-    console.warn(this.loopQut,'qtyVl')
+    console.warn(this.productData, 'productData');
+    
 
-   this.createArrayOfLength(this.productData[0],this.loopQut)
+
+
+  for (let index = 0; index < this.productData.length; index++) {
+        this.createArrayOfLength(this.productData[index],this.productData[index].qty)
+  }
+  
  console.log(this.new_arr,'new_arr')
 
   }
@@ -453,8 +512,10 @@ async printPage() {
   isSelectPg=false;
   selectPG(size: string): void {
     this.selectedPageSize = size;
-    console.log(this.selectedPageSize);
-    this.isSelectPg=true;
+    this.coreService.Pages_type.next(size);
+    // console.log(size)
+    // console.log(this.selectedPageSize);
+    // this.isSelectPg=true;
   }
   //   barcodeWidth: number = 36; 
   //   barcodeHeight: number = 12;
@@ -468,3 +529,5 @@ async printPage() {
   //     }
   // }
 }
+
+

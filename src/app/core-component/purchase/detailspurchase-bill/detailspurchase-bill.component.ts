@@ -295,13 +295,8 @@ export class DetailspurchaseBillComponent implements OnInit {
        });
 
 
-let shows : boolean = false;
-if(this.purchaseBillDetail?.tax_rate?.length>0){
-shows = true;
-}else{
-  shows = false;
+let shows : boolean = (this.purchaseBillDetail?.TaxSummary?.length > 0);
 
-}
 
 
        const obj = {
@@ -419,9 +414,7 @@ shows = true;
            }
            
          ],
-        
-       
-         [
+        [
            {
              content : '',
              colSpan : 9,

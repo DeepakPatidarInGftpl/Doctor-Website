@@ -42,7 +42,7 @@ export class EditbrandComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       code: new FormControl(''),
       image: new FormControl(''),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      discount: new FormControl(''),
       category: new FormArray([]),
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
