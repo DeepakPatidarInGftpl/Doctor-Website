@@ -10,7 +10,7 @@
                 </div>
                 <div class="page-btn">
                     <span style="opacity: 0.5;"
-                    *ngIf="(purchaseBillDetail.status === 'Approved' ||  purchaseBillDetail.status === 'Completed' || purchaseBillDetail.status === 'Rejected' || purchaseBillDetail.status === 'Cancelled')"
+                    *ngIf="(purchaseBillDetail?.status === 'Approved' ||  purchaseBillDetail?.status === 'Completed' || purchaseBillDetail?.status === 'Rejected' || purchaseBillDetail?.status === 'Cancelled')"
                     
                     >
                         <a  class="btn btn-added">
@@ -18,7 +18,7 @@
                         </a>
                     </span>
                     <a
-                    *ngIf="!(purchaseBillDetail.status === 'Approved' ||  purchaseBillDetail.status === 'Completed' || purchaseBillDetail.status === 'Rejected' || purchaseBillDetail.status === 'Cancelled')"
+                    *ngIf="!(purchaseBillDetail?.status === 'Approved' ||  purchaseBillDetail?.status === 'Completed' || purchaseBillDetail?.status === 'Rejected' || purchaseBillDetail?.status === 'Cancelled')"
                     
                     routerLink="//purchase/edit-purchaseReturn/{{purchaseBillDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Purchase Return

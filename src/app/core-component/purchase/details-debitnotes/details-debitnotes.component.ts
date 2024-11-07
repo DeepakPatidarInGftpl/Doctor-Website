@@ -143,6 +143,8 @@ export class DetailsDebitnotesComponent implements OnInit {
         return 'approve-status-badge';
       case 'Rejected':
         return 'reject-status-badge';
+      case 'Completed':
+        return 'success-status-badge';
       default:
         return '';
     }

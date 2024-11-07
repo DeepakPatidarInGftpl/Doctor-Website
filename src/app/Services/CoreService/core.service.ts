@@ -40,6 +40,9 @@ export class CoreService {
   wareHouseSubject = new BehaviorSubject(null)
   ProdCategBehaveSub = new BehaviorSubject(null)
   subCategoriesGroup = new BehaviorSubject(null)
+Pages_type = new BehaviorSubject('a4');
+
+
 
 
   prefixList = ['POSOrder','POSReturn','DeliveryChallan','ProductionVoucher','PurchaseBill','PurchaseOrder','DebitNote',

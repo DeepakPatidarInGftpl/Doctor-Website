@@ -8,7 +8,8 @@
                         Back to Goods Received Note </h6>
                     <h4>New Goods Received Note </h4>
                 </div>
-                <div class="page-btn">
+                <div class="page-btn"
+                *ngIf="purchaseBillDetail.payment_status == 'Payment Pending' ">
                     <a routerLink="//purchase/edit-goodsReceivedNote/{{purchaseBillDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Goods Received Note
                     </a>
