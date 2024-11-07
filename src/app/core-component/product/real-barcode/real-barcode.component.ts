@@ -11,6 +11,7 @@ export class RealBarcodeComponent implements OnInit,AfterViewInit {
   elementType = 'svg';
   value = 'someValue12340987';
   format = 'CODE128';
+  // format = 'ITF-14';
   lineColor = '#000000';
   width = 0.86;
   height = 20;

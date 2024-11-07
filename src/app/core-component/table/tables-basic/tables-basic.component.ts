@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 
 @Component({
@@ -10,10 +11,23 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class TablesBasicComponent implements OnInit  {
  
-@Input() data : any[]
+@Input() data : any[];
+// @Input() pages_type : string;
+
+constructor(
+  public _coreService : CoreService
+){}
+
 
 ngOnInit(): void {
-  console.log(this.data)
+
+console.log(this._coreService.Pages_type.subscribe({
+  next(value) {
+    console.log(value)
+  },
+}))
+
+
 }
   printPage() {
     const printContent = document.getElementById('printContent');
@@ -32,6 +46,12 @@ ngOnInit(): void {
                       }
 
 
+.set_margin{
+  margin-bottom: 9mm !important;
+}
+
+
+
  .main-container{
 
   display: grid;
@@ -40,6 +60,23 @@ ngOnInit(): void {
   margin-top: 5mm;
   margin-left: 5mm;
 }
+
+.main-container_2UP{
+  display: grid;
+  grid-template-columns: repeat(2, 48mm); /* Four columns each 48mm wide */
+  column-gap: 1.5mm;
+  margin-top: 5mm;
+  margin-left: 2mm;
+}
+.main-container_1UP{
+  display: grid;
+  grid-template-columns: repeat(1, 48mm); /* Four columns each 48mm wide */
+  column-gap: 1.5mm;
+  margin-top: 5mm;
+  margin-left: 2mm;
+}
+
+
 /* Container */
 .label-container {
 
@@ -91,6 +128,11 @@ ngOnInit(): void {
   text-align: center;
   margin-top: 1mm;
 }
+
+
+
+
+
 
 .label-barcode img {
   width: 70%; /* Adjust width to fit inside the card */
