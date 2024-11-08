@@ -29,9 +29,10 @@ export class BarcodeComponent implements OnInit {
   filteredPurchase: Observable<any[]>;
   black_stickerControl = new FormControl(0);
   barcodeForm: FormGroup;
-  private searchSubject = new Subject<string>();
+
   results: any[] = [];
 
+  showSpiner : boolean = false
   ngOnInit(): void {
     this.productControl =  new FormControl()
     this.getPurchase();
@@ -44,20 +45,28 @@ export class BarcodeComponent implements OnInit {
 
 
  this.productControl.valueChanges.pipe(
+  
+
   debounceTime(300),      // Wait 300ms
   distinctUntilChanged(), // Only emit when value changes
-  switchMap(term => 
-    term ?  this.coreService.searchProduct(term) : of([]) // Make the API call
-  ),       
+  switchMap(term => {
+    this.showSpiner = true;
+   return term ?  this.coreService.searchProduct(term) : of([]) 
+  }
+   
+),       
   catchError(error => {
     console.error(error);
     return of([]);                  // Handle errors gracefully
   })
  ).subscribe({
   next :(value :any)=> {
-
+    this.showSpiner = false;
     this.isSearch = false;
     this.variantData = value;
+  },
+  error : (err) => {
+    this.showSpiner = false;
   },
  })
 
@@ -286,7 +295,8 @@ export class BarcodeComponent implements OnInit {
     for(let i=1;i<=quantity;i++){
       this.new_arr.push(data)
     }
-    this.Black_Sticker(this.black_stickerControl.value)
+    
+    // console.warn(this.black_stickerControl.value ,'black')
     return this.new_arr
   }
 
@@ -307,17 +317,9 @@ export class BarcodeComponent implements OnInit {
     this._component.printPage()
 }
 
-
-
-  // getQtyArray(quantity: number): number[] {
-  //   console.log(Array.from({ length: quantity }, (_, index) => index + 1),'hello')
-  //   return Array.from({ length: quantity }, (_, index) => index + 1);
-  // }
   productData: any[] = [];
   onCheckProduct(data: any) {
- 
-    if (data.batch.length == 0    ) {
-      // console.log('deepla if')
+    if (data.batch.length == 0) {
       this.toastr.error('Batch not available, Kindly Add Batch to Print Barcodes!');
       this.productControl.reset()
       return
@@ -326,10 +328,10 @@ export class BarcodeComponent implements OnInit {
    
     this.variantData = [];
     const productWithQty = { ...data, qty: 1, mrp: data?.batch[0]?.mrp, additional_discount : data?.batch[0]?.additional_discount, selling_price_offline: data?.batch[0]?.selling_price_offline, };
-    if (this.productData.some(item => item.id === data.id)) {
-      this.toastr.warning('Product is already selected');
-    } else {
+    if (!this.productData.some(item => item.id === data.id)) {
       this.productData.push(productWithQty);
+    } else {
+      this.toastr.warning('Product is already selected');
     }
 
 
@@ -339,7 +341,7 @@ export class BarcodeComponent implements OnInit {
   }
   loopQut:number= 0;
   qtyChangeProduct(index: number, newQty: any) {
-    const qty = parseInt(newQty, 10);
+    const qty : number = parseInt(newQty, 10);
     this.loopQut = newQty; 
     if (!isNaN(qty)) {
       this.productData[index].qty = qty;
@@ -388,22 +390,12 @@ export class BarcodeComponent implements OnInit {
     console.warn(this.productData, 'productData');
   }
   new_arr:any[]= [];
-  printProduct(qtyVl:any) {
+  printProduct() {
     this.isPrint = false;
     this.isPrintProduct = true;
-    this.isSelectPg=true;
-    // console.warn(this.cartData, 'cartdata');
-    console.warn(this.productData, 'productData');
-    
-
-
-
-  for (let index = 0; index < this.productData.length; index++) {
-        this.createArrayOfLength(this.productData[index],this.productData[index].qty)
-  }
-  
- console.log(this.new_arr,'new_arr')
-
+    this.isSelectPg = true;
+    this.productData.forEach(data => this.createArrayOfLength(data, data.qty));
+    this.Black_Sticker(this.black_stickerControl.value);
   }
 
 

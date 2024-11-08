@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SweetalertsRoutingModule } from './sweetalerts-routing.module';
 import { SweetalertsComponent } from './sweetalerts.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { SweetalertsComponent } from './sweetalerts.component';
   ],
   imports: [
     CommonModule,
-    SweetalertsRoutingModule
+    SweetalertsRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class SweetalertsModule { }

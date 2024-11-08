@@ -207,8 +207,9 @@
                  </div>
             </div>  -->
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
+                <div class="col-md-6 d-flex align-center justify-content-between"  >
+
+                    <div class="form-group" style="width: 88% !important;">
                         <label>Search Product</label>
 
                         <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
@@ -230,6 +231,14 @@
                                 characters</mat-option>
                         </mat-autocomplete>
                     </div>
+
+                    <div style="width: 10% !important" *ngIf="showSpiner">
+                        <div class="spinner-border spinner-border-md" style="color: #FF9F43;"  role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+
+                    </div>
+
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -316,6 +325,8 @@
             </div>
             <button class="btn btn-submit me-2" (click)="printProduct()">Print Product Barcode</button>
         </ng-container>
+
+      
 
     </div>
 </div>
