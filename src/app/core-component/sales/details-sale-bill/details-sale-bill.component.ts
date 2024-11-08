@@ -204,7 +204,7 @@ console.log(taxpriceRupees)
     this.location.back();
   }
 
-  generatePdf() {
+generatePdf2() {
 let p : number = parseFloat(this.totalMrp +'')
     let arr2 = new Array() ;
     this.BillDetail?.cart.forEach((cart : any,n : number) => {
@@ -377,7 +377,255 @@ let p : number = parseFloat(this.totalMrp +'')
    
     this._pdf.generatePdf(obj);
    
+}
+
+generateNewPdf() {
+  let p : number = parseFloat(this.totalMrp +'')
+      let arr2 = new Array() ;
+      this.BillDetail?.cart.forEach((cart : any,n : number) => {
+       arr2.push([`1`,`${cart?.barcode?.sku}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
+        [`2`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`]
+       )
+     });
+     const obj = {
+     'Type' : 'Invoice',
+     'Fist_date' : this.BillDetail?.bill_date,
+     'Secouand_date' : this.BillDetail?.bill_date ,
+     'head1' : [],
+    'tbody1' : [
+      [
+        { content: `Customer Details:
+Fashion House`, colSpan: 8},
+        { content: 'Invoice #: PB/24-25/108', colSpan: 2},
+        { content: 'Date: 26 September 2024', colSpan: 2},
+      ],
+      [
+        { content: 'GSTIN: 27AABCR1718EIZP', colSpan: 8},
+        { content: 'Place of Supply: 10-Bihar', colSpan: 2},
+        { content: 'Due Date: 26 October 2024', colSpan: 2},
+        
+      ],
+      [
+        { content: 'Adhar/pan: AABCR1718E', colSpan: 8},
+        { content: 'Transporter: self', colSpan: 2},
+        { content: 'PO No: p0124-25/75', colSpan: 2},
+      ],
+      [
+      { content : `Billing Address: 
+Main Road, Gurga Chowk Bhirha (Rusera), Samastipur, Bihar-848209, India\n
+Shipping Address:
+Main Road, Gurga Chowk, Bhirha(Rusera),
+Samastipur,Bihar-848209 , India`, colSpan: 8 },
+{ content: `Dispatch From:
+Khata No —2837,Khesra No 7284, Landlord-Virendra 
+Prasad Singh, Main Road, Singhiya, Samastipur— 
+848209, Bihar, India`, colSpan: 4},
+      ],
+  ],
+    
+     'table2head' : ['#','ITEM','HSN','BRAND','MRP','RATE','QTY','CD%','GST','AMOUNT'],
+     'foot2' : [
+       [
+         {
+           content : `Total Quantity /item: 2/2
+Total Amount (In Amount)
+INR Seven Thousand five hundred rupees only
+
+Bank Details
+Bank: State Bank of India 
+Account: 396028542380
+IFCA: SBIN003580
+Branch: SINGHIA`,
+           colSpan : 5,
+         },
+         {
+           content : `Taxable Amount
+           Additional changes
+        Discount 
+        Taxes
+        Round off
+        Total 
+
+        Payment Status`,
+           colSpan : 3,
+           styles : {halign : 'right'}
+         }, 
+         {
+          content : `78787
+          7676
+        2626
+        4545
+        7676
+        7676
+
+        Partially Paid`,
+          colSpan : 2,
+          styles : {halign : 'right'}
+        }
+       ],
+      
+//        [
+//         {
+//           content : `Total Amount (In Amount)
+// INR Seven Thousand five hundred rupees only.`,
+//           colSpan : 5,
+//         },
+//        { 
+//         content : `Additional changes
+//         Discount 
+//         Taxes
+//         Round off `,
+//         colSpan : 3,
+//          styles : {halign : 'right'}
+//       }, 
+//       { 
+//         content : ` 7676
+//         2626
+//         4545
+//         7676`,
+//         colSpan : 1,
+//          styles : {halign : 'right'}
+//       }
+//       ],
+      
+      
+      // [
+      //   {
+      //     content : 'Bank Details',
+      //     colSpan : 5,
+      //     styles : {halign : 'left'}
+      //   },
+      //  { 
+      //   content : `Total`,
+      //   colSpan : 3,
+      //   styles : {halign : 'right'}
+      // }, 
+      // { 
+      //   content : `7676`,
+      //   colSpan : 1,
+      //   styles : {halign : 'right'}
+      // }
+      // ],
+//       [
+//         {
+//           content : `Bank: State Bank of India 
+// Account: 396028542380
+// IFCA: SBIN003580
+// Branch: SINGHIA`,
+//           colSpan : 5,
+//         },
+//        { 
+//         content : `Payment Status`,
+//         colSpan : 3,
+//         styles : {halign : 'right'}
+//       },
+//       { 
+//         content : `Partially Paid`,
+//         colSpan : 1,
+//         styles : {halign : 'right'}
+//       }
+//       ],
+    ],
+    'table3head': [
+      [
+        { content: 'HSN / SAC', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
+        { content: 'Taxable Value', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
+        { content: 'State Tax', colSpan: 2, styles: { halign: 'center' } },
+        { content: 'Centra Tax', colSpan: 2, styles: { valign: 'middle', halign: 'center' } },
+        { content: 'Total Taxable Amount', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } }
+      ],
+      [
+        { content: 'Rate', styles: { halign: 'center' } },
+        { content: 'Amount', styles: { halign: 'center' } },
+        { content: 'Rate', styles: { halign: 'center' } },
+        { content: 'Amount', styles: { halign: 'center' } }
+      ],
+      
+    ],
+    'table3body' : [
+      {
+        hsnSac: '9985',
+        taxableValue: 10000,
+        stateTaxRate: '9%',
+        stateTaxAmount: 900,
+        centralTaxRate: '9%',
+        centralTaxAmount: 900,
+        totalTaxableAmount: 11800
+      },
+      {
+        hsnSac: '9967',
+        taxableValue: 15000,
+        stateTaxRate: '12%',
+        stateTaxAmount: 1800,
+        centralTaxRate: '12%',
+        centralTaxAmount: 1800,
+        totalTaxableAmount: 18600
+      },
+    ],
+    'table4head' : [
+      [
+        {
+          content : `Note: \t\t\t\t XYZ Offer applied (if any)`,
+          colSpan : 12,
+        }
+      ]
+    ],
+     'table4body' : [
+      [
+        {
+          content : `Terms and conditions:
+1. Goods ones sold cant be taken back or exchanged.
+2. Please notify us on any discrepancies within 3 days of receipt
+3. We are not manufacturers, company will stand for warranty as per their terms and conditions.
+4. Interest @24% p.a. will be charged for unclear bills beyond 30 days.
+5. Subject to Ruer Jurisdiction.`,
+          colSpan : 9,
+          // styles : {halign : 'left'}
+        },
+       { content : `For PRAMOD VASTRALAY 
+        \n \n \n \n 
+        Authorized Signatory`,
+
+        colSpan : 4,
+        styles : {halign : 'right'}
+      }
+      ]
+     ],
+    
+      
+      
+    'table4foot' : [
+      [
+        {
+          content : `Prepared By: \t Rajnish Singh`,
+          colSpan : 6,
+        },
+       { content : 'Checked By:',
+        colSpan : 3,
+        styles : {halign : 'left'}
+      },
+      { content : 'Counted By:',
+        colSpan : 3,
+        styles : {halign : 'left'}
+      }
+      ]
+    ],
+     'company_name' : this.companyDetails?.name,
+     'company_gst' : this.companyDetails?.gst,
+     'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
+     'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,
+     'top_left_phone' : this.companyDetails?.phone,
+     'top_left_email' : this.companyDetails?.email,
+    
+    
+     'table2body' : arr2,
+     'order_no' : this.BillDetail?.customer_bill_no,
+     }
+     
+      this._pdf.generateNewPdf(obj);
+     
   }
+  
 
   printForm(): void {
     const formElement = document.getElementById('debitNote');
