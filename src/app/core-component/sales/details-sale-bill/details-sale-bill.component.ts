@@ -17,7 +17,8 @@ export class DetailsSaleBillComponent implements OnInit {
     private Arout: ActivatedRoute,
     private saleService: SalesService,
     private location: Location,
-    public _pdf : PdfgenService
+    public _pdf : PdfgenService,
+    private _datepipe : DatePipe
       ) { }
   
   p: number = 1
@@ -380,11 +381,17 @@ let p : number = parseFloat(this.totalMrp +'')
 }
 
 generateNewPdf() {
+
+const Invoice_Date  = this._datepipe.transform(this.BillDetail?.bill_date ,'dd-MMMM-yyyy');
+const Due_date  = this._datepipe.transform(this.BillDetail?.due_date ,'dd-MMMM-yyyy');
+  
   let p : number = parseFloat(this.totalMrp +'')
       let arr2 = new Array() ;
       this.BillDetail?.cart.forEach((cart : any,n : number) => {
-       arr2.push([`1`,`${cart?.barcode?.sku}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
-        [`2`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`]
+       arr2.push([`1`,`${cart?.item_name}`,`${cart?.barcode?.sku}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
+        [`2`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
+        [`3`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
+        [`4`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
        )
      });
      const obj = {
@@ -392,30 +399,31 @@ generateNewPdf() {
      'Fist_date' : this.BillDetail?.bill_date,
      'Secouand_date' : this.BillDetail?.bill_date ,
      'head1' : [],
-    'tbody1' : [
+     'tbody1' : [
       [
         { content: `Customer Details:
-Fashion House`, colSpan: 8},
-        { content: 'Invoice #: PB/24-25/108', colSpan: 2},
-        { content: 'Date: 26 September 2024', colSpan: 2},
+${this.BillDetail?.customer?.name}`, colSpan: 8},
+        { content: `Invoice #: ${this.BillDetail?.customer_bill_no}`, colSpan: 2},
+        { content: `Date: ${Invoice_Date}`, colSpan: 2},
       ],
       [
-        { content: 'GSTIN: 27AABCR1718EIZP', colSpan: 8},
-        { content: 'Place of Supply: 10-Bihar', colSpan: 2},
-        { content: 'Due Date: 26 October 2024', colSpan: 2},
+        { content: `GSTIN: ${this.BillDetail?.customer?.detail?.gstin}`, colSpan: 8},
+        { content: `Place of Supply: ${this.companyDetails?.state_code?.gst_code}-${this.companyDetails?.state?.state}`, colSpan: 2},
+        { content: `Due Date: ${Due_date}`, colSpan: 2},
         
       ],
       [
         { content: 'Adhar/pan: AABCR1718E', colSpan: 8},
         { content: 'Transporter: self', colSpan: 2},
-        { content: 'PO No: p0124-25/75', colSpan: 2},
+        { content: `SO No: ${this.BillDetail?.sale_order?.sale_order_no ?? 'nil'}`, colSpan: 2},
       ],
       [
       { content : `Billing Address: 
-Main Road, Gurga Chowk Bhirha (Rusera), Samastipur, Bihar-848209, India\n
+${this.selectedAddressBilling?.address_line_1==null?'':this.selectedAddressBilling?.address_line_1+ ' , ' +this.selectedAddressBilling?.address_line_2==null?'':this.selectedAddressBilling?.address_line_2+ ' , ' +this.selectedAddressBilling?.city?.city}
+${this.selectedAddressBilling?.state?.state + ' , ' +this.selectedAddressBilling?.country?.country_name}\n
 Shipping Address:
-Main Road, Gurga Chowk, Bhirha(Rusera),
-Samastipur,Bihar-848209 , India`, colSpan: 8 },
+${this.selectedAddressShipping?.address_line_1==null?'':this.selectedAddressShipping?.address_line_1+ ' , ' +this.selectedAddressShipping?.address_line_2==null?'':this.selectedAddressShipping?.address_line_2+ ' , ' +this.selectedAddressShipping?.city?.city}
+${this.selectedAddressBilling?.state?.state + ' , ' +this.selectedAddressBilling?.country?.country_name}`, colSpan: 8 },
 { content: `Dispatch From:
 Khata No —2837,Khesra No 7284, Landlord-Virendra 
 Prasad Singh, Main Road, Singhiya, Samastipur— 
@@ -610,7 +618,7 @@ Branch: SINGHIA`,
       }
       ]
     ],
-     'company_name' : this.companyDetails?.name,
+     'company_name' : this.companyDetails?.name ,
      'company_gst' : this.companyDetails?.gst,
      'top_left_address_line1' : `${this.companyDetails?.address}, ${this.companyDetails?.city?.city}`,
      'top_left_address_line2' : `${this.companyDetails?.state?.state}, ${this.companyDetails?.country?.country_name}, ${this.companyDetails?.pincode}`,

@@ -807,6 +807,10 @@ public generateNewPdf(obj : any) {
 },
   })
    }
+
+
+
+
       pdf.save(`${obj.Type}.pdf`,{returnPromise : true}).then(()=>{
           setTimeout(() => {
               this.loaderPdf.next(false);
@@ -814,6 +818,9 @@ public generateNewPdf(obj : any) {
       })
     })
   }
+
+
+ 
 
 public set_address(supplierAddress : any) {
 
