@@ -230,8 +230,6 @@ if (obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type !== 
     }
 }
 });
-
-  
 }
 
  const pageCount = pdf.getNumberOfPages();
@@ -412,6 +410,410 @@ else  if(obj.Type !== 'Countra Voucher' && obj.Type !== 'Debit Note' && obj.Type
   })
 }
 
+public generateNewPdf(obj : any) {
+  this.loaderPdf.next(true)
+   this._com.loadImage().then((img : any)=>{
+        const pdf = new jsPDF('p','mm','a4');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = 200;
+        const heigth = 200;
+        canvas.width = width;
+        canvas.height = heigth;
+        ctx.clearRect(0,0,width,heigth); // remove Black Bg from images
+        ctx.drawImage(img,0,0,width,heigth);
+        const compressedImage = canvas.toDataURL('image/png',0.9); // set of images qulity
+        const table3head = obj.table3head;
+        const table2head = [obj.table2head];
+        const table3body = obj.table3body;
+        const table1body = obj.tbody1;
+        const foot2 = obj.foot2;
+        const table4head = obj.table4head;
+        const table4body = obj.table4body;
+        const table4foot = obj.table4foot
+        const foot2Len = foot2.length; 
+        const table4bodyLen = table4body.length; 
+        const table4footLen = table4foot.length; 
+        let row: number = 2;
+  
+  ((row: number) => {
+    const lenArr = obj.table2body.length;
+    const loop = lenArr % row;
+    const newval = row - loop;
+    if (loop !== 0) {
+      for (let i = 0; i < newval; i++) {
+        obj.table2body.push([]);
+      }
+    }
+  })(row);
+  
+    const startY = 90
+    const marginTop = { top: startY };
+    const imageUrl = "https://example.com/image.jpg"; // Ensure this is accessible
+    (pdf as any).autoTable({
+      head: table2head,
+      body: obj.table2body,
+      foot: foot2,
+      startY,
+      margin: marginTop,
+      headStyles: {
+        fontSize: 8,
+        textColor: [0, 0, 0],
+        fillColor: [255, 255, 255],
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],
+        fontSize: 8,
+        textColor: [0, 0, 0],
+      },
+      footStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontSize: 8,
+        fontStyle: "normal"
+        
+      },
+      alternateRowStyles: { fillColor: [255, 255, 255] },
+  
+      didDrawCell: (data: any) => {
+        const { cell, table } = data;
+        const { x, y, width, height } = cell;
+        pdf.setDrawColor(0, 0, 0);
+        if (data.section === 'body' || data.section === 'head') {
+          const isFirstRow = data.row.index === 0;
+          const isLastRow = data.row.index === row - 1;
+          const isFirstColumn = data.column.index === 0;
+          const isLastColumn = data.column.index === table.columns.length - 1;
+          if (!isFirstColumn && !isLastColumn && !isFirstRow && !isLastRow) {
+            cell.styles.lineWidth = 0;
+          } else {
+            pdf.setLineWidth(0.2);
+            if (isFirstRow || isLastRow) {
+              pdf.line(cell.x, cell.y, cell.x + cell.width, cell.y); // Top border for the first row
+              pdf.line(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height); // Bottom border for the last row
+            }
+        
+            if (isFirstColumn) {
+              pdf.line(cell.x, cell.y, cell.x, cell.y + cell.height); // Left border for the first column
+            }
+        
+            if (isLastColumn) {
+              pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border for the last column
+            }
+          }
+        }
+        
+        if (data.section === 'foot') {
+          pdf.setLineWidth(0.2);
+          const isFirstRow = data.row.index === 0;
+          const isLastRow = data.row.index === foot2Len - 1;
+          const isFirstColumn = data.column.index === 0;
+          const isLastColumn = data.column.index === data.table.columns.length - 1;
+        
+          if (cell.colSpan === 5 && data.row.index === 0 && data.column.index === 0) {
+            // Remove all borders by default
+            cell.styles.lineWidth = 0;
+        
+            // Keep borders only for the first and last columns and rows
+            if (isFirstRow) {
+              pdf.line(x, y, x + width, y); // Top border
+            }
+            if (isLastRow) {
+              pdf.line(x, y + height, x + width, y + height); // Bottom border
+            }
+            if (isFirstColumn) {
+              pdf.line(x, y, x, y + height); // Left border for first column
+            }
+            if (isLastColumn) {
+              pdf.line(x + width, y, x + width, y + height); // Right border for last column
+            }
+            try {
+              const img = new Image();
+              img.src = compressedImage;
+              console.log(img.src)
+              // img.onload = () => {
+              //   pdf.addImage(img, 'JPEG', x + 2, y + 2, 100, 100); // Adjust positioning as needed
+              //   pdf.setLineWidth(0.2);
+              // };
+              pdf.addImage(compressedImage,"PNG", x + 86, y + 16, 34, 10)
+            } catch (error) {
+              console.error("Error loading image:", error);
+            }
+          } else if (cell.colSpan === 3 ) {
+            pdf.line(x, y, x + width, y);
+            pdf.setLineWidth(0.2);// Set lineWidth to 0 for no border effect
+            pdf.line(x, y, x, y + height); // Left border if needed
+            pdf.line(x, y + height, x + width, y + height); // Bottom border if needed
+
+          } else if (cell.colSpan === 2) {
+            pdf.line(x, y, x + width, y);
+            pdf.setLineWidth(0.2); // Set lineWidth to 0 for no border effect
+            pdf.line(x, y + height, x + width, y + height);
+            pdf.line(x + width, y, x + width, y + height); // Right border
+        
+          }
+          }
+        
+      },
+    });
+  const spacing = -1;
+  (pdf as any).autoTable({
+    head: table3head,
+    body: table3body,
+    startY: (pdf as any).lastAutoTable.finalY + spacing,
+    headStyles: {
+      fontSize: 8,
+      textColor: [0, 0, 0],
+      fillColor: [255, 255, 255],
+    }, 
+    bodyStyles: {
+      fillColor: [255, 255, 255],
+      fontSize: 8,
+    },
+    footStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontSize: 8,
+      halign: 'left',
+      
+    },
+    alternateRowStyles: { fillColor: [255, 255, 255] },
+  
+    didDrawCell: (data: any) => {
+      const { cell, table } = data;
+      const { x, y, width, height } = cell;
+      pdf.setDrawColor(0, 0, 0);
+      if (data.section === 'body' || data.section === 'head') {
+      pdf.setLineWidth(0.2);
+      
+      // Left border
+      pdf.line(x, y, x, y + height);
+      
+      // Right border
+      pdf.line(x + width, y, x + width, y + height);
+      
+      // Top border
+      pdf.line(x, y, x + width, y);
+      
+      // Bottom border
+      pdf.line(x, y + height, x + width, y + height);
+      }
+  if (data.column.index === 0 || data.column.index === 1 || data.column.index === table.columns.length) {
+        pdf.setLineWidth(0.2);
+        pdf.line(cell.x, cell.y, cell.x, cell.y + cell.height);
+        pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
+  
+      }
+    },
+  });
+  
+  (pdf as any).autoTable({
+    head: table4head,
+    body:table4body,
+    foot: table4foot,
+    startY: (pdf as any).lastAutoTable.finalY + spacing ,
+    headStyles: {
+      fontSize: 9,
+      textColor: [0, 0, 0],
+      fillColor: [255, 255, 255],
+    },
+    bodyStyles: {
+      fillColor: [255, 255, 255],
+      fontSize: 9,
+      textColor: [0, 0, 0]
+    },
+    footStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontSize: 9,
+    },
+    alternateRowStyles: { fillColor: [255, 255, 255] },
+  
+    didDrawCell: (data: any) => {
+      const { cell, table } = data;
+      const { x, y, width, height } = cell;
+      pdf.setDrawColor(0, 0, 0);
+      if (data.section === 'head' || data.section === 'body') {
+        // For the first and last rows in the body and head sections
+        if (data.row.index === 0 || data.row.index === table4bodyLen) {
+          pdf.setLineWidth(0.2);
+          pdf.line(x, y, x + width, y); // Top border
+          pdf.line(x, y + height, x + width, y + height); // Bottom border
+        }
+      
+        // Set the right border for the last column in the body
+        if (data.column.index === table.columns.length - 1) {
+          pdf.setLineWidth(0.2);
+          pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border for last column
+        } else {
+          pdf.setLineWidth(0.2); 
+         pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border
+       
+        }
+      
+        // Draw left border for the first column and right border for the last column
+        if (data.column.index === 0 || data.column.index === table.columns.length - 1) {
+          pdf.setLineWidth(0.2);
+          pdf.line(cell.x, cell.y, cell.x, cell.y + cell.height); // Left border
+          pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border
+        }
+      }
+      
+      if (data.section === 'foot') {
+        const isFirstRow = data.row.index === 0;
+        const isLastRow = data.row.index === table4footLen - 1;
+        const isFirstColumn = data.column.index === 0;
+        const isLastColumn = data.column.index === table.columns.length - 1;
+      
+        // Remove middle cell borders in the footer except for first and last row/column
+        if (!isFirstColumn && !isLastColumn && !isFirstRow && !isLastRow) {
+          cell.styles.lineWidth = 0;
+        } else {
+          pdf.setLineWidth(0.2);
+      
+          if (isFirstRow) {
+            pdf.line(cell.x, cell.y, cell.x + cell.width, cell.y); // Top border for the first row
+          }
+          if (isLastRow) {
+            pdf.line(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height); // Bottom border for the last row
+          }
+      
+          if (isFirstColumn) {
+            pdf.line(cell.x, cell.y, cell.x, cell.y + cell.height); // Left border for the first column
+          }
+      
+          // Set the right border for the last column in the footer
+          if (isLastColumn) {
+            pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border for last column
+          }
+
+          if (data.column.index === table.columns.length - 1) {
+            pdf.setLineWidth(0.2);
+            pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border for last column
+          } else {
+            pdf.setLineWidth(0.2); 
+           pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border
+         
+          }
+        }
+      }
+    },
+  });
+  
+   const pageCount = pdf.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i)
+      pdf.setFontSize(9)
+      pdf.setFontSize(8);
+  
+  if (i === pageCount) {
+    const yPos = obj.Type === 'Scrap Entry' ? 220.4 : obj.table2body.length >= 2 ? 218.4 : 217.5;
+    pdf.setTextColor(24, 129, 176);
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFont(undefined, 'bold');
+    pdf.text("Thank You For The Business", 85, yPos);
+  } else {
+    const yPos = obj.table2body.length >= 2 ? 280.5 : 275;
+    pdf.text("Continued on next page", obj.table2body.length >= 2 ? 160 : 190, yPos);
+  }
+
+  let leftContentSpaces = 14;
+      // lift content
+      pdf.setFontSize(16)
+      pdf.setTextColor(0,0,0)
+      pdf.setFont(undefined, 'bold');
+      pdf.text(`${(obj.company_name as string).toUpperCase()}`,leftContentSpaces,15)
+  
+      pdf.setTextColor(256,112,8)
+      pdf.setTextColor(0,0,0)
+      pdf.setFontSize(9)
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`${obj.top_left_address_line1}`,leftContentSpaces,19);
+      pdf.text(`${obj.top_left_address_line2}`,leftContentSpaces,23)
+      pdf.setFont(undefined, 'bold');
+      pdf.text(`GSTIN: ${obj.company_gst}`,leftContentSpaces,27);
+      pdf.text(`MOBILE: ${obj.top_left_phone}, EMAIL Id: ${obj.top_left_email}`,leftContentSpaces,31);
+      
+      let rightContentSpaces : number = 156;
+      pdf.setTextColor(135, 206, 235);
+      pdf.setFont(undefined, 'bold');
+      pdf.setFontSize(16);
+      pdf.text(`TAX INVOICE`,190,14, { align: "right" });
+      pdf.setFontSize(9)
+      pdf.setTextColor(0,0,0)
+      pdf.text(`ORIGINAL FOR RECIPIENT `,190,18, { align: "right" });
+      pdf.addImage(compressedImage,"PNG",rightContentSpaces, 20, 34, 10)
+     
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const marginNextLine = 14;
+      pdf.setDrawColor(0, 0, 0)
+      pdf.setLineWidth(0.2);
+      pdf.line(marginNextLine,40,pageWidth-marginNextLine,40)
+
+      // const pageWidth = pdf.internal.pageSize.getWidth();
+      // const marginNextLine = 14;
+      // pdf.setDrawColor(0, 0, 0)
+      // pdf.setLineWidth(0.2);
+      // pdf.line(18,41,pageWidth-18,41)
+     
+      autoTable(pdf,{
+      body: table1body,
+      startY: 40,
+      headStyles: {
+        fontSize: 8,
+        textColor: [0, 0, 0],
+        fillColor: [255, 202, 153],
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontSize: 8,
+        fontStyle: "normal"
+      },
+      footStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontSize: 8,
+        
+      },
+      alternateRowStyles: { fillColor: [255, 255, 255] },
+      didDrawCell: (data) => {
+        const { cell, table } = data;
+        const { x, y, width, height } = cell;
+        pdf.setDrawColor(0, 0, 0);
+      pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
+      if (data.section === 'body') {
+        // For cells with colSpan of 8 in specific rows (1, 2, or 3)
+        if (cell.colSpan === 8) {
+          // Remove all cell borders initially
+          cell.styles.lineWidth = 0;
+          if (data.column.index === 0 || data.column.index === table.columns.length - 1) {
+            pdf.line(cell.x, cell.y, cell.x, cell.y + cell.height); // Left border
+            pdf.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height); // Right border
+          }
+        }
+
+  // For other conditions where colSpan is not 8, or in specific rows
+  if (data.cell.colSpan === 2 || [0, 1, 2, 3].includes(data.row.index)) {
+    if (cell.colSpan !== 8) {
+      // Set text to bold
+      pdf.setFont(undefined, 'bold');
+      // Draw top and bottom borders
+      pdf.setLineWidth(0.0);
+      pdf.line(x, y, x + width, y); // Top border
+    }
+  }
+}
+},
+  })
+   }
+      pdf.save(`${obj.Type}.pdf`,{returnPromise : true}).then(()=>{
+          setTimeout(() => {
+              this.loaderPdf.next(false);
+          }, 1000);
+      })
+    })
+  }
 
 public set_address(supplierAddress : any) {
 
