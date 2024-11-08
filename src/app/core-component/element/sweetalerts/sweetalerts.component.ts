@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import Swal from 'sweetalert2/dist/sweetalert2.js'; 
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+
+import Fuse from 'fuse.js';
 @Component({
   selector: 'app-sweetalerts',
   templateUrl: './sweetalerts.component.html',
@@ -7,25 +11,42 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 })
 export class SweetalertsComponent implements OnInit {
 
-  constructor() { }
+  products: any[] = [];
+  filteredProducts: any[] = [];
+  searchControl = new FormControl();
+  fuse: Fuse<any>;
+  constructor(
+    private _purchase : PurchaseServiceService
+  ) { }
 
   ngOnInit(): void {
-  }
-  ngAfterViewInit() {
-    this.jquery("assets/plugins/sweetalert/sweetalert2.all.min.js")
-    this.LoadScript("assets/plugins/sweetalert/sweetalerts.min.js")
+    this._purchase.getSearchProduct().subscribe({
+      next : (products :any) => {
+        console.log(products)
+        this.products = products;
 
+        this.fuse = new Fuse(this.products, {
+          keys: ['product.title'],  // Fields to search within
+          threshold: 0.4,                   // Sensitivity; lower for more exact matches
+        });
+
+      },
+    });
+
+    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe((searchTerm) => {
+      this.filteredProducts = this.filterProducts(searchTerm);
+    });
+    
+}
+
+private filterProducts(searchTerm: string): any[] {
+  if (!searchTerm) {
+    return this.products;
   }
-  jquery(js: string) {
-    var script = document.createElement('script');
-    script.src = js;
-    script.async = false;
-    document.body.appendChild(script);
-  }
-  LoadScript(js: string) {
-    var script = document.createElement('script');
-    script.src = js;
-    script.async = false;
-    document.body.appendChild(script);
-  }
+  // searchTerm = searchTerm.toLowerCase();
+  return this.fuse.search(searchTerm).map(result => result.item);
+ 
+}
+
+
 }
