@@ -548,6 +548,7 @@ export class AddSaleBillComponent implements OnInit {
       tax_amount: new FormControl(0),
       total: (0),
       description:'',
+      mrp : 0
     })
   }
   getCart(): FormArray {
@@ -1145,7 +1146,9 @@ export class AddSaleBillComponent implements OnInit {
         this.originalCoastPrice = getCoastPrice;
       }
     } else {
+
       let offlineprice = event?.batch[0]?.selling_price_online || 0;
+
       this.productItemPrice[index] = offlineprice;
       let getDiscountPrice = (offlineprice * this.totalDiscount) / 100
       console.log(getDiscountPrice);
@@ -1175,6 +1178,7 @@ export class AddSaleBillComponent implements OnInit {
           amount: event.batch[0]?.mrp,
           qty: 1,
           tax: this.apiPurchaseTax,
+          mrp :event.batch[0]?.mrp,
           // discount: event.batch[0]?.discount || 0,
           additional_discount: parseInt(event.batch[0]?.additional_discount || 0),
           price: Number(this.originalCoastPrice).toFixed(2),

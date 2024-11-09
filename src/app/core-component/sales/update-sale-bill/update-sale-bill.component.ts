@@ -518,7 +518,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.priceQtyData[i] = {
             price: Number(j?.price)?.toFixed(2),
             qty: j?.qty,
-            additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+            additional_discount: parseInt(j?.barcode?.batch[0]?.additional_discount) || 0,
             tax: parseInt ( j.tax || 0),
             coastPrice: j.price,
             taxPrice: taxPrice
@@ -601,7 +601,7 @@ export class UpdateSaleBillComponent implements OnInit {
       barcode.patchValue({
         qty: value,
         tax: totalProductQty === 0 ? 0 : parseInt(''+taxPercentage),
-        additional_discount: discount
+        additional_discount: parseInt(discount)
       });
     }
   }
@@ -744,7 +744,7 @@ export class UpdateSaleBillComponent implements OnInit {
               price: new FormControl(j.price),
               tax: new FormControl(j?.tax || 0),
               discount: new FormControl(j?.discount),
-              additional_discount: new FormControl(j?.barcode?.batch[0]?.additional_discount),
+              additional_discount: new FormControl(parseInt(j?.barcode?.batch[0]?.additional_discount)),
               total: new FormControl(j?.total)
             })
           );
@@ -756,7 +756,7 @@ export class UpdateSaleBillComponent implements OnInit {
             price: j.price,
             tax: j?.tax || 0,
             discount: j?.discount,
-            additional_discount: j?.barcode?.batch[0]?.additional_discount,
+            additional_discount: parseInt(j?.barcode?.batch[0]?.additional_discount),
             total: j?.total
           });
         }
@@ -779,7 +779,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.priceQtyData[i] = {
           price: Number(j?.price)?.toFixed(2),
           qty: j?.qty,
-          additional_discount: j?.barcode?.batch[0]?.additional_discount || 0,
+          additional_discount: parseInt(j?.barcode?.batch[0]?.additional_discount) || 0,
           tax: j.tax || 0,
           coastPrice: j.price,
           taxPrice: taxPrice
@@ -1609,7 +1609,7 @@ export class UpdateSaleBillComponent implements OnInit {
       this.apiPurchaseTax = 0;
     }
     this.batchDiscount = 0;
-    this.additionalDiscount = event.batch[0]?.additional_discount || 0;
+    this.additionalDiscount = parseInt(event.batch[0]?.additional_discount) || 0;
     this.totalDiscount = this.batchDiscount + this.additionalDiscount;
 
     this.isTaxAvailable[index] = event?.product?.sale_tax_including;
@@ -1699,7 +1699,7 @@ export class UpdateSaleBillComponent implements OnInit {
           qty: 1,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
-          additional_discount: event.batch[0]?.additional_discount || 0,
+          additional_discount: parseInt(event.batch[0]?.additional_discount )|| 0,
           price: Number(this.originalCoastPrice).toFixed(2),
         });
         taxValue = this.apiPurchaseTax;
@@ -1712,7 +1712,7 @@ export class UpdateSaleBillComponent implements OnInit {
           qty: 1,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
-          additional_discount: event.batch[0]?.additional_discount || 0,
+          additional_discount: parseInt(event.batch[0]?.additional_discount )|| 0,
           price: Number(this.originalCoastPrice).toFixed(2),
           // landing_cost: this.landingCost || 0
         });
@@ -1722,7 +1722,7 @@ export class UpdateSaleBillComponent implements OnInit {
         barcode: selectedItemId,
         price: this.originalCoastPrice.toFixed(2),
         qty: 1,
-        additional_discount: event.batch[0]?.additional_discount || 0,
+        additional_discount: parseInt(event.batch[0]?.additional_discount) || 0,
         tax: taxValue,
         coastPrice: this.getCoastPrice,
         taxPrice: this.taxPrice 
@@ -1996,7 +1996,7 @@ export class UpdateSaleBillComponent implements OnInit {
       formdata.append('total_discount', parseFloat(this.saleBillForm.get('total_discount')?.value ).toFixed(2));
       formdata.append('roundoff', parseFloat(this.saleBillForm.get('roundoff')?.value).toFixed(2));
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
-      formdata.append('total', this.calculateTotalForAll());
+      formdata.append('total', this.calculateTotalForAll().toFixed(2));
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
       formdata.append('coupon_code', '');
       //2-1

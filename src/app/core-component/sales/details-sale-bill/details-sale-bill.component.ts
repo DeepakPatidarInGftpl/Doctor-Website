@@ -4,6 +4,7 @@ import { DatePipe, Location } from '@angular/common';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PdfgenService } from 'src/app/Services/PdfGenrate/pdfgen.service';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-details-sale-bill',
   templateUrl: './details-sale-bill.component.html',
@@ -60,16 +61,51 @@ export class DetailsSaleBillComponent implements OnInit {
   additionalDiscoun:any[]=[];
 totalAdditionalDiscou=0;
 totaltaxsummary = {}
+
+ splitArrayIntoChunks(products : any, chunkSize : number = 5) {
+  const result = [];
+  
+  for (let i = 0; i < products.length; i += chunkSize) {
+    const chunk = products.slice(i, i + chunkSize);
+   
+    result.push(chunk);
+  }
+
+  console.warn(result)
+  return result;
+}
+
+
+multpalArray : any
   getdata() {
+
+
+
     this.saleService.getSalesBillById(this.id).subscribe(res => {
       if (this.id == res.id) {
+    
+        let totalTaxAmount : number = 0;
+      
+          res.cart.forEach(element => {
+            totalTaxAmount += Number(element?.tax_amount)
+            if (element?.description !== "0") {
+              const cher = element?.barcode?.product?.unit?.title?.charAt(0).toLocaleUpperCase();
+              element.description = element?.description?.split(',').map(des => `${des}${cher}`).join(',');
+            };
+            // splitArrayIntoChunks
+          });
+          res.totalTaxAmount = totalTaxAmount
+
+          this.multpalArray =  this.splitArrayIntoChunks(res.cart)
+
         this.BillDetail = res
         console.log(res);
 
 
 
-
+        let totalTaxableAmount : number = 0;
         res.TaxSummary.forEach((element:any) => {
+          totalTaxableAmount += Number(element?.taxable_value)
           element.sumOfamount = 0;
           if ( element.igst > 0) {
             element.igst_amount =  element.igst;
@@ -91,6 +127,8 @@ totaltaxsummary = {}
 
   
         });
+
+        res.totalTaxableAmount = totalTaxableAmount
         
 
 
@@ -380,6 +418,9 @@ let p : number = parseFloat(this.totalMrp +'')
    
 }
 
+
+
+
 generateNewPdf() {
 
 const Invoice_Date  = this._datepipe.transform(this.BillDetail?.bill_date ,'dd-MMMM-yyyy');
@@ -387,14 +428,57 @@ const Due_date  = this._datepipe.transform(this.BillDetail?.due_date ,'dd-MMMM-y
   
   let p : number = parseFloat(this.totalMrp +'')
       let arr2 = new Array() ;
-      this.BillDetail?.cart.forEach((cart : any,n : number) => {
-       arr2.push([`1`,`${cart?.item_name}`,`${cart?.barcode?.sku}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
-        [`2`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
-        [`3`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
-        [`4`,`${cart?.barcode?.sku}`, `${cart?.item_name}`,`${cart?.item_name}`,`${cart?.barcode?.product?.subcategory?.title}`,`${cart?.barcode?.product?.brand?.title}`,`${cart?.barcode?.product?.hsncode?.hsn_code}`,`${cart?.price}`, `${cart?.qty}`,`${cart?.discount ?? '' }`],
-       )
-     });
+     
+     
+      this.multpalArray[0].forEach((cart : any,n : number) => {
+        const totalDiscount = Number(cart?.discount) + Number(cart?.additional_discount)
+         arr2.push(
+            [`${n+1}`,`${cart?.item_name} \n${'SKU: ' +  cart?.barcode?.sku}`,
+              `${cart?.barcode?.product?.hsncode?.hsn_code}`,
+              `${cart?.barcode?.product?.brand?.title}`,
+              `${cart?.mrp}`,`${cart?.price}`,
+              `${parseInt(cart?.qty)} ${cart?.barcode?.product?.unit?.title}\n${ ( cart?.description == "0") ? '' : cart?.description}`,
+              `${parseInt(""+totalDiscount) ?? '' }%`,
+              `${parseInt(cart?.tax) ?? '' }%`,
+              `${cart?.total ?? '' }`,
+            
+            ]);
+         });
+
+         const hsnArr = new Array();
+       if( this.BillDetail?.TaxSummary.length > 0){
+        this.BillDetail?.TaxSummary.forEach((tax:any) => {
+          hsnArr.push(
+            [`${tax?.HSNCODE}`,`${tax?.taxable_value}`,`${tax?.sgst}%`,`${tax?.sgst_amount ?? '0'}`,`${tax?.cgst}%`,`${tax?.cgst_amount ?? '0'}`,`${tax?.igst}%`,`${tax?.igst_amount ?? '0'}`,`${tax?.sumOfamount}`
+
+          ])
+        });
+        
+       }else{
+        hsnArr.push([])
+        hsnArr.push([])
+       }
+        
+      //  console.log(hsnArr)
+
+    //   this.BillDetail?.cart.forEach((cart : any,n : number) => {
+    //     if (n <=4) {
+    //       arr2.push(
+    //         [`${n+1}`,`${cart?.item_name} \n${'SKU: ' +  cart?.barcode?.sku}`,
+    //           `${cart?.barcode?.product?.hsncode?.hsn_code}`,
+    //           `${cart?.barcode?.product?.brand?.title}`,
+    //           `${cart?.mrp}`,`${cart?.price}`,
+    //           `${parseInt(cart?.qty)} ${cart?.barcode?.product?.unit?.title}\n${ ( cart?.description == "0") ? '' : cart?.description}`,
+    //           `${parseInt(cart?.discount) ?? '' }%`,
+    //           `${parseInt(cart?.tax) ?? '' }%`,
+    //           `${cart?.total ?? '' }`,
+            
+    //         ]);
+    //       }
+       
+    //  });
      const obj = {
+      'otherArray' : this.multpalArray,
      'Type' : 'Invoice',
      'Fist_date' : this.BillDetail?.bill_date,
      'Secouand_date' : this.BillDetail?.bill_date ,
@@ -447,26 +531,28 @@ Branch: SINGHIA`,
            colSpan : 5,
          },
          {
-           content : `Taxable Amount
-           Additional changes
+           content : `Sub Total
+    Taxable Amount
+Additional Changes
         Discount 
         Taxes
         Round off
-        Total 
+        Total
 
         Payment Status`,
            colSpan : 3,
            styles : {halign : 'right'}
          }, 
          {
-          content : `78787
-          7676
-        2626
-        4545
-        7676
-        7676
+          content : `${this.BillDetail?.subtotal}
+          ${this.BillDetail?.totalTaxableAmount}
+          ${this.BillDetail?.additional_charges ?? '0.00'}
+        ${this.BillDetail?.total_discount}
+        ${this.BillDetail?.totalTaxAmount}
+        ${this.BillDetail?.roundoff}
+        ${this.BillDetail?.total}
 
-        Partially Paid`,
+Partially Paid`,
           colSpan : 2,
           styles : {halign : 'right'}
         }
@@ -540,9 +626,12 @@ Branch: SINGHIA`,
         { content: 'Taxable Value', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
         { content: 'State Tax', colSpan: 2, styles: { halign: 'center' } },
         { content: 'Centra Tax', colSpan: 2, styles: { valign: 'middle', halign: 'center' } },
+        { content: 'Integrated Tax', colSpan: 2, styles: { valign: 'middle', halign: 'center' } },
         { content: 'Total Taxable Amount', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } }
       ],
       [
+        { content: 'Rate', styles: { halign: 'center' } },
+        { content: 'Amount', styles: { halign: 'center' } },
         { content: 'Rate', styles: { halign: 'center' } },
         { content: 'Amount', styles: { halign: 'center' } },
         { content: 'Rate', styles: { halign: 'center' } },
@@ -550,26 +639,7 @@ Branch: SINGHIA`,
       ],
       
     ],
-    'table3body' : [
-      {
-        hsnSac: '9985',
-        taxableValue: 10000,
-        stateTaxRate: '9%',
-        stateTaxAmount: 900,
-        centralTaxRate: '9%',
-        centralTaxAmount: 900,
-        totalTaxableAmount: 11800
-      },
-      {
-        hsnSac: '9967',
-        taxableValue: 15000,
-        stateTaxRate: '12%',
-        stateTaxAmount: 1800,
-        centralTaxRate: '12%',
-        centralTaxAmount: 1800,
-        totalTaxableAmount: 18600
-      },
-    ],
+    'table3body' : hsnArr,
     'table4head' : [
       [
         {
