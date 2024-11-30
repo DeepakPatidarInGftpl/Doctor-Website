@@ -113,11 +113,11 @@
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="col-md-4">
                             <label for="Transaction_Id" class="fw-bold"> Transaction Id</label>
-                            <input id="Transaction_Id" placeholder="Enter Ref No." formControlName="transaction_id" class="input" type="text" />
+                            <input id="Transaction_Id" placeholder="Enter Transaction Id" formControlName="transaction_id" class="input" type="text" />
                         </div>
                         <div *ngIf="payment_modeID.value == 'Bank'" class="offset-md-4 col-md-4 offset-md-4">
                             <label for="Ref_No" class="fw-bold"> Remarks</label>
-                            <input id="Ref_No" formControlName="note" placeholder="Enter Ref No." class="input" type="text" />
+                            <input id="Ref_No" formControlName="note" placeholder="Enter Remarks" class="input" type="text" />
                         </div>
                     </div>
                 </section>

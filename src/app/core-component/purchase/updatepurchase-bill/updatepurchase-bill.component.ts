@@ -129,7 +129,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('material_inward_no')?.setValue(res?.material_inward_no.id);
         
       }else{
-        this.materialList.forEach((item:any)=>{
+        this.materialList?.forEach((item:any)=>{
           if (item.is_active) {
             this.puchaseBillForm.get('material_inward_no')?.setValue(res.id);
           }

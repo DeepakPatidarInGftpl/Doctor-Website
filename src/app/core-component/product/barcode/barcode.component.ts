@@ -50,7 +50,7 @@ export class BarcodeComponent implements OnInit {
   debounceTime(300),      // Wait 300ms
   distinctUntilChanged(), // Only emit when value changes
   switchMap(term => {
-    this.showSpiner = true;
+  this.showSpiner = true;
    return term ?  this.coreService.searchProduct(term) : of([]) 
   }
    

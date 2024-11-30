@@ -1156,18 +1156,18 @@
                                 </li>
                                 <li>
                                     <h4>Round Off</h4>
-                                    <h5>
+                                    <h5 class="p-0 m-0">
                                         <!-- {{calculateRoundoffValue() | currency:'INR'}} -->
                                         <input type="text" formControlName="roundoff" class="input"
-                                            [ngModel]="calculateRoundoffValue()" style="width: 30%;">
+                                            [ngModel]="calculateRoundoffValue()" style="width: 50%;">
                                         <!-- <input type="text" formControlName="roundoff" class="input" [ngModel]="0" style="display: none;"> -->
                                     </h5>
                                 </li>
 
                                 <li>
                                     <h4>Flat Discount</h4>
-                                    <h5>
-                                        <div [align]="'right'" class="input-group mb-3" style="width: 60%;float: inline-end;">
+                                    <h5 class="p-0 m-0">
+                                        <div [align]="'right'" class="input-group" style="width: 60%;float: inline-end;">
                                             <button class="btn btn-secondary"  (click)="ShowRupeeAndPer()" type="button" id="button-addon2">{{ showPercentag ? '%' : '&#8377;'}}</button>
                                             <input type="text" #flat_discounts placeholder="0.00" [formControl]="flat_discount" class="form-control" >
                                           </div>
